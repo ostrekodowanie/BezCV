@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  font-family: 'Work Sans', sans-serif;
+}
+
+html, body {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  color: #141B3F;
+}
+
+.padding {
+  padding-left: 8vw;
+  padding-right: 8vw;
+}
+
+@media all and (min-width: 768px) {
+  .padding {
+    padding-left: 12vw;
+    padding-right: 12vw;
+  }
+}
+
+@media all and (min-width: 1536px) {
+  .padding {
+    padding-left: 18vw;
+    padding-right: 18vw;
+  }
+}
