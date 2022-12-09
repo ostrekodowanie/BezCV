@@ -8,14 +8,14 @@ export default function Header() {
     let path = location.pathname
     if(path?.includes('rejestracja') || path?.includes('logowanie')) return <></>
     return (
-        <header className="flex items-center shadow-[0px_0px_102px_rgba(15,50,235,0.08)] justify-between h-[5rem] md:h-[6rem] padding fixed left-0 right-0 z-30 top-0 bg-white">
+        <header className="flex items-center justify-between h-[5rem] md:h-[6rem] padding fixed left-0 right-0 z-30 top-0 bg-white">
             <Logo />
             <Nav />
         </header>
     )
 }
 
-const Logo = () => <Link to='/'>E-Diagnosta</Link>
+const Logo = () => <Link to='/'>BezCV</Link>
 
 const lineStyle = 'h-[3px] w-full bg-primary transition rounded-xl'
 
@@ -29,11 +29,11 @@ const Nav = () => {
         <>
             <div className={`flex flex-col md:flex-row justify-center items-center bg-white gap-4 text-sm font-medium absolute top-0 md:relative left-full transition-transform ${active && '-translate-x-full'} md:left-auto h-screen md:h-full w-screen md:w-max`}>
                 <CustomLink to='/'>Strona Główna</CustomLink>
-                <CustomLink to='/skp'>Nasze Stacje</CustomLink>
+                <CustomLink to='/contact'>Kontakt</CustomLink>
                 { logged ? <Link className="font-bold text-base ml-2" to='/profil'>{first_name}</Link> : 
                 <>
-                    <Link className="border-[2px] mt-4 md:mt-0 md:ml-4 font-semibold border-primary text-primary rounded flex items-center py-2 px-6" to='/logowanie'>Zaloguj się</Link>
-                    <Link className="bg-primary border-[2px] transition-colors hover:border-darkPrimary hover:bg-darkPrimary font-semibold border-primary text-white rounded flex items-center py-2 px-6" to='/rejestracja'>Załóż Konto</Link>
+                    <Link className="border-[2px] mt-4 md:mt-0 md:ml-4 font-Medium border-primary text-primary rounded flex items-center py-2 px-6" to='/logowanie'>Zaloguj się</Link>
+                    <Link className="bg-primary border-[2px] transition-colors hover:border-darkPrimary hover:bg-darkPrimary font-medium border-primary text-white rounded flex items-center py-2 px-6" to='/rejestracja'>Załóż Konto</Link>
                 </>}
             </div>
             <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 sm:hidden h-5 w-8 justify-between cursor-pointer'>
@@ -54,5 +54,5 @@ type CustomLink = {
 const CustomLink = ({children, to, className}: CustomLink) => {
     const activePath = useResolvedPath(to)
     const isActive = useMatch({path: `${activePath.pathname}/*`, end: true})
-    return <Link to={to} className={`${className && className} transition-colors font-semibold ${isActive ? 'text-primary' : 'hover:text-primary'}`}>{children}</Link>
+    return <Link to={to} className={`${className && className} transition-colors font-medium ${isActive ? 'text-primary' : 'hover:text-primary'}`}>{children}</Link>
 }

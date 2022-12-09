@@ -1,11 +1,12 @@
 export default function Footer() {
     return (
-        <footer className="bg-footer padding py-10 flex items-center justify-center shadow-[0px_-10px_130px_rgb(15,50,235,0.05)]">
-            <div className="flex flex-col sm:grid grid-cols-2 gap-12 sm:gap-6 xl:flex xl:flex-row flex-wrap justify-between w-full">
-                <ContactDetails />
+        <footer className="bg-primary padding py-10 flex items-center justify-center">
+            <div className="flex flex-col sm:grid grid-cols-2 gap-12 sm:gap-6 xl:flex xl:flex-row flex-wrap justify-center w-full">
+                <h2 className="text-3xl text-white">Footer</h2>
+                {/* <ContactDetails />
                 <ServiceLinks />
                 <ForClients />
-                <ForStations />
+                <ForStations /> */}
             </div>
         </footer>
     )

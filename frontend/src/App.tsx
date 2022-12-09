@@ -15,6 +15,7 @@ import jwtDecode from 'jwt-decode'
 import AdminRoute from "./utils/AdminRoute"
 import AdminPanel from "./pages/AdminPanel"
 import Offers from "./pages/Offers"
+import Contact from "./components/home/Contact"
 
 const loginString: string | null = localStorage.getItem('login')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)
@@ -45,6 +46,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/kandydaci/*" element={<Offers />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/logowanie" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
             <Route path="/rejestracja/verify/*" element={<PublicRoute><Verify /></PublicRoute>} />

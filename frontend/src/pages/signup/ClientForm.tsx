@@ -43,8 +43,7 @@ export default function ClientForm() {
 
     return (
         <div className='flex flex-col text-center items-center xl:items-start xl:w-max'>
-            <h2 className="font-semibold text-[2.4rem] mb-4 xl:mb-6 w-full xl:text-5xl">Zarejestruj się</h2>
-            <p className="text-[#74788D] font-medium mb-16 w-full xl:text-lg">Uzupełnij formularz, aby założyć konto jako użytkownik</p>
+            <h2 className="font-semibold text-[2.4rem] mb-4 xl:mb-8 w-full xl:text-5xl">Zarejestruj się</h2>
             <form className='flex flex-col gap-4 font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col max-w-full sm:grid grid-cols-2 gap-6'>
                     <div className='relative'>
