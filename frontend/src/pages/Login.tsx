@@ -17,9 +17,9 @@ export default function Login() {
                     <Route path='/' element={<LoginForm />} />
                 </Routes>
             </section>
-            <div className="min-w-full xl:flex items-center py-12 bg-[linear-gradient(134.13deg,rgba(239,242,254,0.55)_-25.82%,rgba(105,_127,_243,_0.473)_176.38%)]">
+            {/* <div className="min-w-full xl:flex items-center py-12 bg-[linear-gradient(134.13deg,rgba(239,242,254,0.55)_-25.82%,rgba(105,_127,_243,_0.473)_176.38%)]">
                 <img className="max-w-[80%] mx-auto" src={loginMain} alt="" />
-            </div>
+            </div> */}
         </div>
     )
 }

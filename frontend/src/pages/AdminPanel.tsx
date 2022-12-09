@@ -1,7 +1,7 @@
 import axios from "axios"
 import { FormEvent, useEffect, useState } from "react"
 import Loader from "../components/Loader"
-import { StationProps } from "./SKP"
+import { StationProps } from "./Offers"
 
 
 export default function AdminPanel() {

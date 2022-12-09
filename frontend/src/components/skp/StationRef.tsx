@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { arrow, location, rating } from "../../assets/skp";
-import { StationProps } from "../../pages/SKP";
+import { StationProps } from "../../pages/Offers";
 
 export default function StationRef(props: StationProps) {
     return (
