@@ -1,7 +1,6 @@
 import { FormEvent, useState } from "react";
 import CitySearchBar from "../CitySearchBar";
 import FilledButton from "../FilledButton";
-import { landingMain } from '../../assets/home'
 import { useNavigate } from "react-router";
 import Control from "react-control-js";
 
@@ -51,7 +50,7 @@ export default function Landing() {
                 </form>
             </div>
             } />
-            <img className="mt-24 mx-[12vw] xl:mx-0 xl:mt-0 xl:ml-auto" src={landingMain} alt="" />
+            {/* <img className="mt-24 mx-[12vw] xl:mx-0 xl:mt-0 xl:ml-auto" src={landingMain} alt="" /> */}
         </section>
     )
 }

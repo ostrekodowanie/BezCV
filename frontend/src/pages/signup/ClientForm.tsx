@@ -73,7 +73,7 @@ export default function ClientForm() {
                 </div>
                 {!status.ok && status.message && status.message !== 'loading' && <span className='text-red-400 font-medium'>{status.message}</span>}
                 {status.message === 'loading' && <Loader className='absolute bottom-0 left-0' />}
-                <span className="mt-6 mb-4">Już posiadasz konto? <Link className="text-primary font-semibold" to='/logowanie'>Zaloguj się</Link></span>
+                <span className="mt-6 mb-4">Już posiadasz konto? <Link className="text-primary font-medium" to='/logowanie'>Zaloguj się</Link></span>
                 <FilledButton className='mx-auto' type='submit'>Zarejestruj</FilledButton>
             </form>
         </div>
