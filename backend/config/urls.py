@@ -29,7 +29,7 @@ urlpatterns = [
     path('kontakt', views.index),
     path('rejestracja', views.index),
     path('logowanie', views.index),
-    path('verify', views.index),
+    path('rejestracja/verify', views.index),
 
     path('api/', include('apps.Auth.urls')),
     path('api/', include('apps.Contact.urls')),
