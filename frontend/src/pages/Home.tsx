@@ -5,8 +5,8 @@ import Steps from "../components/home/Steps";
 export default function Home() {
     return (
         <>
-            <Landing />
-            <Steps />
+            {/* <Landing /> */}
+            {/* <Steps /> */}
             <Contact />
         </>
     )

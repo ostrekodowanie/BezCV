@@ -27,30 +27,30 @@ export default function Contact() {
     }
 
     return (
-        <section className="padding bg-primary py-16 xl:py-28 max-h-[7in] sm:max-h-[6in] xl:max-h-[5in] relative xl:mt-auto mb-[4in] flex flex-col gap-8 sm:gap-16 xl:flex-row xl:justify-between items-center">
-            <Control ease='ease-out' opacity={1} onScroll={true} element={
-            <h2 className="flex flex-col gap-2 text-white xl:mb-8">
-                <span className="font-semibold">Skontaktuj się z nami</span>
-                <span className="font-bold text-4xl xl:w-max">za pomocą formularza</span>
-            </h2>
-            } />
+        // <section className="padding bg-primary py-16 xl:py-28 max-h-[7in] sm:max-h-[6in] xl:max-h-[5in] relative xl:mt-auto mb-[4in] flex flex-col gap-8 sm:gap-16 xl:flex-row xl:justify-between items-center">
+        //     <Control ease='ease-out' opacity={1} onScroll={true} element={
+        //     <h2 className="flex flex-col gap-2 text-white xl:mb-8">
+        //         <span className="font-semibold">Skontaktuj się z nami</span>
+        //         <span className="font-bold text-4xl xl:w-max">za pomocą formularza</span>
+        //     </h2>
+        //     } />
             <div className="bg-white rounded-xl xl:self-start px-6 py-10 sm:p-12 max-w-full flex flex-col gap-6 shadow-[0px_0px_81px_rgba(15,50,235,0.07)]">
                 <h3 className="font-bold text-xl mb-2">Masz jakieś pytania?</h3>
                 <form onSubmit={handleSubmit} className="flex flex-col sm:grid grid-cols-2 gap-8 max-w-full font-medium">
                     <div className="relative min-w-0">
-                        <input className={inputStyles.input} required onChange={e => setDetails(prev => { return { ...prev, first_name: e.target.value }})} type="text" name="firstName" id='firstName' />
+                        <input className={inputStyles.input} required onChange={e => setDetails(prev => ({ ...prev, first_name: e.target.value }))} type="text" name="firstName" id='firstName' />
                         <span className={`${details.first_name ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>*Imię</span>
                     </div>
                     <div className="relative min-w-0">
-                        <input className={inputStyles.input} required onChange={e => setDetails(prev => { return { ...prev, last_name: e.target.value }})} type="text" name='lastName' id='lastName' />
+                        <input className={inputStyles.input} required onChange={e => setDetails(prev => ({ ...prev, last_name: e.target.value }))} type="text" name='lastName' id='lastName' />
                         <span className={`${details.last_name ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>*Nazwisko</span>
                     </div>
                     <div className="relative min-w-0">
-                        <input className={inputStyles.input} required onChange={e => setDetails(prev => { return { ...prev, email: e.target.value }})} type="email" name="email" id='email' />
+                        <input className={inputStyles.input} required onChange={e => setDetails(prev => ({ ...prev, email: e.target.value }))} type="email" name="email" id='email' />
                         <span className={`${details.email ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>*Email</span>
                     </div>
                     <div className="relative min-w-0">
-                        <input className={inputStyles.input} onChange={e => setDetails(prev => { return { ...prev, phone: e.target.value }})} type="tel" name="phone" id='phone' />
+                        <input className={inputStyles.input} onChange={e => setDetails(prev => ({ ...prev, phone: e.target.value }))} type="tel" name="phone" id='phone' />
                         <span className={`${details.phone ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Numer telefonu</span>
                     </div>
                     <div className="relative min-w-0 col-span-2">
@@ -65,6 +65,6 @@ export default function Contact() {
                     </div>
                 </form>
             </div>
-        </section>
+        // </section>
     )
 }
