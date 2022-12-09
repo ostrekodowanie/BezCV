@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import Loader from "../components/Loader"
 import CandidateFilter from "../components/skp/CandidateFilter"
-import StationRef from "../components/skp/StationRef"
 import useDebounce from "../hooks/useDebounce"
 import { CandidateProps } from "./Candidate"
 import Candidate from './Candidate'
@@ -71,7 +70,7 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
             <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Kandydaci</h1>
             <CandidateFilter setFilter={setFilter} setInput={setInput} filter={filter} />
             <div className="flex flex-col gap-6 sm:grid grid-cols-skp">
-                {stations.length > 0 ? stations.map(station => <StationRef {...station} key={station.name} />) : <Loader className="mx-auto" />}
+                {/* {stations.length > 0 ? stations.map(station => <StationRef {...station} key={station.name} />) : <Loader className="mx-auto" />} */}
             </div>
         </>
     )

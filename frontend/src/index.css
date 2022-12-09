@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap');
+@import url(//db.onlinewebfonts.com/c/3906224246f0b3dde8c3700ab84067a2?family=Croogla4F);
 
 @tailwind base;
 @tailwind components;
@@ -8,7 +8,7 @@
 *::after,
 *::before {
   box-sizing: border-box;
-  font-family: 'Work Sans', sans-serif;
+  font-family: 'Croogla4F', sans-serif;
 }
 
 html, body {
