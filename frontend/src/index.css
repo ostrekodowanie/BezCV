@@ -1,4 +1,4 @@
-@import url(//db.onlinewebfonts.com/c/3906224246f0b3dde8c3700ab84067a2?family=Croogla4F);
+@import url('https://fonts.googleapis.com/css2?family=Cambay:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,7 +8,7 @@
 *::after,
 *::before {
   box-sizing: border-box;
-  font-family: 'Croogla4F', sans-serif;
+  font-family: 'Cambay', sans-serif;
 }
 
 html, body {
