@@ -14,7 +14,7 @@ export default function Verify() {
     useEffect(() => {
         const token = location.search.split("=").pop()
         try {
-            axios.get(`/api/signup/verify?token=${token}`)
+            axios.get(`/api/verify?token=${token}`)
                 .then(() => setStatus({...status, ok: true}))
         }
         catch(err: any) {
