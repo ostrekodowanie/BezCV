@@ -2,54 +2,39 @@ import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import Loader from "../components/Loader"
-import SKPFilter from "../components/skp/StationFilter"
-import StationRef from "../components/skp/StationRef"
+import CandidateFilter from "../components/skp/CandidateFilter"
 import useDebounce from "../hooks/useDebounce"
-import Station from "./Station"
+import { CandidateProps } from "./Candidate"
+import Candidate from './Candidate'
 
-export default function SKP() {
-    const [stations, setStations] = useState<StationProps[]>([])
+export default function Offers() {
+    const [candidates, setCandidates] = useState<CandidateProps[]>([])
 
     useEffect(() => {
         axios.get('/api/skp')
             .then(res => res.data)
-            .then(data => setStations(data))
+            .then(data => setCandidates(data))
     }, [])
 
     return (
         <section className="padding pt-[1.4in] md:pt-[2in]">
             <Routes>
-                {stations.map(station => <Route path={`/${station.slug}`} element={<Station {...station} key={station.id} />} />)}
+                {candidates.map(candidate => <Route path={`/${candidate.slug}`} element={<Candidate {...candidate} key={candidate.id} />} />)}
                 {['/', '/search/*'].map((path, index) => 
-                    <Route path={path} element={<SKPList defaultStations={stations} />} key={index} />
+                    <Route path={path} element={<CandidateList defaultCandidates={candidates} />} key={index} />
                 )}
             </Routes>
         </section>
     )
 }
 
-export interface StationProps {
-    id: number,
-    name: string,
-    slug: string,
-    city: string,
-    desc: string,
-    image: string,
-    rating_count: number,
-    avg_rating: number
-}
-
-export interface Filter {
-    city: string
-}
-
-const SKPList = ({ defaultStations }: { defaultStations: StationProps[]}) => {
+const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProps[]}) => {
     const navigate = useNavigate()
     const location = useLocation()
     const firstRender = useRef(true)
-    const [stations, setStations] = useState<StationProps[]>(defaultStations)
+    const [stations, setStations] = useState<CandidateProps[]>(defaultCandidates)
     const [input, setInput] = useState('')
-    const [filter, setFilter] = useState<Filter>({
+    const [filter, setFilter] = useState({
         city: ''
     })
     const debounceSearch = useDebounce(input, 400)
@@ -82,10 +67,10 @@ const SKPList = ({ defaultStations }: { defaultStations: StationProps[]}) => {
 
     return (
         <>
-            <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Stacje Kontroli Pojazdów</h1>
-            <SKPFilter setFilter={setFilter} setInput={setInput} filter={filter} />
+            <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Kandydaci</h1>
+            <CandidateFilter setFilter={setFilter} setInput={setInput} filter={filter} />
             <div className="flex flex-col gap-6 sm:grid grid-cols-skp">
-                {stations.length > 0 ? stations.map(station => <StationRef {...station} key={station.name} />) : <Loader className="mx-auto" />}
+                {/* {stations.length > 0 ? stations.map(station => <StationRef {...station} key={station.name} />) : <Loader className="mx-auto" />} */}
             </div>
         </>
     )
