@@ -22,7 +22,6 @@ export default function Profile() {
         <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in]">
             <h1 className="font-bold text-2xl">{first_name} {last_name}</h1>
             <div className="flex flex-wrap items-center gap-6">
-                {type === 'admin' && <Link to='/administracja' className="bg-primary transition-colors max-w-max font-medium hover:bg-darkPrimary text-white rounded flex items-center py-2 px-6">Panel administracyjny</Link>}
                 <button className="font-medium py-2 px-5 rounded transition-colors bg-red-400 text-white" onClick={handleLogout}>Wyloguj się</button>
             </div>
         </section>

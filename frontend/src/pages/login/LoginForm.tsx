@@ -28,7 +28,7 @@ export default function LoginForm() {
             message: 'loading'
         })
         try {
-            axios.post('/api/logowanie', JSON.stringify(credentials), {headers: {'Content-Type': 'application/json'}})
+            axios.post('/api/login', JSON.stringify(credentials), {headers: {'Content-Type': 'application/json'}})
             .then(res => res.data)
             .then(data => {
                 let user: User = jwtDecode(data.access)
@@ -64,7 +64,7 @@ export default function LoginForm() {
                     </div>                    
                     <div className='relative max-w-max w-full'>
                         <input className={inputStyles.input} required autoComplete="off" type='password' name='password' id='password' onChange={e => setCredentials(prev => { return { ...prev, password: e.target.value }})} />
-                        <span className={`${credentials.password ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Password</span>
+                        <span className={`${credentials.password ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Hasło</span>
                     </div>
                 </div>
                 {!status.ok && status.message && status.message !== 'loading' && <span className='text-red-400 font-medium'>{status.message}</span>}

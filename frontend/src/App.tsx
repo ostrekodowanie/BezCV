@@ -12,8 +12,6 @@ import { ReactElement, useLayoutEffect } from "react"
 import { useAppDispatch } from "./main"
 import { login, logout } from "./reducers/login"
 import jwtDecode from 'jwt-decode'
-import AdminRoute from "./utils/AdminRoute"
-import AdminPanel from "./pages/AdminPanel"
 import Offers from "./pages/Offers"
 import Contact from "./components/home/Contact"
 
@@ -46,12 +44,11 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/kandydaci/*" element={<Offers />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/kontakt" element={<Contact />} />
             <Route path="/logowanie" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
             <Route path="/rejestracja/verify/*" element={<PublicRoute><Verify /></PublicRoute>} />
             <Route path='/profil' element={<PrivateRoute><Profile /></PrivateRoute>} />
-            <Route path="/administracja" element={<AdminRoute><AdminPanel /></AdminRoute>} />
           </Routes>
         </ScrollTop>
       </main>

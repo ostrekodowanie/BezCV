@@ -25,7 +25,7 @@ export default function ClientForm() {
         if(details.password !== confPassword) return setStatus({ok: false, message: "Hasła się nie zgadzają!"})
         if(details.password.length < 8) return setStatus({ok: false, message: "Hasło musi posiadać co najmniej 8 znaków."})
         try {
-            axios.post('/api/rejestracja/klient', JSON.stringify({...details, type: 'user'}), {
+            axios.post('/api/signup', JSON.stringify(details), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
