@@ -1,7 +1,6 @@
 import axios from "axios"
 import { FormEvent, useEffect, useState } from "react"
 import Loader from "../components/Loader"
-import { StationProps } from "./Offers"
 
 
 export default function AdminPanel() {
@@ -16,7 +15,7 @@ export default function AdminPanel() {
 }
 
 const UnVerified = () => {
-    const [unVerified, setUnVerified] = useState<StationProps[]>([])
+    const [unVerified, setUnVerified] = useState<{ id: number }[]>([])
     const [selected, setSelected] = useState<number[]>([])
     const [action, setAction] = useState<'verify' | 'delete' | null>(null)
     const [status, setStatus] = useState('')
@@ -48,31 +47,7 @@ const UnVerified = () => {
                 <button onClick={() => setAction('delete')} className="py-2 px-5 rounded bg-red-400 text-white">Usuń</button>
                 {status === 'loading' && <Loader />}
             </div>
-            {unVerified.map(station => <Station {...station} setSelected={setSelected} key={station.name} />)}
-            {unVerified.length === 0 && selected.length === 0 && <h2>Brak niezweryfikowanych stacji!</h2>}
+            {unVerified.length === 0 && selected.length === 0 && <h2>Brak niezweryfikowanych osób!</h2>}
         </form>
-    )
-}
-
-interface StationVerifyRef extends StationProps {
-    setSelected: any
-}
-
-const Station = (props: StationVerifyRef) => {
-    const [checked, setChecked] = useState(false)
-
-    useEffect(() => {
-        if(checked) props.setSelected((prev: number[]) => [...prev, props.id])
-        if(!checked) props.setSelected((prev: number[]) => prev.filter(sel => sel !== props.id))
-    }, [checked])
-
-    return (
-        <label htmlFor={props.name} className="flex items-center justify-between gap-4 rounded p-4 shadow">
-            <div className="flex items-center gap-4">
-                <img src={`/images/skp/${props.image.split('/').pop()}`} alt="" />
-                <h3>{props.name}</h3>
-            </div>
-            <input type='checkbox' onChange={() => setChecked(prev => !prev)} checked={checked} id={props.name} />
-        </label>
     )
 }
