@@ -3,7 +3,6 @@ import Home from "./pages/Home"
 import Header from "./components/Header"
 import Login, { User } from "./pages/Login"
 import SignUp from "./pages/SignUp"
-import SKP from "./pages/SKP"
 import Footer from "./components/Footer"
 import PublicRoute from "./utils/PublicRoute"
 import PrivateRoute from "./utils/PrivateRoute"
@@ -15,6 +14,8 @@ import { login, logout } from "./reducers/login"
 import jwtDecode from 'jwt-decode'
 import AdminRoute from "./utils/AdminRoute"
 import AdminPanel from "./pages/AdminPanel"
+import Offers from "./pages/Offers"
+import Contact from "./components/home/Contact"
 
 const loginString: string | null = localStorage.getItem('login')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)
@@ -44,7 +45,8 @@ export default function App() {
         <ScrollTop>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/skp/*" element={<SKP />} />
+            <Route path="/kandydaci/*" element={<Offers />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/logowanie" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
             <Route path="/rejestracja/verify/*" element={<PublicRoute><Verify /></PublicRoute>} />

@@ -55,8 +55,7 @@ export default function LoginForm() {
 
     return (
         <div className='flex flex-col text-center items-center xl:items-start xl:w-max'>
-            <h2 className="font-semibold text-[2.4rem] mb-4 xl:mb-6 w-full xl:text-5xl">Zaloguj się</h2>
-            <p className="text-[#74788D] font-medium mb-16 w-full xl:text-lg">Uzupełnij formularz, aby zalogować się do swojego konta</p>
+            <h2 className="font-semibold text-[2.4rem] mb-4 xl:mb-8 w-full xl:text-5xl">Zaloguj się</h2>
             <form className='flex flex-col gap-4 w-full font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col items-center max-w-full gap-6'>
                     <div className='relative max-w-max w-full'>
@@ -70,7 +69,7 @@ export default function LoginForm() {
                 </div>
                 {!status.ok && status.message && status.message !== 'loading' && <span className='text-red-400 font-medium'>{status.message}</span>}
                 {status.message === 'loading' && <Loader className='absolute bottom-0 left-0' />}
-                <span className="mt-6 mb-4">Nie posiadasz konta? <Link className="text-primary font-semibold" to='/rejestracja'>Zarejestruj się</Link></span>
+                <span className="mt-6 mb-4">Nie posiadasz konta? <Link className="text-primary font-medium" to='/rejestracja'>Zarejestruj się</Link></span>
                 <FilledButton className='mx-auto' type='submit'>Zaloguj</FilledButton>
             </form>
         </div>

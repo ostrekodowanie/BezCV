@@ -7,7 +7,8 @@ export interface LoginState {
         type: string,
         first_name: string,
         last_name: string,
-        email: string
+        email: string,
+        abilities: string[]
     },
     tokens: {
         access: string,
@@ -22,7 +23,8 @@ const initialState: LoginState = {
         type: '',
         first_name: '',
         last_name: '',
-        email: ''
+        email: '',
+        abilities: []
     },
     tokens: {
         access: '',

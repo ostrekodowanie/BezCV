@@ -1,17 +1,15 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Filter } from "../../pages/SKP"
-import { search } from '../../assets/skp'
 import Loader from "../Loader"
 
 interface FilterProps {
     setInput: any,
     setFilter: any,
-    filter: Filter
+    filter: any
 }
 
 
-export default function SKPFilter({ setInput, setFilter, filter }: FilterProps) {
+export default function CandidateFilter({ setInput, setFilter, filter }: FilterProps) {
     const [active, setActive] = useState({
         cities: false
     })
@@ -21,14 +19,15 @@ export default function SKPFilter({ setInput, setFilter, filter }: FilterProps) 
     })
 
     useEffect(() => {
+        if(!active.cities) return
         axios.get('/api/skp/filters')
             .then(res => res.data)
             .then(data => setAllFilters(data))
-    }, [])
+    }, [active])
 
     return (
         <div className="flex items-center justify-between mt-8 mb-12">
-            <input className="px-6 pl-14 py-[0.6rem] border-[#E4E4E9] border-[1px] rounded-3xl bg-search bg-[1.4rem_center] bg-no-repeat" type='search' onChange={e => setInput(e.target.value)} placeholder="Wpisz nazwę stacji" />
+            <input className="px-6 pl-14 py-[0.6rem] border-[#E4E4E9] border-[1px] rounded-3xl bg-search bg-[1.4rem_center] bg-no-repeat" type='search' onChange={e => setInput(e.target.value)} placeholder="Wpisz kandydata" />
             <div className="flex items-center gap-4">
                 <h4 className="font-semibold">Miasto: </h4>
                 <div className="relative">
