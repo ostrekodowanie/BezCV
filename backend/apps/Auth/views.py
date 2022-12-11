@@ -42,16 +42,16 @@ class SignUpView(views.APIView):
     
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        print(serializer)
         if serializer.is_valid():
-            user = serializer
+            serializer.save()
+            user = serializer.data
             
-            token = jwt.encode({'id': user.id}, settings.SECRET_KEY, algorithm='HS256')
+            token = jwt.encode({'id': user['id']}, settings.SECRET_KEY, algorithm='HS256')
             
             email_message = EmailMessage(
                 subject='Potwierdź swoją rejestrację',
                 body='Aby potwierdzić swoją rejestrację, kliknij w link: https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token),
-                to=[user.email]
+                to=[user['email']]
             )
             email_message.send()
             
