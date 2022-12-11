@@ -42,20 +42,20 @@ class SignUpView(views.APIView):
     
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            user = serializer.data
-            
-            token = jwt.encode({'id': user['id']}, settings.SECRET_KEY, algorithm='HS256')
-            
-            email_message = EmailMessage(
-                subject='Potwierdź swoją rejestrację',
-                body='Aby potwierdzić swoją rejestrację, kliknij w link: https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token),
-                to=[user['email']]
-            )
-            email_message.send()
-            
-            return Response({'User created'}, status=status.HTTP_201_CREATED)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user = serializer.data
+        
+        token = jwt.encode({'id': user['id']}, settings.SECRET_KEY, algorithm='HS256')
+        
+        email_message = EmailMessage(
+            subject='Potwierdź swoją rejestrację',
+            body='Aby potwierdzić swoją rejestrację, kliknij w link: https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token),
+            to=[user['email']]
+        )
+        email_message.send()
+        
+        return Response({'User created'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyView(views.APIView):
