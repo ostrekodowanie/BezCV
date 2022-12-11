@@ -155,6 +155,10 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'Auth.User'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://bezcv.up.railway.app',    
+]
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
