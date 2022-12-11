@@ -42,16 +42,15 @@ class SignUpView(views.APIView):
     
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        print(serializer)
         if serializer.is_valid():
-            user = serializer.save()
+            user = serializer.data
             
-            token = jwt.encode({'id': user.id}, settings.SECRET_KEY, algorithm='HS256')
+            token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
             
             email_message = EmailMessage(
                 subject='Potwierdź swoją rejestrację',
                 body='Aby potwierdzić swoją rejestrację, kliknij w link: https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token),
-                to=[user.email]
+                to=[user['email']]
             )
             email_message.send()
             
@@ -64,18 +63,18 @@ class VerifyView(views.APIView):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             print(payload)
-            user = User.objects.get(pk=payload['id'])
+            user = User.objects.get(pk=payload['email'])
             if not user.is_verified:
                 user.is_verified = True
                 user.save()
             return Response({'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
             payload = jwt.decode(token, settings.SECRET_KEY,  algorithms=['HS256'], options={"verify_signature": False})
-            if User.objects.filter(pk=payload['user_id']).exists() == True:
-                user = User.objects.get(pk=payload['user_id'])
+            if User.objects.filter(pk=payload['email']).exists() == True:
+                user = User.objects.get(pk=payload['email'])
                 if user.is_verified:
                     return Response({'User is already verified'}, status=status.HTTP_400_BAD_REQUEST)
-                User.objects.get(pk=payload['user_id']).delete()
+                User.objects.get(pk=payload['email']).delete()
             return Response({'Activation link expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
             return Response({'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
