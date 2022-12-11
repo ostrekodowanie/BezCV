@@ -8,33 +8,67 @@ import PublicRoute from "./utils/PublicRoute"
 import PrivateRoute from "./utils/PrivateRoute"
 import Profile from "./pages/Profile"
 import Verify from "./pages/signup/Verify"
-import { ReactElement, useLayoutEffect } from "react"
-import { useAppDispatch } from "./main"
+import { ReactElement, useLayoutEffect, useRef, useState } from "react"
+import { useAppDispatch, useAppSelector } from "./main"
 import { login, logout } from "./reducers/login"
 import jwtDecode from 'jwt-decode'
 import Offers from "./pages/Offers"
 import Contact from "./components/home/Contact"
+import axios from "axios"
+import Loader from "./components/Loader"
 
 const loginString: string | null = localStorage.getItem('login')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)
 
 export default function App() {
+  const [loading, setLoading] = useState(true)
   const dispatch = useAppDispatch()
-  
-  useLayoutEffect(() => {
+  const timer = useRef<any>(null)
+  const auth = useAppSelector(state => state.login)
+  const { logged } = auth
+  const { refresh } = auth.tokens
+
+  const getUser = async () => {
     if(loginFromLocalStorage) {
-      let user: User = jwtDecode(loginFromLocalStorage.access)
-      dispatch(login({
-          data: {
-              first_name: user.first_name,
-              last_name: user.last_name,
-              email: user.email,
-              type: user.type
-          },
-          tokens: { ...loginFromLocalStorage }
+      await updateToken(loginFromLocalStorage.refresh)
+      return setLoading(false)
+    }
+    setLoading(false)
+    return dispatch(logout())
+  }
+
+  const updateToken = async (token: string) => {
+    const response = await axios.post('/api/token/refresh', JSON.stringify({ refresh: token }), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if(response.status === 200) {
+      let tokens = response.data
+      let user: User = jwtDecode(tokens.access)
+      localStorage.setItem('user', JSON.stringify(tokens))
+      return dispatch(login({
+        data: user,
+        tokens
       }))
-    } else dispatch(logout())
+    }
+    localStorage.removeItem('user')
+    return dispatch(logout())
+  }
+
+  useLayoutEffect(() => {
+    getUser()
   }, [loginFromLocalStorage])
+
+  useLayoutEffect(() => {
+    if(!logged) return
+    timer.current = setTimeout(() => {
+      updateToken(refresh)
+    }, 600000)
+    return () => clearTimeout(timer.current)
+  }, [refresh])
+
+  if(loading) return <Loader />
 
   return (
     <>
