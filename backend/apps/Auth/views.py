@@ -43,6 +43,7 @@ class SignUpView(views.APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            serializer.save()
             user = serializer.data
             
             token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
