@@ -70,11 +70,11 @@ class VerifyView(views.APIView):
             return Response({'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
             payload = jwt.decode(token, settings.SECRET_KEY,  algorithms=['HS256'], options={"verify_signature": False})
-            if User.objects.filter(pk=payload['email']).exists() == True:
-                user = User.objects.get(pk=payload['email'])
+            if User.objects.filter(email=payload['email']).exists() == True:
+                user = User.objects.get(email=payload['email'])
                 if user.is_verified:
                     return Response({'User is already verified'}, status=status.HTTP_400_BAD_REQUEST)
-                User.objects.get(pk=payload['email']).delete()
+                User.objects.get(email=payload['email']).delete()
             return Response({'Activation link expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
             return Response({'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
