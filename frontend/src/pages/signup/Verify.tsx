@@ -25,12 +25,14 @@ export default function Verify() {
         }
     }, [])
     return (
-        <div className="flex flex-col gap-4 text-center items-center xl:items-start xl:w-max">
-            {status.ok ? <>
-                <h1 className="font-semibold text-3xl md:text-4xl">Konto założone, gratulacje!</h1>
-                <p className="bg-[#74788D]">Możesz teraz w pełni korzystać z naszego serwisu</p>
-                <Link to='/logowanie'><FilledButton>Ok, zaczynajmy!</FilledButton></Link>
-            </> : <Loader />}
-        </div>
+        <section className="padding py-[1.4in] flex items-center justify-center">
+            <div className="flex flex-col gap-4 text-center items-center xl:items-start xl:w-max">
+                {status.ok ? <>
+                    <h1 className="font-semibold text-3xl md:text-4xl">Konto założone, gratulacje!</h1>
+                    <p className="bg-[#74788D]">Możesz teraz w pełni korzystać z naszego serwisu</p>
+                    <Link to='/logowanie'><FilledButton>Ok, zaczynajmy!</FilledButton></Link>
+                </> : <Loader />}
+            </div>
+        </section>
     )
 }
