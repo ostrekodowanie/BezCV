@@ -15,11 +15,11 @@ class ContactFormView(views.APIView):
     data = serializer.validated_data
 
     send_mail(
-      'BEZCV Formularz Kontaktowy',
-      f'From: {data["first_name"]} {data["last_name"]}\n{data["email"]}\n{data["phone"]}\n\n{data["message"]}',
-      'portfoliositeexample@gmail.com',
-      ['divideproject.business@gmail.com'],
-      fail_silently=False,
+    'BEZCV Formularz Kontaktowy',
+    f'From: {data["first_name"]} {data["last_name"]}\n{data["email"]}\n{data["phone"]}\n\n{data["message"]}',
+    'portfoliositeexample@gmail.com',
+    ['divideproject.business@gmail.com'],
+    fail_silently=False,
     )
 
     return Response({'Form submitted successfully.'})
