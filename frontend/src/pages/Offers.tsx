@@ -69,9 +69,11 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     return (
         <>
             <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Kandydaci</h1>
-            <CandidateFilter setFilter={setFilter} setInput={setInput} />
-            <div className="flex flex-col gap-6 sm:grid grid-cols-skp">
-                {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <Loader className="mx-auto" />}
+            <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
+                <CandidateFilter setFilter={setFilter} setInput={setInput} />
+                <div className="flex flex-col gap-6 sm:grid grid-cols-skp flex-1">
+                    {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <Loader className="mx-auto" />}
+                </div>
             </div>
         </>
     )
