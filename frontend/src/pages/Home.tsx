@@ -1,13 +1,11 @@
-import Contact from "./Contact";
 import Landing from "../components/home/Landing";
-import Steps from "../components/home/Steps";
+import CandidateForm from "../components/home/CandidateForm";
 
 export default function Home() {
     return (
         <>
             <Landing />
-            {/* <Steps /> */}
-            {/* <Contact /> */}
+            <CandidateForm />
         </>
     )
 }

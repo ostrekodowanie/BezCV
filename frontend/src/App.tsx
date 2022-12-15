@@ -68,7 +68,7 @@ export default function App() {
     return () => clearTimeout(timer.current)
   }, [refresh])
 
-  if(loading) return <Loader />
+  if(loading) return <div className="w-screen h-screen flex items-center justify-center"><Loader /></div>
 
   return (
     <>
