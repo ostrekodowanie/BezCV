@@ -1,15 +1,11 @@
 import axios from 'axios'
 import { FormEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
 import FilledButton from '../FilledButton'
 import { inputStyles } from '../../pages/Contact'
 import Loader from '../Loader'
 
-export default function ClientForm() {
-    const [status, setStatus] = useState({
-        ok: false,
-        message: ''
-    })
+export default function CandidateForm() {
+    const [status, setStatus] = useState<'loading' | boolean | undefined>(undefined)
     const [details, setDetails] = useState({
         first_name: '',
         last_name: '',
@@ -19,27 +15,22 @@ export default function ClientForm() {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        setStatus({ ok: false, message: 'loading' })
+        setStatus('loading')
         try {
-            axios.post('/api/signup', JSON.stringify(details), {
+            axios.post('/api/candidate/add', JSON.stringify(details), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then(() => setStatus({
-                ok: true,
-                message: ''
-            }))
+            }).then(() => setStatus(true))
         }
         catch(err) {
-            console.log(err)
+            setStatus(false)
         }
     }
     
-    if(status.ok) return <h1 className='text-xl font-semibold'>Email weryfikacyjny <span className='text-primary'>został wysłany!</span></h1>
-
     return (
-        <div className='flex flex-col text-center items-center xl:items-start xl:w-max'>
-            <h2 className="font-semibold text-[2.4rem] mb-4 xl:mb-8 w-full xl:text-5xl">Zarejestruj się</h2>
+        <section className='padding flex flex-col text-center items-center xl:items-start xl:w-max'>
+            <h2 className='font-semibold mb-8 text-3xl'>Zgłoś się do pracy</h2>
             <form className='flex flex-col gap-4 font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col max-w-full sm:grid grid-cols-2 gap-6'>
                     <div className='relative'>
@@ -59,11 +50,11 @@ export default function ClientForm() {
                         <span className={`${details.phone ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Numer telefonu</span>
                     </div>
                 </div>
-                {!status.ok && status.message && status.message !== 'loading' && <span className='text-red-400 font-medium'>{status.message}</span>}
-                {status.message === 'loading' && <Loader className='absolute bottom-0 left-0' />}
-                <span className="mt-6 mb-4">Już posiadasz konto? <Link className="text-primary font-medium" to='/logowanie'>Zaloguj się</Link></span>
-                <FilledButton className='mx-auto' type='submit'>Zarejestruj</FilledButton>
+                {status === false && <span className='text-red-400 font-medium'>Wystąpił błąd</span>}
+                {status === true && <span className='text-green-400 font-medium'>Zgłoszenie wysłane!</span>}
+                <FilledButton className='mt-4' type='submit'>Wyślij zgłoszenie</FilledButton>
+                {status === 'loading' && <Loader className='absolute bottom-0 left-0' />}
             </form>
-        </div>
+        </section>
     )
 }
