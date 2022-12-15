@@ -30,7 +30,10 @@ urlpatterns = [
     path('rejestracja', views.index),
     path('logowanie', views.index),
     path('rejestracja/verify', views.index),
-
+    path('oferty', views.index),
+    path('oferty/search', views.index),
+    path('oferty/<slug>', views.candidates),
+    
     path('api/', include('apps.Auth.urls')),
     path('api/', include('apps.Contact.urls')),
     path('api/', include('apps.Candidates.urls')),
