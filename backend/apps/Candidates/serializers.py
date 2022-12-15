@@ -10,4 +10,4 @@ class CandidatesSerializer(serializers.ModelSerializer):
 class SearchCandidateSerializer(serializers.ModelSerializer):        
     class Meta:
         model = Candidates
-        fields = ['id', 'first_name', 'last_name']
+        fields = ['id', 'first_name', 'last_name', 'slug']
