@@ -7,13 +7,12 @@ export default function Profile() {
     const dispatch = useAppDispatch()
     const auth = useAppSelector(state => state.login)
     const { first_name, last_name } = auth.data
-    const { type } = auth.data
     const { refresh } = auth.tokens
 
     const handleLogout = async () => {
         const resp = await axios.post('/api/logout', refresh, { headers: { 'Content-Type': 'application/json' }})
         if(resp.status === 200) {
-            localStorage.removeItem('login')
+            localStorage.removeItem('user')
             dispatch(logout())
         }
     }
