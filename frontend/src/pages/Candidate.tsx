@@ -1,3 +1,8 @@
+export interface AbilityProps {
+    id: number,
+    name: string
+}
+
 export interface CandidateProps {
     id: number,
     first_name: string,
