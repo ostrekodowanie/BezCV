@@ -77,7 +77,7 @@ export default function App() {
         <ScrollTop>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/kandydaci/*" element={<Offers />} />
+            <Route path="/oferty/*" element={<Offers />} />
             <Route path="/kontakt" element={<Contact />} />
             <Route path="/logowanie" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
