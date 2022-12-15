@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import useDebounce from "../hooks/useDebounce"
 import { inputStyles } from "./home/Landing"
 
-export default function CitySearchBar({ setSearch }: { setSearch: any }) {
+export default function SearchBar({ setSearch }: { setSearch: any }) {
     const searchBar = useRef<any>(null!)
     const [input, setInput] = useState('')
     const [filteredCities, setFilteredCities] = useState([])

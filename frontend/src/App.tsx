@@ -13,11 +13,11 @@ import { useAppDispatch, useAppSelector } from "./main"
 import { login, logout } from "./reducers/login"
 import jwtDecode from 'jwt-decode'
 import Offers from "./pages/Offers"
-import Contact from "./components/home/Contact"
+import Contact from "./pages/Contact"
 import axios from "axios"
 import Loader from "./components/Loader"
 
-const loginString: string | null = localStorage.getItem('login')
+const loginString: string | null = localStorage.getItem('user')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)
 
 export default function App() {

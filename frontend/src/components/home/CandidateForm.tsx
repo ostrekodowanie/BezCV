@@ -1,29 +1,25 @@
 import axios from 'axios'
 import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
-import FilledButton from '../../components/FilledButton'
-import { inputStyles } from '../../components/home/Contact'
-import Loader from '../../components/Loader'
+import FilledButton from '../FilledButton'
+import { inputStyles } from '../../pages/Contact'
+import Loader from '../Loader'
 
 export default function ClientForm() {
     const [status, setStatus] = useState({
         ok: false,
         message: ''
     })
-    const [confPassword, setConfPassword] = useState('')
     const [details, setDetails] = useState({
         first_name: '',
         last_name: '',
         email: '',
         phone: '',
-        password: ''
     })
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setStatus({ ok: false, message: 'loading' })
-        if(details.password !== confPassword) return setStatus({ok: false, message: "Hasła się nie zgadzają!"})
-        if(details.password.length < 8) return setStatus({ok: false, message: "Hasło musi posiadać co najmniej 8 znaków."})
         try {
             axios.post('/api/signup', JSON.stringify(details), {
                 headers: {
@@ -61,14 +57,6 @@ export default function ClientForm() {
                     <div className='relative'>
                         <input className={inputStyles.input} type='tel' name='phone' id='phone' onChange={e => setDetails(prev => { return { ...prev, phone: e.target.value }})} />
                         <span className={`${details.phone ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Numer telefonu</span>
-                    </div>
-                    <div className='relative min-w-0'>
-                        <input className={inputStyles.input} required type='password' name='password' id='password' onChange={e => setDetails(prev => { return { ...prev, password: e.target.value }})} />
-                        <span className={`${details.password ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Hasło</span>
-                    </div>
-                    <div className='relative'>
-                        <input className={inputStyles.input} required type='password' name='confPassword' id='confPassword' onChange={e => setConfPassword(e.target.value)} />
-                        <span className={`${confPassword ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Powtórz hasło</span>
                     </div>
                 </div>
                 {!status.ok && status.message && status.message !== 'loading' && <span className='text-red-400 font-medium'>{status.message}</span>}

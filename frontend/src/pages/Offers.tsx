@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import Loader from "../components/Loader"
-import CandidateFilter from "../components/skp/CandidateFilter"
+import CandidateFilter from "../components/offers/CandidateFilter"
 import useDebounce from "../hooks/useDebounce"
 import { CandidateProps } from "./Candidate"
 import Candidate from './Candidate'
