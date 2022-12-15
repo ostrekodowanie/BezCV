@@ -29,7 +29,7 @@ const Nav = () => {
         <>
             <div className={`flex flex-col md:flex-row justify-center items-center bg-white gap-4 text-sm font-medium absolute top-0 md:relative left-full transition-transform ${active && '-translate-x-full'} md:left-auto h-screen md:h-full w-screen md:w-max`}>
                 <CustomLink to='/'>Strona Główna</CustomLink>
-                {logged && <CustomLink to='/kandydaci'>Oferty</CustomLink>}
+                {logged && <CustomLink to='/oferty'>Oferty</CustomLink>}
                 <CustomLink to='/kontakt'>Kontakt</CustomLink>
                 {logged ? <Link className="font-bold text-base ml-2" to='/profil'>{first_name}</Link> : 
                 <>
