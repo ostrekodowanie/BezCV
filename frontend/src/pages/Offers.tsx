@@ -12,7 +12,7 @@ export default function Offers() {
     const [candidates, setCandidates] = useState<CandidateProps[]>([])
 
     useEffect(() => {
-        axios.get('/api/skp')
+        axios.get('/api/oferty')
             .then(res => res.data)
             .then(data => setCandidates(data))
     }, [])
