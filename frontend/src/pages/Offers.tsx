@@ -4,7 +4,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router"
 import Loader from "../components/Loader"
 import CandidateFilter from "../components/offers/CandidateFilter"
 import useDebounce from "../hooks/useDebounce"
-import { CandidateProps } from "./Candidate"
+import { AbilityProps, CandidateProps } from "./Candidate"
 import Candidate from './Candidate'
 import { Link } from "react-router-dom"
 
@@ -29,26 +29,30 @@ export default function Offers() {
     )
 }
 
+interface FilterProps {
+    abilities: AbilityProps[]
+}
+
 const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProps[]}) => {
     const navigate = useNavigate()
     const location = useLocation()
     const firstRender = useRef(true)
     const [candidates, setCandidates] = useState<CandidateProps[]>(defaultCandidates)
     const [input, setInput] = useState('')
-    const [filter, setFilter] = useState({
+    const [filter, setFilter] = useState<FilterProps>({
         abilities: []
     })
     const debounceSearch = useDebounce(input, 400)
 
     useEffect(() => {
         setCandidates([])
-        let url = '/skp'
-        if(input || filter.abilities) {
+        let url = '/oferty'
+        if(input || filter.abilities.length > 0) {
             let searchArr = [
                 debounceSearch && 'q=' + debounceSearch,
-                filter.abilities && 'a=' + filter.abilities
+                filter.abilities.length > 0 && 'a=' + filter.abilities.map(ability => ability.name).join(',')
             ]
-            url = `/skp/search?${searchArr.length > 0 && searchArr.map(item => item).filter(item => item).join("&")}`
+            url = `/oferty/search?${searchArr.length > 0 && searchArr.map(item => item).filter(item => item).join("&")}`
         }
         if(firstRender.current) url = location.pathname + location.search
         firstRender.current = false
@@ -68,11 +72,17 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
 
     return (
         <>
-            <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Kandydaci</h1>
+            <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Oferty</h1>
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} setInput={setInput} />
-                <div className="flex flex-col gap-6 sm:grid grid-cols-skp flex-1">
-                    {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <Loader className="mx-auto" />}
+                <div className="flex flex-col gap-8 flex-1 sm:ml-8">
+                    {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : 
+                    <>
+                        <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
+                        <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
+                        <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
+                        <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
+                    </>}
                 </div>
             </div>
         </>
@@ -83,7 +93,7 @@ const CandidateRef = ({ first_name, last_name, slug }: CandidateProps) => {
     return (
         <div className="shadow rounded-3xl flex flex-col p-6">
             <h3 className="text-bold text-xl">{first_name} {last_name}</h3>
-            <Link className="text-primary font-medium" to={'/' + slug}>Sprawdź</Link>
+            <Link className="text-primary font-medium" to={'/oferty/' + slug}>Sprawdź</Link>
         </div>
     )
 }

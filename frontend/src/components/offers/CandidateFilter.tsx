@@ -22,8 +22,8 @@ export default function CandidateFilter({ setInput, setFilter }: FilterProps) {
     }, [location])
 
     return (
-        <div className="flex flex-col items-center">
-            <input className="px-6 pl-14 py-[0.6rem] border-[#E4E4E9] border-[1px] rounded-3xl bg-search bg-[1.4rem_center] bg-no-repeat" type='search' onChange={e => setInput(e.target.value)} placeholder="Wpisz kandydata" />
+        <div className="flex flex-col p-4">
+            <input className="px-6 pl-14 py-[0.6rem] border-[#E4E4E9] border-[1px] rounded-3xl bg-search bg-[1.4rem_center] bg-no-repeat" type='search' onChange={e => setInput(e.target.value)} placeholder="Wyszukaj kandydata" />
             <div className="flex mt-8 items-center gap-4">
                 <h4 className="font-semibold">Umiejętności: </h4>
                 <ul className="flex flex-col">
