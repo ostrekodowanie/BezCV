@@ -14,6 +14,10 @@ class CandidateView(generics.RetrieveAPIView):
 class CandidateAddView(generics.CreateAPIView):
     serializer_class = serializers.CandidatesSerializer
 
+class OffersView(generics.ListAPIView):
+    queryset = Candidates.objects.filter(is_verified=True)
+    serializer_class = serializers.SearchCandidateSerializer
+
 class SearchCandidateView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
     def get_queryset(self):
