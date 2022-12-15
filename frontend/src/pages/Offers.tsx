@@ -43,10 +43,10 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     useEffect(() => {
         setCandidates([])
         let url = '/skp'
-        if(input || filter.city) {
+        if(input || filter.abilities) {
             let searchArr = [
                 debounceSearch && 'q=' + debounceSearch,
-                filter.city && 'c=' + filter.city
+                filter.abilities && 'a=' + filter.abilities
             ]
             url = `/skp/search?${searchArr.length > 0 && searchArr.map(item => item).filter(item => item).join("&")}`
         }
@@ -69,7 +69,7 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     return (
         <>
             <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Kandydaci</h1>
-            <CandidateFilter setFilter={setFilter} setInput={setInput} filter={filter} />
+            <CandidateFilter setFilter={setFilter} setInput={setInput} />
             <div className="flex flex-col gap-6 sm:grid grid-cols-skp">
                 {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <Loader className="mx-auto" />}
             </div>
