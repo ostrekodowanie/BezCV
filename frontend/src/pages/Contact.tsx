@@ -1,11 +1,11 @@
 import axios from "axios"
 import { FormEvent, useState } from "react"
-import Loader from "../Loader"
+import Loader from "../components/Loader"
 import Control from 'react-control-js'
-import FilledButton from "../FilledButton"
+import FilledButton from "../components/FilledButton"
 
 export const inputStyles = {
-    input: 'peer rounded-lg py-3 px-6 border-[1px] max-w-full border-[#E4E4E9]',
+    input: 'peer rounded-lg focus:outline-blue-600 py-3 px-6 border-[1px] max-w-full border-[#E4E4E9]',
     placeholder: 'left-6 text-sm py-1 peer-focus:top-0 peer-focus:text-blue-600 transition-all peer-focus:bg-white peer-focus:px-2 pointer-events-none absolute -translate-y-[50%] font-medium text-[#6B6B6E]'
 }
 
