@@ -20,7 +20,7 @@ export default function Form() {
         e.preventDefault();
         setStatus('loading')
         try {
-            axios.post('/api/rejestracja/skp', JSON.stringify({ ...employerDetails }), {
+            axios.post('/api/signup', JSON.stringify(employerDetails), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
