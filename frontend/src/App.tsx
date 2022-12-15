@@ -68,7 +68,7 @@ export default function App() {
     return () => clearTimeout(timer.current)
   }, [refresh])
 
-  if(loading) return <Loader />
+  if(loading) return <div className="w-screen h-screen flex items-center justify-center"><Loader /></div>
 
   return (
     <>
@@ -77,7 +77,7 @@ export default function App() {
         <ScrollTop>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/kandydaci/*" element={<Offers />} />
+            <Route path="/oferty/*" element={<Offers />} />
             <Route path="/kontakt" element={<Contact />} />
             <Route path="/logowanie" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
