@@ -49,7 +49,7 @@ export default function Form() {
                     <span className={`${employerDetails.email ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Email</span>
                 </div>
                 <div className='relative'>
-                    <input className={inputStyles.input} required type='tel' name='nip' id='nip' onChange={e => setEmployerDetails(prev => { return { ...prev, nip: e.target.value }})} />
+                    <input className={inputStyles.input} required type='text' name='nip' id='nip' onChange={e => setEmployerDetails(prev => { return { ...prev, nip: e.target.value }})} />
                     <span className={`${employerDetails.nip ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>NIP</span>
                 </div>
                 <div className='relative min-w-0'>
