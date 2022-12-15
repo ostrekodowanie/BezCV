@@ -5,7 +5,7 @@ class Candidates(models.Model):
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
     email = models.EmailField(max_length=255, unique=True)
-    nip = models.CharField(max_length=255, unique=True)
+    phone = models.CharField(max_length=255, unique=True)
     is_verified = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -18,7 +18,7 @@ class Candidates(models.Model):
         return '{} | {} | {}'.format(
             self.pk,
             self.email,
-            self.nip,
+            self.phone,
         )
 
     def save(self, *args, **kwargs):
