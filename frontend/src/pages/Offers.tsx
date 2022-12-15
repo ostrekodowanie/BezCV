@@ -29,7 +29,7 @@ export default function Offers() {
     )
 }
 
-interface FilterProps {
+export interface FilterProps {
     abilities: AbilityProps[]
 }
 
