@@ -35,6 +35,7 @@ export default function Contact() {
                 <span className="font-bold text-4xl xl:w-max">za pomocą formularza</span>
             </h2>
             } /> */}
+            <h2 className="font-semibold text-3xl">Skontaktuj się z nami</h2>
             <div className="bg-white rounded-xl xl:self-start max-w-full flex flex-col gap-6">
                 <form onSubmit={handleSubmit} className="flex flex-col sm:grid grid-cols-2 gap-8 max-w-full font-medium">
                     <div className="relative min-w-0">
