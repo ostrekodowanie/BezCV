@@ -7,7 +7,7 @@ import Loader from '../../components/Loader'
 
 export default function Form() {
     const [confPassword, setConfPassword] = useState('')
-    const [status, setStatus] = useState('')
+    const [status, setStatus] = useState<'loading' | boolean | undefined>(undefined)
     const [employerDetails, setEmployerDetails] = useState({
         first_name: '',
         last_name: '',
@@ -24,12 +24,14 @@ export default function Form() {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then(() => setStatus('Email weryfikacyjny został wysłany!'))
+            }).then(() => setStatus(true))
         }
         catch(err) {
             console.log(err)
         }
     }
+
+    if(status === true) return <h2 className='text-3xl font-bold mx-auto pt-[1in]'>Email weryfikacyjny <span className='text-primary'>został wysłany!</span></h2>
 
     return (
         <div className='flex flex-col text-center items-center xl:w-max'>
@@ -62,6 +64,7 @@ export default function Form() {
                 </div>
             </div>
             {status && status !== 'loading' && <span className='text-red-400 font-medium'>{status}</span>}
+            {status === false && <span className='text-red-400 font-medium'>Spróbuj ponownie później</span>}
             {status === 'loading' && <Loader className='absolute bottom-0 left-0' />}
             <span className="mt-6 mb-4">Już posiadasz konto? <Link className="text-primary font-semibold" to='/logowanie'>Zaloguj się</Link></span>
             <FilledButton className='mx-auto' type='submit'>Dalej</FilledButton>
