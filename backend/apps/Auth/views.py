@@ -41,7 +41,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
     def get_token(cls, user):
         if user.is_verified == False:
-            raise AuthenticationFailed('Activate your account')    
+            raise AuthenticationFailed('Zweryfikuj swoje konto')    
             
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
         
