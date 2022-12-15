@@ -32,7 +32,7 @@ export default function LoginForm() {
             .then(res => res.data)
             .then(data => {
                 let user: User = jwtDecode(data.access)
-                localStorage.setItem('login', JSON.stringify(data))
+                localStorage.setItem('user', JSON.stringify(data))
                 dispatch(login({
                     data: {
                         first_name: user.first_name,

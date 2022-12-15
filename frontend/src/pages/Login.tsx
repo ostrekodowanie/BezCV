@@ -13,7 +13,7 @@ export default function Login() {
     return (
         <div className="flex flex-col items-center xl:min-h-screen">
             <section className="px-[8vw] md:px-[12vw] xl:px-0 xl:flex justify-center pt-[1.4in] xl:pt-[2in] pb-16">
-                <Link to='/' className="text-xl absolute top-8 left-36">Powrót</Link>
+                <Link to='/' className="text-lg absolute top-8 left-36">Powrót</Link>
                 <Routes>
                     <Route path='/' element={<LoginForm />} />
                 </Routes>

@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import CitySearchBar from "../CitySearchBar";
+import CitySearchBar from "../SearchBar";
 import FilledButton from "../FilledButton";
 import { useNavigate } from "react-router";
 import Control from "react-control-js";
