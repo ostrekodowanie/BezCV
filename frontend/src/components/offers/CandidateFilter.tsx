@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router"
+import { FilterProps as FilterStateProps } from "../../pages/Offers"
 import Loader from "../Loader"
 
 interface FilterProps {
@@ -8,15 +9,14 @@ interface FilterProps {
     setFilter: any
 }
 
-
 export default function CandidateFilter({ setInput, setFilter }: FilterProps) {
     const location = useLocation()
-    const [allFilters, setAllFilters] = useState({
+    const [allFilters, setAllFilters] = useState<FilterStateProps>({
         abilities: []
     })
 
     useEffect(() => {
-        axios.get('/api/candidates/filters')
+        axios.get('/api/candidate/abilities')
             .then(res => res.data)
             .then(data => setAllFilters(data))
     }, [location.pathname])
@@ -27,7 +27,7 @@ export default function CandidateFilter({ setInput, setFilter }: FilterProps) {
             <div className="flex mt-8 items-center gap-4">
                 <h4 className="font-semibold">Umiejętności: </h4>
                 <ul className="flex flex-col">
-                    {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <li className="py-3 px-6 pr-16 hover:bg-[#E4E4E4] transition-colors bg-white cursor-pointer" onClick={() => setFilter((prev: {}) => ({ ...prev, ability: ability}))}>{ability}</li>) : <Loader className="mx-auto my-6 w-6" />}
+                    {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <li className="py-3 px-6 pr-16 hover:bg-[#E4E4E4] transition-colors bg-white cursor-pointer" onClick={() => setFilter((prev: {}) => ({ ...prev, ability: ability}))}>{ability.name}</li>) : <Loader className="mx-auto my-6 w-6" />}
                 </ul>
             </div>
         </div>
