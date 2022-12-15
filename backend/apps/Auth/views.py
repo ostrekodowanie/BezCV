@@ -2,6 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth import authenticate
 
 from rest_framework import views, status
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.settings import api_settings
 
 from . import serializers
 from .models import User
@@ -17,12 +19,29 @@ from .models import User
 import jwt
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    default_error_messages = {
-        'no_active_account': _('Incorrect email or password')
-    }
+    def validate(self, attrs):
+        authenticate_kwargs = {
+            self.username_field: attrs[self.username_field],
+            "password": attrs["password"],
+        }
+        try:
+            authenticate_kwargs["request"] = self.context["request"]
+        except KeyError:
+            pass
+        
+        try:
+            user_obj = User.objects.get(email=attrs[self.username_field])
+            if not user_obj.check_password(attrs['password']):
+                raise AuthenticationFailed('Nieprawidłowe hasło')
+            self.user = authenticate(**authenticate_kwargs)
+
+            return super().validate(attrs)
+        except User.DoesNotExist:
+            raise AuthenticationFailed('Konto nie istnieje')
+    
     def get_token(cls, user):
         if user.is_verified == False:
-            raise AuthenticationFailed('Activate your account')
+            raise AuthenticationFailed('Activate your account')    
             
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
         
@@ -63,7 +82,6 @@ class VerifyView(views.APIView):
         token = request.GET.get('token')
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            print(payload)
             user = User.objects.get(email=payload['email'])
             if not user.is_verified:
                 user.is_verified = True

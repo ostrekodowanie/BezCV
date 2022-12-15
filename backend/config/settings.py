@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'apps.Auth',
     'apps.Contact',
+    'apps.Candidates',
 ]
 
 MIDDLEWARE = [
