@@ -22,15 +22,13 @@ export default function CandidateFilter({ setInput, setFilter }: FilterProps) {
     }, [location])
 
     return (
-        <div className="flex flex-col items-center mt-8 mb-12">
+        <div className="flex flex-col items-center">
             <input className="px-6 pl-14 py-[0.6rem] border-[#E4E4E9] border-[1px] rounded-3xl bg-search bg-[1.4rem_center] bg-no-repeat" type='search' onChange={e => setInput(e.target.value)} placeholder="Wpisz kandydata" />
             <div className="flex mt-8 items-center gap-4">
                 <h4 className="font-semibold">Umiejętności: </h4>
-                <div className="relative">
-                    <ul className="flex flex-col absolute top-[120%] z-10 w-max min-h-max max-h-[1.5in] overflow-y-auto rounded-xl overflow-hidden right-0 shadow-primarySmall">
-                        {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <li className="py-3 px-6 pr-16 hover:bg-[#E4E4E4] transition-colors bg-white cursor-pointer" onClick={() => setFilter((prev: {}) => ({ ...prev, ability: ability}))}>{ability}</li>) : <Loader className="mx-auto my-6 w-6" />}
-                    </ul>
-                </div>
+                <ul className="flex flex-col">
+                    {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <li className="py-3 px-6 pr-16 hover:bg-[#E4E4E4] transition-colors bg-white cursor-pointer" onClick={() => setFilter((prev: {}) => ({ ...prev, ability: ability}))}>{ability}</li>) : <Loader className="mx-auto my-6 w-6" />}
+                </ul>
             </div>
         </div>
     )
