@@ -19,7 +19,7 @@ export default function CandidateFilter({ setInput, setFilter }: FilterProps) {
         axios.get('/api/candidates/filters')
             .then(res => res.data)
             .then(data => setAllFilters(data))
-    }, [location])
+    }, [location.pathname])
 
     return (
         <div className="flex flex-col p-4">
