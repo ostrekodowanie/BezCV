@@ -2,9 +2,11 @@ from django.db.models import Q
 from django.shortcuts import render
 
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from . import serializers
-from .models import Candidates
+from .models import Candidates, Abilities
 
 class CandidateView(generics.RetrieveAPIView):
     queryset = Candidates.objects.filter(is_verified=True)
@@ -17,6 +19,19 @@ class CandidateAddView(generics.CreateAPIView):
 class OffersView(generics.ListAPIView):
     queryset = Candidates.objects.filter(is_verified=True)
     serializer_class = serializers.SearchCandidateSerializer
+
+class AbilitiesView(APIView):
+    def get(self, request):
+        abilities = Abilities.objects.all().order_by('name').distinct('name')
+        abilities_list = []
+        for x in abilities:
+            abilities_list.append(x.name)
+
+        data = {
+            'abilities': abilities_list,
+        }
+
+        return Response(data)
 
 class SearchCandidateView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
