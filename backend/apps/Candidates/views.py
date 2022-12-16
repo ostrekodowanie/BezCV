@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers
+from apps.Favourites.models import FavouriteCandidates
 
 class CandidateView(generics.RetrieveAPIView):
     queryset = Candidates.objects.filter(is_verified=True)
@@ -28,9 +29,9 @@ class OffersView(generics.ListAPIView):
         return (Candidates.objects
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .filter(is_purchased=False))
+            .filter(is_purchased=False)
+            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
         
-
 class AbilitiesView(APIView):
     def get(self, request):
         abilities = Abilities.objects.all().order_by('name').distinct('name')
@@ -67,7 +68,8 @@ class SearchCandidateView(generics.ListAPIView):
         return (Candidates.objects
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .filter(is_purchased=False))
+            .filter(is_purchased=False)
+            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
