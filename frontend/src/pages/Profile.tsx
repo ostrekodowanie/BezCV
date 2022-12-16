@@ -8,7 +8,7 @@ import { CandidateProps } from "./Candidate"
 export default function Profile() {
     const dispatch = useAppDispatch()
     const auth = useAppSelector(state => state.login)
-    const { first_name, last_name } = auth.data
+    const { first_name, last_name, is_staff } = auth.data
     const { refresh } = auth.tokens
 
     const handleLogout = async () => {
@@ -21,10 +21,12 @@ export default function Profile() {
 
     return (
         <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in]">
-            <h1 className="font-bold text-2xl">{first_name} {last_name}</h1>
+            <h1 className="font-bold text-2xl mb-8">{first_name} {last_name}</h1>
+            <h2 className="font-bold text-3xl mb-4">Ulubieni</h2>
             <Favourites />
             <div className="flex flex-wrap items-center gap-6">
-                <button className="font-medium py-2 px-5 rounded transition-colors bg-red-400 text-white" onClick={handleLogout}>Wyloguj się</button>
+                {is_staff && <Link className="font-medium py-2 px-5 rounded transition-colors bg-blue-400 hover:bg-blue-500 text-white" to='/administracja'>Panel administracyjny</Link>}
+                <button className="font-medium py-2 px-5 rounded transition-colors bg-red-400 hover:bg-red-500 text-white" onClick={handleLogout}>Wyloguj się</button>
             </div>
         </section>
     )
@@ -43,12 +45,12 @@ const Favourites = () => {
     }, [])
 
     return (
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-wrap gap-6 my-8">
             {favourites.length > 0 ? favourites.map(cand => <CandidateFavourite {...cand} key={cand.id} />) : <>
-                <div className="flex-1 bg-[#f8f8f8] rounded-full min-h-[2in]" />
-                <div className="flex-1 bg-[#f8f8f8] rounded-full min-h-[2in]" />
-                <div className="flex-1 bg-[#f8f8f8] rounded-full min-h-[2in]" />
-                <div className="flex-1 bg-[#f8f8f8] rounded-full min-h-[2in]" />
+                <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
             </>}
         </div>
     )
