@@ -95,11 +95,25 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     )
 }
 
-const CandidateRef = ({ first_name, last_name, slug }: CandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, favourite, slug }: CandidateProps) => {
+    const user_id = useAppSelector(state => state.login.data.id)
+    const [isFavourite, setIsFavourite] = useState(favourite)
+
+    const handleLike = async () => {
+        if(isFavourite) {
+            let resp = await axios.delete(`/api/profile/favourites/${user_id}/${id}`)
+            if(resp.status === 204) return setIsFavourite(false)
+        }
+        let resp = await axios.post('/api/profile/favourites/add', JSON.stringify({ employer: user_id, candidate: id}))
+        if(resp.status === 200) return setIsFavourite(true)
+    }
     return (
-        <div className="shadow rounded-3xl flex flex-col p-6">
-            <h3 className="text-bold text-xl">{first_name} {last_name}</h3>
-            <Link className="text-primary font-medium" to={'/oferty/' + slug}>Sprawdź</Link>
+        <div className="shadow rounded-3xl p-6 flex justify-between">
+            <div className="flex flex-col">
+                <h3 className="text-bold text-xl">{first_name} {last_name}</h3>
+                <Link className="text-primary font-medium" to={'/oferty/' + slug}>Sprawdź</Link>
+            </div>
+            <button onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
         </div>
     )
 }

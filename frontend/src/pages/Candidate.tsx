@@ -5,7 +5,8 @@ export interface CandidateProps {
     abilities?: [],
     phone?: string,
     email?: string,
-    slug?: string
+    slug?: string,
+    favourite?: boolean
 }
 
 export default function Candidate({ first_name }: CandidateProps) {
