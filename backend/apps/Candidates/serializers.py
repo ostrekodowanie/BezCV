@@ -5,7 +5,7 @@ from .models import Candidates, PurchasedOffers
 class CandidateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
-        fields = ('first_name', 'last_name', 'email', 'phone', 'value')
+        fields = ('first_name', 'last_name', 'email', 'phone')
 
 class CandidateAddSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +15,7 @@ class CandidateAddSerializer(serializers.ModelSerializer):
 class SearchCandidateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
-        fields = ['id', 'first_name', 'last_name', 'value', 'slug']
+        fields = ['id', 'first_name', 'last_name', 'slug']
 
 class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:
