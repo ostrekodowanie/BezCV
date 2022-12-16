@@ -50,7 +50,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['last_name'] = user.last_name
         token['email'] = user.email
         token['nip'] = user.nip
-        token['tokens'] = int(user.tokens)
+        token['points'] = int(user.points)
         token['is_staff'] = user.is_staff
         print(token)
 
