@@ -35,8 +35,8 @@ urlpatterns = [
     path('oferty/<slug><id>', views.candidates),
     path('punkty', views.index),
     path('profil', views.index),
+    path('administracja', views.index),
 
-    
     path('api/', include('apps.Auth.urls')),
     path('api/', include('apps.Contact.urls')),
     path('api/', include('apps.Candidates.urls')),
