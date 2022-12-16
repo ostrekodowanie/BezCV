@@ -1,5 +1,5 @@
 from django.db import models
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify, stringformat
 
 from apps.Auth.models import User
 
@@ -26,9 +26,9 @@ class Candidates(models.Model):
 
     def save(self, *args, **kwargs):
         super(Candidates, self).save(*args, **kwargs)
-        if not self.slug:
-            self.slug = '-'.join((slugify(self.first_name), slugify(self.last_name), slugify(self.pk)))
-            self.save()
+        
+        self.slug = '-'.join((slugify(self.first_name), slugify(self.last_name), slugify(self.pk)))
+        super().save(*args, **kwargs)
 
 class Abilities(models.Model):
     name = models.CharField(max_length=255, unique=True)
