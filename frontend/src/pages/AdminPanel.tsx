@@ -1,6 +1,7 @@
 import axios from "axios"
 import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
 import Loader from "../components/Loader"
+import { useAppSelector } from "../main"
 import { CandidateProps } from "./Candidate"
 
 export default function AdminPanel() {
@@ -15,59 +16,49 @@ export default function AdminPanel() {
 }
 
 const UnVerified = () => {
+    const { access } = useAppSelector(state => state.login.tokens)
     const [unVerified, setUnVerified] = useState<CandidateProps[]>([])
-    const [selected, setSelected] = useState<number[]>([])
-    const [action, setAction] = useState<'verify' | 'delete' | null>(null)
     const [status, setStatus] = useState('')
 
     useEffect(() => {
-        axios.get('/api/ca/verify')
+        axios.get('/api/admin/candidates', { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setUnVerified(data))
+            .finally(() => setStatus(''))
     }, [])
-
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        setStatus('loading')
-        const response = await axios.post('/api/skp/verify/action', JSON.stringify({
-            data: selected,
-            action: action
-        }), { headers: { 'Content-Type': 'application/json' }})
-        if(response.status === 200) {
-            selected.forEach(id => setUnVerified(prev => prev.filter(item => item.id !== id)))
-            return setStatus('')
-        }
-    }
-
+    
+    if(status === 'loading') return <Loader />
+    if(unVerified.length === 0) return <h2>Brak niezweryfikowanych kandydatów!</h2>
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-                <h3 className="font-bold ml-4">Wybierz akcję:</h3>
-                <button onClick={() => setAction('verify')} className="py-2 px-5 rounded bg-blue-400 text-white">Zweryfikuj</button>
-                <button onClick={() => setAction('delete')} className="py-2 px-5 rounded bg-red-400 text-white">Usuń</button>
-                {status === 'loading' && <Loader />}
-            </div>
-            {(unVerified.length > 0 && selected.length === 0) ? unVerified.map(candidate => <Candidate {...candidate} setSelected={setSelected} key={candidate.id} />) : <h2>Brak niezweryfikowanych stacji!</h2>}
-        </form>
+        <div className="flex">
+            {unVerified.map(candidate => <Candidate {...candidate} setUnVerified={setUnVerified} key={candidate.id} />)}
+        </div>
     )
 }
 
 interface CandidateVerifyRef extends CandidateProps {
-    setSelected: Dispatch<SetStateAction<number[]>>
+    setUnVerified: Dispatch<SetStateAction<CandidateProps[]>>
 }
 
-const Candidate = ({ id, first_name, last_name, slug, setSelected}: CandidateVerifyRef) => {
-    const [checked, setChecked] = useState(false)
+const Candidate = ({ setUnVerified, id, ...rest }: CandidateVerifyRef) => {
+    const { first_name, last_name } = rest
 
-    useEffect(() => {
-        if(checked) setSelected(prev => [...prev, id])
-        if(!checked) setSelected(prev => prev.filter(sel => sel !== id))
-    }, [checked])
+    const handleSubmit = async (action: 'verify' | 'delete') => {
+        const response = await axios.post('/api/admin/candidates/verify', JSON.stringify({
+            action,
+            id,
+            ...(action === 'verify' && { ...rest })
+        }), { headers: { 'Content-Type': 'application/json' }})
+        if(response.status === 200) return setUnVerified(prev => prev.filter(cand => cand.id !== id))
+    }
 
     return (
-        <label htmlFor={slug} className="flex items-center justify-between gap-4 rounded p-4 shadow">
+        <div className="flex items-center justify-between gap-4 rounded p-4 shadow">
             <h3>{first_name} {last_name}</h3>
-            <input type='checkbox' onChange={() => setChecked(prev => !prev)} checked={checked} id={slug} />
-        </label>
+            <div className="flex items-center gap-4">
+                <button className="font-medium py-2 px-5 rounded transition-colors bg-blue-400 hover:bg-blue-500 text-white" onClick={() => handleSubmit('verify')}>Zweryfikuj</button>
+                <button className="font-medium py-2 px-5 rounded transition-colors bg-red-400 hover:bg-red-500 text-white" onClick={() => handleSubmit('delete')}>Usuń</button>
+            </div>
+        </div>
     )
 }
