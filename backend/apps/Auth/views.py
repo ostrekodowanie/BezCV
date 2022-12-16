@@ -24,6 +24,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             self.username_field: attrs[self.username_field],
             "password": attrs["password"],
         }
+
         try:
             authenticate_kwargs["request"] = self.context["request"]
         except KeyError:
@@ -31,6 +32,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         
         try:
             user_obj = User.objects.get(email=attrs[self.username_field])
+
             if not user_obj.check_password(attrs['password']):
                 raise AuthenticationFailed('Nieprawidłowe hasło')
             self.user = authenticate(**authenticate_kwargs)
@@ -52,7 +54,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['nip'] = user.nip
         token['points'] = int(user.points)
         token['is_staff'] = user.is_staff
-        print(token)
 
         return token
 

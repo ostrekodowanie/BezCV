@@ -27,6 +27,6 @@ class VerifyCandidatesView(APIView):
 
             return Response({'Successfully verified'})
 
-        Candidates.objects.filter(id=request.data['id']).delete()
+        Candidates.objects.filter(id=id).delete()
 
         return Response({'Successfully deleted'})
