@@ -109,6 +109,7 @@ const CandidateRef = ({ id, first_name, last_name, favourite, slug }: CandidateP
         })
         if(resp.status === 201) return setIsFavourite(true)
     }
+    
     return (
         <div className="shadow rounded-3xl p-6 flex justify-between">
             <div className="flex flex-col">
