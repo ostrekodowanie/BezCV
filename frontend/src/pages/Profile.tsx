@@ -45,10 +45,10 @@ const Favourites = () => {
     return (
         <div className="flex flex-wrap gap-6">
             {favourites.length > 0 ? favourites.map(cand => <CandidateFavourite {...cand} key={cand.id} />) : <>
-                <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2in]" />
-                <div className="bg-[#f8f8f8] rounded-full min-h-[2in]" />
-                <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2in]" />
-                <div className="bg-[#f8f8f8] rounded-full min-h-[2in]" />
+                <div className="flex-1 bg-[#f8f8f8] rounded-full min-h-[2in]" />
+                <div className="flex-1 bg-[#f8f8f8] rounded-full min-h-[2in]" />
+                <div className="flex-1 bg-[#f8f8f8] rounded-full min-h-[2in]" />
+                <div className="flex-1 bg-[#f8f8f8] rounded-full min-h-[2in]" />
             </>}
         </div>
     )
