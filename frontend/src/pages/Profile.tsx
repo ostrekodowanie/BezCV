@@ -31,11 +31,13 @@ export default function Profile() {
 }
 
 const Favourites = () => {
-    const { id } = useAppSelector(state => state.login.data)
+    const auth = useAppSelector(state => state.login)
+    const { id } = auth.data
+    const { access } = auth.tokens
     const [favourites, setFavourites] = useState<CandidateProps[]>([])
     
     useEffect(() => {
-        axios.get('/api/profile/favourites?u=' + id)
+        axios.get('/api/profile/favourites?u=' + id, { headers: { 'Authorization': 'Bearer ' + access}})
             .then(res => res.data)
             .then(data => setFavourites(data))
     }, [])
