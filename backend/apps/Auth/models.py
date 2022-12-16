@@ -23,3 +23,7 @@ class User(AbstractUser):
             self.pk,
             self.email,
         )
+
+    def reduce_points(self):
+        self.points -= 1
+        super().save()

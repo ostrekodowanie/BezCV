@@ -20,7 +20,7 @@ class CandidateView(generics.RetrieveAPIView):
 
 class CandidateAddView(generics.CreateAPIView):
     serializer_class = serializers.CandidateAddSerializer
-    
+
 
 class OffersView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
@@ -52,7 +52,7 @@ class AbilitiesView(APIView):
 
 class SearchCandidateView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         q = self.request.GET.get('q')
