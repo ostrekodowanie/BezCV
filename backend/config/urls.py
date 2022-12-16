@@ -33,6 +33,7 @@ urlpatterns = [
     path('oferty', views.index),
     path('oferty/search', views.index),
     path('oferty/<slug>', views.candidates),
+    path('tokeny', views.index),
     path('profil', views.index),
 
     
