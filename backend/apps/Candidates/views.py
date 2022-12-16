@@ -10,12 +10,17 @@ from .models import Candidates, Abilities, PurchasedOffers
 from apps.Favourites.models import FavouriteCandidates
 
 class CandidateView(generics.RetrieveAPIView):
-    queryset = Candidates.objects.filter(is_verified=True)
     serializer_class = serializers.CandidateSerializer
-    lookup_field = 'slug'
+    def get_queryset(self):
+        slug=self.kwargs['slug']
+        id=self.kwargs['pk']
+
+        return Candidates.objects.filter(Q(is_verified=True) & Q(slug=slug) & Q(id=id))
+
 
 class CandidateAddView(generics.CreateAPIView):
     serializer_class = serializers.CandidateAddSerializer
+    
 
 class OffersView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
