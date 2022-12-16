@@ -37,4 +37,5 @@ urlpatterns = [
     path('api/', include('apps.Auth.urls')),
     path('api/', include('apps.Contact.urls')),
     path('api/', include('apps.Candidates.urls')),
+    path('api/', include('apps.Admin.urls')),
 ]
