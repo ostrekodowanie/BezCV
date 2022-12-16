@@ -8,8 +8,8 @@ from . import serializers
 from .models import FavouriteCandidates
 from apps.Candidates.models import Candidates
 
-class FavouriteOffersView(generics.ListAPIView):
-    serializer_class = serializers.FavouriteOffersSerializer
+class FavouriteCandidatesView(generics.ListAPIView):
+    serializer_class = serializers.FavouriteCandidatesSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
