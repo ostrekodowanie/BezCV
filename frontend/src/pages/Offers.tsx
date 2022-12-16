@@ -1,18 +1,21 @@
 import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
-import Loader from "../components/Loader"
 import CandidateFilter from "../components/offers/CandidateFilter"
 import useDebounce from "../hooks/useDebounce"
-import { AbilityProps, CandidateProps } from "./Candidate"
+import { CandidateProps } from "./Candidate"
 import Candidate from './Candidate'
 import { Link } from "react-router-dom"
+import { useAppSelector } from "../main"
 
 export default function Offers() {
     const [candidates, setCandidates] = useState<CandidateProps[]>([])
+    const auth = useAppSelector(state => state.login)
+    const { access } = auth.tokens
+    const { id } = auth.data
 
     useEffect(() => {
-        axios.get('/api/oferty')
+        axios.get('/api/oferty?u=' + id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidates(data))
     }, [])
@@ -30,13 +33,16 @@ export default function Offers() {
 }
 
 export interface FilterProps {
-    abilities: AbilityProps[]
+    abilities: string[]
 }
 
 const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProps[]}) => {
     const navigate = useNavigate()
     const location = useLocation()
     const firstRender = useRef(true)
+    const auth = useAppSelector(state => state.login)
+    const { access } = auth.tokens
+    const { id } = auth.data
     const [candidates, setCandidates] = useState<CandidateProps[]>(defaultCandidates)
     const [input, setInput] = useState('')
     const [filter, setFilter] = useState<FilterProps>({
@@ -50,7 +56,7 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
         if(input || filter.abilities.length > 0) {
             let searchArr = [
                 debounceSearch && 'q=' + debounceSearch,
-                filter.abilities.length > 0 && 'a=' + filter.abilities.map(ability => ability.name).join(',')
+                filter.abilities.length > 0 && 'a=' + filter.abilities.map(ability => ability).join(',')
             ]
             url = `/oferty/search?${searchArr.length > 0 && searchArr.map(item => item).filter(item => item).join("&")}`
         }
@@ -61,14 +67,14 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
 
     useEffect(() => {
         let isCancelled = false
-        let url = '/api' + location.pathname + location.search
-        axios.get(url)
+        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id :  '?u=' + id)
+        axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => !isCancelled && setCandidates(data))
         return () => {
             isCancelled = true
         }
-    }, [location])
+    }, [location.search])
 
     return (
         <>
