@@ -11,11 +11,16 @@ from apps.Favourites.models import FavouriteCandidates
 
 class CandidateView(generics.RetrieveAPIView):
     serializer_class = serializers.CandidateSerializer
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
+        u = self.request.GET.get('u')
         slug=self.kwargs['slug']
         id=self.kwargs['pk']
 
-        return Candidates.objects.filter(Q(is_verified=True) & Q(slug=slug) & Q(id=id))
+        return (Candidates.objects
+            .filter(Q(is_verified=True) & Q(slug=slug) & Q(id=id))
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
 
 
 class CandidateAddView(generics.CreateAPIView):

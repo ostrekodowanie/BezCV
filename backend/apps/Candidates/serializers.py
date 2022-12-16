@@ -4,9 +4,10 @@ from .models import Candidates, PurchasedOffers
 from apps.Auth.models import User
 
 class CandidateSerializer(serializers.ModelSerializer):
+    is_purchased = serializers.BooleanField(read_only=True)
     class Meta:
         model = Candidates
-        fields = ('first_name', 'last_name', 'email', 'phone')
+        fields = ('first_name', 'last_name', 'email', 'phone', 'is_purchased')
 
 class CandidateAddSerializer(serializers.ModelSerializer):
     class Meta:
