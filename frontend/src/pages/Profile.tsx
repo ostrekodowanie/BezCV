@@ -22,12 +22,12 @@ export default function Profile() {
     return (
         <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in]">
             <h1 className="font-bold text-2xl mb-8">{first_name} {last_name}</h1>
-            <h2 className="font-bold text-3xl mb-4">Ulubieni</h2>
-            <Favourites />
             <div className="flex flex-wrap items-center gap-6">
                 {is_staff && <Link className="font-medium py-2 px-5 rounded transition-colors bg-blue-400 hover:bg-blue-500 text-white" to='/administracja'>Panel administracyjny</Link>}
                 <button className="font-medium py-2 px-5 rounded transition-colors bg-red-400 hover:bg-red-500 text-white" onClick={handleLogout}>Wyloguj się</button>
             </div>
+            <Favourites />
+            <Purchased />
         </section>
     )
 }
@@ -47,13 +47,16 @@ const Favourites = () => {
     }, [])
 
     return (
-        <div className="flex flex-wrap gap-6 my-8">
-            {loading ? <>
-                <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
-                <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
-                <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
-                <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
-            </> : favourites.length > 0 ? favourites.map(cand => <CandidateFavourite setFavourites={setFavourites} {...cand} key={cand.id} />) : <h2>Brak ulubionych!</h2>}
+        <div className="my-16 flex flex-col gap-6">
+            <h2 className="font-bold text-3xl mb-4">Ulubieni</h2>
+            <div className="flex flex-wrap gap-6">
+                {loading ? <>
+                    <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                    <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                    <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                    <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                </> : favourites.length > 0 ? favourites.map(cand => <CandidateFavourite setFavourites={setFavourites} {...cand} key={cand.id} />) : <h2>Brak ulubionych!</h2>}
+            </div>
         </div>
     )
 }
@@ -68,11 +71,53 @@ const CandidateFavourite = ({ id, first_name, last_name, slug, setFavourites }: 
     
     return (
         <div className='p-6 shadow rounded-3xl'>
-            <h3>{first_name} {last_name}</h3>
-            <div className="flex items-center justify-between mt-4">
+            <h3 className="text-lg font-medium">{first_name} {last_name}</h3>
+            <div className="flex items-center justify-between mt-2">
                 <Link className="text-blue-400 font-medium" to={'/oferty/' + slug + id}>Sprawdź</Link>
                 <button className="text-red-400 font-medium" onClick={handleRemove}>Usuń</button>
             </div>
+        </div>
+    )
+}
+
+const Purchased = () => {
+    const [purchased, setPurchased] = useState<CandidateProps[]>([])
+    const [loading, setLoading] = useState(true)
+    const auth = useAppSelector(state => state.login)
+    const { id } = auth.data
+    const { access } = auth.tokens
+
+    useEffect(() => {
+        axios.get('/api/profile/candidates?u=' + id, { headers: { 'Authorization': 'Bearer ' + access}})
+            .then(res => res.data)
+            .then(data => setPurchased(data))
+            .finally(() => setLoading(false))
+    }, [])
+
+    return (
+        <div className="my-16 flex flex-col gap-6">
+            <h2 className="font-bold text-3xl mb-4">Zakupione kontakty</h2>
+            <div className="flex flex-wrap gap-6">
+                {loading ? <>
+                    <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                    <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                    <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                    <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
+                </> : purchased.length > 0 ? purchased.map(cand => <CandidatePurchased {...cand} key={cand.id} />) : <h2>Brak zakupionych kontaktów</h2>}
+            </div>
+        </div>
+    )
+}
+
+const CandidatePurchased = ({ id, first_name, last_name, email, phone, slug }: CandidateProps) => {
+    return (
+        <div className='p-6 shadow rounded-3xl'>
+            <h3 className="text-lg font-medium">{first_name} {last_name}</h3>
+            <div className="my-2">
+                <h4>{email}</h4>
+                <h4>+48 {phone}</h4>
+            </div>
+            <Link className="text-blue-400 font-medium" to={'/oferty/' + slug + id}>Wyświetl profil</Link>
         </div>
     )
 }
