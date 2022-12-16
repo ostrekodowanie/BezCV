@@ -5,7 +5,7 @@ export interface LoginState {
     isLoading: boolean,
     data: {
         id: number,
-        type: string,
+        is_staff: boolean,
         first_name: string,
         last_name: string,
         email: string,
@@ -23,7 +23,7 @@ const initialState: LoginState = {
     isLoading: true,
     data: {
         id: -1,
-        type: '',
+        is_staff: false,
         first_name: '',
         last_name: '',
         email: '',
