@@ -1,4 +1,4 @@
-from django.db.models import Q, Exists
+from django.db.models import Q, Exists, OuterRef
 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -27,7 +27,7 @@ class OffersView(generics.ListAPIView):
 
         return (Candidates.objects
             .filter(queries)
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u)))
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False))
         
 
@@ -66,7 +66,7 @@ class SearchCandidateView(generics.ListAPIView):
         
         return (Candidates.objects
             .filter(queries)
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u)))
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False))
 
 class PurchaseOfferView(generics.CreateAPIView):

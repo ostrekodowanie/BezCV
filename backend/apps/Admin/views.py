@@ -7,4 +7,4 @@ from . import serializers
 class VerifyCandidatesView(generics.ListAPIView):
     queryset = Candidates.objects.filter(is_verified=False)
     serializer_class = serializers.VerifyCandidatesSerializer
-    #permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
