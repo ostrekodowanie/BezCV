@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from rest_framework_simplejwt.tokens import RefreshToken
+
 class User(AbstractUser):
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
@@ -26,4 +28,5 @@ class User(AbstractUser):
 
     def reduce_points(self):
         self.points -= 1
+        
         super().save()
