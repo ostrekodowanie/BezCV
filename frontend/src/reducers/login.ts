@@ -9,6 +9,7 @@ export interface LoginState {
         first_name: string,
         last_name: string,
         email: string,
+        points: number,
         abilities: string[]
     },
     tokens: {
@@ -26,6 +27,7 @@ const initialState: LoginState = {
         first_name: '',
         last_name: '',
         email: '',
+        points: 0,
         abilities: []
     },
     tokens: {
