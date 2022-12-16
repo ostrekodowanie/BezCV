@@ -101,11 +101,13 @@ const CandidateRef = ({ id, first_name, last_name, favourite, slug }: CandidateP
 
     const handleLike = async () => {
         if(isFavourite) {
-            let resp = await axios.delete(`/api/profile/favourites/${user_id}/${id}`)
+            let resp = await axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`)
             if(resp.status === 204) return setIsFavourite(false)
         }
-        let resp = await axios.post('/api/profile/favourites/add', JSON.stringify({ employer: user_id, candidate: id}))
-        if(resp.status === 200) return setIsFavourite(true)
+        let resp = await axios.post('/api/profile/favourites/add', JSON.stringify({ employer: user_id, candidate: id }), {
+            headers: { 'Content-Type': 'application/json' }
+        })
+        if(resp.status === 201) return setIsFavourite(true)
     }
     return (
         <div className="shadow rounded-3xl p-6 flex justify-between">
