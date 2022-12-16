@@ -15,14 +15,18 @@ class VerifyCandidatesView(APIView):
     def post(self, request):
         action = request.data.pop('action')
         id = request.data.pop('id')
-        abilities = request.data.pop('abilities')
+
         if action == 'verify':
-            Candidates.objects.filter(id=id).update(**request.data)
+            abilities = request.data.pop('abilities')
+
+            Candidates.objects.filter(id=id).update(is_verified=True, **request.data)
             Candidates.objects.get(id=id).save()
+
             for x in abilities:
                 CandidateAbilities.objects.create(candidate_id=id, ability=Abilities.objects.get(name=x))
 
             return Response({'Successfully verified'})
 
         Candidates.objects.filter(id=request.data['id']).delete()
+
         return Response({'Successfully deleted'})
