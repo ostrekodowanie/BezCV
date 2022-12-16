@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useResolvedPath, useMatch, useLocation } from 'react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppSelector } from "../main"
 
 export default function Header() {

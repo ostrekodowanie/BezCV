@@ -37,26 +37,28 @@ const Favourites = () => {
     const { id } = auth.data
     const { access } = auth.tokens
     const [favourites, setFavourites] = useState<CandidateProps[]>([])
+    const [loading, setLoading] = useState(true)
     
     useEffect(() => {
         axios.get('/api/profile/favourites?u=' + id, { headers: { 'Authorization': 'Bearer ' + access}})
             .then(res => res.data)
             .then(data => setFavourites(data))
+            .finally(() => setLoading(false))
     }, [])
 
     return (
         <div className="flex flex-wrap gap-6 my-8">
-            {favourites.length > 0 ? favourites.map(cand => <CandidateFavourite setFavourites={setFavourites} {...cand} key={cand.id} />) : <>
+            {loading ? <>
                 <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
                 <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
                 <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
                 <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
-            </>}
+            </> : favourites.length > 0 ? favourites.map(cand => <CandidateFavourite setFavourites={setFavourites} {...cand} key={cand.id} />) : <h2>Brak ulubionych!</h2>}
         </div>
     )
 }
 
-const CandidateFavourite = ({ id, first_name, last_name, setFavourites }: CandidateProps & { setFavourites: Dispatch<SetStateAction<CandidateProps[]>>}) => {
+const CandidateFavourite = ({ id, first_name, last_name, slug, setFavourites }: CandidateProps & { setFavourites: Dispatch<SetStateAction<CandidateProps[]>>}) => {
     const user_id = useAppSelector(state => state.login.data.id)
 
     const handleRemove = async () => {
@@ -67,7 +69,10 @@ const CandidateFavourite = ({ id, first_name, last_name, setFavourites }: Candid
     return (
         <div className='p-6 shadow rounded-3xl'>
             <h3>{first_name} {last_name}</h3>
-            <button onClick={handleRemove}>Usuń</button>
+            <div className="flex items-center justify-between mt-4">
+                <Link className="text-blue-400 font-medium" to={'/oferty/' + slug + id}>Sprawdź</Link>
+                <button className="text-red-400 font-medium" onClick={handleRemove}>Usuń</button>
+            </div>
         </div>
     )
 }

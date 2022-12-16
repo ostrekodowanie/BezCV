@@ -55,10 +55,13 @@ export const loginSlice = createSlice({
                 ...initialState.tokens
             }
             state.isLoading = false
+        },
+        purchase: state => {
+            state.data.points = state.data.points - 1
         }
     }
 })
 
-export const { login, logout } = loginSlice.actions
+export const { login, logout, purchase } = loginSlice.actions
 
 export default loginSlice.reducer
