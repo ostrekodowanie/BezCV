@@ -55,12 +55,7 @@ const Form = () => {
                     let user: User = jwtDecode(data.access)
                     localStorage.setItem('user', JSON.stringify(data))
                     dispatch(login({
-                        data: {
-                            first_name: user.first_name,
-                            last_name: user.last_name,
-                            email: user.email,
-                            type: user.type
-                        },
+                        data: user,
                         tokens: { ...data }
                     }))
                 })

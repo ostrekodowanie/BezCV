@@ -10,6 +10,7 @@ export default function Profile() {
     const auth = useAppSelector(state => state.login)
     const { first_name, last_name, is_staff } = auth.data
     const { refresh } = auth.tokens
+    console.log(is_staff)
 
     const handleLogout = async () => {
         const resp = await axios.post('/api/logout', refresh, { headers: { 'Content-Type': 'application/json' }})
