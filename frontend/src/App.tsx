@@ -16,6 +16,8 @@ import Offers from "./pages/Offers"
 import Contact from "./pages/Contact"
 import axios from "axios"
 import Loader from "./components/Loader"
+import AdminRoute from "./utils/AdminRoute"
+import AdminPanel from "./pages/AdminPanel"
 
 const loginString: string | null = localStorage.getItem('user')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)
@@ -83,6 +85,7 @@ export default function App() {
             <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
             <Route path="/rejestracja/verify/*" element={<PublicRoute><Verify /></PublicRoute>} />
             <Route path='/profil' element={<PrivateRoute><Profile /></PrivateRoute>} />
+            <Route path='/administracja' element={<AdminRoute><AdminPanel /></AdminRoute>} />
           </Routes>
         </ScrollTop>
       </main>
