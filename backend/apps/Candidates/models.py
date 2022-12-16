@@ -1,11 +1,14 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 
+from apps.Auth.models import User
+
 class Candidates(models.Model):
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
     email = models.EmailField(max_length=255, unique=True)
     phone = models.CharField(max_length=255, unique=True)
+    value = models.DecimalField(decimal_places=0, max_digits=100, blank=True)
     is_verified = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -43,18 +46,36 @@ class Abilities(models.Model):
 
 class CandidateAbilities(models.Model):
     candidate = models.ForeignKey(
-        Candidates, on_delete=models.CASCADE, related_name='candidates')
+        Candidates, on_delete=models.CASCADE, related_name='candidateabilities_candidate')
     ability = models.ForeignKey(
-        Abilities, on_delete=models.CASCADE, related_name='abilities')
+        Abilities, on_delete=models.CASCADE, related_name='candidateabilities_ability')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = 'CandidateAbilities'
+        verbose_name_plural = 'Candidate abilities'
         unique_together = [['candidate', 'ability']]
 
     def __str__(self):
         return '{}'.format(
             self.pk,
         )
+
+class PurchasedOffers(models.Model):
+    employer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='purchasedoffers_employer')
+    candidate = models.ForeignKey(
+        Candidates, on_delete=models.CASCADE, related_name='purchasedoffers_candidate')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Purchased offers'
+        unique_together = [['employer', 'candidate']]
+
+    def __str__(self):
+        return '{}'.format(
+            self.pk,
+        )
+
     
