@@ -15,7 +15,7 @@ class CandidateAddSerializer(serializers.ModelSerializer):
 class SearchCandidateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
-        fields = ['id', 'first_name', 'last_name', 'slug']
+        fields = ('id', 'first_name', 'last_name', 'slug')
 
 class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:

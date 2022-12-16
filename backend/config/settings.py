@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.Contact',
     'apps.Candidates',
     'apps.Admin',
+    'apps.Favourites',
 ]
 
 MIDDLEWARE = [
