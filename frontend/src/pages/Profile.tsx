@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../main"
 import { logout } from "../reducers/login"
@@ -46,7 +46,7 @@ const Favourites = () => {
 
     return (
         <div className="flex flex-wrap gap-6 my-8">
-            {favourites.length > 0 ? favourites.map(cand => <CandidateFavourite {...cand} key={cand.id} />) : <>
+            {favourites.length > 0 ? favourites.map(cand => <CandidateFavourite setFavourites={setFavourites} {...cand} key={cand.id} />) : <>
                 <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
                 <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
                 <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
@@ -56,10 +56,18 @@ const Favourites = () => {
     )
 }
 
-const CandidateFavourite = ({ first_name, last_name }: CandidateProps) => {
+const CandidateFavourite = ({ id, first_name, last_name, setFavourites }: CandidateProps & { setFavourites: Dispatch<SetStateAction<CandidateProps[]>>}) => {
+    const user_id = useAppSelector(state => state.login.data.id)
+
+    const handleRemove = async () => {
+        let resp = await axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`)
+        if(resp.status === 204) return setFavourites(prev => prev.filter(cand => cand.id !== id))
+    }
+    
     return (
         <div className='p-6 shadow rounded-3xl'>
             <h3>{first_name} {last_name}</h3>
+            <button onClick={handleRemove}>Usuń</button>
         </div>
     )
 }
