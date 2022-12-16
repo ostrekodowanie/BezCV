@@ -71,3 +71,10 @@ class SearchCandidateView(generics.ListAPIView):
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
+
+class PurchasedOffersView(generics.ListAPIView):
+    serializer_class = serializers.CandidateSerializer
+    def get_queryset(self):
+        u = self.request.GET.get('u')
+        return Candidates.objects.filter(purchasedoffers_candidate__employer_id=u)
+        

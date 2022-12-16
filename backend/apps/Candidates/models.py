@@ -8,7 +8,6 @@ class Candidates(models.Model):
     last_name = models.CharField(max_length=40)
     email = models.EmailField(max_length=255, unique=True)
     phone = models.CharField(max_length=255, unique=True)
-    value = models.DecimalField(decimal_places=0, max_digits=100, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
