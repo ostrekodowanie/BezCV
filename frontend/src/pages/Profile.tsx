@@ -103,7 +103,7 @@ const Purchased = () => {
                     <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
                     <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
                     <div className="flex-1 bg-[#f8f8f8] rounded-3xl min-h-[2in]" />
-                </> : purchased.length > 0 ? purchased.map(cand => <CandidatePurchased {...cand} key={cand.id} />) : <h2>Brak zakupionych kontaktów</h2>}
+                </> : purchased.length > 0 ? purchased.map(cand => <CandidatePurchased {...cand} key={cand.id} />) : <h2>Brak zakupionych kontaktów!</h2>}
             </div>
         </div>
     )
