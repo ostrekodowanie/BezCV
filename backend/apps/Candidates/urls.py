@@ -9,4 +9,5 @@ urlpatterns = [
   path('oferty/search', views.SearchCandidateView.as_view()),
   path('oferty/purchase', views.PurchaseOfferView.as_view()),
   path('oferty/<slug>', views.CandidateView.as_view()),
+  path('panel/candidates', views.PurchasedOffersView.as_view()),
 ]
