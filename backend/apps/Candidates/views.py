@@ -9,18 +9,23 @@ from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers
 from apps.Favourites.models import FavouriteCandidates
 
-class CandidateView(generics.RetrieveAPIView):
+class CandidateView(generics.GenericAPIView):
     serializer_class = serializers.CandidateSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         u = self.request.GET.get('u')
         slug=self.kwargs['slug']
         id=self.kwargs['pk']
 
-        return (Candidates.objects
+        candidate = (Candidates.objects
             .filter(Q(is_verified=True) & Q(slug=slug) & Q(id=id))
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
+
+        if candidate.filter(is_purchased=True):
+            return candidate
+        
+        return Response(candidate.values('id', 'first_name', 'last_name', 'is_purchased'))
 
 
 class CandidateAddView(generics.CreateAPIView):
