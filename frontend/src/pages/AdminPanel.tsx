@@ -1,5 +1,5 @@
 import axios from "axios"
-import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { CandidateProps } from "./Candidate"
@@ -18,7 +18,7 @@ export default function AdminPanel() {
 const UnVerified = () => {
     const { access } = useAppSelector(state => state.login.tokens)
     const [unVerified, setUnVerified] = useState<CandidateProps[]>([])
-    const [status, setStatus] = useState('')
+    const [status, setStatus] = useState('loading')
 
     useEffect(() => {
         axios.get('/api/admin/candidates', { headers: { 'Authorization': 'Bearer ' + access }})
@@ -41,13 +41,20 @@ interface CandidateVerifyRef extends CandidateProps {
 }
 
 const Candidate = ({ setUnVerified, id, ...rest }: CandidateVerifyRef) => {
-    const { first_name, last_name } = rest
+    const { first_name, last_name, email, phone } = rest
+    const [details, setDetails] = useState({
+        first_name,
+        last_name,
+        email,
+        phone,
+        abilities: []
+    })
 
     const handleSubmit = async (action: 'verify' | 'delete') => {
         const response = await axios.post('/api/admin/candidates/verify', JSON.stringify({
             action,
             id,
-            ...(action === 'verify' && { ...rest })
+            ...(action === 'verify' && { ...details })
         }), { headers: { 'Content-Type': 'application/json' }})
         if(response.status === 200) return setUnVerified(prev => prev.filter(cand => cand.id !== id))
     }
@@ -56,8 +63,8 @@ const Candidate = ({ setUnVerified, id, ...rest }: CandidateVerifyRef) => {
         <div className="flex items-center justify-between gap-4 rounded p-4 shadow">
             <h3>{first_name} {last_name}</h3>
             <div className="flex items-center gap-4">
-                <button className="font-medium py-2 px-5 rounded transition-colors bg-blue-400 hover:bg-blue-500 text-white" onClick={() => handleSubmit('verify')}>Zweryfikuj</button>
-                <button className="font-medium py-2 px-5 rounded transition-colors bg-red-400 hover:bg-red-500 text-white" onClick={() => handleSubmit('delete')}>Usuń</button>
+                <button className="text-sm py-2 px-5 rounded transition-colors bg-blue-400 hover:bg-blue-500 text-white" onClick={() => handleSubmit('verify')}>Zweryfikuj</button>
+                <button className="text-sm py-2 px-5 rounded transition-colors bg-red-400 hover:bg-red-500 text-white" onClick={() => handleSubmit('delete')}>Usuń</button>
             </div>
         </div>
     )
