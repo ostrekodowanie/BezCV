@@ -23,11 +23,9 @@ class Candidates(models.Model):
             self.phone,
         )
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):        
+        self.slug = '-'.join((slugify(self.first_name), slugify(self.last_name)))+'-'
         super(Candidates, self).save(*args, **kwargs)
-        
-        self.slug = '-'.join((slugify(self.first_name), slugify(self.last_name), slugify(self.pk)))
-        super().save(*args, **kwargs)
 
 class Abilities(models.Model):
     name = models.CharField(max_length=255, unique=True)

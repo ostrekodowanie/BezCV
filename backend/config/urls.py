@@ -32,7 +32,7 @@ urlpatterns = [
     path('rejestracja/verify', views.index),
     path('oferty', views.index),
     path('oferty/search', views.index),
-    path('oferty/<slug>', views.candidates),
+    path('oferty/<slug><id>', views.candidates),
     path('punkty', views.index),
     path('profil', views.index),
 
