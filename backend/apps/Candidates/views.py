@@ -47,7 +47,7 @@ class AbilitiesView(APIView):
 
 class SearchCandidateView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         q = self.request.GET.get('q')
@@ -60,10 +60,10 @@ class SearchCandidateView(generics.ListAPIView):
             for x in q.split():
                 query &= Q(slug__icontains=x)
             queries.add(Q(query), Q.AND)
-        
-        if a:
-            a.split(',')
-            queries.add(Q(candidateabilities_candidate__ability__name__in=a), Q.AND)
+
+        if a:     
+            s = a.split(',')
+            queries.add(Q(candidateabilities_candidate__ability__name__in=s), Q.AND)
         
         return (Candidates.objects
             .filter(queries)
