@@ -23,7 +23,7 @@ const Nav = () => {
     const [active, setActive] = useState(false)
     const auth = useAppSelector(state => state.login)
     const { logged } = auth
-    const { first_name } = auth.data
+    const { first_name, points } = auth.data
 
     return (
         <>
@@ -31,7 +31,10 @@ const Nav = () => {
                 <CustomLink to='/'>Strona Główna</CustomLink>
                 {logged && <CustomLink to='/oferty'>Oferty</CustomLink>}
                 <CustomLink to='/kontakt'>Kontakt</CustomLink>
-                {logged ? <Link className="font-bold text-base ml-2" to='/profil'>{first_name}</Link> : 
+                {logged ? <>
+                    <Link className="font-bold text-base ml-2" to='/profil'>{first_name}</Link>
+                    <Link className="font-bold text-base" to='/punkty'>{points} pkt.</Link>
+                </> : 
                 <>
                     <Link className="border-[2px] mt-4 md:mt-0 md:ml-4 font-Medium border-primary text-primary rounded flex items-center py-2 px-6" to='/logowanie'>Zaloguj się</Link>
                     <Link className="bg-primary border-[2px] transition-colors hover:border-darkPrimary hover:bg-darkPrimary font-medium border-primary text-white rounded flex items-center py-2 px-6" to='/rejestracja'>Załóż Konto</Link>
