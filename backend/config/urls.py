@@ -33,6 +33,8 @@ urlpatterns = [
     path('oferty', views.index),
     path('oferty/search', views.index),
     path('oferty/<slug>', views.candidates),
+    path('profil', views.index),
+
     
     path('api/', include('apps.Auth.urls')),
     path('api/', include('apps.Contact.urls')),
