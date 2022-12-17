@@ -6,6 +6,7 @@ import { useNavigate } from "react-router"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
+import slugFrom from "../utils/slugFrom"
 
 export interface CandidateProps {
     id: number,
@@ -47,7 +48,7 @@ export default function Candidate({ id, first_name, last_name }: CandidateProps)
 
     useEffect(() => {
         setLoading(prev => ({...prev, page: true}))
-        axios.get(`/api/oferty/${[first_name, last_name, id].join('-')}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
+        axios.get(`/api/oferty/${slugFrom(first_name, last_name, id)}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidateDetails(data[0]))
             .finally(() => setLoading(prev => ({...prev, page: false})))
