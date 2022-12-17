@@ -93,7 +93,7 @@ const Form = () => {
                 <div className='flex items-center gap-6'>
                     <FilledButton type='submit'>Zaloguj</FilledButton>
                     {!status.ok && status.message && status.message !== 'loading' && <span className='text-red-400 font-medium'>{status.message}</span>}
-                    {status.message === 'loading' && <Loader className='absolute bottom-0 left-0' />}
+                    {status.message === 'loading' && <Loader />}
                 </div>
             </form>
         </div>
