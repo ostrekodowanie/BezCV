@@ -101,7 +101,8 @@ class SearchCandidateView(generics.ListAPIView):
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False)
-            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
+            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
+            .distinct('id'))
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
