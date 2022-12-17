@@ -57,7 +57,7 @@ export const loginSlice = createSlice({
             state.isLoading = false
         },
         addPoints: (state, action) => {
-            state.data.points = state.data.points + parseInt(action.payload)
+            state.data.points = state.data.points + action.payload
         },
         purchase: state => {
             state.data.points = state.data.points - 1

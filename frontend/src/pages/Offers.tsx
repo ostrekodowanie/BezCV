@@ -114,7 +114,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite }: CandidateP
         <div className="shadow rounded-3xl p-6 flex justify-between">
             <div className="flex flex-col">
                 <h3 className="text-bold text-xl">{first_name} {last_name}</h3>
-                <Link className="text-primary font-medium" to={'/oferty/' + slug?.split(' ').join('-') + id}>Sprawdź</Link>
+                <Link className="text-primary font-medium" to={'/oferty/' + slug?.split(' ').join('-') + '-' + id}>Sprawdź</Link>
             </div>
             <button onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
         </div>
