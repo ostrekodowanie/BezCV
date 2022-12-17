@@ -1,8 +1,10 @@
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 import axios from 'axios'
 import { Dispatch, SetStateAction, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Loader from '../components/Loader'
-import { useAppSelector } from '../main'
+import { useAppDispatch, useAppSelector } from '../main'
+import { addPoints } from '../reducers/login'
 
 interface PackageProps {
     points: number,
@@ -53,6 +55,7 @@ const Package = ({ points, price, setChosen }: PackageProps & { setChosen: Dispa
 
 const ChosenPackage = ({ points, price, setChosen }: PackageProps & { setChosen: Dispatch<SetStateAction<PackageProps | null>> }) => {
     const { id } = useAppSelector(state => state.login.data)
+    const dispatch = useAppDispatch()
     const [loading, setLoading] = useState(false)
     const [status, setStatus] = useState(0)
 
@@ -61,6 +64,7 @@ const ChosenPackage = ({ points, price, setChosen }: PackageProps & { setChosen:
         const resp = await axios.post('/api/points/purchase', JSON.stringify({ employer: id, amount: points, price }), { headers: { 'Content-Type': 'application/json'} })
         setLoading(false)
         setStatus(resp.status)
+        if(status === 201) dispatch(addPoints(points))
     }
 
     if(loading) return <div className='h-full w-full flex items-center justify-center'>
@@ -91,8 +95,8 @@ const ChosenPackage = ({ points, price, setChosen }: PackageProps & { setChosen:
                     })
                 }}
                 onApprove={(data, actions) => {
-                    // @ts-ignore
-                    return actions?.order.capture().then(() => handleSuccess(points))
+                    //@ts-ignore
+                    return actions.order.capture().then(() => handleSuccess(points))
                 }}
             />
         </div>
