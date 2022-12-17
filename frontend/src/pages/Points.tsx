@@ -62,9 +62,9 @@ const ChosenPackage = ({ points, price, setChosen }: PackageProps & { setChosen:
     const handleSuccess = async (points: number) => {
         setLoading(true)
         const resp = await axios.post('/api/points/purchase', JSON.stringify({ employer: id, amount: points, price }), { headers: { 'Content-Type': 'application/json'} })
+        if(resp.status === 201) dispatch(addPoints(points))
         setLoading(false)
         setStatus(resp.status)
-        if(status === 201) dispatch(addPoints(points))
     }
 
     if(loading) return <div className='h-full w-full flex items-center justify-center'>
