@@ -7,7 +7,7 @@ import Loader from '../../components/Loader'
 
 export default function Form() {
     const [confPassword, setConfPassword] = useState('')
-    const [status, setStatus] = useState<'loading' | boolean | undefined>(undefined)
+    const [status, setStatus] = useState<boolean | undefined | string>(undefined)
     const [employerDetails, setEmployerDetails] = useState({
         first_name: '',
         last_name: '',
@@ -34,41 +34,43 @@ export default function Form() {
     if(status === true) return <h2 className='text-3xl font-bold mx-auto pt-[1in]'>Email weryfikacyjny <span className='text-primary'>został wysłany!</span></h2>
 
     return (
-        <div className='flex flex-col text-center items-center xl:w-max'>
-            <h2 className="font-semibold text-[2.4rem] mb-4 xl:mb-6 w-full xl:text-5xl">Zarejestruj się</h2>
-            <form className='flex flex-col gap-4 font-medium relative' onSubmit={handleSubmit}>
-            <div className='flex flex-col max-w-full sm:grid grid-cols-2 gap-6'>
-                <div className='relative'>
-                    <input className={inputStyles.input} required type='text' name='firstName' id='firstName' onChange={e => setEmployerDetails(prev => { return { ...prev, first_name: e.target.value }})} />
-                    <span className={`${employerDetails.first_name ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Imię</span>
-                </div>                    
-                <div className='relative'>
-                    <input className={inputStyles.input} required type='text' name='lastName' id='lastName' onChange={e => setEmployerDetails(prev => { return { ...prev, last_name: e.target.value }})} />
-                    <span className={`${employerDetails.last_name ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Nazwisko</span>
+        <div className='flex flex-col text-center items-center xl:flex-1 xl:max-w-[10in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-16 xl:self-start'>
+            <h2 className="font-bold text-[2.4rem] mb-8 xl:mb-10 w-full">Zarejestruj się</h2>
+            <form className='flex flex-col gap-4 w-full font-medium relative' onSubmit={handleSubmit}>
+                <div className='flex flex-col max-w-full sm:grid grid-cols-2 gap-6 xl:gap-8'>
+                    <div className='relative flex flex-col gap-2 items-start'>
+                        <label className='text-sm' htmlFor="firstName">Imię</label>
+                        <input className={inputStyles.input} required type='text' name='firstName' id='firstName' onChange={e => setEmployerDetails(prev => { return { ...prev, first_name: e.target.value }})} />
+                    </div>                    
+                    <div className='relative flex flex-col gap-2 items-start'>
+                        <label className='text-sm' htmlFor="lastName">Nazwisko</label>
+                        <input className={inputStyles.input} required type='text' name='lastName' id='lastName' onChange={e => setEmployerDetails(prev => { return { ...prev, last_name: e.target.value }})} />
+                    </div>
+                    <div className='relative flex flex-col gap-2 items-start'>
+                        <label className='text-sm' htmlFor="email">Email</label>
+                        <input className={inputStyles.input} required type='email' name='email' id='email' onChange={e => setEmployerDetails(prev => { return { ...prev, email: e.target.value }})} />
+                    </div>
+                    <div className='relative flex flex-col gap-2 items-start'>
+                        <label className='text-sm' htmlFor="nip">NIP</label>
+                        <input className={inputStyles.input} required type='text' name='nip' id='nip' onChange={e => setEmployerDetails(prev => { return { ...prev, nip: e.target.value }})} />
+                    </div>
+                    <div className='relative flex flex-col gap-2 items-start'>
+                        <label className='text-sm' htmlFor="password">Hasło</label>
+                        <input className={inputStyles.input} required type='password' name='password' id='password' onChange={e => setEmployerDetails(prev => { return { ...prev, password: e.target.value }})} />
+                    </div>
+                    <div className='relative flex flex-col gap-2 items-start'>
+                        <label className='text-sm' htmlFor="confPassword">Powtórz hasło</label>
+                        <input className={inputStyles.input} required type='password' name='confPassword' id='confPassword' onChange={e => setConfPassword(e.target.value)} />
+                    </div>
                 </div>
-                <div className='relative'>
-                    <input className={inputStyles.input} required type='email' name='email' id='email' onChange={e => setEmployerDetails(prev => { return { ...prev, email: e.target.value }})} />
-                    <span className={`${employerDetails.email ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Email</span>
+                {status && status !== 'loading' && <span className='text-red-400 font-medium'>{status}</span>}
+                {status === 'loading' && <Loader className='absolute bottom-0 left-0' />}
+                <div className='relative flex items-center mt-4 mb-2'>
+                    <span className="relative mx-auto bg-white px-6 xl:px-10 py-3 z-10">Już posiadasz konto? <Link className="text-primary font-semibold hover:text-darkPrimary transition-colors" to='/logowanie'>Zaloguj się</Link></span>
+                    <div className='bg-[#DFDFDF] absolute left-0 right-0 h-[2px]' />
                 </div>
-                <div className='relative'>
-                    <input className={inputStyles.input} required type='text' name='nip' id='nip' onChange={e => setEmployerDetails(prev => { return { ...prev, nip: e.target.value }})} />
-                    <span className={`${employerDetails.nip ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>NIP</span>
-                </div>
-                <div className='relative min-w-0'>
-                    <input className={inputStyles.input} required type='password' name='password' id='password' onChange={e => setEmployerDetails(prev => { return { ...prev, password: e.target.value }})} />
-                    <span className={`${employerDetails.password ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Hasło</span>
-                </div>
-                <div className='relative'>
-                    <input className={inputStyles.input} required type='password' name='confPassword' id='confPassword' onChange={e => setConfPassword(e.target.value)} />
-                    <span className={`${confPassword ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Powtórz hasło</span>
-                </div>
-            </div>
-            {status && status !== 'loading' && <span className='text-red-400 font-medium'>{status}</span>}
-            {status === false && <span className='text-red-400 font-medium'>Spróbuj ponownie później</span>}
-            {status === 'loading' && <Loader className='absolute bottom-0 left-0' />}
-            <span className="mt-6 mb-4">Już posiadasz konto? <Link className="text-primary font-semibold" to='/logowanie'>Zaloguj się</Link></span>
-            <FilledButton className='mx-auto' type='submit'>Dalej</FilledButton>
-        </form>
+                <FilledButton type='submit'>Załóż konto</FilledButton>
+            </form>
         </div>
     )
 }
