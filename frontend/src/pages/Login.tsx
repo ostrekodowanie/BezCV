@@ -57,10 +57,13 @@ const Form = () => {
                 let user: User = jwtDecode(tokens.access)
                 localStorage.setItem('user', JSON.stringify(tokens))
                 const userInfo = await getUserInfo(user.id, tokens.access)
-                if(userInfo) return dispatch(login({
-                    data: { ...userInfo, id: user.id },
-                    tokens
-                }))
+                if(userInfo) {
+                    dispatch(login({
+                        data: { ...userInfo, id: user.id },
+                        tokens
+                    }))
+                    return navigate('/profil')
+                }
             }
             localStorage.removeItem('user')
             return dispatch(logout())

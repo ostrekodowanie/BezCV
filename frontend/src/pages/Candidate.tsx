@@ -44,7 +44,7 @@ export default function Candidate({ id, slug }: CandidateProps) {
         setLoading(prev => ({...prev, purchase: true}))
         let data = { candidate: id, employer: user_id, refresh }
         const resp = await axios.post('/api/oferty/purchase', data)
-        if(resp.status === 200) dispatch(purchase())
+        if(resp.status === 201) dispatch(purchase())
         return setLoading(prev => ({...prev, purchase: false}))
     }
 
