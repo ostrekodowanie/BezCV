@@ -108,6 +108,8 @@ class PurchaseOfferView(generics.CreateAPIView):
 
 class PurchasedOffersView(generics.ListAPIView):
     serializer_class = serializers.PurchasedOffersSerializer
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         u = self.request.GET.get('u')
         print(u)
