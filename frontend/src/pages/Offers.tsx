@@ -33,7 +33,8 @@ export default function Offers() {
 }
 
 export interface FilterProps {
-    abilities: string[]
+    abilities: string[],
+    roles: string[]
 }
 
 const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProps[]}) => {
@@ -46,7 +47,8 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     const [candidates, setCandidates] = useState<CandidateProps[]>(defaultCandidates)
     const [input, setInput] = useState('')
     const [filter, setFilter] = useState<FilterProps>({
-        abilities: []
+        abilities: [],
+        roles: []
     })
     const debounceSearch = useDebounce(input, 400)
 

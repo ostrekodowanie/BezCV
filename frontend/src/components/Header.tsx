@@ -33,7 +33,7 @@ const Nav = () => {
                 <CustomLink to='/kontakt'>Kontakt</CustomLink>
                 {logged ? <>
                     <Link className="font-bold text-base ml-2" to='/profil'>{first_name}</Link>
-                    <Link className="font-bold text-base" to='/punkty'>{points} pkt. +</Link>
+                    <Link className="font-bold text-base" to='/punkty'>{points} pkt.</Link>
                 </> : 
                 <>
                     <Link className="border-[2px] mt-4 md:mt-0 md:ml-4 font-Medium border-primary text-primary rounded flex items-center py-2 px-6" to='/logowanie'>Zaloguj się</Link>
