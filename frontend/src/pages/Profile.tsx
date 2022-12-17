@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../main"
 import { logout } from "../reducers/login"
-import slugFrom from "../utils/slugFrom"
 import { CandidateProps } from "./Candidate"
 
 export default function Profile() {
@@ -62,7 +61,7 @@ const Favourites = () => {
     )
 }
 
-const CandidateFavourite = ({ id, first_name, last_name, setFavourites }: CandidateProps & { setFavourites: Dispatch<SetStateAction<CandidateProps[]>>}) => {
+const CandidateFavourite = ({ id, first_name, last_name, slug, setFavourites }: CandidateProps & { setFavourites: Dispatch<SetStateAction<CandidateProps[]>>}) => {
     const user_id = useAppSelector(state => state.login.data.id)
 
     const handleRemove = async () => {
@@ -74,7 +73,7 @@ const CandidateFavourite = ({ id, first_name, last_name, setFavourites }: Candid
         <div className='p-6 shadow rounded-3xl'>
             <h3 className="text-lg font-medium">{first_name} {last_name}</h3>
             <div className="flex items-center justify-between mt-2">
-                <Link className="text-blue-400 font-medium" to={'/oferty/' + slugFrom(first_name, last_name, id)}>Sprawdź</Link>
+                <Link className="text-blue-400 font-medium" to={'/oferty/' + slug?.split(' ').join('-') + id}>Sprawdź</Link>
                 <button className="text-red-400 font-medium" onClick={handleRemove}>Usuń</button>
             </div>
         </div>
@@ -110,7 +109,7 @@ const Purchased = () => {
     )
 }
 
-const CandidatePurchased = ({ id, first_name, last_name, email, phone }: CandidateProps) => {
+const CandidatePurchased = ({ id, first_name, last_name, slug, email, phone }: CandidateProps) => {
     return (
         <div className='p-6 shadow rounded-3xl'>
             <h3 className="text-lg font-medium">{first_name} {last_name}</h3>
@@ -118,7 +117,7 @@ const CandidatePurchased = ({ id, first_name, last_name, email, phone }: Candida
                 <h4>{email}</h4>
                 <h4>+48 {phone}</h4>
             </div>
-            <Link className="text-blue-400 font-medium" to={'/oferty/' + slugFrom(first_name, last_name, id)}>Wyświetl profil</Link>
+            <Link className="text-blue-400 font-medium" to={'/oferty/' + slug?.split(' ').join('-') + id}>Wyświetl profil</Link>
         </div>
     )
 }

@@ -7,7 +7,6 @@ import { CandidateProps } from "./Candidate"
 import Candidate from './Candidate'
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../main"
-import slugFrom from "../utils/slugFrom"
 
 export default function Offers() {
     const [candidates, setCandidates] = useState<CandidateProps[]>([])
@@ -96,7 +95,7 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, favourite }: CandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, slug, favourite }: CandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFavourite, setIsFavourite] = useState(favourite)
 
@@ -115,7 +114,7 @@ const CandidateRef = ({ id, first_name, last_name, favourite }: CandidateProps) 
         <div className="shadow rounded-3xl p-6 flex justify-between">
             <div className="flex flex-col">
                 <h3 className="text-bold text-xl">{first_name} {last_name}</h3>
-                <Link className="text-primary font-medium" to={'/oferty/' + slugFrom(first_name, last_name, id)}>Sprawdź</Link>
+                <Link className="text-primary font-medium" to={'/oferty/' + slug?.split(' ').join('-') + id}>Sprawdź</Link>
             </div>
             <button onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
         </div>
