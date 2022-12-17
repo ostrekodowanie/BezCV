@@ -107,4 +107,4 @@ class LogoutView(views.APIView):
 class UserView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
