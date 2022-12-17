@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,7 +8,7 @@
 *::after,
 *::before {
   box-sizing: border-box;
-  font-family: 'Kanit', sans-serif;
+  font-family: 'Cabin', sans-serif;
 }
 
 html, body {
@@ -18,7 +18,7 @@ html, body {
 body {
   overflow-y: scroll;
   overflow-x: hidden;
-  color: #141B3F;
+  color: #171A23;
 }
 
 .padding {

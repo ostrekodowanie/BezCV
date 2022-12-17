@@ -1,12 +1,9 @@
 import { Link } from "react-router-dom"
-import { useResolvedPath, useMatch, useLocation } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useResolvedPath, useMatch } from 'react-router'
+import { useState } from 'react'
 import { useAppSelector } from "../main"
 
 export default function Header() {
-    const location = useLocation()
-    let path = location.pathname
-    if(path?.includes('rejestracja') || path?.includes('logowanie')) return <></>
     return (
         <header className="flex items-center justify-between h-[5rem] md:h-[6rem] padding fixed left-0 right-0 z-30 top-0 bg-white">
             <Logo />
@@ -36,11 +33,11 @@ const Nav = () => {
                     <Link className="font-bold text-base" to='/punkty'>{points} pkt.</Link>
                 </> : 
                 <>
-                    <Link className="border-[2px] mt-4 md:mt-0 md:ml-4 font-Medium border-primary text-primary rounded flex items-center py-2 px-6" to='/logowanie'>Zaloguj się</Link>
-                    <Link className="bg-primary border-[2px] transition-colors hover:border-darkPrimary hover:bg-darkPrimary font-medium border-primary text-white rounded flex items-center py-2 px-6" to='/rejestracja'>Załóż Konto</Link>
+                    <Link className="border-[2px] mt-4 md:mt-0 md:ml-4 font-semibold border-primary text-primary rounded flex items-center py-2 px-6" to='/logowanie'>Zaloguj się</Link>
+                    <Link className="bg-primary border-[2px] transition-colors hover:border-darkPrimary hover:bg-darkPrimary font-semibold border-primary text-white rounded flex items-center py-2 px-6" to='/rejestracja'>Załóż Konto</Link>
                 </>}
             </div>
-            <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 sm:hidden h-5 w-8 justify-between cursor-pointer'>
+            <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 md:hidden h-5 w-8 justify-between cursor-pointer'>
                 <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(45deg)', maxWidth: '100%'} : { maxWidth: '60%' }} className={lineStyle}></div>
                 <div style={active ? {opacity: 0} : {}} className={lineStyle}></div>
                 <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(-45deg)', maxWidth: '100%'} : { maxWidth: '60%', marginLeft: 'auto'}} className={lineStyle}></div>
@@ -58,5 +55,5 @@ type CustomLink = {
 const CustomLink = ({children, to, className}: CustomLink) => {
     const activePath = useResolvedPath(to)
     const isActive = useMatch({path: `${activePath.pathname}/*`, end: true})
-    return <Link to={to} className={`${className && className} transition-colors font-medium ${isActive ? 'text-primary' : 'hover:text-primary'}`}>{children}</Link>
+    return <Link to={to} className={`${className && className} transition-colors font-semibold ${isActive ? 'text-primary' : 'hover:text-primary'}`}>{children}</Link>
 }
