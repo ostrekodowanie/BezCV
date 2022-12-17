@@ -19,6 +19,7 @@ import Loader from "./components/Loader"
 import AdminRoute from "./utils/AdminRoute"
 import AdminPanel from "./pages/AdminPanel"
 import Points from "./pages/Points"
+import getUserInfo from "./utils/getUserInfo"
 
 const loginString: string | null = localStorage.getItem('user')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)
@@ -48,10 +49,11 @@ export default function App() {
     })
     if(response.status === 200) {
       let tokens = response.data
-      let user: User = jwtDecode(tokens.access)
+      let { id }: User = jwtDecode(tokens.access)
       localStorage.setItem('user', JSON.stringify(tokens))
-      return dispatch(login({
-        data: user,
+      const userInfo = await getUserInfo(id, tokens.access)
+      if(userInfo) return dispatch(login({
+        data: {...userInfo, id},
         tokens
       }))
     }
