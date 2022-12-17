@@ -1,4 +1,5 @@
-from django.db.models import Q, Exists, OuterRef, Count
+from django.db.models import Q, Exists, OuterRef, Count, F
+from django.contrib.postgres.aggregates import ArrayAgg
 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -16,7 +17,6 @@ class AllCandidatesView(generics.ListAPIView):
 class CandidateView(generics.GenericAPIView):
     serializer_class = serializers.CandidateSerializer
     permission_classes = [IsAuthenticated]
-
     def get(self, request, *args, **kwargs):
         u = self.request.GET.get('u')
         slug=self.kwargs['slug']
@@ -24,13 +24,13 @@ class CandidateView(generics.GenericAPIView):
 
         candidate = (Candidates.objects
             .filter(Q(is_verified=True) & Q(slug=slug) & Q(id=id))
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
+            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name')))
 
         if candidate.filter(is_purchased=True):
-            print(candidate)
-            return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased'))
+            return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities', role=F('candidateroles_candidate__role__name')))
         
-        return Response(candidate.values('id', 'first_name', 'last_name', 'is_purchased'))
+        return Response(candidate.values('id', 'first_name', 'last_name', 'is_purchased', 'abilities', role=F('candidateroles_candidate__role__name')))
 
 
 class CandidateAddView(generics.CreateAPIView):
