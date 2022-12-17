@@ -1,10 +1,11 @@
 import axios from "axios"
+import jwtDecode from "jwt-decode"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
-import { purchase } from "../reducers/login"
+import { login, purchase } from "../reducers/login"
 
 export interface CandidateProps {
     id: number,
@@ -23,7 +24,7 @@ export default function Candidate({ id, first_name, last_name, slug }: Candidate
     const dispatch = useDispatch()
     const { points } = auth.data
     const user_id = auth.data.id
-    const { access } = auth.tokens
+    const { access, refresh } = auth.tokens
     const [loading, setLoading] = useState(true)
     const [candidateDetails, setCandidateDetails] = useState({
         is_purchased: false,
@@ -33,17 +34,25 @@ export default function Candidate({ id, first_name, last_name, slug }: Candidate
 
     const handlePurchase = async () => {
         if(points < 1) return navigate('/punkty')
-        let data = { candidate: id, employer: user_id }
+        let data = { candidate: id, employer: user_id, refresh }
         const resp = await axios.post('/api/oferty/purchase', data)
-        if(resp.status === 201) return dispatch(purchase())
+        if(resp.status === 200) {
+            localStorage.setItem('user', JSON.stringify(resp.data))
+            dispatch(login({
+                data: jwtDecode(resp.data.access),
+                tokens: resp.data
+            }))
+            return dispatch(purchase())
+        }
     }
 
     useEffect(() => {
+        setLoading(true)
         axios.get(`/api/oferty/${slug}${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidateDetails(data))
             .finally(() => setLoading(false))
-    }, [])
+    }, [points])
 
     if(loading) return <Loader />
 
