@@ -37,3 +37,8 @@ class PurchaseOfferSerializer(serializers.ModelSerializer):
 
         return instance
 
+class PurchasedOffersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Candidates
+        fields = ('id', 'slug', 'first_name', 'last_name', 'email', 'phone')
+
