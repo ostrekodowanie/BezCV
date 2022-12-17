@@ -15,7 +15,7 @@ export default function Offers() {
     const { id } = auth.data
 
     useEffect(() => {
-        axios.get('/api/oferty?u=' + id, { headers: { 'Authorization': 'Bearer ' + access }})
+        axios.get('/api/oferty/all?u=' + id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidates(data))
     }, [])
