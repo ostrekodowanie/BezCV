@@ -24,7 +24,7 @@ class Candidates(models.Model):
         )
 
     def save(self, *args, **kwargs):        
-        self.slug = '-'.join((slugify(self.first_name), slugify(self.last_name)))+'-'
+        self.slug = '-'.join((slugify(self.first_name), slugify(self.last_name)))
         super(Candidates, self).save(*args, **kwargs)
 
 class Abilities(models.Model):
