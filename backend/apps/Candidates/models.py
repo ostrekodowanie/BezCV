@@ -27,6 +27,37 @@ class Candidates(models.Model):
         self.slug = '-'.join((slugify(self.first_name), slugify(self.last_name)))
         super(Candidates, self).save(*args, **kwargs)
 
+class Roles(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Roles'
+
+    def __str__(self):
+        return '{} | {}'.format(
+            self.pk,
+            self.name,
+        )
+
+class CandidateRoles(models.Model):
+    candidate = models.ForeignKey(
+        Candidates, on_delete=models.CASCADE, related_name='candidateroles_candidate')
+    role = models.ForeignKey(
+        Roles, on_delete=models.CASCADE, related_name='candidateroles_ability')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Candidate roles'
+        unique_together = [['candidate', 'role']]
+
+    def __str__(self):
+        return '{}'.format(
+            self.pk,
+        )
+
 class Abilities(models.Model):
     name = models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
