@@ -84,8 +84,8 @@ const Candidate = ({ setUnVerified, id, ...rest }: CandidateVerifyRef) => {
             </div>
             <div className="flex flex-wrap items-center gap-4">
                 {data.abilities.map(ab => (
-                    <label htmlFor={ab} className="flex items-center gap-2 rounded-full shadow py-2 px-6">
-                        <input type="checkbox" id={ab} value={ab} onChange={() => setDetails(prev => prev.abilities.includes(ab) ? ({ ...prev, abilities: prev.abilities.filter(item => item !== ab) }) : ({ ...prev, abilities: [...prev.abilities, ab]}))} />
+                    <label htmlFor={ab + id.toString()} className="flex items-center gap-2 rounded-full shadow py-2 px-6">
+                        <input type="checkbox" id={ab + id.toString()} value={ab} onChange={() => setDetails(prev => prev.abilities.includes(ab) ? ({ ...prev, abilities: prev.abilities.filter(item => item !== ab) }) : ({ ...prev, abilities: [...prev.abilities, ab]}))} />
                         <h4>{ab}</h4>
                     </label>
                 ))}
