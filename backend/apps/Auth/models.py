@@ -28,5 +28,8 @@ class User(AbstractUser):
 
     def reduce_points(self):
         self.points -= 1
-        
+        super().save()
+
+    def purchase_points(self, amount):
+        self.points += amount
         super().save()
