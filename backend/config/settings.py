@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.Candidates',
     'apps.Admin',
     'apps.Favourites',
+    'apps.Points',
 ]
 
 MIDDLEWARE = [

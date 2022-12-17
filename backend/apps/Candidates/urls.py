@@ -9,6 +9,6 @@ urlpatterns = [
   path('oferty/all', views.AllCandidatesView.as_view()),
   path('oferty/search', views.SearchCandidateView.as_view()),
   path('oferty/purchase', views.PurchaseOfferView.as_view()),
-  path('oferty/<slug><pk>', views.CandidateView.as_view()),
+  path('oferty/<slug>-<pk>', views.CandidateView.as_view()),
   path('profile/candidates', views.PurchasedOffersView.as_view()),
 ]
