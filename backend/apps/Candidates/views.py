@@ -98,7 +98,7 @@ class PurchaseOfferView(generics.GenericAPIView):
         id = serializer.data['employer']
         user = User.objects.get(id=id)
 
-        token = RefreshToken.for_user(user)
+        token = RefreshToken.for_user(id)
         token['id'] = user.id
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
