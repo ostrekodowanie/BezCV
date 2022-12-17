@@ -1,24 +1,23 @@
 import axios from "axios"
-import jwtDecode from "jwt-decode"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
-import slugFrom from "../utils/slugFrom"
 
 export interface CandidateProps {
     id: number,
     first_name: string,
     last_name: string,
+    slug?: string,
     abilities?: [],
     phone?: string,
     email?: string,
     favourite?: boolean
 }
 
-export default function Candidate({ id, first_name, last_name }: CandidateProps) {
+export default function Candidate({ id, slug }: CandidateProps) {
     const auth = useAppSelector(state => state.login)
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -48,7 +47,7 @@ export default function Candidate({ id, first_name, last_name }: CandidateProps)
 
     useEffect(() => {
         setLoading(prev => ({...prev, page: true}))
-        axios.get(`/api/oferty/${slugFrom(first_name, last_name, id)}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
+        axios.get(`/api/oferty/${slug?.split(' ').join('-')}${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidateDetails(data[0]))
             .finally(() => setLoading(prev => ({...prev, page: false})))
