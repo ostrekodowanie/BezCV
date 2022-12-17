@@ -37,7 +37,8 @@ export default function Candidate({ id, slug }: CandidateProps) {
         last_name: '',
         email: '',
         phone: '',
-        abilities: []
+        abilities: [],
+        role: ''
     })
 
     const handlePurchase = async () => {
@@ -66,11 +67,16 @@ export default function Candidate({ id, slug }: CandidateProps) {
                 <h2>Email: {candidateDetails.email ? candidateDetails.email : candidateDetails.first_name.charAt(0).toLowerCase() + '******@*****.***'}</h2>
                 <h2>Numer telefonu: {candidateDetails.phone ? candidateDetails.phone : '+48 *** *** ***'}</h2>
             </div>
-            {candidateDetails.abilities?.map(ab => (
-                <div className="flex items-center gap-2 rounded-full shadow py-2 px-6">
-                    <h4>{ab}</h4>
-                </div>
-            ))}
+            <div className="flex flex-wrap gap-4">
+                {candidateDetails.abilities?.map(ab => (
+                    <div className="flex items-center gap-2 w-max rounded-full shadow py-2 px-6">
+                        <h4>{ab}</h4>
+                    </div>
+                ))}
+            </div>
+            <div className="flex items-center gap-4">
+                <h2 className="text-lg">Preferowane stanowisko: {candidateDetails.role}</h2>
+            </div>
             {!candidateDetails.is_purchased && 
                 <div className="flex items-center gap-4">
                     <button onClick={handlePurchase} className="bg-primary transition-colors max-w-max font-medium hover:bg-darkPrimary text-white rounded flex items-center py-2 px-6">Wykup kontakt za 1 punkt</button>
