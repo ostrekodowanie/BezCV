@@ -23,7 +23,7 @@ export default function Offers() {
     return (
         <section className="padding pt-[1.4in] md:pt-[2in]">
             <Routes>
-                {candidates.map(candidate => <Route path={'/' + [candidate.first_name, candidate.last_name, candidate.id].join('-')} element={<Candidate {...candidate} key={candidate.id} />} />)}
+                {candidates.map(candidate => <Route path={'/' + candidate.slug + '-' + candidate.id} element={<Candidate {...candidate} key={candidate.id} />} />)}
                 {['/', '/search/*'].map((path, index) => 
                     <Route path={path} element={<CandidateList defaultCandidates={candidates} />} key={index} />
                 )}

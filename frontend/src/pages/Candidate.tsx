@@ -47,11 +47,11 @@ export default function Candidate({ id, slug }: CandidateProps) {
 
     useEffect(() => {
         setLoading(prev => ({...prev, page: true}))
-        axios.get(`/api/oferty/${slug?.split(' ').join('-')}-${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
+        axios.get(`/api/oferty/${slug}-${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidateDetails(data[0]))
             .finally(() => setLoading(prev => ({...prev, page: false})))
-    }, [points])
+    }, [points, slug])
 
     if(loading.page) return <Loader />
 
