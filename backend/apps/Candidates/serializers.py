@@ -4,19 +4,16 @@ from .models import Candidates, PurchasedOffers
 from apps.Auth.views import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-
-
+class AllCandidatesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Candidates
+        fields = ('id', 'slug')
+        
 class CandidateSerializer(serializers.ModelSerializer):
     is_purchased = serializers.BooleanField(read_only=True)
     class Meta:
         model = Candidates
         fields = ('id', 'slug', 'first_name', 'last_name', 'email', 'phone', 'is_purchased')
-
-class Candidate2Serializer(serializers.ModelSerializer):
-    is_purchased = serializers.BooleanField(read_only=True)
-    class Meta:
-        model = Candidates
-        fields = ('first_name', 'last_name', 'is_purchased')
 
 class CandidateAddSerializer(serializers.ModelSerializer):
     class Meta:

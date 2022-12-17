@@ -9,6 +9,10 @@ from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers
 from apps.Favourites.models import FavouriteCandidates
 
+class AllCandidatesView(generics.ListAPIView):
+    queryset = Candidates.objects.filter(is_verified=True)
+    serializer_class = serializers.AllCandidatesSerializer
+
 class CandidateView(generics.GenericAPIView):
     serializer_class = serializers.CandidateSerializer
     permission_classes = [IsAuthenticated]
