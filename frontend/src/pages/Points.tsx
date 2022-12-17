@@ -1,6 +1,7 @@
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 import axios from 'axios'
 import { Dispatch, SetStateAction, useState } from 'react'
+import Loader from '../components/Loader'
 import { useAppSelector } from '../main'
 
 interface PackageProps {
@@ -52,12 +53,25 @@ const Package = ({ points, price, setChosen }: PackageProps & { setChosen: Dispa
 
 const ChosenPackage = ({ points, price, setChosen }: PackageProps & { setChosen: Dispatch<SetStateAction<PackageProps | null>> }) => {
     const { id } = useAppSelector(state => state.login.data)
+    const [loading, setLoading] = useState(false)
+    const [status, setStatus] = useState(0)
 
-    const handleSuccess = (points: number) => {
-        axios.post('/api/points/add', JSON.stringify({ user_id: id, amount: points }), { headers: { 'Content-Type': 'application/json'} })
-            .then(res => res.data)
-            .then(data => console.log(data))
+    const handleSuccess = async (points: number) => {
+        setLoading(true)
+        const resp = await axios.post('/api/points/purchase', JSON.stringify({ employer: id, amount: points, price }), { headers: { 'Content-Type': 'application/json'} })
+        setLoading(false)
+        setStatus(resp.status)
     }
+
+    if(loading) return <div className='h-full w-full flex items-center justify-center'>
+        <span className='flex items-center gap-4'>Przetwarzanie płatności <Loader /></span>
+    </div>
+
+    if(status) return (
+        <div className='h-full w-full flex items-center justify-center'>
+            {status === 201 ? <h1 className='text-3xl'>Dziękujemy za zakup!</h1> : <span className='text-red'>Wystąpił błąd. Skontaktuj się z obsługą.</span>}
+        </div>
+    )
 
     return (
         <div className="flex flex-col gap-4 rounded items-center p-6 shadow">
@@ -78,7 +92,7 @@ const ChosenPackage = ({ points, price, setChosen }: PackageProps & { setChosen:
                 }}
                 onApprove={(data, actions) => {
                     // @ts-ignore
-                    return actions.order.capture().then(() => handleSuccess(10))
+                    return actions?.order.capture().then(() => handleSuccess(points))
                 }}
             />
         </div>
