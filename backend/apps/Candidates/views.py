@@ -94,6 +94,7 @@ class PurchaseOfferView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid()
+        serializer.save()
         id = serializer.data['employer']
         user = User.objects.get(id=id)
 
