@@ -6,6 +6,8 @@ import { useNavigate } from "react-router"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { login, purchase } from "../reducers/login"
+import getUserInfo from "../utils/getUserInfo"
+import { User } from "./Login"
 
 export interface CandidateProps {
     id: number,
@@ -36,14 +38,7 @@ export default function Candidate({ id, first_name, last_name, slug }: Candidate
         if(points < 1) return navigate('/punkty')
         let data = { candidate: id, employer: user_id, refresh }
         const resp = await axios.post('/api/oferty/purchase', data)
-        if(resp.status === 200) {
-            localStorage.setItem('user', JSON.stringify(resp.data))
-            dispatch(login({
-                data: jwtDecode(resp.data.access),
-                tokens: resp.data
-            }))
-            return dispatch(purchase())
-        }
+        if(resp.status === 200) localStorage.setItem('user', JSON.stringify(resp.data))
     }
 
     useEffect(() => {

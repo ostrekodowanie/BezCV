@@ -7,9 +7,11 @@ import FilledButton from '../components/FilledButton'
 import { inputStyles } from './Contact'
 import Loader from '../components/Loader'
 import { useAppDispatch } from '../main'
-import { login } from '../reducers/login'
+import { login, logout } from '../reducers/login'
+import getUserInfo from '../utils/getUserInfo'
 
 export interface User {
+    id: number,
     first_name: string,
     last_name: string,
     email: string,
@@ -42,24 +44,26 @@ const Form = () => {
         password: ''
     })
     
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setStatus({
             ok: false,
             message: 'loading'
         })
         try {
-            axios.post('/api/login', JSON.stringify(credentials), {headers: {'Content-Type': 'application/json'}})
-                .then(res => res.data)
-                .then(data => {
-                    let user: User = jwtDecode(data.access)
-                    localStorage.setItem('user', JSON.stringify(data))
-                    dispatch(login({
-                        data: user,
-                        tokens: { ...data }
-                    }))
-                })
-                .then(() => navigate('/profil'))
+            const response = await axios.post('/api/login', JSON.stringify(credentials), {headers: {'Content-Type': 'application/json'}})
+            if(response.status === 200) {
+                let tokens = response.data
+                let user: User = jwtDecode(tokens.access)
+                localStorage.setItem('user', JSON.stringify(tokens))
+                const userInfo = await getUserInfo(user.id, tokens.access)
+                if(userInfo) return dispatch(login({
+                    data: { ...userInfo, id: user.id },
+                    tokens
+                }))
+            }
+            localStorage.removeItem('user')
+            return dispatch(logout())
         }
         catch(err) {
            setStatus({
