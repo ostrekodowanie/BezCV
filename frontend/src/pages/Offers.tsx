@@ -55,10 +55,11 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     useEffect(() => {
         setCandidates([])
         let url = '/oferty'
-        if(input || filter.abilities.length > 0) {
+        if(input || filter.abilities.length > 0 || filter.roles.length > 0) {
             let searchArr = [
                 debounceSearch && 'q=' + debounceSearch,
-                filter.abilities.length > 0 && 'a=' + filter.abilities.map(ability => ability).join(',')
+                filter.abilities.length > 0 && 'a=' + filter.abilities.map(ability => ability).join(','),
+                filter.roles.length > 0 && 'r=' + filter.roles.map(role => role).join(','),
             ]
             url = `/oferty/search?${searchArr.length > 0 && searchArr.map(item => item).filter(item => item).join("&")}`
         }
