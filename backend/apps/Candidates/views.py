@@ -1,4 +1,4 @@
-from django.db.models import Q, Exists, OuterRef
+from django.db.models import Q, Exists, OuterRef, Count
 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -50,7 +50,9 @@ class OffersView(generics.ListAPIView):
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False)
-            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
+            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
+            .annotate(ids=Count('favouritecandidates_candidate__id'))
+            .order_by('-ids'))
 
         
 class FiltersView(APIView):
@@ -101,7 +103,10 @@ class SearchCandidateView(generics.ListAPIView):
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False)
-            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
+            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
+            .annotate(ids=Count('favouritecandidates_candidate__id'))
+            .order_by('-ids')
+            .distinct('id'))
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
