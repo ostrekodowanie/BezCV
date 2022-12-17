@@ -50,10 +50,12 @@ export default function CandidateForm() {
                         <span className={`${details.phone ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Numer telefonu</span>
                     </div>
                 </div>
-                {status === false && <span className='text-red-400 font-medium'>Wystąpił błąd</span>}
-                {status === true && <span className='text-green-400 font-medium'>Zgłoszenie wysłane!</span>}
-                <FilledButton className='mt-4' type='submit'>Wyślij zgłoszenie</FilledButton>
-                {status === 'loading' && <Loader className='absolute bottom-0 left-0' />}
+                <div className='flex items-center gap-6'>
+                    <FilledButton className='mt-4' type='submit'>Wyślij zgłoszenie</FilledButton>
+                    {status === 'loading' && <Loader />}
+                    {status === false && <span className='text-red-400 font-medium'>Wystąpił błąd</span>}
+                    {status === true && <span className='text-green-400 font-medium'>Zgłoszenie wysłane!</span>}
+                </div>
             </form>
         </section>
     )

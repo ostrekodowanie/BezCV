@@ -8,7 +8,7 @@ import PublicRoute from "./utils/PublicRoute"
 import PrivateRoute from "./utils/PrivateRoute"
 import Profile from "./pages/Profile"
 import Verify from "./pages/signup/Verify"
-import { ReactElement, useLayoutEffect, useRef, useState } from "react"
+import { ReactElement, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "./main"
 import { login, logout } from "./reducers/login"
 import jwtDecode from 'jwt-decode'
@@ -31,6 +31,11 @@ export default function App() {
   const auth = useAppSelector(state => state.login)
   const { logged } = auth
   const { refresh } = auth.tokens
+  const { points } = auth.data
+
+  useEffect(() => {
+    console.log(points)
+  }, [points])
 
   const getUser = async () => {
     if(loginFromLocalStorage) {

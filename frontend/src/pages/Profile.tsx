@@ -73,7 +73,7 @@ const CandidateFavourite = ({ id, first_name, last_name, slug, setFavourites }: 
         <div className='p-6 shadow rounded-3xl'>
             <h3 className="text-lg font-medium">{first_name} {last_name}</h3>
             <div className="flex items-center justify-between mt-2">
-                <Link className="text-blue-400 font-medium" to={'/oferty/' + slug?.split(' ').join('-') + id}>Sprawdź</Link>
+                <Link className="text-blue-400 font-medium" to={'/oferty/' + slug?.split(' ').join('-') + '-' + id}>Sprawdź</Link>
                 <button className="text-red-400 font-medium" onClick={handleRemove}>Usuń</button>
             </div>
         </div>
@@ -117,7 +117,7 @@ const CandidatePurchased = ({ id, first_name, last_name, slug, email, phone }: C
                 <h4>{email}</h4>
                 <h4>+48 {phone}</h4>
             </div>
-            <Link className="text-blue-400 font-medium" to={'/oferty/' + slug?.split(' ').join('-') + id}>Wyświetl profil</Link>
+            <Link className="text-blue-400 font-medium" to={'/oferty/' + slug?.split(' ').join('-') + '-' + id}>Wyświetl profil</Link>
         </div>
     )
 }
