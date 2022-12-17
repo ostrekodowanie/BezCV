@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
-from .models import Candidates, Abilities, PurchasedOffers
+from .models import Candidates, Abilities, PurchasedOffers, Roles
 from apps.Favourites.models import FavouriteCandidates
 
 class AllCandidatesView(generics.ListAPIView):
@@ -53,15 +53,21 @@ class OffersView(generics.ListAPIView):
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
 
         
-class AbilitiesView(APIView):
+class FiltersView(APIView):
     def get(self, request):
         abilities = Abilities.objects.all().order_by('name').distinct('name')
         abilities_list = []
         for x in abilities:
             abilities_list.append(x.name)
 
+        roles = Roles.objects.all().order_by('name').distinct('name')
+        roles_list = []
+        for x in roles:
+            roles_list.append(x.name)
+
         data = {
             'abilities': abilities_list,
+            'roles': roles_list,
         }
 
         return Response(data)
@@ -73,6 +79,7 @@ class SearchCandidateView(generics.ListAPIView):
     def get_queryset(self):
         q = self.request.GET.get('q')
         a = self.request.GET.get('a')
+        r = self.request.GET.get('r')
         u = self.request.GET.get('u')
         queries = Q(is_verified=True)
 
@@ -86,6 +93,10 @@ class SearchCandidateView(generics.ListAPIView):
             s = a.split(',')
             queries.add(Q(candidateabilities_candidate__ability__name__in=s), Q.AND)
         
+        if r:
+            s = r.split(',')
+            queries.add(Q(candidateroles_candidate__role__name__in=s), Q.AND)
+            
         return (Candidates.objects
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
