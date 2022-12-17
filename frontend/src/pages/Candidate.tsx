@@ -5,9 +5,7 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
-import { login, purchase } from "../reducers/login"
-import getUserInfo from "../utils/getUserInfo"
-import { User } from "./Login"
+import { purchase } from "../reducers/login"
 
 export interface CandidateProps {
     id: number,
@@ -16,11 +14,10 @@ export interface CandidateProps {
     abilities?: [],
     phone?: string,
     email?: string,
-    slug?: string,
     favourite?: boolean
 }
 
-export default function Candidate({ id, slug }: CandidateProps) {
+export default function Candidate({ id, first_name, last_name }: CandidateProps) {
     const auth = useAppSelector(state => state.login)
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -50,7 +47,7 @@ export default function Candidate({ id, slug }: CandidateProps) {
 
     useEffect(() => {
         setLoading(prev => ({...prev, page: true}))
-        axios.get(`/api/oferty/${slug}${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
+        axios.get(`/api/oferty/${[first_name, last_name, id].join('-')}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidateDetails(data[0]))
             .finally(() => setLoading(prev => ({...prev, page: false})))
@@ -60,10 +57,10 @@ export default function Candidate({ id, slug }: CandidateProps) {
 
     return (
         <div className="flex flex-col gap-6">
-            <h1>{candidateDetails.first_name} {candidateDetails.last_name}</h1>
-            <div className="flex items-center gap-4">
-                <h2>{candidateDetails.email ? candidateDetails.email : candidateDetails.first_name.charAt(0).toLowerCase() + '******@*****.***'}</h2>
-                <h2>{candidateDetails.phone ? candidateDetails.phone : '+48 *** *** ***'}</h2>
+            <h1 className="font-semibold text-xl">{candidateDetails.first_name} {candidateDetails.last_name}</h1>
+            <div className="flex items-center gap-4 font-medium text-lg">
+                <h2>Email: {candidateDetails.email ? candidateDetails.email : candidateDetails.first_name.charAt(0).toLowerCase() + '******@*****.***'}</h2>
+                <h2>Numer telefonu: {candidateDetails.phone ? candidateDetails.phone : '+48 *** *** ***'}</h2>
             </div>
             {!candidateDetails.is_purchased && 
                 <div className="flex items-center gap-4">
