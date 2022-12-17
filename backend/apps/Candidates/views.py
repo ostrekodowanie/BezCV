@@ -27,7 +27,8 @@ class CandidateView(generics.GenericAPIView):
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
 
         if candidate.filter(is_purchased=True):
-            return candidate
+            print(candidate)
+            return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased'))
         
         return Response(candidate.values('id', 'first_name', 'last_name', 'is_purchased'))
 
@@ -50,6 +51,7 @@ class OffersView(generics.ListAPIView):
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False)
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
+
         
 class AbilitiesView(APIView):
     def get(self, request):
