@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
-import { useResolvedPath, useMatch } from 'react-router'
-import { useState } from 'react'
+import { useResolvedPath, useMatch, useLocation } from 'react-router'
+import { useEffect, useState } from 'react'
 import { useAppSelector } from "../main"
 
 export default function Header() {
@@ -19,8 +19,13 @@ const lineStyle = 'h-[3px] w-full bg-primary transition rounded-xl'
 const Nav = () => {
     const [active, setActive] = useState(false)
     const auth = useAppSelector(state => state.login)
+    const location = useLocation()
     const { logged } = auth
     const { first_name, points } = auth.data
+
+    useEffect(() => {
+        setActive(false)
+    }, [location])
 
     return (
         <>
@@ -29,7 +34,7 @@ const Nav = () => {
                 {logged && <CustomLink to='/oferty'>Oferty</CustomLink>}
                 <CustomLink to='/kontakt'>Kontakt</CustomLink>
                 {logged ? <>
-                    <Link className="font-bold text-base ml-2" to='/profil'>{first_name}</Link>
+                    <Link className="font-bold text-base md:ml-2" to='/profil'>{first_name}</Link>
                     <Link className="font-bold text-base" to='/punkty'>{points} pkt.</Link>
                 </> : 
                 <>
