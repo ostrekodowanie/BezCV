@@ -12,6 +12,7 @@ export interface CandidateProps {
     last_name: string,
     slug?: string,
     abilities?: [],
+    role?: string,
     phone?: string,
     email?: string,
     favourite?: boolean
