@@ -21,7 +21,7 @@ export default function Offers() {
     }, [])
 
     return (
-        <section className="padding pt-[1.4in] md:pt-[2in]">
+        <section className="padding py-[1.4in] md:py-[2in]">
             <Routes>
                 {candidates.map(candidate => <Route path={'/' + candidate.slug + '-' + candidate.id} element={<Candidate {...candidate} key={candidate.id} />} />)}
                 {['/', '/search/*'].map((path, index) => 

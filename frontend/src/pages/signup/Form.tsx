@@ -8,6 +8,10 @@ import Loader from '../../components/Loader'
 export default function Form() {
     const [confPassword, setConfPassword] = useState('')
     const [status, setStatus] = useState<boolean | undefined | string>(undefined)
+    const [accepts, setAccepts] = useState({
+        statute: false,
+        policy: false
+    })
     const [employerDetails, setEmployerDetails] = useState({
         first_name: '',
         last_name: '',
@@ -19,6 +23,8 @@ export default function Form() {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setStatus('loading')
+        if(confPassword !== employerDetails.password) return setStatus('Hasła się nie zgadzają!')
+        if(employerDetails.password.length < 6) return setStatus('Hasło musi posiadać co najmniej 6 znaków!')
         try {
             axios.post('/api/signup', JSON.stringify(employerDetails), {
                 headers: {
@@ -34,7 +40,7 @@ export default function Form() {
     if(status === true) return <h2 className='text-3xl font-bold mx-auto pt-[1in]'>Email weryfikacyjny <span className='text-primary'>został wysłany!</span></h2>
 
     return (
-        <div className='flex flex-col text-center items-center xl:flex-1 xl:max-w-[10in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-16 xl:self-start'>
+        <div className='flex flex-col text-center items-center xl:flex-1 xl:max-w-[10in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start'>
             <h2 className="font-bold text-[2.4rem] mb-8 xl:mb-10 w-full">Zarejestruj się</h2>
             <form className='flex flex-col gap-4 w-full font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col max-w-full sm:grid grid-cols-2 gap-6 xl:gap-8'>
@@ -62,6 +68,14 @@ export default function Form() {
                         <label className='text-sm' htmlFor="confPassword">Powtórz hasło</label>
                         <input className={inputStyles.input} required type='password' name='confPassword' id='confPassword' onChange={e => setConfPassword(e.target.value)} />
                     </div>
+                </div>
+                <div className='relative flex gap-4 items-center justify-start mt-6'>
+                    <input type='checkbox' required id='statute' name='signup' onChange={e => setAccepts(prev => ({ ...prev, statute: e.target.checked }))} />
+                    <label className='text-sm' htmlFor='statute'>Akceptuję regulamin</label>
+                </div>
+                <div className='relative flex gap-4 items-center justify-start'>
+                    <input type='checkbox' required id='policy' name='signup' onChange={e => setAccepts(prev => ({ ...prev, policy: e.target.checked }))} />
+                    <label className='text-sm' htmlFor='policy'>Akceptuję politykę prywatności</label>
                 </div>
                 {status && status !== 'loading' && <span className='text-red-400 font-medium'>{status}</span>}
                 {status === 'loading' && <Loader className='absolute bottom-0 left-0' />}
