@@ -5,9 +5,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from rest_framework_simplejwt.tokens import RefreshToken
-
-from apps.Auth.models import User
 from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers
 from apps.Favourites.models import FavouriteCandidates
@@ -89,26 +86,8 @@ class SearchCandidateView(generics.ListAPIView):
             .filter(is_purchased=False)
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk')))))
 
-class PurchaseOfferView(generics.GenericAPIView):
+class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
-        serializer.save()
-        id = serializer.data['employer']
-        user = User.objects.get(id=id)
-
-        token = RefreshToken.for_user(id)
-        token['id'] = user.id
-        token['first_name'] = user.first_name
-        token['last_name'] = user.last_name
-        token['email'] = user.email
-        token['nip'] = user.nip
-        token['points'] = int(user.points)
-        token['is_staff'] = user.is_staff
-        
-        return Response({'refresh': str(token),'access': str(token.access_token)})
-        
 
 class PurchasedOffersView(generics.ListAPIView):
     serializer_class = serializers.CandidateSerializer
