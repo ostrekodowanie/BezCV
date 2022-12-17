@@ -96,7 +96,7 @@ class SearchCandidateView(generics.ListAPIView):
         if r:
             s = r.split(',')
             queries.add(Q(candidateroles_candidate__role__name__in=s), Q.AND)
-            
+
         return (Candidates.objects
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
@@ -107,7 +107,7 @@ class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
 
 class PurchasedOffersView(generics.ListAPIView):
-    serializer_class = serializers.CandidateSerializer
+    serializer_class = serializers.PurchasedOffers
     def get_queryset(self):
         u = self.request.GET.get('u')
         return Candidates.objects.filter(purchasedoffers_candidate__employer_id=u)
