@@ -30,7 +30,7 @@ const UnVerified = () => {
     if(status === 'loading') return <Loader />
     if(unVerified.length === 0) return <h2>Brak niezweryfikowanych kandydatów!</h2>
     return (
-        <div className="flex">
+        <div className="flex flex-col gap-4">
             {unVerified.map(candidate => <Candidate {...candidate} setUnVerified={setUnVerified} key={candidate.id} />)}
         </div>
     )
