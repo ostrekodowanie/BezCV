@@ -19,3 +19,8 @@ class SignUpSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  User
+        fields = ('first_name', 'last_name', 'email', 'nip', 'points', 'is_staff')

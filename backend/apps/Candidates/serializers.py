@@ -30,18 +30,13 @@ class SearchCandidateSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name', 'slug', 'favourite')
 
 class PurchaseOfferSerializer(serializers.ModelSerializer):
-    refresh = serializers.CharField()
     class Meta:
         model = PurchasedOffers
         fields = '__all__'
 
     def create(self, validated_data):
-        refresh = validated_data.pop('refresh')
         instance = PurchasedOffers.objects.create(**validated_data)
         instance.employer.reduce_points()
-
-        token = RefreshToken(refresh)
-        token.blacklist()
 
         return instance
 

@@ -4,9 +4,10 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import authenticate
 
-from rest_framework import views, status
+from rest_framework import views, status, generics
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -45,14 +46,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             raise AuthenticationFailed('Zweryfikuj swoje konto')    
             
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
-        
-        token['id'] = user.id
-        token['first_name'] = user.first_name
-        token['last_name'] = user.last_name
-        token['email'] = user.email
-        token['nip'] = user.nip
-        token['points'] = int(user.points)
-        token['is_staff'] = user.is_staff
 
         return token
 
@@ -110,3 +103,8 @@ class LogoutView(views.APIView):
             return Response(status=status.HTTP_200_OK)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class UserView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+    #permission_classes = [IsAuthenticated]
