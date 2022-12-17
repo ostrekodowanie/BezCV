@@ -14,8 +14,7 @@ class AllCandidatesView(generics.ListAPIView):
     queryset = Candidates.objects.filter(is_verified=True)
     serializer_class = serializers.AllCandidatesSerializer
 
-class CandidateView(generics.GenericAPIView):
-    serializer_class = serializers.CandidateSerializer
+class CandidateView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         u = self.request.GET.get('u')
@@ -29,7 +28,7 @@ class CandidateView(generics.GenericAPIView):
 
         if candidate.filter(is_purchased=True):
             return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities', role=F('candidateroles_candidate__role__name')))
-        
+
         return Response(candidate.values('id', 'first_name', 'last_name', 'is_purchased', 'abilities', role=F('candidateroles_candidate__role__name')))
 
 
