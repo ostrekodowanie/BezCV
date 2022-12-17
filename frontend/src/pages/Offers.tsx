@@ -23,7 +23,7 @@ export default function Offers() {
     return (
         <section className="padding pt-[1.4in] md:pt-[2in]">
             <Routes>
-                {candidates.map(candidate => <Route path={'/' + [candidate.first_name, candidate.last_name, candidate.id].join('-')} element={<Candidate {...candidate} key={candidate.id} />} />)}
+                {candidates.map(candidate => <Route path={'/' + candidate.slug + '-' + candidate.id} element={<Candidate {...candidate} key={candidate.id} />} />)}
                 {['/', '/search/*'].map((path, index) => 
                     <Route path={path} element={<CandidateList defaultCandidates={candidates} />} key={index} />
                 )}
@@ -33,7 +33,8 @@ export default function Offers() {
 }
 
 export interface FilterProps {
-    abilities: string[]
+    abilities: string[],
+    roles: string[]
 }
 
 const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProps[]}) => {
@@ -46,7 +47,8 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     const [candidates, setCandidates] = useState<CandidateProps[]>(defaultCandidates)
     const [input, setInput] = useState('')
     const [filter, setFilter] = useState<FilterProps>({
-        abilities: []
+        abilities: [],
+        roles: []
     })
     const debounceSearch = useDebounce(input, 400)
 
@@ -114,7 +116,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite }: CandidateP
         <div className="shadow rounded-3xl p-6 flex justify-between">
             <div className="flex flex-col">
                 <h3 className="text-bold text-xl">{first_name} {last_name}</h3>
-                <Link className="text-primary font-medium" to={'/oferty/' + slug?.split(' ').join('-') + id}>Sprawdź</Link>
+                <Link className="text-primary font-medium" to={'/oferty/' + slug?.split(' ').join('-') + '-' + id}>Sprawdź</Link>
             </div>
             <button onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
         </div>
