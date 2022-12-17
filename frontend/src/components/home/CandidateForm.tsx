@@ -33,21 +33,21 @@ export default function CandidateForm() {
             <h2 className='font-semibold mb-8 text-3xl'>Zgłoś się do pracy</h2>
             <form className='flex flex-col gap-4 font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col max-w-full sm:grid grid-cols-2 gap-6'>
-                    <div className='relative'>
+                    <div className='relative flex flex-col gap-2 items-start w-full'>
+                        <label className='text-sm' htmlFor="firstName">Imię</label>
                         <input className={inputStyles.input} required type='text' name='firstName' id='firstName' onChange={e => setDetails(prev => { return { ...prev, first_name: e.target.value }})} />
-                        <span className={`${details.first_name ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Imię</span>
                     </div>                    
-                    <div className='relative'>
+                    <div className='relative flex flex-col gap-2 items-start w-full'>
+                        <label className='text-sm' htmlFor="lastName">Nazwisko</label>
                         <input className={inputStyles.input} required type='text' name='lastName' id='lastName' onChange={e => setDetails(prev => { return { ...prev, last_name: e.target.value }})} />
-                        <span className={`${details.last_name ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Nazwisko</span>
                     </div>
-                    <div className='relative'>
+                    <div className='relative flex flex-col gap-2 items-start w-full'>
+                        <label className='text-sm' htmlFor="email">Email</label>
                         <input className={inputStyles.input} required type='email' name='email' id='email' onChange={e => setDetails(prev => { return { ...prev, email: e.target.value }})} />
-                        <span className={`${details.email ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Email</span>
                     </div>
-                    <div className='relative'>
+                    <div className='relative flex flex-col gap-2 items-start w-full'>
+                        <label className='text-sm' htmlFor="phone">Numer telefonu</label>
                         <input className={inputStyles.input} type='tel' name='phone' id='phone' onChange={e => setDetails(prev => { return { ...prev, phone: e.target.value }})} />
-                        <span className={`${details.phone ? 'px-2 bg-white top-0' : 'top-[50%]'} ${inputStyles.placeholder}`}>Numer telefonu</span>
                     </div>
                 </div>
                 <div className='flex items-center gap-6'>
