@@ -117,7 +117,7 @@ class PasswordResetView(views.APIView):
 
         email_message = EmailMessage(
             subject='Resetowanie hasła',
-            body='Aby zresetować, kliknij w link: https://' + get_current_site(request).domain + '/reset-password?token={}'.format(token),
+            body='Aby zresetować, kliknij w link: https://' + get_current_site(request).domain + 'logowanie/reset-password?token={}'.format(token),
             to=[email]
         )
         email_message.send()
