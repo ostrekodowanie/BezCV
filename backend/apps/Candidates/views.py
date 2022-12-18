@@ -40,7 +40,7 @@ class CandidateAddView(generics.CreateAPIView):
 
 class OffersView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         u = self.request.GET.get('u')
@@ -77,7 +77,7 @@ class FiltersView(APIView):
 
 class SearchCandidateView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         q = self.request.GET.get('q')
@@ -118,6 +118,5 @@ class PurchasedOffersView(generics.ListAPIView):
 
     def get_queryset(self):
         u = self.request.GET.get('u')
-        print(u)
         return Candidates.objects.filter(purchasedoffers_candidate__employer_id=u)
         
