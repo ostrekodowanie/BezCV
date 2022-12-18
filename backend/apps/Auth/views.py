@@ -104,6 +104,45 @@ class LogoutView(views.APIView):
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+class PasswordResetView(views.APIView):
+    def post(self, request):
+        email = request.data
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({'Nie ma użytkownika o podanym adresie email'}, status=status.HTTP_400_BAD_REQUEST)
+
+        token = jwt.encode({'email': email}, settings.SECRET_KEY, algorithm='HS256')
+
+        email_message = EmailMessage(
+            subject='Resetowanie hasła',
+            body='Aby zresetować, kliknij w link: https://' + get_current_site(request).domain + '/reset-password?token={}'.format(token),
+            to=[email]
+        )
+        email_message.send()
+
+        return Response({'Wiadomość została wysłana na podany adres email'}, status=status.HTTP_200_OK)
+
+class PasswordResetConfirmView(views.APIView):
+    def post(self, request):
+        token = request.data.get('token')
+        new_password = request.data.get('new_password')
+
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            email = payload['email']
+        except jwt.ExpiredSignatureError:
+            return Response({'Token resetu hasła wygasł'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.DecodeError:
+            return Response({'Nieprawidłowy token resetu hasła'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.get(email=email)
+        user.set_password(new_password)
+        user.save()
+
+        return Response({'Hasło zostało zresetowane'}, status=status.HTTP_200_OK)
+
 class UserView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
