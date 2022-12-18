@@ -14,9 +14,9 @@ class AllCandidatesView(generics.ListAPIView):
     queryset = Candidates.objects.filter(is_verified=True)
     serializer_class = serializers.AllCandidatesSerializer
 
-class CandidateView(generics.GenericAPIView):
-    serializer_class = serializers.CandidateSerializer
+class CandidateView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         u = self.request.GET.get('u')
         slug=self.kwargs['slug']
@@ -25,12 +25,13 @@ class CandidateView(generics.GenericAPIView):
         candidate = (Candidates.objects
             .filter(Q(is_verified=True) & Q(slug=slug) & Q(id=id))
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name')))
+            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
+            .annotate(role=F('candidateroles_candidate__role__name')))
 
         if candidate.filter(is_purchased=True):
-            return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities', role=F('candidateroles_candidate__role__name')))
-        
-        return Response(candidate.values('id', 'first_name', 'last_name', 'is_purchased', 'abilities', role=F('candidateroles_candidate__role__name')))
+            return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities', 'role'))
+
+        return Response(candidate.values('id', 'first_name', 'last_name', 'is_purchased', 'abilities', 'role'))
 
 
 class CandidateAddView(generics.CreateAPIView):
@@ -106,7 +107,7 @@ class SearchCandidateView(generics.ListAPIView):
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
-            .distinct('id'))
+            .distinct())
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
@@ -117,6 +118,5 @@ class PurchasedOffersView(generics.ListAPIView):
 
     def get_queryset(self):
         u = self.request.GET.get('u')
-        print(u)
         return Candidates.objects.filter(purchasedoffers_candidate__employer_id=u)
         
