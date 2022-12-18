@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import { Link } from "react-router-dom"
 import FilledButton from "../../components/FilledButton"
 import Loader from "../../components/Loader"
@@ -9,9 +9,10 @@ export default function Recovery() {
     const [email, setEmail] = useState('')
     const [status, setStatus] = useState<boolean | 'loading' | undefined>()
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault()
         setStatus('loading')
-        const response = await axios.post('/api/reset-password', email, { headers: { 'Content-Type': 'application/json' }})
+        const response = await axios.post('/api/login/reset-password', email, { headers: { 'Content-Type': 'application/json' }})
         if(response.status === 200) return setStatus(true)
         return setStatus(false)
     }
@@ -19,7 +20,7 @@ export default function Recovery() {
     return (
         <div className='flex flex-col text-center items-center xl:flex-1 xl:max-w-[7in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start'>
             <h2 className="font-bold text-[2.4rem] mb-4 xl:mb-8 w-full">Zresetuj hasło</h2>
-            {status === true ? <h3 className='text-xl my-6'>Wiadomość została wysłana na podany email.</h3> : <form className='flex flex-col gap-4 w-full font-medium relative' onSubmit={handleSubmit}>
+            {status === true ? <h3 className='text-xl mt-2 mb-6'>Wiadomość została wysłana na podany email.</h3> : <form className='flex flex-col gap-4 w-full font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col sm:flex-row justify-center max-w-full gap-6 xl:gap-8'>
                     <div className='relative flex flex-col gap-2 items-start w-full'>
                         <label className='text-sm' htmlFor="email">Email</label>
