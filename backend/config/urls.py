@@ -30,6 +30,8 @@ urlpatterns = [
     path('rejestracja', views.index),
     path('logowanie', views.index),
     path('rejestracja/verify', views.index),
+    path('reset-password', views.index),
+    path('reset-password/confirm', views.index),
     path('oferty', views.index),
     path('oferty/search', views.index),
     path('oferty/<slug>-<id>', views.candidates),
