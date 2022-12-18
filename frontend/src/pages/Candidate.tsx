@@ -64,8 +64,8 @@ export default function Candidate({ id, slug }: CandidateProps) {
         <div className="flex flex-col gap-6">
             <h1 className="font-bold text-3xl">{candidateDetails.first_name} {candidateDetails.last_name}</h1>
             <div className="flex items-center gap-4 font-medium text-lg">
-                <h2>Email: {candidateDetails.email ? candidateDetails.email : candidateDetails.first_name.charAt(0).toLowerCase() + '******@*****.***'}</h2>
-                <h2>Numer telefonu: {candidateDetails.phone ? candidateDetails.phone : '+48 *** *** ***'}</h2>
+                <h2>{candidateDetails.email ? candidateDetails.email : candidateDetails.first_name.charAt(0).toLowerCase() + '******@*****.***'}</h2>
+                <h2>{candidateDetails.phone ? candidateDetails.phone : '+48 *** *** ***'}</h2>
             </div>
             <div className="flex flex-wrap gap-4">
                 {candidateDetails.abilities?.map(ab => (
@@ -75,7 +75,7 @@ export default function Candidate({ id, slug }: CandidateProps) {
                 ))}
             </div>
             <div className="flex items-center gap-4">
-                <h2 className="text-lg">Preferowane stanowisko: <span className="font-bold">{candidateDetails.role}</span></h2>
+                <h2 className="text-lg">Preferowane stanowisko: <span className="font-bold text-blue-400">{candidateDetails.role}</span></h2>
             </div>
             {!candidateDetails.is_purchased && 
                 <div className="flex items-center gap-4">

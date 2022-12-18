@@ -89,7 +89,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/oferty/*" element={<Offers />} />
             <Route path="/kontakt" element={<Contact />} />
-            <Route path="/logowanie" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/logowanie/*" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
             <Route path="/rejestracja/verify/*" element={<PublicRoute><Verify /></PublicRoute>} />
             <Route path='/profil' element={<PrivateRoute><Profile /></PrivateRoute>} />
