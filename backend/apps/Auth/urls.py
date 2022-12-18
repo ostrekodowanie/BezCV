@@ -10,7 +10,7 @@ urlpatterns = [
     path('signup/verify', views.VerifyView.as_view()),
     path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('logout', views.LogoutView.as_view()),
-    path('reset-password', views.PasswordResetView.as_view()),
-    path('reset-password/confirm', views.PasswordResetConfirmView.as_view()),
+    path('login/reset-password', views.PasswordResetView.as_view()),
+    path('login/reset-password/confirm', views.PasswordResetConfirmView.as_view()),
     path('user/<pk>', views.UserView.as_view()),
 ]
