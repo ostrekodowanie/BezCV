@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router"
+import ChangePassword from "./login/ChangePassword"
 import Form from "./login/Form"
 import Recovery from "./login/Recovery"
 
@@ -16,6 +17,7 @@ export default function Login() {
             <Routes>
                 <Route path='/' element={<Form />} />
                 <Route path='/odzyskiwanie' element={<Recovery />} />
+                <Route path='/reset-password/*' element={<ChangePassword />} />
             </Routes>
         </section>
     )
