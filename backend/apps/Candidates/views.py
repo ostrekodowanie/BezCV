@@ -1,6 +1,5 @@
 from django.db.models import Q, Exists, OuterRef, Count, F
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.shortcuts import get_object_or_404
 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -41,7 +40,7 @@ class CandidateAddView(generics.CreateAPIView):
 
 class OffersView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         u = self.request.GET.get('u')
@@ -78,7 +77,7 @@ class FiltersView(APIView):
 
 class SearchCandidateView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         q = self.request.GET.get('q')
@@ -108,7 +107,7 @@ class SearchCandidateView(generics.ListAPIView):
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
-            .distinct('id'))
+            .distinct())
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
