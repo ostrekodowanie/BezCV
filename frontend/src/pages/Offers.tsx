@@ -114,7 +114,9 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
         <Link to={'/oferty/' + slug + '-' + id} className="shadow rounded-3xl p-6 flex justify-between">
             <div className="flex flex-col gap-6">
                 <div className="flex items-center gap-6">
-                    <div className="h-16 w-16 rounded bg-[#F8F8F9]" />
+                    <div className="h-16 w-16 rounded-full flex justify-center items-center bg-[#F8F8F9]">
+                        <h4 className="font-bold text-2xl">{first_name.charAt(0)}</h4>
+                    </div>
                     <div className="flex flex-col">
                         <h3 className="text-xl font-bold">{first_name} {last_name}</h3>
                         <h3 className="font-bold text-primary">{role}</h3>
