@@ -55,7 +55,7 @@ export default function Candidate() {
         setLoading(prev => ({...prev, page: true}))
         axios.get(`/api/oferty/${slug}-${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
-            .then(data => setCandidateDetails(data[0]))
+            .then(data => setCandidateDetails(data))
             .finally(() => setLoading(prev => ({...prev, page: false})))
     }, [points, slug, id])
 
@@ -64,7 +64,7 @@ export default function Candidate() {
     return (
         <div className="flex flex-col gap-6">
             <h1 className="font-bold text-3xl">{candidateDetails.first_name} {candidateDetails.last_name}</h1>
-            <div className="flex items-center gap-4 font-medium text-lg">
+            <div className="flex items-center gap-4 font-medium text-lg"> 
                 <h2>{candidateDetails.email}</h2>
                 <h2>+48 {candidateDetails.phone}</h2>
             </div>

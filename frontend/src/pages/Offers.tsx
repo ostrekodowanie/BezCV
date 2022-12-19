@@ -61,15 +61,20 @@ const CandidateList = () => {
     }, [debounceSearch, filter])
 
     useEffect(() => {
+        console.log(page)
         let isCancelled = false
         let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + (page > 1 ? '&page=' + page : '')
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
-            .then(data => !isCancelled && setCandidates(prev => page === 1 ? data : [...prev, ...data]))
+            .then(data => !isCancelled && setCandidates(prev => page === 1 ? data.results : [...prev, ...data.results]))
         return () => {
             isCancelled = true
         }
     }, [location.search, page])
+
+    useEffect(() => {
+        console.log(candidates)
+    }, [candidates])
 
     const OffersLoader = () => (
         <>
@@ -86,7 +91,7 @@ const CandidateList = () => {
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} setInput={setInput} />
                 <div className="flex flex-col gap-8 flex-1 sm:ml-8">
-                    <InfiniteScroll next={() => setPage(prev => prev++)} hasMore={true} loader={<OffersLoader />} dataLength={10}>
+                    <InfiniteScroll height={'80vh'} className="flex flex-col gap-8 flex-1 sm:ml-8" next={() => setPage(prev => prev + 1)} hasMore={true} loader={<OffersLoader />} dataLength={5}>
                         {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
                     </InfiniteScroll>
                 </div>
