@@ -47,6 +47,7 @@ const CandidateList = () => {
     useEffect(() => {
         setCandidates([])
         setPage(1)
+        setHasMore(true)
         let url = '/oferty'
         if(input || filter.abilities.length > 0 || filter.roles.length > 0) {
             let searchArr = [
@@ -62,12 +63,25 @@ const CandidateList = () => {
     }, [debounceSearch, filter])
 
     useEffect(() => {
-        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + (page > 1 ? '&page=' + page : '')
+        let isCancelled = false
+        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id)
+        axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
+            .then(res => res.data)
+            .then(data => !isCancelled && setCandidates(data.results))
+            .catch(() => setHasMore(false))
+        return () => {
+            isCancelled = true
+        }
+    }, [location.search])
+
+    useEffect(() => {
+        if(page === 1) return
+        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + '&page=' + page
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidates(prev => page === 1 ? data.results : [...prev, ...data.results]))
             .catch(() => setHasMore(false))
-    }, [location.search, page])
+    }, [page])
 
     const OffersLoader = () => (
         <>
