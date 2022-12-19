@@ -56,10 +56,12 @@ class CandidateAddView(generics.CreateAPIView):
 
 
 class OffersView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         u = self.request.GET.get('u')
-
         page = self.request.GET.get('page', 1)
+
         per_page = 10
         offset = (int(page) - 1) * per_page
 
@@ -73,12 +75,13 @@ class OffersView(APIView):
 
         total_count = queryset.count()
 
-        queryset = (Candidates.objects
+        queryset = (queryset
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
             .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-            .annotate(role=F('candidateroles_candidate__role__name'))[offset:offset + per_page]
+            .annotate(role=F('candidateroles_candidate__role__name'))
+            .distinct()[offset:offset + per_page]
         )
 
         if not queryset.exists():
@@ -87,13 +90,16 @@ class OffersView(APIView):
         return Response({'count': total_count, 'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
 
 
-class SearchCandidateView(generics.ListAPIView):
+class SearchCandidateView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         q = self.request.GET.get('q')
         a = self.request.GET.get('a')
         r = self.request.GET.get('r')
         u = self.request.GET.get('u')
         page = self.request.GET.get('page', 1)
+
         per_page = 10
         offset = (int(page) - 1) * per_page
 
@@ -120,7 +126,7 @@ class SearchCandidateView(generics.ListAPIView):
 
         total_count = queryset.count()
 
-        queryset = (Candidates.objects
+        queryset = (queryset
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
