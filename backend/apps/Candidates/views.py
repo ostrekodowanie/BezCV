@@ -63,6 +63,10 @@ class OffersView(generics.ListAPIView):
     def get_queryset(self):
         u = self.request.GET.get('u')
 
+        #page = self.request.GET.get('page', 1)
+        #per_page = 10
+        #offset = (int(page) - 1) * per_page
+
         queries = Q(is_verified=True)
 
         queryset = (Candidates.objects
@@ -73,10 +77,10 @@ class OffersView(generics.ListAPIView):
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
             .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-            .annotate(role=F('candidateroles_candidate__role__name'))
+            .annotate(role=F('candidateroles_candidate__role__name'))#[offset:offset + per_page]
         )
 
-        return queryset 
+        return queryset
 
         
 class FiltersView(APIView):
