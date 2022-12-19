@@ -7,14 +7,6 @@ class CandidateAddSerializer(serializers.ModelSerializer):
         model = Candidates
         fields = ('first_name', 'last_name', 'email', 'phone')
 
-class SearchCandidateSerializer(serializers.ModelSerializer):
-    favourite = serializers.BooleanField(read_only=True)
-    abilities = serializers.ListField(child=serializers.CharField())
-    role = serializers.CharField()
-    class Meta:
-        model = Candidates
-        fields = ('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')
-
 class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchasedOffers
