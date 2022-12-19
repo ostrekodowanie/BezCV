@@ -1,14 +1,21 @@
-from django.db.models import Q, Exists, OuterRef, Count, F, Prefetch
+from django.db.models import Q, Exists, OuterRef, Count, F
 from django.contrib.postgres.aggregates import ArrayAgg
 
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 from . import serializers
-from .models import Candidates, Abilities, PurchasedOffers, Roles, CandidateAbilities, CandidateRoles
+from .models import Candidates, Abilities, PurchasedOffers, Roles
 from apps.Favourites.models import FavouriteCandidates
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page'
+    max_page_size = 5
 
 
 class CandidateView(APIView):
@@ -51,6 +58,7 @@ class CandidateAddView(generics.CreateAPIView):
 class OffersView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         u = self.request.GET.get('u')
@@ -73,12 +81,13 @@ class OffersView(generics.ListAPIView):
         
 class FiltersView(APIView):
     def get(self, request):
-        abilities = Abilities.objects.all().order_by('name').distinct('name')
+        abilities = Abilities.objects.annotate(ability_count=Count('name')).order_by('ability_count')
+        roles = Roles.objects.annotate(role_count=Count('name')).order_by('role_count')
+
         abilities_list = []
         for x in abilities:
             abilities_list.append(x.name)
 
-        roles = Roles.objects.all().order_by('name').distinct('name')
         roles_list = []
         for x in roles:
             roles_list.append(x.name)
@@ -93,12 +102,14 @@ class FiltersView(APIView):
 class SearchCandidateView(generics.ListAPIView):
     serializer_class = serializers.SearchCandidateSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination    
 
     def get_queryset(self):
         q = self.request.GET.get('q')
         a = self.request.GET.get('a')
         r = self.request.GET.get('r')
         u = self.request.GET.get('u')
+
         queries = Q(is_verified=True)
 
         if q:
