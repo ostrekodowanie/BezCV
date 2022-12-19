@@ -62,15 +62,11 @@ const CandidateList = () => {
     }, [debounceSearch, filter])
 
     useEffect(() => {
-        let isCancelled = false
         let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + (page > 1 ? '&page=' + page : '')
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
-            .then(data => !isCancelled && setCandidates(prev => page === 1 ? data.results : [...prev, ...data.results]))
+            .then(data => setCandidates(prev => page === 1 ? data.results : [...prev, ...data.results]))
             .catch(() => setHasMore(false))
-        return () => {
-            isCancelled = true
-        }
     }, [location.search, page])
 
     const OffersLoader = () => (
