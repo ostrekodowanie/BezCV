@@ -7,6 +7,7 @@ import { CandidateProps } from "./Candidate"
 import Candidate from './Candidate'
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../main"
+import InfiniteScroll from "react-infinite-scroll-component"
 
 export default function Offers() {
     return (
@@ -35,6 +36,7 @@ const CandidateList = () => {
     const { id } = auth.data
     const [candidates, setCandidates] = useState<CandidateProps[]>([])
     const [input, setInput] = useState('')
+    const [page, setPage] = useState(1)
     const [filter, setFilter] = useState<FilterProps>({
         abilities: [],
         roles: []
@@ -43,6 +45,7 @@ const CandidateList = () => {
 
     useEffect(() => {
         setCandidates([])
+        setPage(1)
         let url = '/oferty'
         if(input || filter.abilities.length > 0 || filter.roles.length > 0) {
             let searchArr = [
@@ -59,14 +62,23 @@ const CandidateList = () => {
 
     useEffect(() => {
         let isCancelled = false
-        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id :  '?u=' + id)
+        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + '&page=' + page
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
-            .then(data => !isCancelled && setCandidates(data))
+            .then(data => !isCancelled && setCandidates(prev => page === 1 ? data : [...prev, ...data]))
         return () => {
             isCancelled = true
         }
-    }, [location.search])
+    }, [location.search, page])
+
+    const OffersLoader = () => (
+        <>
+            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
+            <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
+            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
+            <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
+        </>
+    )
 
     return (
         <>
@@ -74,13 +86,9 @@ const CandidateList = () => {
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} setInput={setInput} />
                 <div className="flex flex-col gap-8 flex-1 sm:ml-8">
-                    {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : 
-                    <>
-                        <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
-                        <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
-                        <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
-                        <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
-                    </>}
+                    <InfiniteScroll next={() => setPage(prev => prev++)} hasMore={true} loader={<OffersLoader />} dataLength={5}>
+                        {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
+                    </InfiniteScroll>
                 </div>
             </div>
         </>

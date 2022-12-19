@@ -8,7 +8,7 @@ import PublicRoute from "./utils/PublicRoute"
 import PrivateRoute from "./utils/PrivateRoute"
 import Profile from "./pages/Profile"
 import Verify from "./pages/signup/Verify"
-import { ReactElement, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { ReactElement, useLayoutEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "./main"
 import { login, logout } from "./reducers/login"
 import jwtDecode from 'jwt-decode'
@@ -42,27 +42,24 @@ export default function App() {
   }
 
   const updateToken = async (token: string) => {
-    try {
-      const response = await axios.post('/api/token/refresh', JSON.stringify({ refresh: token }), {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if(response.status === 200) {
-        let tokens = response.data
-        let { id }: User = jwtDecode(tokens.access)
-        localStorage.setItem('user', JSON.stringify(tokens))
-        const userInfo = await getUserInfo(id, tokens.access)
-        if(userInfo) return dispatch(login({
-          data: {...userInfo, id},
-          tokens
-        }))
+    const response = await axios.post('/api/token/refresh', JSON.stringify({ refresh: token }), {
+      headers: {
+        'Content-Type': 'application/json'
       }
+    })
+    if(response.status === 200) {
+      let tokens = response.data
+      let { id }: User = jwtDecode(tokens.access)
+      localStorage.setItem('user', JSON.stringify(tokens))
+      const userInfo = await getUserInfo(id, tokens.access)
+      if(userInfo) return dispatch(login({
+        data: {...userInfo, id},
+        tokens
+      }))
     }
-    catch {
-      localStorage.removeItem('user')
-      return dispatch(logout())
-    }
+    console.log('Error')
+    localStorage.removeItem('user')
+    return dispatch(logout())
   }
 
   useLayoutEffect(() => {
