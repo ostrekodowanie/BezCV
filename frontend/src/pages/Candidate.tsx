@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
@@ -20,8 +20,9 @@ export interface CandidateProps {
 
 type Details = Omit<CandidateProps, 'slug' | 'id' | 'favourite'> & { is_purchased: boolean }
 
-export default function Candidate({ id, slug }: CandidateProps) {
+export default function Candidate() {
     const auth = useAppSelector(state => state.login)
+    const { id, slug } = useParams()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { points } = auth.data
@@ -56,7 +57,7 @@ export default function Candidate({ id, slug }: CandidateProps) {
             .then(res => res.data)
             .then(data => setCandidateDetails(data[0]))
             .finally(() => setLoading(prev => ({...prev, page: false})))
-    }, [points, slug])
+    }, [points, slug, id])
 
     if(loading.page) return <Loader />
 
@@ -64,8 +65,8 @@ export default function Candidate({ id, slug }: CandidateProps) {
         <div className="flex flex-col gap-6">
             <h1 className="font-bold text-3xl">{candidateDetails.first_name} {candidateDetails.last_name}</h1>
             <div className="flex items-center gap-4 font-medium text-lg">
-                <h2>{candidateDetails.email ? candidateDetails.email : candidateDetails.first_name.charAt(0).toLowerCase() + '******@*****.***'}</h2>
-                <h2>{candidateDetails.phone ? candidateDetails.phone : '+48 *** *** ***'}</h2>
+                <h2>{candidateDetails.email}</h2>
+                <h2>+48 {candidateDetails.phone}</h2>
             </div>
             <div className="flex flex-wrap gap-4">
                 {candidateDetails.abilities?.map(ab => (

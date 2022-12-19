@@ -8,7 +8,7 @@ export default function AdminPanel() {
     return (
         <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in]">
             <div className="flex flex-col gap-6">
-                <h2 className="font-bold text-xl">Niezweryfikowani kandydaci</h2>
+                <h2 className="font-bold text-3xl">Niezweryfikowani kandydaci</h2>
                 <UnVerified />
             </div>
         </section>
@@ -77,7 +77,7 @@ const Candidate = ({ setUnVerified, id, ...rest }: CandidateVerifyRef) => {
 
     return (
         <div className="flex flex-col gap-4 rounded shadow px-10 py-6">
-            <h3 className="font-bold">{first_name} {last_name}</h3>
+            <h3 className="font-bold text-lg">{first_name} {last_name}</h3>
             <div className="flex items-center gap-6 font-medium">
                 <h3>Email: {email}</h3>
                 <h3>Numer telefonu: {phone}</h3>
