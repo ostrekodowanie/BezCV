@@ -62,7 +62,7 @@ const CandidateList = () => {
 
     useEffect(() => {
         let isCancelled = false
-        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + '&page=' + page
+        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + (page > 1 && '&page=' + page)
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => !isCancelled && setCandidates(prev => page === 1 ? data : [...prev, ...data]))
@@ -86,7 +86,7 @@ const CandidateList = () => {
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} setInput={setInput} />
                 <div className="flex flex-col gap-8 flex-1 sm:ml-8">
-                    <InfiniteScroll next={() => setPage(prev => prev++)} hasMore={true} loader={<OffersLoader />} dataLength={5}>
+                    <InfiniteScroll next={() => setPage(prev => prev++)} hasMore={true} loader={<OffersLoader />} dataLength={10}>
                         {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
                     </InfiniteScroll>
                 </div>
