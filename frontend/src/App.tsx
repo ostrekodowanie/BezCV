@@ -31,11 +31,6 @@ export default function App() {
   const auth = useAppSelector(state => state.login)
   const { logged } = auth
   const { refresh } = auth.tokens
-  const { points } = auth.data
-
-  useEffect(() => {
-    console.log(points)
-  }, [points])
 
   const getUser = async () => {
     if(loginFromLocalStorage) {
@@ -47,23 +42,27 @@ export default function App() {
   }
 
   const updateToken = async (token: string) => {
-    const response = await axios.post('/api/token/refresh', JSON.stringify({ refresh: token }), {
-      headers: {
-        'Content-Type': 'application/json'
+    try {
+      const response = await axios.post('/api/token/refresh', JSON.stringify({ refresh: token }), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if(response.status === 200) {
+        let tokens = response.data
+        let { id }: User = jwtDecode(tokens.access)
+        localStorage.setItem('user', JSON.stringify(tokens))
+        const userInfo = await getUserInfo(id, tokens.access)
+        if(userInfo) return dispatch(login({
+          data: {...userInfo, id},
+          tokens
+        }))
       }
-    })
-    if(response.status === 200) {
-      let tokens = response.data
-      let { id }: User = jwtDecode(tokens.access)
-      localStorage.setItem('user', JSON.stringify(tokens))
-      const userInfo = await getUserInfo(id, tokens.access)
-      if(userInfo) return dispatch(login({
-        data: {...userInfo, id},
-        tokens
-      }))
     }
-    localStorage.removeItem('user')
-    return dispatch(logout())
+    catch {
+      localStorage.removeItem('user')
+      return dispatch(logout())
+    }
   }
 
   useLayoutEffect(() => {
