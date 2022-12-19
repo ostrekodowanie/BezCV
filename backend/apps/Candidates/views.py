@@ -1,7 +1,7 @@
 from django.db.models import Q, Exists, OuterRef, Count, F
 from django.contrib.postgres.aggregates import ArrayAgg
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -55,17 +55,13 @@ class CandidateAddView(generics.CreateAPIView):
     serializer_class = serializers.CandidateAddSerializer
 
 
-class OffersView(generics.ListAPIView):
-    serializer_class = serializers.SearchCandidateSerializer
-    permission_classes = [IsAuthenticated]
-    pagination_class = StandardResultsSetPagination
-
-    def get_queryset(self):
+class OffersView(APIView):
+    def get(self, request, *args, **kwargs):
         u = self.request.GET.get('u')
 
-        #page = self.request.GET.get('page', 1)
-        #per_page = 10
-        #offset = (int(page) - 1) * per_page
+        page = self.request.GET.get('page', 1)
+        per_page = 10
+        offset = (int(page) - 1) * per_page
 
         queries = Q(is_verified=True)
 
@@ -73,14 +69,69 @@ class OffersView(generics.ListAPIView):
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False)
+        )
+
+        total_count = queryset.count()
+
+        queryset = (Candidates.objects
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
             .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-            .annotate(role=F('candidateroles_candidate__role__name'))#[offset:offset + per_page]
+            .annotate(role=F('candidateroles_candidate__role__name'))[offset:offset + per_page]
         )
 
-        return queryset
+        if not queryset.exists():
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response({'count': total_count, 'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
+
+
+class SearchCandidateView(generics.ListAPIView):
+    def get(self, request, *args, **kwargs):
+        q = self.request.GET.get('q')
+        a = self.request.GET.get('a')
+        r = self.request.GET.get('r')
+        u = self.request.GET.get('u')
+        page = self.request.GET.get('page', 1)
+        per_page = 10
+        offset = (int(page) - 1) * per_page
+
+        queries = Q(is_verified=True)
+
+        if q:
+            query=Q()
+            for x in q.split():
+                query &= Q(slug__icontains=x)
+            queries.add(Q(query), Q.AND)
+
+        if a:     
+            s = a.split(',')
+            queries.add(Q(candidateabilities_candidate__ability__name__in=s), Q.AND)
+        
+        if r:
+            s = r.split(',')
+            queries.add(Q(candidateroles_candidate__role__name__in=s), Q.AND)
+
+        queryset = (Candidates.objects
+            .filter(queries)
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
+            .filter(is_purchased=False))
+
+        total_count = queryset.count()
+
+        queryset = (Candidates.objects
+            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
+            .annotate(ids=Count('favouritecandidates_candidate__id'))
+            .order_by('-ids')
+            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
+            .annotate(role=F('candidateroles_candidate__role__name'))
+            .distinct()[offset:offset + per_page])
+
+        if not queryset.exists():
+            return Response(status=status.HTTP_204_NO_CONTENT)
+ 
+        return Response({'count': total_count,'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
 
         
 class FiltersView(APIView):
@@ -102,46 +153,6 @@ class FiltersView(APIView):
         }
 
         return Response(data)
-
-class SearchCandidateView(generics.ListAPIView):
-    serializer_class = serializers.SearchCandidateSerializer
-    permission_classes = [IsAuthenticated]
-    pagination_class = StandardResultsSetPagination    
-
-    def get_queryset(self):
-        q = self.request.GET.get('q')
-        a = self.request.GET.get('a')
-        r = self.request.GET.get('r')
-        u = self.request.GET.get('u')
-
-        queries = Q(is_verified=True)
-
-        if q:
-            query=Q()
-            for x in q.split():
-                query &= Q(slug__icontains=x)
-            queries.add(Q(query), Q.AND)
-
-        if a:     
-            s = a.split(',')
-            queries.add(Q(candidateabilities_candidate__ability__name__in=s), Q.AND)
-        
-        if r:
-            s = r.split(',')
-            queries.add(Q(candidateroles_candidate__role__name__in=s), Q.AND)
-
-        queryset = (Candidates.objects
-            .filter(queries)
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .filter(is_purchased=False)
-            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .annotate(ids=Count('favouritecandidates_candidate__id'))
-            .order_by('-ids')
-            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-            .annotate(role=F('candidateroles_candidate__role__name'))
-            .distinct())
-
-        return queryset
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
