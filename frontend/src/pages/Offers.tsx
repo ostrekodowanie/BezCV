@@ -62,7 +62,7 @@ const CandidateList = () => {
 
     useEffect(() => {
         let isCancelled = false
-        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + (page > 1 && '&page=' + page)
+        let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + (page > 1 ? '&page=' + page : '')
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => !isCancelled && setCandidates(prev => page === 1 ? data : [...prev, ...data]))
