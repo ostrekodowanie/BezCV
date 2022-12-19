@@ -86,7 +86,7 @@ class CandidateAbilities(models.Model):
 
     def __str__(self):
         return '{}'.format(
-            self.candidate,
+            self.pk,
         )
 
 class PurchasedOffers(models.Model):
