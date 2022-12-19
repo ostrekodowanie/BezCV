@@ -37,6 +37,7 @@ const CandidateList = () => {
     const [candidates, setCandidates] = useState<CandidateProps[]>([])
     const [input, setInput] = useState('')
     const [page, setPage] = useState(1)
+    const [hasMore, setHasMore] = useState(true)
     const [filter, setFilter] = useState<FilterProps>({
         abilities: [],
         roles: []
@@ -61,20 +62,16 @@ const CandidateList = () => {
     }, [debounceSearch, filter])
 
     useEffect(() => {
-        console.log(page)
         let isCancelled = false
         let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + (page > 1 ? '&page=' + page : '')
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => !isCancelled && setCandidates(prev => page === 1 ? data.results : [...prev, ...data.results]))
+            .catch(() => setHasMore(false))
         return () => {
             isCancelled = true
         }
     }, [location.search, page])
-
-    useEffect(() => {
-        console.log(candidates)
-    }, [candidates])
 
     const OffersLoader = () => (
         <>
@@ -90,11 +87,9 @@ const CandidateList = () => {
             <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} setInput={setInput} />
-                <div className="flex flex-col gap-8 flex-1 sm:ml-8">
-                    <InfiniteScroll height={'80vh'} className="flex flex-col gap-8 flex-1 sm:ml-8" next={() => setPage(prev => prev + 1)} hasMore={true} loader={<OffersLoader />} dataLength={5}>
-                        {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
-                    </InfiniteScroll>
-                </div>
+                <InfiniteScroll className="flex flex-col gap-8 flex-1 sm:ml-8" next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
+                    {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
+                </InfiniteScroll>
             </div>
         </>
     )
@@ -128,7 +123,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
                 <div className="flex flex-wrap gap-4">
                     {abilities?.map(ab => (
                         <div className="flex items-center gap-2 w-max rounded-full shadow py-2 px-6 bg-[#EBF0FE]">
-                            <h4 className="text-primary">{ab}</h4>
+                            <h4 className="text-primary text-sm font-semibold">{ab}</h4>
                         </div>
                     ))}
                 </div>
