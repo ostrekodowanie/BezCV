@@ -9,23 +9,12 @@ import { Link } from "react-router-dom"
 import { useAppSelector } from "../main"
 
 export default function Offers() {
-    const [candidates, setCandidates] = useState<CandidateProps[]>([])
-    const auth = useAppSelector(state => state.login)
-    const { access } = auth.tokens
-    const { id } = auth.data
-
-    useEffect(() => {
-        axios.get('/api/oferty/all?u=' + id, { headers: { 'Authorization': 'Bearer ' + access }})
-            .then(res => res.data)
-            .then(data => setCandidates(data))
-    }, [])
-
     return (
         <section className="padding py-[1.4in] md:py-[2in]">
             <Routes>
-                {candidates.map(candidate => <Route path={'/' + candidate.slug + '-' + candidate.id} element={<Candidate {...candidate} key={candidate.id} />} />)}
+                <Route path='/:slug-:id' element={<Candidate />} />
                 {['/', '/search/*'].map((path, index) => 
-                    <Route path={path} element={<CandidateList defaultCandidates={candidates} />} key={index} />
+                    <Route path={path} element={<CandidateList />} key={index} />
                 )}
             </Routes>
         </section>
@@ -37,14 +26,14 @@ export interface FilterProps {
     roles: string[]
 }
 
-const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProps[]}) => {
+const CandidateList = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const firstRender = useRef(true)
     const auth = useAppSelector(state => state.login)
     const { access } = auth.tokens
     const { id } = auth.data
-    const [candidates, setCandidates] = useState<CandidateProps[]>(defaultCandidates)
+    const [candidates, setCandidates] = useState<CandidateProps[]>([])
     const [input, setInput] = useState('')
     const [filter, setFilter] = useState<FilterProps>({
         abilities: [],
@@ -81,7 +70,7 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
 
     return (
         <>
-            <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Oferty</h1>
+            <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} setInput={setInput} />
                 <div className="flex flex-col gap-8 flex-1 sm:ml-8">
@@ -98,7 +87,7 @@ const CandidateList = ({ defaultCandidates }: { defaultCandidates: CandidateProp
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, slug, favourite }: CandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilities }: CandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFavourite, setIsFavourite] = useState(favourite)
 
@@ -114,12 +103,24 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite }: CandidateP
     }
     
     return (
-        <div className="shadow rounded-3xl p-6 flex justify-between">
-            <div className="flex flex-col">
-                <h3 className="text-bold text-xl">{first_name} {last_name}</h3>
-                <Link className="text-primary font-medium" to={'/oferty/' + slug?.split(' ').join('-') + '-' + id}>Sprawdź</Link>
+        <Link to={'/oferty/' + slug + '-' + id} className="shadow rounded-3xl p-6 flex justify-between">
+            <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-6">
+                    <div className="h-16 w-16 rounded bg-[#F8F8F9]" />
+                    <div className="flex flex-col">
+                        <h3 className="text-xl font-bold">{first_name} {last_name}</h3>
+                        <h3 className="font-bold text-primary">{role}</h3>
+                    </div>
+                </div>
+                <div className="flex flex-wrap gap-4">
+                    {abilities?.map(ab => (
+                        <div className="flex items-center gap-2 w-max rounded-full shadow py-2 px-6 bg-[#EBF0FE]">
+                            <h4 className="text-primary">{ab}</h4>
+                        </div>
+                    ))}
+                </div>
             </div>
             <button onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
-        </div>
+        </Link>
     )
 }
