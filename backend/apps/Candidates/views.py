@@ -82,7 +82,7 @@ class OffersView(APIView):
         )
 
         if not queryset.exists():
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response({'count': total_count, 'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
 
@@ -129,7 +129,7 @@ class SearchCandidateView(generics.ListAPIView):
             .distinct()[offset:offset + per_page])
 
         if not queryset.exists():
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_404_NOT_FOUND)
  
         return Response({'count': total_count,'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
 
