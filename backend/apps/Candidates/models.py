@@ -9,7 +9,7 @@ class Candidates(models.Model):
     email = models.EmailField(max_length=255, unique=True)
     phone = models.CharField(max_length=255, unique=True)
     is_verified = models.BooleanField(default=False)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
