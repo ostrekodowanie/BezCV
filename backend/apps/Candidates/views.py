@@ -1,4 +1,4 @@
-from django.db.models import Q, Exists, OuterRef, Count, F
+from django.db.models import Q, Exists, OuterRef, Count, F, Prefetch
 from django.contrib.postgres.aggregates import ArrayAgg
 
 from rest_framework import generics
@@ -7,12 +7,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
-from .models import Candidates, Abilities, PurchasedOffers, Roles
+from .models import Candidates, Abilities, PurchasedOffers, Roles, CandidateAbilities, CandidateRoles
 from apps.Favourites.models import FavouriteCandidates
 
-class AllCandidatesView(generics.ListAPIView):
-    queryset = Candidates.objects.filter(is_verified=True)
-    serializer_class = serializers.AllCandidatesSerializer
 
 class CandidateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -27,11 +24,24 @@ class CandidateView(APIView):
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
             .annotate(role=F('candidateroles_candidate__role__name')))
+        
+        if candidate.values('is_purchased').first()['is_purchased'] == True:
+            return candidate
 
-        if candidate.filter(is_purchased=True):
-            return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities', 'role'))
-
-        return Response(candidate.values('id', 'first_name', 'last_name', 'is_purchased', 'abilities', 'role'))
+        email = candidate.values('email').first()['email']
+        email_parts = email.split('@')
+        hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
+        
+        return Response({
+            'id': candidate.values('id').first()['id'],
+            'first_name': candidate.values('first_name').first()['first_name'],
+            'last_name': candidate.values('last_name').first()['last_name'],
+            'email': hidden_email,
+            'phone': '*********',
+            'is_purchased': candidate.values('is_purchased').first()['is_purchased'],
+            'abilities': candidate.values('abilities').first()['abilities'],
+            'role': candidate.values('role').first()['role']
+        })
 
 
 class CandidateAddView(generics.CreateAPIView):
@@ -47,13 +57,18 @@ class OffersView(generics.ListAPIView):
 
         queries = Q(is_verified=True)
 
-        return (Candidates.objects
+        queryset = (Candidates.objects
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False)
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
-            .order_by('-ids'))
+            .order_by('-ids')
+            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
+            .annotate(role=F('candidateroles_candidate__role__name'))
+        )
+
+        return queryset 
 
         
 class FiltersView(APIView):
@@ -100,14 +115,18 @@ class SearchCandidateView(generics.ListAPIView):
             s = r.split(',')
             queries.add(Q(candidateroles_candidate__role__name__in=s), Q.AND)
 
-        return (Candidates.objects
+        queryset = (Candidates.objects
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False)
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
+            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
+            .annotate(role=F('candidateroles_candidate__role__name'))
             .distinct())
+
+        return queryset
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer

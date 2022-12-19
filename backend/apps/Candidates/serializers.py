@@ -1,11 +1,6 @@
 from rest_framework import serializers
 
-from .models import Candidates, PurchasedOffers, Abilities, Roles
-
-class AllCandidatesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Candidates
-        fields = ('id', 'slug')
+from .models import Candidates, PurchasedOffers, Abilities, Roles, CandidateAbilities, CandidateRoles
 
 class CandidateAddSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,9 +9,11 @@ class CandidateAddSerializer(serializers.ModelSerializer):
 
 class SearchCandidateSerializer(serializers.ModelSerializer):
     favourite = serializers.BooleanField(read_only=True)
+    abilities = serializers.ListField(child=serializers.CharField())
+    role = serializers.CharField()
     class Meta:
         model = Candidates
-        fields = ('id', 'first_name', 'last_name', 'slug', 'favourite')
+        fields = ('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')
 
 class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:
