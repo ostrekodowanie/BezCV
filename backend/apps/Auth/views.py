@@ -8,6 +8,7 @@ from rest_framework import views, status, generics
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -17,6 +18,7 @@ from . import serializers
 from .models import User
 
 import jwt
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -49,8 +51,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return token
 
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
 
 class SignUpView(views.APIView):
     serializer_class = serializers.SignUpSerializer
@@ -73,6 +77,7 @@ class SignUpView(views.APIView):
             return Response({'User created'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class VerifyView(views.APIView):
     def get(self, request):
         token = request.GET.get('token')
@@ -94,6 +99,7 @@ class VerifyView(views.APIView):
         except jwt.exceptions.DecodeError as identifier:
             return Response({'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class LogoutView(views.APIView):
     def post(self, request):
         try:
@@ -103,6 +109,7 @@ class LogoutView(views.APIView):
             return Response(status=status.HTTP_200_OK)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class PasswordResetView(views.APIView):
     def post(self, request):
@@ -124,6 +131,7 @@ class PasswordResetView(views.APIView):
 
         return Response({'Wiadomość została wysłana na podany adres email'}, status=status.HTTP_200_OK)
 
+
 class PasswordResetConfirmView(views.APIView):
     def post(self, request):
         token = request.data.get('token')
@@ -143,7 +151,13 @@ class PasswordResetConfirmView(views.APIView):
 
         return Response({'Hasło zostało zresetowane'}, status=status.HTTP_200_OK)
 
+
 class UserView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [IsAuthenticated]
+
+class UpdateUserView(generics.UpdateAPIView):
+    parser_classes = (MultiPartParser, FormParser)
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
