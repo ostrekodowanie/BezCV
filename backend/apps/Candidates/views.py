@@ -5,17 +5,10 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import PageNumberPagination
 
 from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers, Roles
 from apps.Favourites.models import FavouriteCandidates
-
-
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 5
-    page_size_query_param = 'page'
-    max_page_size = 5
 
 
 class CandidateView(APIView):
