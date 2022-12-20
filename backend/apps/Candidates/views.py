@@ -26,7 +26,7 @@ class CandidateView(APIView):
             .annotate(role=F('candidateroles_candidate__role__name')))
         
         if candidate.values('is_purchased').first()['is_purchased'] == True:
-            return candidate
+            return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities','role'))
 
         email = candidate.values('email').first()['email']
         email_parts = email.split('@')
@@ -68,9 +68,9 @@ class OffersView(APIView):
         total_count = queryset.count()
 
         queryset = (queryset
+            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name', distinct=True))
             .annotate(role=F('candidateroles_candidate__role__name'))
-            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
             .distinct()[offset:offset + per_page]
@@ -119,10 +119,10 @@ class SearchCandidateView(APIView):
 
         queryset = (queryset
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
+            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name', distinct=True))
+            .annotate(role=F('candidateroles_candidate__role__name'))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
-            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-            .annotate(role=F('candidateroles_candidate__role__name'))
             .distinct()[offset:offset + per_page])
 
         if not queryset.exists():
