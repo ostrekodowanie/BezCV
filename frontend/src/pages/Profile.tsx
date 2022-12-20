@@ -10,7 +10,6 @@ export default function Profile() {
     const auth = useAppSelector(state => state.login)
     const { id, first_name, last_name, is_staff, image, desc } = auth.data
     const [profilePicture, setProfilePicture] = useState<any>(image)
-    const [status, setStatus] = useState<any>()
     const { access, refresh } = auth.tokens
 
     const handleLogout = async () => {
@@ -21,15 +20,17 @@ export default function Profile() {
         }
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
         const formData = new FormData()
         formData.append(
             "image",
-            profilePicture
+            // @ts-ignore
+            e.target.files[0]
         );
-        const resp = await axios.patchForm('/api/user/update' + id, formData, { headers: { 'Authorization': 'Bearer ' + access }})
+        const resp = await axios.patchForm('/api/user/update/' + id, formData, { headers: { 'Authorization': 'Bearer ' + access }})
         if(resp.status === 200) {
-            setStatus(true)
+            //@ts-ignore
+            setProfilePicture(URL.createObjectURL(e.target.files[0]))
         }
     }
 
@@ -39,12 +40,10 @@ export default function Profile() {
                 <label className="h-24 w-24 cursor-pointer overflow-hidden block rounded-full relative bg-[#F6F6F6]" htmlFor="profile-photo">
                     <img className="absolute h-full w-full inset-0 object-cover" src={profilePicture} alt='' />
                 </label>
-                {/* @ts-ignore */}
-                <input onChange={e => setProfilePicture(URL.createObjectURL(e.target.files[0]))} accept="image/png, image/jpeg" className='absolute -z-10 opacity-0' type='file' id="profile-photo" />
+                <input onChange={handleSubmit} accept="image/png, image/jpeg" className='absolute -z-10 opacity-0' type='file' id="profile-photo" />
             </div>
             <h1 className="font-bold text-2xl">{first_name} {last_name}</h1>
             <p className="text-[rgba(23,26,35,0.5)] text-sm font-medium leading-relaxed my-6">{desc}</p>
-            <button className="font-medium py-2 px-5 rounded transition-colors bg-green-400 hover:bg-green-500 text-white mb-6" onClick={handleSubmit}>Zapisz dane</button>
             <div className="flex flex-wrap items-center gap-6">
                 {is_staff && <Link className="font-medium py-2 px-5 rounded transition-colors bg-primary hover:bg-darkPrimary text-white" to='/administracja'>Panel administracyjny</Link>}
                 <button className="font-medium py-2 px-5 rounded transition-colors bg-red-400 hover:bg-red-500 text-white" onClick={handleLogout}>Wyloguj się</button>
