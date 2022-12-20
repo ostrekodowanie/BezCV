@@ -76,7 +76,7 @@ export default function Candidate() {
                 ))}
             </div>
             <div className="flex items-center gap-4">
-                <h2 className="text-lg">Preferowane stanowisko: <span className="font-bold text-blue-400">{candidateDetails.role}</span></h2>
+                <h2 className="text-lg">Preferowane stanowisko: <span className="font-bold text-primary">{candidateDetails.role}</span></h2>
             </div>
             {!candidateDetails.is_purchased && 
                 <div className="flex items-center gap-4">
