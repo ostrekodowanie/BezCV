@@ -21,7 +21,7 @@ from django.views.static import serve
 from . import views
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 
     re_path('images/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 
