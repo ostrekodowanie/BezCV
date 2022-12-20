@@ -42,8 +42,8 @@ class Roles(models.Model):
         )
 
 class CandidateRoles(models.Model):
-    candidate = models.ForeignKey(
-        Candidates, on_delete=models.CASCADE, related_name='candidateroles_candidate')
+    candidate = models.OneToOneField(
+        Candidates, on_delete=models.CASCADE, related_name='candidateroles_candidate', unique=True)
     role = models.ForeignKey(
         Roles, on_delete=models.CASCADE, related_name='candidateroles_ability')
     created_at = models.DateTimeField(auto_now_add=True)
