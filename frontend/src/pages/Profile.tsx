@@ -1,5 +1,5 @@
 import axios from "axios"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../main"
 import { logout } from "../reducers/login"
@@ -8,8 +8,10 @@ import { CandidateProps } from "./Candidate"
 export default function Profile() {
     const dispatch = useAppDispatch()
     const auth = useAppSelector(state => state.login)
-    const { first_name, last_name, is_staff } = auth.data
-    const { refresh } = auth.tokens
+    const { id, first_name, last_name, is_staff, image, desc } = auth.data
+    const [profilePicture, setProfilePicture] = useState<any>(image)
+    const [status, setStatus] = useState<any>()
+    const { access, refresh } = auth.tokens
 
     const handleLogout = async () => {
         const resp = await axios.post('/api/logout', refresh, { headers: { 'Content-Type': 'application/json' }})
@@ -19,11 +21,32 @@ export default function Profile() {
         }
     }
 
+    const handleSubmit = async () => {
+        const formData = new FormData()
+        formData.append(
+            "image",
+            profilePicture
+        );
+        const resp = await axios.patchForm('/api/user/update' + id, formData, { headers: { 'Authorization': 'Bearer ' + access }})
+        if(resp.status === 200) {
+            setStatus(true)
+        }
+    }
+
     return (
         <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in]">
-            <h1 className="font-bold text-2xl mb-8">{first_name} {last_name}</h1>
+            <div className="flex flex-col mb-4">
+                <label className="h-24 w-24 cursor-pointer overflow-hidden block rounded-full relative bg-[#F6F6F6]" htmlFor="profile-photo">
+                    <img className="absolute h-full w-full inset-0 object-cover" src={profilePicture} alt='' />
+                </label>
+                {/* @ts-ignore */}
+                <input onChange={e => setProfilePicture(URL.createObjectURL(e.target.files[0]))} accept="image/png, image/jpeg" className='absolute -z-10 opacity-0' type='file' id="profile-photo" />
+            </div>
+            <h1 className="font-bold text-2xl">{first_name} {last_name}</h1>
+            <p className="text-[rgba(23,26,35,0.5)] text-sm font-medium leading-relaxed my-6">{desc}</p>
+            <button className="font-medium py-2 px-5 rounded transition-colors bg-green-400 hover:bg-green-500 text-white mb-6" onClick={handleSubmit}>Zapisz dane</button>
             <div className="flex flex-wrap items-center gap-6">
-                {is_staff && <Link className="font-medium py-2 px-5 rounded transition-colors bg-blue-400 hover:bg-blue-500 text-white" to='/administracja'>Panel administracyjny</Link>}
+                {is_staff && <Link className="font-medium py-2 px-5 rounded transition-colors bg-primary hover:bg-darkPrimary text-white" to='/administracja'>Panel administracyjny</Link>}
                 <button className="font-medium py-2 px-5 rounded transition-colors bg-red-400 hover:bg-red-500 text-white" onClick={handleLogout}>Wyloguj się</button>
             </div>
             <Favourites />
