@@ -47,7 +47,6 @@ class CandidateView(APIView):
 class CandidateAddView(generics.CreateAPIView):
     serializer_class = serializers.CandidateAddSerializer
 
-
 class OffersView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -69,11 +68,11 @@ class OffersView(APIView):
         total_count = queryset.count()
 
         queryset = (queryset
+            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name', distinct=True))
+            .annotate(role=F('candidateroles_candidate__role__name'))
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
-            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-            .annotate(role=F('candidateroles_candidate__role__name'))
             .distinct()[offset:offset + per_page]
         )
 
@@ -81,7 +80,6 @@ class OffersView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response({'count': total_count, 'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
-
 
 class SearchCandidateView(APIView):
     permission_classes = [IsAuthenticated]
