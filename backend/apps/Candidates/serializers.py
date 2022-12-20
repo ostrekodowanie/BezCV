@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Candidates, PurchasedOffers, Abilities, Roles, CandidateAbilities, CandidateRoles
+from .models import Candidates, PurchasedOffers
 
 class CandidateAddSerializer(serializers.ModelSerializer):
     class Meta:
