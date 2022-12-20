@@ -37,6 +37,7 @@ const CandidateList = () => {
     const [candidates, setCandidates] = useState<CandidateProps[]>([])
     const [input, setInput] = useState('')
     const [page, setPage] = useState(1)
+    const [count, setCount] = useState(0)
     const [hasMore, setHasMore] = useState(true)
     const [filter, setFilter] = useState<FilterProps>({
         abilities: [],
@@ -67,6 +68,7 @@ const CandidateList = () => {
         let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id)
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
+            .then(data => { setCount(data.count); return data })
             .then(data => !isCancelled && setCandidates(data.results))
             .catch(() => setHasMore(false))
         return () => {
@@ -79,6 +81,7 @@ const CandidateList = () => {
         let url = '/api' + location.pathname + (location.search ? location.search + '&u=' + id : '?u=' + id) + '&page=' + page
         axios.get(url, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
+            .then(data => { setCount(data.count); return data })
             .then(data => setCandidates(prev => page === 1 ? data.results : [...prev, ...data.results]))
             .catch(() => setHasMore(false))
     }, [page])
@@ -97,7 +100,10 @@ const CandidateList = () => {
             <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} setInput={setInput} />
-                <InfiniteScroll className="flex flex-col gap-8 flex-1 sm:ml-8" next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
+                <InfiniteScroll className="flex flex-col relative gap-8 flex-1 sm:ml-8" next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
+                    <div className="flex items-center right-0 -top-8 w-max ml-auto">
+                        <h4 className="text-sm font-semibold text-[rgba(23,26,35,0.5)]">Wyświetlono {candidates.length} z {count} wyników</h4>
+                    </div>
                     {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
                 </InfiniteScroll>
             </div>
@@ -121,7 +127,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
     }
     
     return (
-        <Link to={'/oferty/' + slug + '-' + id} className="shadow rounded-3xl p-6 flex justify-between">
+        <Link to={'/oferty/' + slug + '-' + id} className="hover:bg-[#FAFAFA] transition-colors rounded-3xl p-6 flex justify-between">
             <div className="flex flex-col gap-6">
                 <div className="flex items-center gap-6">
                     <div className="h-16 w-16 rounded-full flex justify-center items-center bg-[#F8F8F9]">
