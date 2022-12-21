@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import CandidateFilter from "../components/offers/CandidateFilter"
 import useDebounce from "../hooks/useDebounce"
@@ -62,6 +62,14 @@ const CandidateList = () => {
         firstRender.current = false
         return navigate(url)
     }, [debounceSearch, filter])
+
+    useLayoutEffect(() => {
+        document.documentElement.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }, [filter])
 
     useEffect(() => {
         let isCancelled = false

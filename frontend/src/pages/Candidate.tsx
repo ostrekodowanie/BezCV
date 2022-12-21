@@ -55,10 +55,10 @@ export default function Candidate() {
         setLoading(prev => ({...prev, page: true}))
         axios.get(`/api/oferty/${slug}-${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
-            .then(data => setCandidateDetails(data))
+            .then(data => setCandidateDetails(data[0]))
             .finally(() => setLoading(prev => ({...prev, page: false})))
     }, [points, slug, id])
-
+    
     if(loading.page) return <Loader />
 
     return (

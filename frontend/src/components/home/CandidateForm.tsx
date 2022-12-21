@@ -16,16 +16,12 @@ export default function CandidateForm() {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setStatus('loading')
-        try {
-            axios.post('/api/candidate/add', JSON.stringify(details), {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(() => setStatus(true))
-        }
-        catch(err) {
-            setStatus(false)
-        }
+        axios.post('/api/candidate/add', JSON.stringify(details), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(() => setStatus(true))
+        .catch(() => setStatus(false))
     }
     
     return (
@@ -50,8 +46,8 @@ export default function CandidateForm() {
                         <input className={inputStyles.input} type='tel' name='phone' id='phone' onChange={e => setDetails(prev => { return { ...prev, phone: e.target.value }})} />
                     </div>
                 </div>
-                <div className='flex items-center gap-6'>
-                    <FilledButton className='mt-4' type='submit'>Wyślij zgłoszenie</FilledButton>
+                <div className='flex items-center gap-6 mt-4'>
+                    <FilledButton type='submit'>Wyślij zgłoszenie</FilledButton>
                     {status === 'loading' && <Loader />}
                     {status === false && <span className='text-red-400 font-medium'>Wystąpił błąd</span>}
                     {status === true && <span className='text-green-400 font-medium'>Zgłoszenie wysłane!</span>}
