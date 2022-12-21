@@ -42,24 +42,23 @@ export default function App() {
   }
 
   const updateToken = async (token: string) => {
-    const response = await axios.post('/api/token/refresh', JSON.stringify({ refresh: token }), {
+    await axios.post('/api/token/refresh', JSON.stringify({ refresh: token }), {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
-    if(response.status === 200) {
-      let tokens = response.data
+    }).then(async res => {
+      let tokens = res.data
       let { id }: User = jwtDecode(tokens.access)
       localStorage.setItem('user', JSON.stringify(tokens))
-      const userInfo = await getUserInfo(id, tokens.access)
-      if(userInfo) return dispatch(login({
-        data: {...userInfo, id},
-        tokens
-      }))
-    }
-    console.log('Error')
-    localStorage.removeItem('user')
-    return dispatch(logout())
+      const userInfo = await getUserInfo(id, tokens.access).catch(() => dispatch(logout()))
+      if(userInfo) {
+        dispatch(login({
+            data: { ...userInfo, id },
+            tokens
+        }))
+      }
+    })
+    .catch(() => dispatch(logout()))
   }
 
   useLayoutEffect(() => {
