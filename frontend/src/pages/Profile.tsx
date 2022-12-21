@@ -9,15 +9,12 @@ export default function Profile() {
     const dispatch = useAppDispatch()
     const auth = useAppSelector(state => state.login)
     const { id, first_name, last_name, is_staff, image, desc } = auth.data
-    const [profilePicture, setProfilePicture] = useState<any>(image)
+    const [profilePicture, setProfilePicture] = useState<any>(image ? '/' + image.split('/').splice(3).join('/') : image)
     const { access, refresh } = auth.tokens
 
     const handleLogout = async () => {
         const resp = await axios.post('/api/logout', refresh, { headers: { 'Content-Type': 'application/json' }})
-        if(resp.status === 200) {
-            localStorage.removeItem('user')
-            dispatch(logout())
-        }
+        if(resp.status === 200) dispatch(logout())
     }
 
     const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
