@@ -1,4 +1,4 @@
-from django.db.models import Q, Exists, OuterRef, Count, F
+from django.db.models import Q, Exists, OuterRef, Count, F, Subquery
 from django.contrib.postgres.aggregates import ArrayAgg
 
 from rest_framework import generics, status
@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
-from .models import Candidates, Abilities, PurchasedOffers, Roles
+from .models import Candidates, Abilities, PurchasedOffers, Roles, CandidateAbilities
 from apps.Favourites.models import FavouriteCandidates
 
 
@@ -32,7 +32,7 @@ class CandidateView(APIView):
         email_parts = email.split('@')
         hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
         
-        return Response({
+        return Response([{
             'id': candidate.values('id').first()['id'],
             'first_name': candidate.values('first_name').first()['first_name'],
             'last_name': candidate.values('last_name').first()['last_name'],
@@ -41,7 +41,7 @@ class CandidateView(APIView):
             'is_purchased': candidate.values('is_purchased').first()['is_purchased'],
             'abilities': candidate.values('abilities').first()['abilities'],
             'role': candidate.values('role').first()['role']
-        })
+        }])
 
 
 class CandidateAddView(generics.CreateAPIView):
@@ -81,6 +81,7 @@ class OffersView(APIView):
 
         return Response({'count': total_count, 'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
 
+
 class SearchCandidateView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -95,7 +96,7 @@ class SearchCandidateView(APIView):
         offset = (int(page) - 1) * per_page
 
         queries = Q(is_verified=True)
-
+        
         if q:
             query=Q()
             for x in q.split():
@@ -104,33 +105,39 @@ class SearchCandidateView(APIView):
 
         if a:     
             s = a.split(',')
-            queries.add(Q(candidateabilities_candidate__ability__name__in=s), Q.AND)
+            filters = Q(candidateabilities_candidate__ability__name__in=s)      
+        else:
+            filters = Q()
         
         if r:
             s = r.split(',')
-            queries.add(Q(candidateroles_candidate__role__name__in=s), Q.AND)
+            filters.add(Q(candidateroles_candidate__role__name__in=s), Q.AND)
 
         queryset = (Candidates.objects
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False))
-
-        total_count = queryset.count()
-
+        
         queryset = (queryset
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name', distinct=True))
             .annotate(role=F('candidateroles_candidate__role__name'))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
-            .order_by('-ids')
-            .distinct()[offset:offset + per_page])
+            .filter(filters)
+            .annotate(matching_abilities_count=Count('candidateabilities_candidate__ability__name', filter=filters))
+
+            .order_by('-ids'))
+
+        total_count = len(queryset)
+
+        queryset = queryset.distinct()[offset:offset + per_page]
 
         if not queryset.exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
  
-        return Response({'count': total_count,'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
+        return Response({'count': total_count,'results': queryset.annotate(matching_abilities_count=Count('candidateabilities_candidate__ability', filter=filters)).values('id', 'first_name', 'last_name', 'slug', 'favourite', 'role', 'abilities', 'matching_abilities_count')})
 
-        
+
 class FiltersView(APIView):
     def get(self, request):
         abilities = Abilities.objects.annotate(ability_count=Count('name')).order_by('ability_count')
