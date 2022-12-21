@@ -23,18 +23,16 @@ export default function Form() {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setStatus('loading')
+        if(employerDetails.nip.length !== 10) return setStatus('NIP powinien posiadać 10 cyfr!')
         if(confPassword !== employerDetails.password) return setStatus('Hasła się nie zgadzają!')
         if(employerDetails.password.length < 6) return setStatus('Hasło musi posiadać co najmniej 6 znaków!')
-        try {
-            axios.post('/api/signup', JSON.stringify(employerDetails), {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(() => setStatus(true))
-        }
-        catch(err) {
-            console.log(err)
-        }
+        axios.post('/api/signup', JSON.stringify(employerDetails), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(() => setStatus(true))
+        .catch(err => setStatus(err.response.data.email))
+
     }
 
     if(status === true) return <h2 className='text-3xl font-bold mx-auto pt-[1in]'>Email weryfikacyjny <span className='text-primary'>został wysłany!</span></h2>
@@ -77,13 +75,16 @@ export default function Form() {
                     <input type='checkbox' required id='policy' name='signup' onChange={e => setAccepts(prev => ({ ...prev, policy: e.target.checked }))} />
                     <label className='text-sm' htmlFor='policy'>Akceptuję politykę prywatności</label>
                 </div>
-                {status && status !== 'loading' && <span className='text-red-400 font-medium'>{status}</span>}
-                {status === 'loading' && <Loader className='absolute bottom-0 left-0' />}
+                
                 <div className='relative flex items-center mt-4 mb-2'>
                     <span className="relative mx-auto bg-white px-6 xl:px-10 py-3 z-10">Już posiadasz konto? <Link className="text-primary font-semibold hover:text-darkPrimary transition-colors" to='/logowanie'>Zaloguj się</Link></span>
                     <div className='bg-[#DFDFDF] absolute left-0 right-0 h-[2px]' />
                 </div>
-                <FilledButton type='submit'>Załóż konto</FilledButton>
+                <div className='flex items-center gap-4'>
+                    <FilledButton type='submit'>Załóż konto</FilledButton>
+                    {status && status !== 'loading' && <span className='text-red-400 font-medium'>{status}</span>}
+                    {status === 'loading' && <Loader />}
+                </div>
             </form>
         </div>
     )

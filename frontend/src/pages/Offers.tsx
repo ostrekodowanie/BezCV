@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import CandidateFilter from "../components/offers/CandidateFilter"
 import useDebounce from "../hooks/useDebounce"
@@ -40,8 +40,8 @@ const CandidateList = () => {
     const [count, setCount] = useState(0)
     const [hasMore, setHasMore] = useState(true)
     const [filter, setFilter] = useState<FilterProps>({
-        abilities: [],
-        roles: []
+        abilities: decodeURIComponent(location.search).split('&').find(item => item.includes('a='))?.split("=").pop()?.split(',') || [],
+        roles: decodeURIComponent(location.search).split('&').find(item => item.includes('r='))?.split("=").pop()?.split(',') || []
     })
     const debounceSearch = useDebounce(input, 400)
 
@@ -62,14 +62,6 @@ const CandidateList = () => {
         firstRender.current = false
         return navigate(url)
     }, [debounceSearch, filter])
-
-    useLayoutEffect(() => {
-        document.documentElement.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
-        });
-    }, [filter])
 
     useEffect(() => {
         let isCancelled = false
@@ -124,19 +116,16 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
     const [isFavourite, setIsFavourite] = useState(favourite)
 
     const handleLike = async () => {
-        if(isFavourite) {
-            let resp = await axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`)
-            if(resp.status === 204) return setIsFavourite(false)
-        }
-        let resp = await axios.post('/api/profile/favourites/add', JSON.stringify({ employer: user_id, candidate: id }), {
+        setIsFavourite(prev => !prev)
+        if(isFavourite) return axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`)
+        return axios.post('/api/profile/favourites/add', JSON.stringify({ employer: user_id, candidate: id }), {
             headers: { 'Content-Type': 'application/json' }
         })
-        if(resp.status === 201) return setIsFavourite(true)
     }
-    
+
     return (
-        <Link to={'/oferty/' + slug + '-' + id} className="hover:bg-[#FAFAFA] transition-colors rounded-3xl p-6 flex justify-between">
-            <div className="flex flex-col gap-6">
+        <div className="hover:bg-[#FAFAFA] transition-colors rounded-3xl p-6 flex justify-between">
+            <Link to={'/oferty/' + slug + '-' + id}  className="flex flex-col gap-6 flex-1">
                 <div className="flex items-center gap-6">
                     <div className="h-16 w-16 rounded-full flex justify-center items-center bg-[#F6F6F6]">
                         <h4 className="font-bold text-2xl">{first_name.charAt(0)}</h4>
@@ -148,13 +137,13 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
                 </div>
                 <div className="flex flex-wrap gap-4">
                     {abilities?.map(ab => (
-                        <div className="flex items-center gap-2 w-max rounded-full shadow py-2 px-6 bg-[#EBF0FE]">
+                        <div className="flex items-center gap-2 w-max rounded-full py-2 px-6 bg-[#EBF0FE]">
                             <h4 className="text-primary text-sm font-semibold">{ab}</h4>
                         </div>
                     ))}
                 </div>
-            </div>
-            <button onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
-        </Link>
+            </Link>
+            <button className="py-2 px-6 rounded-3xl transition-colors hover:bg-[#FAFAFA]" onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
+        </div>
     )
 }
