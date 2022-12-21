@@ -31,7 +31,7 @@ export default function Form() {
                 'Content-Type': 'application/json'
             }
         }).then(() => setStatus(true))
-        .catch(err => setStatus(err.response.data.email))
+        .catch(err => setStatus(err.response.data))
 
     }
 

@@ -30,9 +30,9 @@ export default function Form() {
             message: 'loading'
         })
         try {
-            const response = await axios.post('/api/login', JSON.stringify(credentials), {headers: {'Content-Type': 'application/json'}})
-            if(response.status === 200) {
-                let tokens = response.data
+            axios.post('/api/login', JSON.stringify(credentials), {headers: {'Content-Type': 'application/json'}})
+            .then(async res => {
+                let tokens = res.data
                 let user: User = jwtDecode(tokens.access)
                 localStorage.setItem('user', JSON.stringify(tokens))
                 const userInfo = await getUserInfo(user.id, tokens.access)
@@ -43,9 +43,7 @@ export default function Form() {
                     }))
                     return navigate('/profil')
                 }
-            }
-            localStorage.removeItem('user')
-            return dispatch(logout())
+            }).catch(err => setStatus({ ok: false, message: err.response.data }))
         }
         catch(err) {
            setStatus({
