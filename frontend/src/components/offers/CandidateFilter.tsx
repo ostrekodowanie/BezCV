@@ -4,11 +4,12 @@ import { useLocation } from "react-router"
 import { FilterProps as FilterStateProps } from "../../pages/Offers"
 
 interface FilterProps {
+    input: string,
     setInput: Dispatch<SetStateAction<string>>,
     setFilter: Dispatch<SetStateAction<FilterStateProps>>
 }
 
-export default function CandidateFilter({ setInput, setFilter }: FilterProps) {
+export default function CandidateFilter({ input, setInput, setFilter }: FilterProps) {
     const [allFilters, setAllFilters] = useState<FilterStateProps>({
         abilities: [],
         roles: []
@@ -23,7 +24,7 @@ export default function CandidateFilter({ setInput, setFilter }: FilterProps) {
     return (
         <div className="flex flex-col p-4">
             <div className="sticky top-36">
-                <input className="px-6 pl-14 py-[0.6rem] border-[#E4E4E9] border-[1px] rounded-3xl bg-search bg-[1.4rem_center] bg-no-repeat" type='search' onChange={e => setInput(e.target.value)} placeholder="Wyszukaj kandydata" />
+                <input className="px-6 pl-14 py-[0.6rem] border-[#E4E4E9] border-[1px] rounded-3xl bg-search bg-[1.4rem_center] bg-no-repeat" value={input} type='search' onChange={e => setInput(e.target.value)} placeholder="Wyszukaj kandydata" />
                 <div className="flex flex-col mt-8 gap-8">
                     <div>
                         {allFilters.roles.length > 0 ? <h4 className="font-semibold mb-4">Zawody:</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
