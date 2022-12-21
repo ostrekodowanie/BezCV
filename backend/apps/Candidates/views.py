@@ -1,4 +1,4 @@
-from django.db.models import Q, Exists, OuterRef, Count, F, Subquery
+from django.db.models import Q, Exists, OuterRef, Count, F, Subquery, Case, Sum, When, IntegerField
 from django.contrib.postgres.aggregates import ArrayAgg
 
 from rest_framework import generics, status
@@ -57,29 +57,46 @@ class OffersView(APIView):
         per_page = 10
         offset = (int(page) - 1) * per_page
 
-        queries = Q(is_verified=True)
-
         queryset = (Candidates.objects
-            .filter(queries)
+            .filter(is_verified=True)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False)
+            .prefetch_related('candidateroles_candidate')
         )
+
+        if not queryset.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        abilities_dict = {}
+        abilities = CandidateAbilities.objects.filter(candidate_id__in=queryset).values('candidate_id', 'ability__name')
+        for ability in abilities:
+            if ability['candidate_id'] not in abilities_dict:
+                abilities_dict[ability['candidate_id']] = []
+            abilities_dict[ability['candidate_id']].append(ability['ability__name'])
 
         total_count = queryset.count()
 
         queryset = (queryset
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name', distinct=True))
             .annotate(role=F('candidateroles_candidate__role__name'))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
             .distinct()[offset:offset + per_page]
         )
 
-        if not queryset.exists():
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        results = []
+        for candidate in queryset:
+            result = {}
+            result['id'] = candidate.id
+            result['first_name'] = candidate.first_name
+            result['last_name'] = candidate.last_name
+            result['slug'] = candidate.slug
+            result['favourite'] = candidate.favourite
+            result['abilities'] = abilities_dict.get(candidate.id, [])
+            result['role'] = candidate.role
+            results.append(result)
 
-        return Response({'count': total_count, 'results': queryset.values('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')})
+        return Response({'count': total_count, 'results': results})
 
 
 class SearchCandidateView(APIView):
@@ -104,38 +121,63 @@ class SearchCandidateView(APIView):
             queries.add(Q(query), Q.AND)
 
         if a:     
-            s = a.split(',')
-            filters = Q(candidateabilities_candidate__ability__name__in=s)      
+            abilities_list = a.split(',')
+            filters = Q(candidateabilities_candidate__ability__name__in=abilities_list)      
         else:
             filters = Q()
         
         if r:
-            s = r.split(',')
-            filters.add(Q(candidateroles_candidate__role__name__in=s), Q.AND)
+            roles = r.split(',')
+            filters.add(Q(candidateroles_candidate__role__name__in=roles), Q.AND)
 
         queryset = (Candidates.objects
             .filter(queries)
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
             .filter(is_purchased=False))
         
+        abilities_dict = {}
+        abilities = CandidateAbilities.objects.filter(candidate_id__in=queryset).values('candidate_id', 'ability__name')
+        for ability in abilities:
+            if ability['candidate_id'] not in abilities_dict:
+                abilities_dict[ability['candidate_id']] = []
+            abilities_dict[ability['candidate_id']].append(ability['ability__name'])
+
+        total_count = len(queryset)
+        
         queryset = (queryset
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name', distinct=True))
             .annotate(role=F('candidateroles_candidate__role__name'))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .filter(filters)
-            .annotate(matching_abilities_count=Count('candidateabilities_candidate__ability__name', filter=filters))
-
             .order_by('-ids'))
-
-        total_count = len(queryset)
-
+        
         queryset = queryset.distinct()[offset:offset + per_page]
 
         if not queryset.exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
- 
-        return Response({'count': total_count,'results': queryset.annotate(matching_abilities_count=Count('candidateabilities_candidate__ability', filter=filters)).values('id', 'first_name', 'last_name', 'slug', 'favourite', 'role', 'abilities', 'matching_abilities_count')})
+
+        results = []
+        for candidate in queryset:
+            result = {}
+            result['id'] = candidate.id
+            result['first_name'] = candidate.first_name
+            result['last_name'] = candidate.last_name
+            result['slug'] = candidate.slug
+            result['favourite'] = candidate.favourite
+            result['abilities'] = abilities_dict.get(candidate.id, [])
+            result['role'] = candidate.role
+
+            matching_abilities_count = 0
+            for ability in abilities_dict.get(candidate.id, []):
+                if ability in abilities_list:
+                    matching_abilities_count += 1
+
+            result['matching_abilities_count'] = matching_abilities_count
+            results.append(result)
+        
+        results = sorted(results, key=lambda x: x['matching_abilities_count'], reverse=True)
+
+        return Response({'count': total_count, 'results': results})
 
 
 class FiltersView(APIView):

@@ -1,5 +1,7 @@
-from .models import User
 from rest_framework import serializers
+from rest_framework.validators import ValidationError
+
+from .models import User
 
 class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,6 +12,12 @@ class SignUpSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        email = validated_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError({'Email jest już przypisany do istniejącego konta'})
+        nip = validated_data.get('nip')
+        if User.objects.filter(nip=nip).exists():
+            raise ValidationError({'NIP jest już przypisany do istniejącego konta'})
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
 
