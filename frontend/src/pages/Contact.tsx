@@ -4,7 +4,7 @@ import Loader from "../components/Loader"
 import FilledButton from "../components/FilledButton"
 
 export const inputStyles = {
-    input: 'peer rounded-lg bg-[#F8F9F9] focus:bg-[#F3F6FE] py-3 px-6 w-full'
+    input: 'peer rounded-lg bg-[#F8F9F9] focus:bg-[#F3F6FE] py-3 px-6 w-full transition-colors'
 }
 
 export default function Contact() {
