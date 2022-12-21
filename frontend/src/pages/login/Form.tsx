@@ -43,7 +43,7 @@ export default function Form() {
                     }))
                     return navigate('/profil')
                 }
-            }).catch(err => setStatus({ ok: false, message: err.response.data.detail }))
+            }).catch(err => setStatus({ ok: false, message: err.response.data.detail ? err.response.data.detail : "Wystąpił błąd!" }))
         }
         catch(err) {
            setStatus({
