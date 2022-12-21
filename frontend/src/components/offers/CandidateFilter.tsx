@@ -1,5 +1,6 @@
 import axios from "axios"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useLocation } from "react-router"
 import { FilterProps as FilterStateProps } from "../../pages/Offers"
 
 interface FilterProps {
@@ -8,6 +9,7 @@ interface FilterProps {
 }
 
 export default function CandidateFilter({ setInput, setFilter }: FilterProps) {
+    const location = useLocation()
     const [allFilters, setAllFilters] = useState<FilterStateProps>({
         abilities: [],
         roles: []

@@ -36,13 +36,14 @@ export default function Profile() {
 
     return (
         <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in]">
-            <div className="flex flex-col mb-4">
+            <div className="flex flex-col mb-8 gap-6">
                 <label className="h-24 w-24 cursor-pointer overflow-hidden block rounded-full relative bg-[#F6F6F6]" htmlFor="profile-photo">
                     <img className="absolute h-full w-full inset-0 object-cover" src={profilePicture} alt='' />
+                    <div className="absolute inset-0 bg-black z-10 transition-opacity opacity-0 hover:opacity-10 duration-300" />
                 </label>
                 <input onChange={handleSubmit} accept="image/png, image/jpeg" className='absolute -z-10 opacity-0' type='file' id="profile-photo" />
+                <h1 className="font-bold text-3xl">{first_name} {last_name}</h1>
             </div>
-            <h1 className="font-bold text-2xl">{first_name} {last_name}</h1>
             <p className="text-[rgba(23,26,35,0.5)] text-sm font-medium leading-relaxed my-6">{desc}</p>
             <div className="flex flex-wrap items-center gap-6">
                 {is_staff && <Link className="font-medium py-2 px-5 rounded transition-colors bg-primary hover:bg-darkPrimary text-white" to='/administracja'>Panel administracyjny</Link>}
