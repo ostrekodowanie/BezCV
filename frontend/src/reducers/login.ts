@@ -51,6 +51,7 @@ export const loginSlice = createSlice({
             state.isLoading = false
         },
         logout: state => {
+            localStorage.removeItem('user')
             state.logged = false
             state.data = {
                 ...initialState.data
