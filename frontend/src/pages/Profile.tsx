@@ -14,10 +14,7 @@ export default function Profile() {
 
     const handleLogout = async () => {
         const resp = await axios.post('/api/logout', refresh, { headers: { 'Content-Type': 'application/json' }})
-        if(resp.status === 200) {
-            localStorage.removeItem('user')
-            dispatch(logout())
-        }
+        if(resp.status === 200) dispatch(logout())
     }
 
     const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
