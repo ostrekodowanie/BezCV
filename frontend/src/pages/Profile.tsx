@@ -9,7 +9,7 @@ export default function Profile() {
     const dispatch = useAppDispatch()
     const auth = useAppSelector(state => state.login)
     const { id, first_name, last_name, is_staff, image, desc } = auth.data
-    const [profilePicture, setProfilePicture] = useState<any>(image)
+    const [profilePicture, setProfilePicture] = useState<any>('/' + image.split('/').splice(3).join('/'))
     const { access, refresh } = auth.tokens
 
     const handleLogout = async () => {
