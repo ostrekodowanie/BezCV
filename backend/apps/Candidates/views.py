@@ -64,9 +64,6 @@ class OffersView(APIView):
             .prefetch_related('candidateroles_candidate')
         )
 
-        if not queryset.exists():
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
         abilities_dict = {}
         abilities = CandidateAbilities.objects.filter(candidate_id__in=queryset).values('candidate_id', 'ability__name')
         for ability in abilities:
@@ -83,6 +80,9 @@ class OffersView(APIView):
             .order_by('-ids')
             .distinct()[offset:offset + per_page]
         )
+        
+        if not queryset.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         results = []
         for candidate in queryset:
@@ -141,8 +141,6 @@ class SearchCandidateView(APIView):
             if ability['candidate_id'] not in abilities_dict:
                 abilities_dict[ability['candidate_id']] = []
             abilities_dict[ability['candidate_id']].append(ability['ability__name'])
-
-        total_count = len(queryset)
         
         queryset = (queryset
             .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
@@ -151,10 +149,9 @@ class SearchCandidateView(APIView):
             .filter(filters)
             .order_by('-ids'))
         
-        queryset = queryset.distinct()[offset:offset + per_page]
+        queryset = queryset.distinct()
 
-        if not queryset.exists():
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        total_count = len(queryset)
 
         results = []
         for candidate in queryset:
@@ -168,14 +165,20 @@ class SearchCandidateView(APIView):
             result['role'] = candidate.role
 
             matching_abilities_count = 0
-            for ability in abilities_dict.get(candidate.id, []):
-                if ability in abilities_list:
-                    matching_abilities_count += 1
+
+            if a:
+                for ability in abilities_dict.get(candidate.id, []):
+                    if ability in abilities_list:
+                        matching_abilities_count += 1
 
             result['matching_abilities_count'] = matching_abilities_count
             results.append(result)
         
         results = sorted(results, key=lambda x: x['matching_abilities_count'], reverse=True)
+        results = results[offset:offset + per_page]
+
+        if not results:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response({'count': total_count, 'results': results})
 
