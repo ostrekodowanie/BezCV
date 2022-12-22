@@ -1,7 +1,7 @@
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 import axios from 'axios'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { bestseller, package1, package2, package3, priceUnderline, titleUnderline } from '../assets/points'
+import { bestseller, package1, package2, package3, priceUnderline, titleUnderline } from '../assets/points/points'
 import { arrowRight } from '../assets/general'
 import Loader from '../components/Loader'
 import { useAppDispatch, useAppSelector } from '../main'
