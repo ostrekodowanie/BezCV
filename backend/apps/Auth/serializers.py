@@ -22,7 +22,6 @@ class SignUpSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        print('syf')
         email = validated_data.get('email')
         if User.objects.filter(email=email).exists():
             raise ValidationError('Email jest już przypisany do istniejącego konta')
