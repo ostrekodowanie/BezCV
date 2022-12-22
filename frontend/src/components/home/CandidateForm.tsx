@@ -21,11 +21,11 @@ export default function CandidateForm() {
                 'Content-Type': 'application/json'
             }
         }).then(() => setStatus(true))
-        .catch(() => setStatus(false))
+        .catch(err => setStatus(err.response.data ? err.response.data : 'Wystąpił błąd!'))
     }
     
     return (
-        <section className='padding flex flex-col text-center items-center xl:items-start xl:w-max'>
+        <section className='padding py-[1in] md:py-[1.4in] 2xl:py-[1.8in] flex flex-col text-center items-center xl:items-start xl:w-max'>
             <h2 className='font-semibold mb-8 text-3xl'>Zgłoś się do pracy</h2>
             <form className='flex flex-col gap-4 font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col max-w-full sm:grid grid-cols-2 gap-6'>
@@ -48,8 +48,7 @@ export default function CandidateForm() {
                 </div>
                 <div className='flex items-center gap-6 mt-4'>
                     <FilledButton type='submit'>Wyślij zgłoszenie</FilledButton>
-                    {status === 'loading' && <Loader />}
-                    {status === false && <span className='text-red-400 font-medium'>Wystąpił błąd</span>}
+                    {status === 'loading' ? <Loader /> : status && status !== true && <span className='text-red-400 font-medium'>{status}</span>}
                     {status === true && <span className='text-green-400 font-medium'>Zgłoszenie wysłane!</span>}
                 </div>
             </form>

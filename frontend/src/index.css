@@ -24,6 +24,10 @@ body {
   padding-right: 8vw;
 }
 
+.control-package {
+  max-width: none !important;
+}
+
 @media all and (min-width: 768px) {
   .padding {
     padding-left: 12vw;
