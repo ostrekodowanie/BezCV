@@ -31,11 +31,11 @@ export default function Form() {
                 'Content-Type': 'application/json'
             }
         }).then(() => setStatus(true))
-        .catch(err => setStatus(err.response.data))
+        .catch(err => setStatus(err.response.data ? err.response.data : 'Wystąpił błąd!'))
 
     }
 
-    if(status === true) return <h2 className='text-3xl font-bold mx-auto pt-[1in]'>Email weryfikacyjny <span className='text-primary'>został wysłany!</span></h2>
+    if(status === true) return <h2 className='text-2xl font-bold mx-auto pt-[1in]'>Email weryfikacyjny <span className='text-primary'>został wysłany!</span></h2>
 
     return (
         <div className='flex flex-col text-center items-center xl:flex-1 xl:max-w-[10in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start'>
