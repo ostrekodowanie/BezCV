@@ -19,8 +19,12 @@ const UnVerified = () => {
     const { access } = useAppSelector(state => state.login.tokens)
     const [unVerified, setUnVerified] = useState<CandidateProps[]>([])
     const [status, setStatus] = useState('loading')
+    const [data, setData] = useState({ abilities: [], roles: [] })
 
     useEffect(() => {
+        axios.get('/api/candidate/filters')
+            .then(res => res.data)
+            .then(data => setData(data))
         axios.get('/api/admin/candidates', { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setUnVerified(data))
@@ -31,21 +35,21 @@ const UnVerified = () => {
     if(unVerified.length === 0) return <h2>Brak niezweryfikowanych kandydatów!</h2>
     return (
         <div className="flex flex-col gap-6">
-            {unVerified.map(candidate => <Candidate {...candidate} setUnVerified={setUnVerified} key={candidate.id} />)}
+            {unVerified.map(candidate => <Candidate {...candidate} data={data} setUnVerified={setUnVerified} key={candidate.id} />)}
         </div>
     )
 }
 
 interface CandidateVerifyRef extends CandidateProps {
+    data: { abilities: string[], roles: string[] },
     setUnVerified: Dispatch<SetStateAction<CandidateProps[]>>
 }
 
-const Candidate = ({ setUnVerified, id, ...rest }: CandidateVerifyRef) => {
+const Candidate = ({ setUnVerified, data, id, ...rest }: CandidateVerifyRef) => {
     const { first_name, last_name, email, phone } = rest
     const listRef = useRef<any>(null!)
     const [list, setList] = useState({ abilities: false, role: false })
-    const [data, setData] = useState({ abilities: [], roles: [] })
-    const [details, setDetails] = useState({
+    const [details, setDetails] = useState<{ abilities: string[], role: string }>({
         abilities: [],
         role: ''
     })
@@ -59,11 +63,6 @@ const Candidate = ({ setUnVerified, id, ...rest }: CandidateVerifyRef) => {
         if(response.status === 200) return setUnVerified(prev => prev.filter(cand => cand.id !== id))
     }
 
-    useEffect(() => {
-        axios.get('/api/candidate/filters')
-            .then(res => res.data)
-            .then(data => setData(data))
-    }, [])
 
     const handleBlur = (e: Event) => {
         if(listRef.current && !listRef.current.contains(e.target)) return setList(prev => ({ ...prev, role: false}))
