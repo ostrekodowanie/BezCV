@@ -1,4 +1,4 @@
-from django.db.models import Q, Exists, OuterRef, Count, F, Subquery, Case, Sum, When, IntegerField
+from django.db.models import Q, Exists, OuterRef, Count, F
 from django.contrib.postgres.aggregates import ArrayAgg
 
 from rest_framework import generics, status

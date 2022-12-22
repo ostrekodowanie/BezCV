@@ -1,3 +1,5 @@
+from django.core.mail import EmailMessage
+
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 from rest_framework.views import APIView
@@ -21,12 +23,27 @@ class VerifyCandidatesView(APIView):
             role = request.data.pop('role')
 
             Candidates.objects.filter(id=id).update(is_verified=True, **request.data)
-            Candidates.objects.get(id=id).save()
+            
+            candidate = Candidates.objects.get(id=id)
+            candidate.save()
 
             for x in abilities:
                 CandidateAbilities.objects.create(candidate_id=id, ability=Abilities.objects.get(name=x))
 
             CandidateRoles.objects.create(candidate_id=id, role=Roles.objects.get(name=role))
+
+            email_message = EmailMessage(
+            subject='BezCV - Zgłoszenie',
+            body=f'''Dziękujemy za zgłoszenie!\n\n
+                Szczegóły:\n
+                Imię i nazwisko: {candidate.first_name} {candidate.last_name}\n
+                Email: {candidate.email}\n
+                Numer telefonu: {candidate.phone}\n
+                Zawód: {role}\n
+                Umiejętności: {', '.join(abilities)}''',
+            to=[candidate.email]
+            )
+            email_message.send()
 
             return Response({'Successfully verified'})
 
