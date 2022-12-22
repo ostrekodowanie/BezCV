@@ -1,26 +1,32 @@
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 import axios from 'axios'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { bestseller, package1, package2, package3, priceUnderline, titleUnderline } from '../assets/points'
+import { arrowRight } from '../assets/general'
 import Loader from '../components/Loader'
 import { useAppDispatch, useAppSelector } from '../main'
 import { addPoints } from '../reducers/login'
+import Control, { Controller } from 'react-control-js'
 
 interface PackageProps {
+    image: string,
     points: number,
     price: number
 }
 
 const packages: PackageProps[] = [
     {
+        image: package1,
         points: 10,
         price: 499
     },
     {
+        image: package2,
         points: 15,
         price: 699
     },
     {
+        image: package3,
         points: 20,
         price: 899
     }
@@ -30,11 +36,15 @@ export default function Points() {
     const [chosen, setChosen] = useState<PackageProps | null>(null)
     
     return (
-        <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in]">
+        <section className="padding py-[1.4in] 2xl:py-[1.8in] bg-[#F8F9F9] min-h-screen">
+            <h1 className='flex flex-col gap-3 mb-12'>
+                <span className='font-semibold text-[0.95rem]'>Doładuj swoje konto w punkty</span>
+                <span className='text-3xl md:text-4xl font-bold'>i zdobądź <span className='relative'><span className='relative z-10'>pracowników!</span><img className='absolute -bottom-1 -right-3 -left-3 min-w-[115%]' src={titleUnderline} alt='' /></span></span>
+            </h1>
             {!chosen ?
-                <div className="flex flex-wrap justify-center gap-6 md:grid grid-cols-3">
-                    {packages.map(pack => <Package {...pack} setChosen={setChosen} key={pack.points} />)} 
-                </div>
+                <Controller stagger={50} opacity={1} ease='ease-out' delay={500} className="flex flex-wrap justify-center gap-8 xl:grid grid-cols-3">
+                    {packages.map(pack => <Control className='control-package' element={<Package {...pack} setChosen={setChosen} key={pack.points} />} />)} 
+                </Controller>
             : 
             <PayPalScriptProvider options={{ "client-id": 'AdORToXVjx2A9wjRlvRmuu93SboFo1PgQWSYQhZ3bCDm8x_KhHMDkYHDML4kYWXjFYdHAsmm08KS6XSV', currency: 'PLN'}}>
                 <ChosenPackage {...chosen} setChosen={setChosen} />
@@ -43,12 +53,29 @@ export default function Points() {
     )
 }
 
-const Package = ({ points, price, setChosen }: PackageProps & { setChosen: Dispatch<SetStateAction<PackageProps | null>> }) => {
+const Package = ({ setChosen, ...rest }: PackageProps & { setChosen: Dispatch<SetStateAction<PackageProps | null>> }) => {
+    const { points, price, image } = rest
     return (
-        <div className="flex flex-col gap-4 rounded items-center p-6 shadow">
-            <h2>{points} kontaktów</h2>
-            <h3 className="font-bold text-3xl">{price} zł</h3>
-            <button onClick={() => setChosen({ points, price })} className='bg-primary transition-colors max-w-max font-medium hover:bg-darkPrimary text-white rounded flex items-center py-2 px-6'>Wybierz pakiet</button>
+        <div className="flex flex-col self-stretch h-full justify-end gap-4 rounded-3xl relative items-center py-6 px-12 bg-white flex-1">
+            {points === 15 && <div className='absolute -top-6 rounded-t-full text-sm rounded-br-full -right-6 h-12 pl-8 pr-16 font-bold flex items-center bg-white'>
+                Bestseller
+                <div className='absolute h-12 w-12 right-0 p-2 flex items-center justify-center bg-secondary rounded-full'>
+                    <img src={bestseller} alt="" />
+                </div>    
+            </div>}
+            <img className='mb-4 max-w-[1.8in] max-h-[1.3in]' src={image} alt="" />
+            <h3 className='font-bold relative flex flex-col items-center'>
+                <span className='relative z-10'>{price} zł</span>
+                <img className='absolute bottom-[2px] min-w-[120%]' src={priceUnderline} alt="" />
+            </h3>
+            <h2 className="font-bold text-3xl w-max">{points} kontaktów</h2>
+            <ul className='list-outside list-disc marker:text-secondary sm:w-max mt-4 text-sm font-medium flex flex-col gap-3'>
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+                <li>Lorem ipsum dolor sit amet consectetur.</li>
+            </ul>
+            <button onClick={() => setChosen(rest)} className='bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-3xl flex items-center py-3 px-6 mt-8'>Wybierz pakiet <img className='max-h-[1em] ml-2' src={arrowRight} alt="" /></button>
         </div>
     )
 }
