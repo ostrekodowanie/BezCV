@@ -25,9 +25,9 @@ export default function CandidateFilter({ input, setInput, setFilter }: FilterPr
         <div className="flex flex-col">
             <div className="sticky top-36">
                 <input className="px-6 pl-14 py-3 rounded-3xl bg-search bg-[1.6rem_center] w-full bg-no-repeat" value={input} type='search' onChange={e => setInput(e.target.value)} placeholder="Wyszukaj kandydata" />
-                <div className="flex flex-col mt-8 gap-8 px-8 py-6 bg-white rounded-xl min-h-[80vh] flex-1">
+                <div className="flex flex-col mt-8 gap-8 px-8 py-6 bg-white rounded-3xl min-h-[80vh] flex-1">
                     <div>
-                        {allFilters.roles.length > 0 ? <h4 className="font-semibold mb-4">Zawody:</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
+                        {allFilters.roles.length > 0 ? <h4 className="font-semibold mb-4">Zawody</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
                         <div className="flex flex-col gap-3">
                             {allFilters.roles.length > 0 ? allFilters.roles.map(role => <RoleCheckBox role={role} setFilter={setFilter} key={role} />) :
                             <>
@@ -39,7 +39,7 @@ export default function CandidateFilter({ input, setInput, setFilter }: FilterPr
                         </div>
                     </div>
                     <div>
-                        {allFilters.abilities.length > 0 ? <h4 className="font-semibold mb-4">Umiejętności:</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
+                        {allFilters.abilities.length > 0 ? <h4 className="font-semibold mb-4">Umiejętności</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
                         <div className="flex flex-col gap-3">
                             {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <AbilityCheckBox ability={ability} setFilter={setFilter} key={ability} />) :
                             <>
