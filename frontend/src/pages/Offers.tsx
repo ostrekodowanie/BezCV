@@ -8,6 +8,7 @@ import Candidate from './Candidate'
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../main"
 import InfiniteScroll from "react-infinite-scroll-component"
+import { girl, liked, notLiked } from "../assets/offers/offers"
 
 export default function Offers() {
     return (
@@ -98,10 +99,11 @@ const CandidateList = () => {
             <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter input={input} setFilter={setFilter} setInput={setInput} />
-                <div>
+                <div className="relative">
                     <div className="flex items-center w-max ml-auto mb-4">
                         <h4 className="text-sm font-semibold text-[rgba(23,26,35,0.5)]">Wyświetlono {candidates.length} z {count} wyników</h4>
                     </div>
+                    <img className="absolute hidden lg:block -top-[1.34in] max-h-[2in] right-[2in] z-10" src={girl} alt="" />
                     <InfiniteScroll className={`flex flex-col bg-white rounded-3xl relative gap-6 flex-1 min-h-[80vh] sm:ml-8 p-4`} next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
                         {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
                     </InfiniteScroll>
@@ -143,7 +145,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
                     ))}
                 </div>
             </Link>
-            <button className="py-2 px-6 rounded-3xl transition-colors hover:bg-[#FAFAFA]" onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
+            <button className="flex items-end px-6" onClick={handleLike}><img className="w-7 mt-auto" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} /></button>
         </div>
     )
 }
