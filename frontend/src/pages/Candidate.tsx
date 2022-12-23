@@ -15,6 +15,7 @@ export interface CandidateProps {
     slug?: string,
     abilities?: [],
     role?: string,
+    salary?: string,
     phone?: string,
     email?: string,
     favourite?: boolean,
@@ -43,6 +44,7 @@ export default function Candidate() {
         phone: '',
         abilities: [],
         role: '',
+        salary: '',
         similar_candidates: []
     })
 
@@ -115,7 +117,7 @@ export default function Candidate() {
                                 <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                             </> : <>
                                 <h4 className="text-sm font-medium">Oczekiwania finansowe</h4>
-                                <h3 className="font-bold">4500 - 7000 zł</h3>
+                                <h3 className="font-bold">{candidateDetails.salary} zł</h3>
                             </>}
                         </div>
                     </div>

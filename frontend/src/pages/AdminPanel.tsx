@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { CandidateProps } from "./Candidate"
+import { inputStyles } from "./Contact"
 
 export default function AdminPanel() {
     return (
@@ -45,13 +46,20 @@ interface CandidateVerifyRef extends CandidateProps {
     setUnVerified: Dispatch<SetStateAction<CandidateProps[]>>
 }
 
+interface DetailsProps { 
+    abilities: string[],
+    role: string,
+    salary: string
+}
+
 const Candidate = ({ setUnVerified, data, id, ...rest }: CandidateVerifyRef) => {
     const { first_name, last_name, email, phone } = rest
     const listRef = useRef<any>(null!)
     const [list, setList] = useState({ abilities: false, role: false })
-    const [details, setDetails] = useState<{ abilities: string[], role: string }>({
+    const [details, setDetails] = useState<DetailsProps>({
         abilities: [],
-        role: ''
+        role: '',
+        salary: ''
     })
 
     const handleSubmit = async (action: 'verify' | 'delete') => {
@@ -81,6 +89,7 @@ const Candidate = ({ setUnVerified, data, id, ...rest }: CandidateVerifyRef) => 
                 <h3>Email: {email}</h3>
                 <h3>Numer telefonu: {phone}</h3>
             </div>
+            <input className={inputStyles.input} type="text" onChange={e => setDetails(prev => ({ ...prev, salary: e.target.value }))} placeholder='Stawka' />
             <div className="flex flex-wrap items-center gap-4">
                 {data.abilities.map(ab => (
                     <label htmlFor={ab + id.toString()} className="flex items-center gap-2 rounded-full shadow py-2 px-6">
