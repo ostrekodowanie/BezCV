@@ -1,4 +1,4 @@
-from django.db.models import Q, Exists, OuterRef, Count, F
+from django.db.models import Q, Exists, OuterRef, Count
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers, Roles
-from apps.Favourites.models import FavouriteCandidates
 from .utils import get_candidate, get_similar_candidates
 
 
@@ -67,6 +66,15 @@ class CandidateView(APIView):
 
 class CandidateAddView(generics.CreateAPIView):
     serializer_class = serializers.CandidateAddSerializer
+
+    def perform_create(self, serializer):
+        email = serializer.validated_data.get('email')
+        phone = serializer.validated_data.get('phone')
+        if Candidates.objects.filter(email=email).exists():
+            raise serializers.ValidationError('Email jest już przypisany do istniejącego konta')
+        if Candidates.objects.filter(phone=phone).exists():
+            raise serializers.ValidationError('Numer telefonu jest już przypisany do kandydata')
+        serializer.save()
 
 
 class OffersView(APIView):
@@ -186,20 +194,12 @@ class SearchCandidateView(APIView):
 
 class FiltersView(APIView):
     def get(self, request):
-        abilities = Abilities.objects.annotate(ability_count=Count('name')).order_by('ability_count')
-        roles = Roles.objects.annotate(role_count=Count('name')).order_by('role_count')
-
-        abilities_list = []
-        for x in abilities:
-            abilities_list.append(x.name)
-
-        roles_list = []
-        for x in roles:
-            roles_list.append(x.name)
+        abilities = Abilities.objects.values_list('name', flat=True).annotate(ability_count=Count('name')).order_by('ability_count')
+        roles = Roles.objects.values_list('name', flat=True).annotate(role_count=Count('name')).order_by('role_count')
 
         data = {
-            'abilities': abilities_list,
-            'roles': roles_list,
+            'abilities': abilities,
+            'roles': roles,
         }
 
         return Response(data)
@@ -207,11 +207,11 @@ class FiltersView(APIView):
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
 
-class PurchasedOffersView(generics.ListAPIView):
+class PurchasedOffersListView(generics.ListAPIView):
     serializer_class = serializers.PurchasedOffersSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        u = self.request.GET.get('u')
-        return Candidates.objects.filter(purchasedoffers_candidate__employer_id=u)
+        user = self.request.GET.get('u')
+        return Candidates.objects.filter(purchasedoffers_candidate__employer_id=user)
         
