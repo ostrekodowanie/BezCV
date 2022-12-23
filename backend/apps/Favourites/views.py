@@ -13,8 +13,8 @@ class FavouriteCandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        u = self.request.GET.get('u')
-        return Candidates.objects.filter(favouritecandidates_candidate__employer_id=u)
+        user = self.request.GET.get('u')
+        return Candidates.objects.filter(favouritecandidates_candidate__employer_id=user)
 
 
 class AddToFavouritesView(generics.CreateAPIView):
@@ -27,6 +27,6 @@ class RemoveFromFavouritesView(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         u = self.kwargs['u']
         c = self.kwargs['c']
-        favourite = FavouriteCandidates.objects.filter(Q(employer=u) & Q(candidate=c))
+        favourite = FavouriteCandidates.objects.get(Q(employer=u) & Q(candidate=c))
         favourite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
