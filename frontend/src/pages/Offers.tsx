@@ -145,7 +145,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
                     ))}
                 </div>
             </Link>
-            <button className="flex items-end px-6" onClick={handleLike}><img className="w-7 mt-auto" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} /></button>
+            <button className="flex items-start px-6 py-3" onClick={handleLike}><img className="w-6" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} /></button>
         </div>
     )
 }
