@@ -12,7 +12,7 @@ from apps.Favourites.models import FavouriteCandidates
 
 
 class CandidateView(APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         u = self.request.GET.get('u')
@@ -25,23 +25,32 @@ class CandidateView(APIView):
             .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
             .annotate(role=F('candidateroles_candidate__role__name')))
         
-        if candidate.values('is_purchased').first()['is_purchased'] == True:
-            return Response(candidate.values('id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities','role'))
+        (id, first_name, last_name, email, phone, is_purchased, abilities, role) = candidate.values_list(
+            'id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities', 'role').first()
 
-        email = candidate.values('email').first()['email']
+        data = {
+            'id': id,
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'phone': phone,
+            'is_purchased': is_purchased,
+            'abilities': abilities,
+            'role': role
+        }
+
+        if is_purchased:
+            return Response(data)
+
         email_parts = email.split('@')
         hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
         
-        return Response([{
-            'id': candidate.values('id').first()['id'],
-            'first_name': candidate.values('first_name').first()['first_name'],
-            'last_name': candidate.values('last_name').first()['last_name'],
+        data.update({
             'email': hidden_email,
-            'phone': '*********',
-            'is_purchased': candidate.values('is_purchased').first()['is_purchased'],
-            'abilities': candidate.values('abilities').first()['abilities'],
-            'role': candidate.values('role').first()['role']
-        }])
+            'phone': '*********'
+        })
+
+        return Response(data)
 
 
 class CandidateAddView(generics.CreateAPIView):
