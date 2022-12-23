@@ -129,7 +129,7 @@ export default function Candidate() {
             }
             <div className="bg-white rounded-xl p-10 flex flex-wrap gap-8">
                 <div className="flex flex-col">
-                    <h2 className="font-semibold text-xl mb-4">Istotne umiejętności kandydata</h2>
+                    <h2 className="font-semibold text-xl mb-6">Istotne umiejętności kandydata</h2>
                     <div className="flex flex-wrap gap-4 max-w-[5in]">
                         {!loading.page ? candidateDetails.abilities?.map(ab => (
                         <div className="flex items-center gap-2 w-max rounded-full py-2 px-6 text-primary bg-lightPrimary" key={ab}>
@@ -148,7 +148,7 @@ export default function Candidate() {
             </div>
             <div className="bg-white rounded-xl p-10 flex flex-wrap gap-8">
                 <div className="flex flex-col w-full">
-                    <h2 className="font-semibold text-xl mb-4">Ci kandydaci mogą Cię zainteresować</h2>
+                    <h2 className="font-semibold text-xl mb-6">Ci kandydaci mogą Cię zainteresować</h2>
                     <div className="flex flex-col gap-4 w-full">
                         {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
                             <SuggestedCandidateLoader />
@@ -163,17 +163,24 @@ export default function Candidate() {
     )
 }
 
-const SuggestedCandidate = ({ id, first_name, last_name, slug, role }: CandidateProps) => {
+const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }: CandidateProps) => {
     return (
         <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex flex-wrap items-center gap-4">
                 <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="font-bold text-2xl">{first_name.charAt(0)}</h4></div>
-                <div className="flex flex-col font-semibold gap-2">
+                <div className="flex flex-col font-bold mr-8 gap-1">
                     <h4>{first_name} {last_name}</h4>
-                    <h4 className="text-primary">{role}</h4>
+                    <h4 className="text-primary text-sm">{role}</h4>
+                </div>
+                <div className="flex flex-wrap items-center gap-4">
+                    {abilities?.map(ab => (
+                        <div className="flex items-center gap-2 w-max rounded-full py-2 px-6 bg-[#EBF0FE]">
+                            <h4 className="text-primary text-sm font-semibold">{ab}</h4>
+                        </div>
+                    ))}
                 </div>
             </div>
-            <Link className="text-primary border-primary rounded-full py-2 px-6 border-[2px] font-bold" to={`/oferty/${slug}-${id}`}>Pokaż profil</Link>
+            <Link className="text-primary border-primary rounded-full text-sm py-2 px-4 border-[1px] hover:bg-primary hover:text-white transition-colors font-bold" to={`/oferty/${slug}-${id}`}>Pokaż profil</Link>
         </div>
     )
 }
