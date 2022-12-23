@@ -1,5 +1,4 @@
 from django.db.models import Q, Exists, OuterRef, Count, F
-from django.contrib.postgres.aggregates import ArrayAgg
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -9,80 +8,53 @@ from rest_framework.permissions import IsAuthenticated
 from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers, Roles, CandidateAbilities
 from apps.Favourites.models import FavouriteCandidates
-
-from itertools import chain
+from .utils import get_candidate, get_similar_candidates
 
 
 class CandidateView(APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        u = self.request.GET.get('u')
-        slug=self.kwargs['slug']
-        id=self.kwargs['pk']
+        user = self.request.GET.get('u')
+        candidate_slug = self.kwargs['slug']
+        candidate_id = self.kwargs['pk']
 
-        candidate = (Candidates.objects
-            .filter(Q(is_verified=True) & Q(slug=slug) & Q(id=id))
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-            .annotate(role=F('candidateroles_candidate__role__name')))
+        candidate = get_candidate(user, candidate_slug, candidate_id)
+        role = candidate.candidateroles_candidate.role.name
+        abilities = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
 
-        (id, first_name, last_name, email, phone, is_purchased, abilities, role) = candidate.values_list(
-            'id', 'first_name', 'last_name', 'email', 'phone', 'is_purchased', 'abilities', 'role').first()
-    
         data = {
-            'id': id,
-            'first_name': first_name,
-            'last_name': last_name,
-            'email': email,
-            'phone': phone,
-            'is_purchased': is_purchased,
+            'id': candidate.id,
+            'first_name': candidate.first_name,
+            'last_name': candidate.last_name,
+            'email': candidate.email,
+            'phone': candidate.phone,
+            'is_purchased': candidate.is_purchased,
             'abilities': abilities,
-            'role': role,
+            'role': role
         }
 
-        similar_candidates = (Candidates.objects
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .filter(Q(is_verified=True) & Q(is_purchased=False) & Q(candidateroles_candidate__role__name=role) & ~Q(id=id))
-            .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-            .annotate(role=F('candidateroles_candidate__role__name')))[:10]
+        similar_candidates = get_similar_candidates(user, role, abilities, candidate_id)
 
-        if len(similar_candidates) < 10:
-            remaining_count = 10 - len(similar_candidates)
-            remaining_candidates = (Candidates.objects
-                .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-                .filter(Q(is_verified=True) & Q(is_purchased=False) & ~Q(candidateroles_candidate__role__name=role) & ~Q(id=id))
-                .annotate(abilities=ArrayAgg('candidateabilities_candidate__ability__name'))
-                .annotate(role=F('candidateroles_candidate__role__name')))[:remaining_count]
-            similar_candidates = list(chain(similar_candidates, remaining_candidates))
-        
         similar_candidate_data = []
         for similar_candidate in similar_candidates:
-            id = similar_candidate.id
-            slug = similar_candidate.slug
-            first_name = similar_candidate.first_name
-            last_name = similar_candidate.last_name
-            abilities = similar_candidate.abilities
-            role = similar_candidate.role
-        
             similar_candidate_dict = {
-                    'id': id,
-                    'slug': slug,
-                    'first_name': first_name,
-                    'last_name': last_name,
-                    'abilities': abilities,
-                    'role': role
-                }
+                'id': similar_candidate.id,
+                'slug': similar_candidate.slug,
+                'first_name': similar_candidate.first_name,
+                'last_name': similar_candidate.last_name,
+                'abilities': [ability.ability.name for ability in similar_candidate.candidateabilities_candidate.all()],
+                'role': similar_candidate.candidateroles_candidate.role.name
+            }
                 
             similar_candidate_data.append(similar_candidate_dict)
 
             data.update({'similar_candidates': similar_candidate_data})
 
-        if is_purchased:
-
+        if candidate.is_purchased:
             return Response(data)
 
-        email_parts = email.split('@')
+        email_parts = candidate.email.split('@')
         hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
         
         data.update({
@@ -95,6 +67,7 @@ class CandidateView(APIView):
 
 class CandidateAddView(generics.CreateAPIView):
     serializer_class = serializers.CandidateAddSerializer
+
 
 class OffersView(APIView):
     permission_classes = [IsAuthenticated]
