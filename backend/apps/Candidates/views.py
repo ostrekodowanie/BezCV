@@ -28,6 +28,7 @@ class CandidateView(APIView):
             'last_name': candidate.last_name,
             'email': candidate.email,
             'phone': candidate.phone,
+            'salary': candidate.salary,
             'is_purchased': candidate.is_purchased,
             'abilities': abilities,
             'role': role
