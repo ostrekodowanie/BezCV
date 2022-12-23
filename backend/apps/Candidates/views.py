@@ -73,30 +73,29 @@ class OffersView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        u = self.request.GET.get('u')
+        user = self.request.GET.get('u')
         page = self.request.GET.get('page', 1)
 
         per_page = 10
         offset = (int(page) - 1) * per_page
 
         queryset = (Candidates.objects
-            .filter(is_verified=True)
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .filter(is_purchased=False)
-            .prefetch_related('candidateroles_candidate')
+            .prefetch_related('candidateabilities_candidate__ability')
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
+            .filter(Q(is_verified=True) & Q(is_purchased=False))
         )
 
-        abilities_dict = {}
+        '''abilities_dict = {}
         abilities = CandidateAbilities.objects.filter(candidate_id__in=queryset).values('candidate_id', 'ability__name')
         for ability in abilities:
             if ability['candidate_id'] not in abilities_dict:
                 abilities_dict[ability['candidate_id']] = []
-            abilities_dict[ability['candidate_id']].append(ability['ability__name'])
+            abilities_dict[ability['candidate_id']].append(ability['ability__name'])'''
 
         total_count = queryset.count()
 
         queryset = (queryset
-            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
+            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
             .annotate(role=F('candidateroles_candidate__role__name'))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids')
@@ -114,7 +113,7 @@ class OffersView(APIView):
             result['last_name'] = candidate.last_name
             result['slug'] = candidate.slug
             result['favourite'] = candidate.favourite
-            result['abilities'] = abilities_dict.get(candidate.id, [])
+            result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
             result['role'] = candidate.role
             results.append(result)
 
