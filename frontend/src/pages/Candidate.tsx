@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router"
+import { Link } from "react-router-dom"
 import { cash, role } from "../assets/candidate/candidate"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
@@ -16,7 +17,8 @@ export interface CandidateProps {
     role?: string,
     phone?: string,
     email?: string,
-    favourite?: boolean
+    favourite?: boolean,
+    similar_candidates?: CandidateProps[]
 }
 
 type Details = Omit<CandidateProps, 'slug' | 'id' | 'favourite'> & { is_purchased: boolean }
@@ -40,7 +42,8 @@ export default function Candidate() {
         email: '',
         phone: '',
         abilities: [],
-        role: ''
+        role: '',
+        similar_candidates: []
     })
 
     const handlePurchase = async () => {
@@ -147,11 +150,7 @@ export default function Candidate() {
                 <div className="flex flex-col w-full">
                     <h2 className="font-semibold text-xl mb-4">Ci kandydaci mogą Cię zainteresować</h2>
                     <div className="flex flex-col gap-4 w-full">
-                        {!loading.page ? candidateDetails.abilities?.map(ab => (
-                        <div className="flex items-center gap-2 w-max rounded-full py-2 px-6 text-primary bg-lightPrimary">
-                            <h4 className="text-sm font-semibold">{ab}</h4>
-                        </div>
-                        )) : <> 
+                        {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
                             <SuggestedCandidateLoader />
                             <SuggestedCandidateLoader />
                             <SuggestedCandidateLoader />
@@ -161,6 +160,21 @@ export default function Candidate() {
                 </div>
             </div>
         </section>       
+    )
+}
+
+const SuggestedCandidate = ({ id, first_name, last_name, slug, role }: CandidateProps) => {
+    return (
+        <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex flex-wrap items-center gap-4">
+                <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="font-bold text-2xl">{first_name.charAt(0)}</h4></div>
+                <div className="flex flex-col font-semibold gap-2">
+                    <h4>{first_name} {last_name}</h4>
+                    <h4 className="text-primary">{role}</h4>
+                </div>
+            </div>
+            <Link className="text-primary border-primary rounded-full py-2 px-6 border-[2px] font-bold" to={`/oferty/${slug}-${id}`}>Pokaż profil</Link>
+        </div>
     )
 }
 
