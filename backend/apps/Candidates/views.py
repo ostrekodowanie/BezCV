@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
-from .models import Candidates, Abilities, PurchasedOffers, Roles, CandidateAbilities
+from .models import Candidates, Abilities, PurchasedOffers, Roles
 from apps.Favourites.models import FavouriteCandidates
 from .utils import get_candidate, get_similar_candidates
 
@@ -20,8 +20,8 @@ class CandidateView(APIView):
         candidate_id = self.kwargs['pk']
 
         candidate = get_candidate(user, candidate_slug, candidate_id)
-        role = candidate.candidateroles_candidate.role.name
         abilities = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
+        role = candidate.candidateroles_candidate.role.name
 
         data = {
             'id': candidate.id,
@@ -76,45 +76,38 @@ class OffersView(APIView):
         user = self.request.GET.get('u')
         page = self.request.GET.get('page', 1)
 
-        per_page = 10
+        per_page = 5
         offset = (int(page) - 1) * per_page
 
         queryset = (Candidates.objects
+            .only('id', 'first_name', 'last_name', 'slug')
+            .select_related('candidateroles_candidate__role')
             .prefetch_related('candidateabilities_candidate__ability')
+            .prefetch_related('favouritecandidates_candidate')
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
             .filter(Q(is_verified=True) & Q(is_purchased=False))
         )
 
-        '''abilities_dict = {}
-        abilities = CandidateAbilities.objects.filter(candidate_id__in=queryset).values('candidate_id', 'ability__name')
-        for ability in abilities:
-            if ability['candidate_id'] not in abilities_dict:
-                abilities_dict[ability['candidate_id']] = []
-            abilities_dict[ability['candidate_id']].append(ability['ability__name'])'''
-
         total_count = queryset.count()
 
-        queryset = (queryset
-            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
-            .annotate(role=F('candidateroles_candidate__role__name'))
-            .annotate(ids=Count('favouritecandidates_candidate__id'))
-            .order_by('-ids')
-            .distinct()[offset:offset + per_page]
+        candidates = (queryset
+            .annotate(ids=Count('favouritecandidates_candidate'))
+            .order_by('-ids')[offset:offset + per_page]
         )
-        
-        if not queryset.exists():
+
+        if not candidates.exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         results = []
-        for candidate in queryset:
+        for candidate in candidates:
             result = {}
             result['id'] = candidate.id
             result['first_name'] = candidate.first_name
             result['last_name'] = candidate.last_name
             result['slug'] = candidate.slug
-            result['favourite'] = candidate.favourite
+            result['favourite'] = candidate.favouritecandidates_candidate.exists()
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
-            result['role'] = candidate.role
+            result['role'] = candidate.candidateroles_candidate.role.name
             results.append(result)
 
         return Response({'count': total_count, 'results': results})
@@ -125,9 +118,9 @@ class SearchCandidateView(APIView):
 
     def get(self, request, *args, **kwargs):
         q = self.request.GET.get('q')
-        a = self.request.GET.get('a')
-        r = self.request.GET.get('r')
-        u = self.request.GET.get('u')
+        abilities = self.request.GET.get('a')
+        roles = self.request.GET.get('r')
+        user = self.request.GET.get('u')
         page = self.request.GET.get('page', 1)
 
         per_page = 10
@@ -141,36 +134,23 @@ class SearchCandidateView(APIView):
                 query &= Q(slug__icontains=x)
             queries.add(Q(query), Q.AND)
 
-        if a:     
-            abilities_list = a.split(',')
-            filters = Q(candidateabilities_candidate__ability__name__in=abilities_list)      
-        else:
-            filters = Q()
+        if abilities:     
+            abilities_list = abilities.split(',')
+            queries.add(Q(candidateabilities_candidate__ability__name__in=abilities_list), Q.AND)
         
-        if r:
-            roles = r.split(',')
-            filters.add(Q(candidateroles_candidate__role__name__in=roles), Q.AND)
+        if roles:
+            roles = roles.split(',')
+            queries.add(Q(candidateroles_candidate__role__name__in=roles), Q.AND)
 
         queryset = (Candidates.objects
-            .filter(queries)
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .filter(is_purchased=False))
-        
-        abilities_dict = {}
-        abilities = CandidateAbilities.objects.filter(candidate_id__in=queryset).values('candidate_id', 'ability__name')
-        for ability in abilities:
-            if ability['candidate_id'] not in abilities_dict:
-                abilities_dict[ability['candidate_id']] = []
-            abilities_dict[ability['candidate_id']].append(ability['ability__name'])
-        
-        queryset = (queryset
-            .annotate(favourite=Exists(FavouriteCandidates.objects.filter(employer=u, candidate_id=OuterRef('pk'))))
-            .annotate(role=F('candidateroles_candidate__role__name'))
+            .only('id', 'first_name', 'last_name', 'slug')
+            .select_related('candidateroles_candidate__role')
+            .prefetch_related('candidateabilities_candidate__ability')
+            .prefetch_related('favouritecandidates_candidate')
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
+            .filter(Q(queries) & Q(is_purchased=False))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
-            .filter(filters)
             .order_by('-ids'))
-        
-        queryset = queryset.distinct()
 
         total_count = len(queryset)
 
@@ -181,14 +161,14 @@ class SearchCandidateView(APIView):
             result['first_name'] = candidate.first_name
             result['last_name'] = candidate.last_name
             result['slug'] = candidate.slug
-            result['favourite'] = candidate.favourite
-            result['abilities'] = abilities_dict.get(candidate.id, [])
-            result['role'] = candidate.role
+            result['favourite'] = candidate.favouritecandidates_candidate.exists()
+            result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
+            result['role'] = candidate.candidateroles_candidate.role.name
 
             matching_abilities_count = 0
 
-            if a:
-                for ability in abilities_dict.get(candidate.id, []):
+            if abilities:
+                for ability in result['abilities']:
                     if ability in abilities_list:
                         matching_abilities_count += 1
 
