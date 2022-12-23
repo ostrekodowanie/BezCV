@@ -11,14 +11,12 @@ import InfiniteScroll from "react-infinite-scroll-component"
 
 export default function Offers() {
     return (
-        <section className="padding py-[1.4in] md:py-[2in]">
-            <Routes>
-                <Route path='/:slug-:id' element={<Candidate />} />
-                {['/', '/search/*'].map((path, index) => 
-                    <Route path={path} element={<CandidateList />} key={index} />
-                )}
-            </Routes>
-        </section>
+        <Routes>
+            <Route path='/:slug-:id' element={<Candidate />} />
+            {['/', '/search/*'].map((path, index) => 
+                <Route path={path} element={<CandidateList />} key={index} />
+            )}
+        </Routes>
     )
 }
 
@@ -96,7 +94,7 @@ const CandidateList = () => {
     )
 
     return (
-        <>
+        <section className="padding py-[1.4in] md:py-[2in] bg-[#F8F8F9]">
             <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter input={input} setFilter={setFilter} setInput={setInput} />
@@ -107,7 +105,7 @@ const CandidateList = () => {
                     {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
                 </InfiniteScroll>
             </div>
-        </>
+        </section>
     )
 }
 
