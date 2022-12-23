@@ -18,7 +18,12 @@ def get_similar_candidates(user, role, abilities, candidate_id):
         .prefetch_related('candidateabilities_candidate__ability')
         .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
         .distinct()
-        .filter(Q(is_verified=True) & Q(is_purchased=False) & Q(candidateroles_candidate__role__name=role) & Q(candidateabilities_candidate__ability__name__in=abilities) & ~Q(id=candidate_id)))[:5]
+        .filter(Q(is_verified=True) 
+            & Q(is_purchased=False) 
+            & Q(candidateroles_candidate__role__name=role) 
+            & Q(candidateabilities_candidate__ability__name__in=abilities) 
+            & ~Q(id=candidate_id))
+        )[:5]
 
     if len(similar_candidates) < 5:
             remaining_count = 5 - len(similar_candidates)
@@ -28,7 +33,12 @@ def get_similar_candidates(user, role, abilities, candidate_id):
                 .prefetch_related('candidateabilities_candidate__ability')
                 .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
                 .distinct()
-                .filter(Q(is_verified=True) & Q(is_purchased=False) & ~Q(candidateroles_candidate__role__name=role) & Q(candidateabilities_candidate__ability__name__in=abilities) & ~Q(id=candidate_id)))[:remaining_count]
+                .filter(Q(is_verified=True) 
+                    & Q(is_purchased=False) 
+                    & ~Q(candidateroles_candidate__role__name=role) 
+                    & Q(candidateabilities_candidate__ability__name__in=abilities) 
+                    & ~Q(id=candidate_id))
+                )[:remaining_count]
             similar_candidates = list(chain(similar_candidates, remaining_candidates))
 
     return similar_candidates
