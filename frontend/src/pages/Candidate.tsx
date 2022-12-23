@@ -2,6 +2,8 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router"
+import { Link } from "react-router-dom"
+import { cash, role } from "../assets/candidate/candidate"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
@@ -15,7 +17,8 @@ export interface CandidateProps {
     role?: string,
     phone?: string,
     email?: string,
-    favourite?: boolean
+    favourite?: boolean,
+    similar_candidates?: CandidateProps[]
 }
 
 type Details = Omit<CandidateProps, 'slug' | 'id' | 'favourite'> & { is_purchased: boolean }
@@ -39,7 +42,8 @@ export default function Candidate() {
         email: '',
         phone: '',
         abilities: [],
-        role: ''
+        role: '',
+        similar_candidates: []
     })
 
     const handlePurchase = async () => {
@@ -55,35 +59,139 @@ export default function Candidate() {
         setLoading(prev => ({...prev, page: true}))
         axios.get(`/api/oferty/${slug}-${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
-            .then(data => setCandidateDetails(data[0]))
+            .then(data => setCandidateDetails(data))
             .finally(() => setLoading(prev => ({...prev, page: false})))
     }, [points, slug, id])
     
-    if(loading.page) return <Loader />
-
     return (
-        <div className="flex flex-col gap-6">
-            <h1 className="font-bold text-3xl">{candidateDetails.first_name} {candidateDetails.last_name}</h1>
-            <div className="flex items-center gap-4 font-medium text-lg"> 
-                <h2>{candidateDetails.email}</h2>
-                <h2>+48 {candidateDetails.phone}</h2>
-            </div>
-            <div className="flex flex-wrap gap-4">
-                {candidateDetails.abilities?.map(ab => (
-                    <div className="flex items-center gap-2 w-max rounded-full shadow py-2 px-6">
-                        <h4>{ab}</h4>
+        <section className="padding py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-[#F8F8F9] min-h-screen flex flex-col gap-8">
+            <div className="bg-white rounded-xl p-10">
+                {loading.page ? <div className="flex items-center gap-4 mb-8">
+                    <div className="w-[1in] h-[2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                    <div className="w-[1.6in] h-[2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                </div> : <h1 className="font-bold text-3xl mb-8">{candidateDetails.first_name} {candidateDetails.last_name}</h1>}
+                <div className="flex flex-wrap gap-6 xl:flex-nowrap xl:justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img src={role} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm font-medium">Email</h4>
+                                <h3 className="font-bold">{candidateDetails.email}</h3>
+                            </>}
+                        </div>
                     </div>
-                ))}
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img src={role} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm font-medium">Numer telefonu</h4>
+                                <h3 className="font-bold">+48 {candidateDetails.phone}</h3>
+                            </>}
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img src={role} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm font-medium">Stanowisko</h4>
+                                <h3 className="font-bold">{candidateDetails.role}</h3>
+                            </>}
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img src={cash} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm font-medium">Oczekiwania finansowe</h4>
+                                <h3 className="font-bold">4500 - 7000 zł</h3>
+                            </>}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="flex items-center gap-4">
-                <h2 className="text-lg">Preferowane stanowisko: <span className="font-bold text-primary">{candidateDetails.role}</span></h2>
-            </div>
-            {!candidateDetails.is_purchased && 
+            {loading.page ? <Loader /> : !candidateDetails.is_purchased && 
                 <div className="flex items-center gap-4">
-                    <button onClick={handlePurchase} className="bg-primary transition-colors max-w-max font-medium hover:bg-darkPrimary text-white rounded flex items-center py-2 px-6">Wykup kontakt za 1 punkt</button>
+                    <button onClick={handlePurchase} className="bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-3xl flex items-center py-3 px-6">Wykup kontakt za 1 punkt</button>
                     {loading.purchase && <Loader />}    
                 </div>
             }
-        </div>            
+            <div className="bg-white rounded-xl p-10 flex flex-wrap gap-8">
+                <div className="flex flex-col">
+                    <h2 className="font-semibold text-xl mb-4">Istotne umiejętności kandydata</h2>
+                    <div className="flex flex-wrap gap-4 max-w-[5in]">
+                        {!loading.page ? candidateDetails.abilities?.map(ab => (
+                        <div className="flex items-center gap-2 w-max rounded-full py-2 px-6 text-primary bg-lightPrimary" key={ab}>
+                            <h4 className="text-sm font-semibold" key={ab + 'content'}>{ab}</h4>
+                        </div>
+                        )) : <>
+                            <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                            <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                            <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                            <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                            <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                            <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                        </>}
+                    </div>
+                </div>
+            </div>
+            <div className="bg-white rounded-xl p-10 flex flex-wrap gap-8">
+                <div className="flex flex-col w-full">
+                    <h2 className="font-semibold text-xl mb-4">Ci kandydaci mogą Cię zainteresować</h2>
+                    <div className="flex flex-col gap-4 w-full">
+                        {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
+                            <SuggestedCandidateLoader />
+                            <SuggestedCandidateLoader />
+                            <SuggestedCandidateLoader />
+                            <SuggestedCandidateLoader />
+                        </>}
+                    </div>
+                </div>
+            </div>
+        </section>       
+    )
+}
+
+const SuggestedCandidate = ({ id, first_name, last_name, slug, role }: CandidateProps) => {
+    return (
+        <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex flex-wrap items-center gap-4">
+                <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="font-bold text-2xl">{first_name.charAt(0)}</h4></div>
+                <div className="flex flex-col font-semibold gap-2">
+                    <h4>{first_name} {last_name}</h4>
+                    <h4 className="text-primary">{role}</h4>
+                </div>
+            </div>
+            <Link className="text-primary border-primary rounded-full py-2 px-6 border-[2px] font-bold" to={`/oferty/${slug}-${id}`}>Pokaż profil</Link>
+        </div>
+    )
+}
+
+const SuggestedCandidateLoader = () => {
+    return (
+        <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex flex-wrap items-center gap-4">
+                <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center" />
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-4">
+                        <div className="w-[.8in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                        <div className="w-[1.2in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                    </div>
+                    <div className="w-[.6in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                </div>
+            </div>
+            <div className="w-[1in] h-[2em] rounded-full bg-[#f8f8f8]" />
+        </div>
     )
 }

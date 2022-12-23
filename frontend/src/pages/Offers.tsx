@@ -8,17 +8,16 @@ import Candidate from './Candidate'
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../main"
 import InfiniteScroll from "react-infinite-scroll-component"
+import { girl, liked, notLiked } from "../assets/offers/offers"
 
 export default function Offers() {
     return (
-        <section className="padding py-[1.4in] md:py-[2in]">
-            <Routes>
-                <Route path='/:slug-:id' element={<Candidate />} />
-                {['/', '/search/*'].map((path, index) => 
-                    <Route path={path} element={<CandidateList />} key={index} />
-                )}
-            </Routes>
-        </section>
+        <Routes>
+            <Route path='/:slug-:id' element={<Candidate />} />
+            {['/', '/search/*'].map((path, index) => 
+                <Route path={path} element={<CandidateList />} key={index} />
+            )}
+        </Routes>
     )
 }
 
@@ -87,27 +86,30 @@ const CandidateList = () => {
     }, [page])
 
     const OffersLoader = () => (
-        <>
+        <div className="m-6 flex flex-col gap-6">
             <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
             <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
             <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
             <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
-        </>
+        </div>
     )
 
     return (
-        <>
+        <section className="padding py-[1.4in] md:py-[2in] bg-[#F8F8F9]">
             <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter input={input} setFilter={setFilter} setInput={setInput} />
-                <InfiniteScroll className="flex flex-col relative gap-8 flex-1 sm:ml-8" next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
-                    <div className="flex items-center right-0 -top-8 w-max ml-auto">
+                <div className="relative">
+                    <div className="flex items-center w-max ml-auto mb-4">
                         <h4 className="text-sm font-semibold text-[rgba(23,26,35,0.5)]">Wyświetlono {candidates.length} z {count} wyników</h4>
                     </div>
-                    {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
-                </InfiniteScroll>
+                    <img className="absolute hidden lg:block -top-[1.34in] max-h-[2in] right-[2in] z-10" src={girl} alt="" />
+                    <InfiniteScroll className={`flex flex-col bg-white rounded-3xl relative gap-6 flex-1 min-h-[80vh] sm:ml-8 p-4`} next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
+                        {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
+                    </InfiniteScroll>
+                </div>
             </div>
-        </>
+        </section>
     )
 }
 
@@ -143,7 +145,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
                     ))}
                 </div>
             </Link>
-            <button className="py-2 px-6 rounded-3xl transition-colors hover:bg-[#FAFAFA]" onClick={handleLike}>{isFavourite ? 'Polubiono' : 'Polub'}</button>
+            <button className="flex items-start px-6 py-3" onClick={handleLike}><img className="w-6" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} /></button>
         </div>
     )
 }
