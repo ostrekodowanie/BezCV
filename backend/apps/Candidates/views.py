@@ -12,7 +12,7 @@ from .utils import get_candidate, get_similar_candidates
 
 
 class CandidateView(APIView):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         user = self.request.GET.get('u')
