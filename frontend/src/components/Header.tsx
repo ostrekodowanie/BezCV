@@ -38,8 +38,8 @@ const Nav = () => {
                     <Link className="font-bold text-base" to='/punkty'>{points} pkt.</Link>
                 </> : 
                 <>
-                    <Link className="border-[2px] mt-4 md:mt-0 md:ml-4 font-semibold border-primary text-primary rounded flex items-center py-2 px-6" to='/logowanie'>Zaloguj się</Link>
-                    <Link className="bg-primary border-[2px] transition-colors hover:border-darkPrimary hover:bg-darkPrimary font-semibold border-primary text-white rounded flex items-center py-2 px-6" to='/rejestracja'>Załóż Konto</Link>
+                    <Link className="mt-4 md:mt-0 md:ml-4 font-semibold flex items-center p-2 hover:text-primary transition-colors" to='/logowanie'>Zaloguj się</Link>
+                    <Link className="bg-primary border-[2px] transition-colors hover:border-darkPrimary hover:bg-darkPrimary font-semibold border-primary text-white rounded-xl flex items-center py-2 px-6" to='/rejestracja'>Zarejestruj się</Link>
                 </>}
             </div>
             <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 md:hidden h-5 w-8 justify-between cursor-pointer'>

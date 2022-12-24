@@ -41,3 +41,27 @@ body {
     padding-right: 18vw;
   }
 }
+
+@keyframes animationScale {
+  100% {
+    transform: scaleX(100%);
+  }
+}
+
+@keyframes animationScaleY {
+  100% {
+    transform: scaleY(100%);
+  }
+}
+
+.animation-scale {
+  transform: scaleX(0%);
+  animation: animationScale 700ms ease-in-out 700ms forwards;
+  transform-origin: left;
+}
+
+.animation-scale-y {
+  transform: scaleY(0%);
+  animation: animationScaleY 700ms ease-in-out 700ms forwards;
+  transform-origin: bottom;
+}

@@ -167,7 +167,7 @@ export default function Candidate() {
 
 const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }: CandidateProps) => {
     return (
-        <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4">
                 <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="font-bold text-2xl">{first_name.charAt(0)}</h4></div>
                 <div className="flex flex-col font-bold mr-8 gap-1">
