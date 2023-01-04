@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers, Roles
 from .utils import get_candidate, get_similar_candidates
+from apps.Favourites.models import FavouriteCandidates
 
 
 class CandidateView(APIView):
@@ -46,6 +47,10 @@ class CandidateView(APIView):
                 'abilities': [ability.ability.name for ability in similar_candidate.candidateabilities_candidate.all()],
                 'role': similar_candidate.candidateroles_candidate.role.name
             }
+
+            original_candidate_users = FavouriteCandidates.objects.filter(candidate_id=candidate_id).values_list('employer', flat=True)
+            similar_candidate_users = FavouriteCandidates.objects.filter(candidate_id=similar_candidate.id).values_list('employer', flat=True)
+            num_users = len(set(original_candidate_users).intersection(similar_candidate_users))
                 
             similar_candidate_data.append(similar_candidate_dict)
 
