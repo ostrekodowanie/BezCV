@@ -18,7 +18,7 @@ export default function Recovery() {
     }
 
     return (
-        <div className='flex flex-col text-center items-center xl:flex-1 xl:max-w-[7in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start'>
+        <div className='flex flex-col text-center items-center xl:flex-1 xl:max-w-[7in] md:shadow-boxPrimary bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start'>
             <h2 className="font-bold text-[2.4rem] mb-4 xl:mb-8 w-full">Zresetuj hasło</h2>
             {status === true ? <h3 className='text-xl mt-2 mb-6'>Wiadomość została wysłana na podany email.</h3> : <form className='flex flex-col gap-4 w-full font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col sm:flex-row justify-center max-w-full gap-6 xl:gap-8'>

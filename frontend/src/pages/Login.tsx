@@ -13,7 +13,7 @@ export interface User {
 
 export default function Login() {
     return (
-        <section className="md:px-[12vw] xl:px-0 xl:flex justify-center md:pt-[1.5in] min-h-screen bg-[#F8F9F9] md:pb-16">
+        <section className="md:px-[12vw] xl:px-0 xl:flex justify-center md:pt-[1.5in] min-h-screen bg-[#FCFCFC] md:pb-16">
             <Routes>
                 <Route path='/' element={<Form />} />
                 <Route path='/odzyskiwanie' element={<Recovery />} />
