@@ -151,7 +151,7 @@ class PasswordResetConfirmView(views.APIView):
 
         return Response({'Hasło zostało zresetowane'}, status=status.HTTP_200_OK)
 
-
+# user
 class UserView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer

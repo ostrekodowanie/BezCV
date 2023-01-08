@@ -1,6 +1,7 @@
-from django.db.models import Q, Exists, OuterRef
+from django.db.models import Q, Exists, OuterRef, Count
 
 from .models import Candidates, PurchasedOffers
+from apps.Favourites.models import FavouriteCandidates
 
 from itertools import chain
 
@@ -13,6 +14,8 @@ def get_candidate(user, candidate_slug, candidate_id):
         .get(Q(is_verified=True) & Q(slug=candidate_slug) & Q(id=candidate_id)))
     
 def get_similar_candidates(user, role, abilities, candidate_id):
+   
+
     similar_candidates = (Candidates.objects
         .only('id', 'slug', 'first_name', 'last_name')
         .select_related('candidateroles_candidate__role')
@@ -25,7 +28,7 @@ def get_similar_candidates(user, role, abilities, candidate_id):
             & Q(candidateabilities_candidate__ability__name__in=abilities) 
             & ~Q(id=candidate_id))
         )[:5]
-
+        
     if len(similar_candidates) < 5:
             remaining_count = 5 - len(similar_candidates)
             remaining_candidates = (Candidates.objects

@@ -5,7 +5,7 @@ import CandidateFilter from "../components/offers/CandidateFilter"
 import useDebounce from "../hooks/useDebounce"
 import { CandidateProps } from "./Candidate"
 import Candidate from './Candidate'
-import { Link, useSearchParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useAppSelector } from "../main"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { girl, liked, notLiked } from "../assets/offers/offers"
