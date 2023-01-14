@@ -38,8 +38,8 @@ const Nav = () => {
                     <Link className="font-bold text-base" to='/punkty'>{points} pkt.</Link>
                 </> : 
                 <>
-                    <Link className="mt-4 md:mt-0 md:ml-4 font-semibold flex items-center p-2 hover:text-primary transition-colors" to='/logowanie'>Zaloguj się</Link>
-                    <Link className="bg-primary border-[2px] transition-colors hover:border-darkPrimary hover:bg-darkPrimary font-semibold border-primary text-white rounded-xl flex items-center py-2 px-6" to='/rejestracja'>Zarejestruj się</Link>
+                    <Link className="mt-4 md:mt-0 md:ml-4 font-semibold transition-colors flex items-center p-2 text-[#2F66F4] hover:text-darkPrimary" to='/logowanie'>Zaloguj się</Link>
+                    <Link className="bg-primary transition-colors font-semibold border-primary text-white rounded-full flex items-center py-2 px-6" to='/rejestracja'>Zarejestruj się</Link>
                 </>}
             </div>
             <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 md:hidden h-5 w-8 justify-between cursor-pointer'>
@@ -60,5 +60,5 @@ type CustomLink = {
 const CustomLink = ({children, to, className}: CustomLink) => {
     const activePath = useResolvedPath(to)
     const isActive = useMatch({path: `${activePath.pathname}/*`, end: true})
-    return <Link to={to} className={`${className && className} transition-colors font-semibold ${isActive ? 'text-primary' : 'hover:text-primary'}`}>{children}</Link>
+    return <Link to={to} className={`${className && className} transition-colors font-semibold ${isActive ? 'text-[#2F66F4]' : 'hover:text-[#2F66F4]'}`}>{children}</Link>
 }

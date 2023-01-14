@@ -53,14 +53,12 @@ export default function Profile() {
 }
 
 const Favourites = () => {
-    const auth = useAppSelector(state => state.login)
-    const { id } = auth.data
-    const { access } = auth.tokens
+    const { access } = useAppSelector(state => state.login.tokens)
     const [favourites, setFavourites] = useState<CandidateProps[]>([])
     const [loading, setLoading] = useState(true)
     
     useEffect(() => {
-        axios.get('/api/profile/favourites?u=' + id, { headers: { 'Authorization': 'Bearer ' + access}})
+        axios.get('/api/profile/favourites', { headers: { 'Authorization': 'Bearer ' + access}})
             .then(res => res.data)
             .then(data => setFavourites(data))
             .finally(() => setLoading(false))
@@ -82,10 +80,12 @@ const Favourites = () => {
 }
 
 const CandidateFavourite = ({ id, first_name, last_name, slug, setFavourites }: CandidateProps & { setFavourites: Dispatch<SetStateAction<CandidateProps[]>>}) => {
-    const user_id = useAppSelector(state => state.login.data.id)
+    const { access } = useAppSelector(state => state.login.tokens)
 
     const handleRemove = async () => {
-        let resp = await axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`)
+        let resp = await axios.delete(`/api/profile/favourites/remove/${id}`, {
+            headers: { 'Authorization': 'Bearer ' + access }
+        })
         if(resp.status === 204) return setFavourites(prev => prev.filter(cand => cand.id !== id))
     }
     
