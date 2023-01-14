@@ -14,8 +14,6 @@ def get_candidate(user, candidate_slug, candidate_id):
         .get(Q(is_verified=True) & Q(slug=candidate_slug) & Q(id=candidate_id)))
     
 def get_similar_candidates(user, role, abilities, candidate_id):
-   
-
     similar_candidates = (Candidates.objects
         .only('id', 'slug', 'first_name', 'last_name')
         .select_related('candidateroles_candidate__role')

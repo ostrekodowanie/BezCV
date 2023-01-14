@@ -4,7 +4,6 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import  LimitOffsetPagination
 
 from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers, Roles
@@ -68,7 +67,6 @@ class CandidateView(APIView):
         })
 
         return Response(data)
-
 
 class CandidateAddView(generics.CreateAPIView):
     serializer_class = serializers.CandidateAddSerializer
@@ -216,6 +214,5 @@ class PurchasedOffersListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.GET.get('u')
-        return Candidates.objects.filter(purchasedoffers_candidate__employer_id=user)
+        return Candidates.objects.filter(purchasedoffers_candidate__employer_id=self.request.user)
         
