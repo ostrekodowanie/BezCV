@@ -75,7 +75,7 @@ const Package = ({ setChosen, ...rest }: PackageProps & { setChosen: Dispatch<Se
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
             </ul>
-            <button onClick={() => setChosen(rest)} className='bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-3xl flex items-center py-3 px-6 mt-8'>Wybierz pakiet <img className='max-h-[1em] ml-2' src={arrowRight} alt="" /></button>
+            <button onClick={() => setChosen(rest)} className='bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-full flex items-center py-3 px-6 mt-8'>Wybierz pakiet <img className='max-h-[1em] ml-2' src={arrowRight} alt="" /></button>
         </div>
     )
 }

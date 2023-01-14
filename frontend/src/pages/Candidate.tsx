@@ -66,12 +66,15 @@ export default function Candidate() {
     }, [points, slug, id])
     
     return (
-        <section className="padding py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-[#F8F8F9] min-h-screen flex flex-col gap-8">
-            <div className="bg-white rounded-xl p-10">
+        <section className="padding py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8">
+            <div className="bg-white rounded-3xl shadow-primaryBig p-10">
                 {loading.page ? <div className="flex items-center gap-4 mb-8">
                     <div className="w-[1in] h-[2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                     <div className="w-[1.6in] h-[2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                </div> : <h1 className="font-bold text-3xl mb-8">{candidateDetails.first_name} {candidateDetails.last_name}</h1>}
+                </div> : <div className="mb-8 flex flex-col gap-2">
+                    <h2 className="text-primary font-medium">Kandydat</h2>
+                    <h1 className="font-bold text-3xl">{candidateDetails.first_name} {candidateDetails.last_name}</h1>
+                </div>}
                 <div className="flex flex-wrap gap-6 xl:flex-nowrap xl:justify-between">
                     <div className="flex items-center gap-4">
                         <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img src={role} alt="" /></div>
@@ -125,39 +128,41 @@ export default function Candidate() {
             </div>
             {loading.page ? <Loader /> : !candidateDetails.is_purchased && 
                 <div className="flex items-center gap-4">
-                    <button onClick={handlePurchase} className="bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-3xl flex items-center py-3 px-6">Wykup kontakt za 1 punkt</button>
+                    <button onClick={handlePurchase} className="bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-full flex items-center py-3 px-6">Wykup kontakt za 1 punkt</button>
                     {loading.purchase && <Loader />}    
                 </div>
             }
-            <div className="bg-white rounded-xl p-10 flex flex-wrap gap-8">
-                <div className="flex flex-col">
-                    <h2 className="font-semibold text-xl mb-6">Istotne umiejętności kandydata</h2>
-                    <div className="flex flex-wrap gap-4 max-w-[5in]">
-                        {!loading.page ? candidateDetails.abilities?.map(ab => (
-                        <div className="flex items-center gap-2 w-max rounded-full py-2 px-6 text-primary bg-lightPrimary" key={ab}>
-                            <h4 className="text-sm font-semibold" key={ab + 'content'}>{ab}</h4>
+            <div className="flex flex-col gap-8 md:grid grid-cols-[1fr_3fr]">
+                <div className="bg-white rounded-3xl p-10 flex flex-wrap shadow-primaryBig gap-8">
+                    <div className="flex flex-col">
+                        <h2 className="font-semibold text-xl mb-6">Istotne umiejętności kandydata</h2>
+                        <div className="flex flex-wrap gap-4 max-w-[5in]">
+                            {!loading.page ? candidateDetails.abilities?.map(ab => (
+                            <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]" key={ab}>
+                                <h4 className="text-sm font-semibold text-primary" key={ab + 'content'}>{ab}</h4>
+                            </div>
+                            )) : <>
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                            </>}
                         </div>
-                        )) : <>
-                            <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                            <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                            <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                            <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                            <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                            <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                        </>}
                     </div>
                 </div>
-            </div>
-            <div className="bg-white rounded-xl p-10 flex flex-wrap gap-8">
-                <div className="flex flex-col w-full">
-                    <h2 className="font-semibold text-xl mb-6">Ci kandydaci mogą Cię zainteresować</h2>
-                    <div className="flex flex-col gap-4 w-full">
-                        {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
-                            <SuggestedCandidateLoader />
-                            <SuggestedCandidateLoader />
-                            <SuggestedCandidateLoader />
-                            <SuggestedCandidateLoader />
-                        </>}
+                <div className="bg-white rounded-3xl p-10 flex flex-wrap shadow-primaryBig gap-8">
+                    <div className="flex flex-col w-full">
+                        <h2 className="font-semibold text-xl mb-6">Ci kandydaci mogą Cię zainteresować</h2>
+                        <div className="flex flex-col gap-6 w-full">
+                            {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
+                                <SuggestedCandidateLoader />
+                                <SuggestedCandidateLoader />
+                                <SuggestedCandidateLoader />
+                                <SuggestedCandidateLoader />
+                            </>}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -168,21 +173,21 @@ export default function Candidate() {
 const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }: CandidateProps) => {
     return (
         <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-4">
-                <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="font-bold text-2xl">{first_name.charAt(0)}</h4></div>
-                <div className="flex flex-col font-bold mr-8 gap-1">
-                    <h4>{first_name} {last_name}</h4>
-                    <h4 className="text-primary text-sm">{role}</h4>
+            <div className="flex items-center gap-4">
+                <div className="h-14 w-14 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="font-bold text-xl text-primary">{first_name.charAt(0)}</h4></div>
+                <div className="flex flex-col font-bold mr-8 gap-1 w-max">
+                    <h4 className="text-sm w-max">{first_name} {last_name}</h4>
+                    <h4 className="text-primary text-sm w-max">{role}</h4>
                 </div>
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-wrap self-start items-center gap-4">
                     {abilities?.map(ab => (
-                        <div className="flex items-center gap-2 w-max rounded-full py-2 px-6 bg-[#EBF0FE]">
-                            <h4 className="text-primary text-sm font-semibold">{ab}</h4>
+                        <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]">
+                            <h4 className="text-primary text-[0.75rem] font-semibold">{ab}</h4>
                         </div>
                     ))}
                 </div>
             </div>
-            <Link className="text-primary border-primary rounded-full w-max text-sm py-2 px-4 border-[1px] hover:bg-primary hover:text-white transition-colors font-bold" to={`/oferty/${slug}-${id}`}>Pokaż profil</Link>
+            <Link className="text-primary border-primary rounded-full w-max min-w-max text-sm py-2 px-4 border-[1px] hover:bg-primary hover:text-white transition-colors font-bold" to={`/oferty/${slug}-${id}`}>Pokaż profil</Link>
         </div>
     )
 }

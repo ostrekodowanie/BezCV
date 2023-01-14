@@ -19,6 +19,24 @@ body {
   color: #171A23;
 }
 
+.text-primary {
+  background: linear-gradient(263.78deg, #2F66F4 -16.49%, #0D9AE9 96.33%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  text-shadow: 0px 5px 16px rgba(47, 102, 244, 0.34);
+}
+
+.bg-primary {
+  box-shadow: 0px 12px 17px rgba(47, 102, 244, 0.25);
+  transition: all 200ms ease-out;
+}
+
+.bg-primary:hover {
+  transform: scale(1.05);
+}
+
 .padding {
   padding-left: 8vw;
   padding-right: 8vw;
