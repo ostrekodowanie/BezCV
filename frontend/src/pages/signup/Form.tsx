@@ -38,7 +38,7 @@ export default function Form() {
     if(status === true) return <h2 className='text-2xl font-bold mx-auto pt-[1in]'>Email weryfikacyjny <span className='text-primary'>został wysłany!</span></h2>
 
     return (
-        <div className='flex flex-col text-center items-center xl:flex-1 xl:max-w-[10in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start'>
+        <div className='flex flex-col text-center md:shadow-boxPrimary items-center xl:flex-1 xl:max-w-[10in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start'>
             <h2 className="font-bold text-[2.4rem] mb-8 xl:mb-10 w-full">Zarejestruj się</h2>
             <form className='flex flex-col gap-4 w-full font-medium relative' onSubmit={handleSubmit}>
                 <div className='flex flex-col max-w-full sm:grid grid-cols-2 gap-6 xl:gap-8'>

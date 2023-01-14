@@ -182,7 +182,7 @@ const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }
                     ))}
                 </div>
             </div>
-            <Link className="text-primary border-primary rounded-full text-sm py-2 px-4 border-[1px] hover:bg-primary hover:text-white transition-colors font-bold" to={`/oferty/${slug}-${id}`}>Pokaż profil</Link>
+            <Link className="text-primary border-primary rounded-full w-max text-sm py-2 px-4 border-[1px] hover:bg-primary hover:text-white transition-colors font-bold" to={`/oferty/${slug}-${id}`}>Pokaż profil</Link>
         </div>
     )
 }

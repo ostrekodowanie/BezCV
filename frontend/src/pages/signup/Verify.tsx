@@ -13,16 +13,12 @@ export default function Verify() {
     const location = useLocation()
     useEffect(() => {
         const token = location.search.split("=").pop()
-        try {
             axios.get(`/api/signup/verify?token=${token}`)
                 .then(() => setStatus({...status, ok: true}))
-        }
-        catch(err: any) {
-            setStatus({
-                ok: false,
-                message: err.response
-            })
-        }
+                .catch(err => setStatus({
+                    ok: false,
+                    message: typeof err.response.data === 'string' ? err.response.data : 'Wystąpił błąd!'
+                }))
     }, [])
     return (
         <section className="padding py-[1.4in] flex items-center justify-center">

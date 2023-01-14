@@ -23,7 +23,8 @@ module.exports = {
         skp: 'repeat(auto-fit, minmax(300px, 1fr))'
       },
       boxShadow: {
-        primarySmall: '0px 4px 14px rgba(12, 50, 250, 0.1)'
+        primarySmall: '0px 4px 14px rgba(12, 50, 250, 0.1)',
+        boxPrimary: '6px -6px 65px rgba(47, 102, 244, 0.06), -6px 6px 65px rgba(47, 102, 244, 0.06)'
       }
     },
   },
