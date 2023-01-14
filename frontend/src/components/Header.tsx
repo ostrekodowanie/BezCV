@@ -4,8 +4,16 @@ import { useEffect, useState } from 'react'
 import { useAppSelector } from "../main"
 
 export default function Header() {
+    const [down, setDown] = useState(false)
+    
+    useEffect(() => {
+        const cb = () => setDown(window.scrollY > 100);
+        window.addEventListener("scroll", cb)
+        return () => window.removeEventListener("scroll", cb)
+    }, [])
+
     return (
-        <header className="flex items-center justify-between h-[5rem] md:h-[6rem] padding fixed left-0 right-0 z-30 top-0 bg-white">
+        <header className={`flex items-center justify-between min-h-[5rem] padding fixed left-0 right-0 z-30 top-0 transition-all bg-white ${down ? 'shadow-primarySmall md:min-h-[5rem]' : 'md:min-h-[6rem]'}`}>
             <Logo />
             <Nav />
         </header>

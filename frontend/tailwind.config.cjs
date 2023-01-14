@@ -12,7 +12,10 @@ module.exports = {
         darkPrimary: '#234CB8',
         darkSecondary: '#cf7432',
         lightPrimary: '#E5ECFD',
-        font: '#141B3F'
+        font: '#141B3F',
+        fontPrimary: '#2F66F4',
+        negative: '#E8456C',
+        darkNegative: '#aa344f'
       },
       backgroundImage: {
         primary: 'linear-gradient(90.04deg, #2F66F4 24.53%, #0D9AE9 82.58%)',

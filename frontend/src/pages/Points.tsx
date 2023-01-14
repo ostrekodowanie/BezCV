@@ -36,7 +36,7 @@ export default function Points() {
     const [chosen, setChosen] = useState<PackageProps | null>(null)
     
     return (
-        <section className="padding py-[1.4in] 2xl:py-[1.8in] bg-[#F8F9F9] min-h-screen">
+        <section className="padding py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen">
             <h1 className='flex flex-col gap-3 mb-12'>
                 <span className='font-semibold text-[0.95rem]'>Doładuj swoje konto w punkty</span>
                 <span className='text-3xl md:text-4xl font-bold'>i zdobądź <span className='relative'><span className='relative z-10'>pracowników!</span><img className='absolute -bottom-1 -right-3 -left-3 min-w-[115%]' src={titleUnderline} alt='' /></span></span>
@@ -56,7 +56,7 @@ export default function Points() {
 const Package = ({ setChosen, ...rest }: PackageProps & { setChosen: Dispatch<SetStateAction<PackageProps | null>> }) => {
     const { points, price, image } = rest
     return (
-        <div className="flex flex-col self-stretch h-full justify-end gap-4 rounded-3xl relative items-center py-6 px-12 bg-white flex-1">
+        <div className="flex flex-col self-stretch h-full justify-end gap-4 rounded-3xl relative items-center py-6 px-12 bg-white shadow-primaryBig flex-1">
             {points === 15 && <div className='absolute -top-6 rounded-t-full text-sm rounded-br-full -right-6 h-12 pl-8 pr-16 font-bold flex items-center bg-white'>
                 Bestseller
                 <div className='absolute h-12 w-12 right-0 p-2 flex items-center justify-center bg-secondary rounded-full'>
