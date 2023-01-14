@@ -4,6 +4,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import  LimitOffsetPagination
 
 from . import serializers
 from .models import Candidates, Abilities, PurchasedOffers, Roles
@@ -15,11 +16,10 @@ class CandidateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        user = self.request.GET.get('u')
         candidate_slug = self.kwargs['slug']
         candidate_id = self.kwargs['pk']
 
-        candidate = get_candidate(user, candidate_slug, candidate_id)
+        candidate = get_candidate(self.request.user, candidate_slug, candidate_id)
         abilities = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
         role = candidate.candidateroles_candidate.role.name
 
@@ -35,7 +35,7 @@ class CandidateView(APIView):
             'role': role
         }
 
-        similar_candidates = get_similar_candidates(user, role, abilities, candidate_id)
+        similar_candidates = get_similar_candidates(self.request.user, role, abilities, candidate_id)
 
         similar_candidate_data = []
         for similar_candidate in similar_candidates:
@@ -82,12 +82,27 @@ class CandidateAddView(generics.CreateAPIView):
             raise serializers.ValidationError('Numer telefonu jest już przypisany do kandydata')
         serializer.save()
 
+class OffersView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.OffersSerializer
+    pagination_class = LimitOffsetPagination
 
-class OffersView(APIView):
+    def get_queryset(self):
+        queryset = (Candidates.objects
+            .only('id', 'first_name', 'last_name', 'slug')
+            .select_related('candidateroles_candidate__role')
+            .prefetch_related('candidateabilities_candidate__ability')
+            .prefetch_related('favouritecandidates_candidate')
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
+            .filter(Q(is_verified=True) & Q(is_purchased=False))
+            .annotate(ids=Count('favouritecandidates_candidate'))
+            .order_by('-ids')
+        )
+        return queryset
+'''class OffersView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        user = self.request.GET.get('u')
         page = self.request.GET.get('page', 1)
 
         per_page = 5
@@ -98,7 +113,7 @@ class OffersView(APIView):
             .select_related('candidateroles_candidate__role')
             .prefetch_related('candidateabilities_candidate__ability')
             .prefetch_related('favouritecandidates_candidate')
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
             .filter(Q(is_verified=True) & Q(is_purchased=False))
         )
 
@@ -125,7 +140,7 @@ class OffersView(APIView):
             results.append(result)
 
         return Response({'count': total_count, 'results': results})
-
+'''
 
 class SearchCandidateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -134,7 +149,6 @@ class SearchCandidateView(APIView):
         q = self.request.GET.get('q')
         abilities = self.request.GET.get('a')
         roles = self.request.GET.get('r')
-        user = self.request.GET.get('u')
         page = self.request.GET.get('page', 1)
 
         per_page = 10
@@ -161,7 +175,7 @@ class SearchCandidateView(APIView):
             .select_related('candidateroles_candidate__role')
             .prefetch_related('candidateabilities_candidate__ability')
             .prefetch_related('favouritecandidates_candidate')
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
+            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
             .filter(Q(queries) & Q(is_purchased=False))
             .annotate(ids=Count('favouritecandidates_candidate__id'))
             .order_by('-ids'))

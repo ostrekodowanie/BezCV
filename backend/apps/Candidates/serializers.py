@@ -19,6 +19,7 @@ class CandidateAddSerializer(serializers.ModelSerializer):
         model = Candidates
         fields = ('first_name', 'last_name', 'email', 'phone')
 
+
 class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchasedOffers
@@ -30,8 +31,24 @@ class PurchaseOfferSerializer(serializers.ModelSerializer):
 
         return instance
 
+
 class PurchasedOffersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
         fields = ('id', 'slug', 'first_name', 'last_name', 'email', 'phone')
 
+
+class OffersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Candidates
+        fields = ('id', 'first_name', 'last_name', 'slug', 'favourite', 'abilities', 'role')
+
+    def get_abilities(self, obj):
+        return [ability.ability.name for ability in obj.candidateabilities_candidate.all()]
+
+    def get_role(self, obj):
+        return obj.candidateroles_candidate.role.name
+
+    def get_favourite(self, obj):
+        request = self.context.get('request')
+        return obj.favourite.filter(pk=request.user.pk).exists()

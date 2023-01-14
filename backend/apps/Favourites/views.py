@@ -13,8 +13,7 @@ class FavouriteCandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.GET.get('u')
-        return Candidates.objects.filter(favouritecandidates_candidate__employer_id=user)
+        return Candidates.objects.filter(favouritecandidates_candidate__employer_id=self.request.user)
 
 
 class AddToFavouritesView(generics.CreateAPIView):
