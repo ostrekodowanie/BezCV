@@ -19,6 +19,7 @@ class CandidateAddSerializer(serializers.ModelSerializer):
         model = Candidates
         fields = ('first_name', 'last_name', 'email', 'phone')
 
+
 class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchasedOffers
@@ -30,8 +31,8 @@ class PurchaseOfferSerializer(serializers.ModelSerializer):
 
         return instance
 
+
 class PurchasedOffersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
         fields = ('id', 'slug', 'first_name', 'last_name', 'email', 'phone')
-
