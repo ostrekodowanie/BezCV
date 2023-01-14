@@ -82,24 +82,8 @@ class CandidateAddView(generics.CreateAPIView):
             raise serializers.ValidationError('Numer telefonu jest już przypisany do kandydata')
         serializer.save()
 
-class OffersView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = serializers.OffersSerializer
-    pagination_class = LimitOffsetPagination
 
-    def get_queryset(self):
-        queryset = (Candidates.objects
-            .only('id', 'first_name', 'last_name', 'slug')
-            .select_related('candidateroles_candidate__role')
-            .prefetch_related('candidateabilities_candidate__ability')
-            .prefetch_related('favouritecandidates_candidate')
-            .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
-            .filter(Q(is_verified=True) & Q(is_purchased=False))
-            .annotate(ids=Count('favouritecandidates_candidate'))
-            .order_by('-ids')
-        )
-        return queryset
-'''class OffersView(APIView):
+class OffersView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -140,7 +124,7 @@ class OffersView(generics.ListAPIView):
             results.append(result)
 
         return Response({'count': total_count, 'results': results})
-'''
+
 
 class SearchCandidateView(APIView):
     permission_classes = [IsAuthenticated]

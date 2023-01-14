@@ -22,10 +22,10 @@ class AddToFavouritesView(generics.CreateAPIView):
 
 class RemoveFromFavouritesView(generics.DestroyAPIView):
     serializer_class = serializers.FavouriteOffersSerializer
+    permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
-        u = self.kwargs['u']
-        c = self.kwargs['c']
-        favourite = FavouriteCandidates.objects.get(Q(employer=u) & Q(candidate=c))
+        candidate = self.kwargs['c']
+        favourite = FavouriteCandidates.objects.get(Q(employer=self.request.user) & Q(candidate=candidate))
         favourite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
