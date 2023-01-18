@@ -34,7 +34,7 @@ class CandidateView(APIView):
             'role': role
         }
 
-        similar_candidates = get_similar_candidates(self.request.user, role, abilities, candidate_id)
+        similar_candidates = get_similar_candidates(self.request.user, role, [ability.ability.name for ability in candidate.candidateabilities_candidate.all()], candidate_id)
 
         similar_candidate_data = []
         for similar_candidate in similar_candidates:
