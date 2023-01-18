@@ -60,8 +60,8 @@ class CandidateView(APIView):
 
         email_parts = candidate.email.split('@')
         hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
-        hidden_first_name = candidate.first_name[slice(1)] + '*' * (len(candidate.first_name) - 1)
-        hidden_last_name = candidate.last_name[slice(1)] + '*' * (len(candidate.last_name) - 1)
+        hidden_first_name = candidate.first_name[0] + '*' * (len(candidate.first_name) - 1)
+        hidden_last_name = candidate.last_name[0] + '*' * (len(candidate.last_name) - 1)
         
         data.update({
             'email': hidden_email,
@@ -117,8 +117,8 @@ class OffersView(APIView):
         for candidate in candidates:
             result = {}
             result['id'] = candidate.id
-            result['first_name'] = candidate.first_name
-            result['last_name'] = candidate.last_name
+            result['first_name'] = candidate.first_name[0] + '*' * (len(candidate.first_name) - 1)
+            result['last_name'] = candidate.last_name[0] + '*' * (len(candidate.last_name) - 1)
             result['slug'] = candidate.slug
             result['favourite'] = candidate.favouritecandidates_candidate.exists()
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
@@ -132,7 +132,6 @@ class SearchCandidateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        q = self.request.GET.get('q')
         abilities = self.request.GET.get('a')
         roles = self.request.GET.get('r')
         page = self.request.GET.get('page', 1)
@@ -141,12 +140,6 @@ class SearchCandidateView(APIView):
         offset = (int(page) - 1) * per_page
 
         queries = Q(is_verified=True)
-        
-        if q:
-            query=Q()
-            for x in q.split():
-                query &= Q(slug__icontains=x)
-            queries.add(Q(query), Q.AND)
 
         if abilities:     
             abilities_list = abilities.split(',')
@@ -172,10 +165,9 @@ class SearchCandidateView(APIView):
         for candidate in queryset:
             result = {}
             result['id'] = candidate.id
-            result['first_name'] = candidate.first_name
-            result['last_name'] = candidate.last_name
+            result['first_name'] = candidate.first_name[0] + '*' * (len(candidate.first_name) - 1)
+            result['last_name'] = candidate.last_name[0] + '*' * (len(candidate.last_name) - 1)
             result['slug'] = candidate.slug
-            result['favourite'] = candidate.favouritecandidates_candidate.exists()
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
             result['role'] = candidate.candidateroles_candidate.role.name
 
