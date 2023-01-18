@@ -37,7 +37,7 @@ export default function Profile() {
             <div className="flex flex-col justify-between gap-6 p-10 shadow-primaryBig rounded-3xl">
                 <div className="flex items-center gap-6">
                     <label className="h-24 w-24 cursor-pointer flex items-center justify-center overflow-hidden rounded-full relative bg-[#F6F6F6]" htmlFor="profile-photo">
-                        {profilePicture ? <img className="absolute h-full w-full inset-0 object-cover" src={profilePicture} alt='' /> : <span className="text-primary font-bold">{first_name.charAt(0)}</span>}
+                        {profilePicture ? <img className="absolute h-full w-full inset-0 object-cover" src={profilePicture} alt='' /> : <span className="text-primary text-3xl font-bold">{first_name.charAt(0)}</span>}
                         <div className="absolute inset-0 bg-black z-10 transition-opacity opacity-0 hover:opacity-20 duration-300" />
                     </label>
                     <input onChange={handleSubmit} accept="image/png, image/jpeg" className='absolute -z-10 opacity-0' type='file' id="profile-photo" />

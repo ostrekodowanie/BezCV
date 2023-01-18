@@ -147,7 +147,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
                 </div>
             </Link>
             <button className="flex items-center self-end gap-3 w-max h-max rounded-full py-3 px-6 bg-[#EBF0FE]" onClick={handleLike}>
-                <h3 className="text-primary text-sm font-semibold">{isFavourite ? 'Polubiono' : 'Dodaj do ulubionych'}</h3>
+                <h3 className="text-primary text-sm font-semibold hidden sm:block">{isFavourite ? 'Polubiono' : 'Dodaj do ulubionych'}</h3>
                 <img className="max-h-[1em]" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} />
             </button>
         </div>
