@@ -78,6 +78,7 @@ class CandidateAbilities(models.Model):
         Candidates, on_delete=models.CASCADE, related_name='candidateabilities_candidate')
     ability = models.ForeignKey(
         Abilities, on_delete=models.CASCADE, related_name='candidateabilities_ability')
+    percentage = models.DecimalField(max_digits=3, decimal_places=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -86,8 +87,9 @@ class CandidateAbilities(models.Model):
         unique_together = [['candidate', 'ability']]
 
     def __str__(self):
-        return '{}'.format(
+        return '{} | {}'.format(
             self.pk,
+            self.percentage,
         )
 
 class PurchasedOffers(models.Model):

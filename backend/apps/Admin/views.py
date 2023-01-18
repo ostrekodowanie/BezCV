@@ -28,7 +28,7 @@ class VerifyCandidatesView(APIView):
             candidate.save()
 
             for x in abilities:
-                CandidateAbilities.objects.create(candidate_id=id, ability=Abilities.objects.get(name=x))
+                CandidateAbilities.objects.create(candidate_id=id, ability=Abilities.objects.get(name=x[0]), percentage=x[1])
 
             CandidateRoles.objects.create(candidate_id=id, role=Roles.objects.get(name=role))
 

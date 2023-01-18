@@ -19,7 +19,7 @@ class CandidateView(APIView):
         candidate_id = self.kwargs['pk']
 
         candidate = get_candidate(self.request.user, candidate_slug, candidate_id)
-        abilities = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
+        abilities = [{'name': ability.ability.name, 'percentage': ability.percentage} for ability in candidate.candidateabilities_candidate.all()]
         role = candidate.candidateroles_candidate.role.name
 
         data = {
@@ -60,10 +60,14 @@ class CandidateView(APIView):
 
         email_parts = candidate.email.split('@')
         hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
+        hidden_first_name = candidate.first_name[slice(1)] + '*' * (len(candidate.first_name) - 1)
+        hidden_last_name = candidate.last_name[slice(1)] + '*' * (len(candidate.last_name) - 1)
         
         data.update({
             'email': hidden_email,
-            'phone': '*********'
+            'phone': '*********',
+            'first_name': hidden_first_name,
+            'last_name': hidden_last_name,
         })
 
         return Response(data)
