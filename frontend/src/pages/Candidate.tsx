@@ -7,22 +7,25 @@ import { cash, role } from "../assets/candidate/candidate"
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
+import { AbilityProps } from "./AdminPanel"
 
 export interface CandidateProps {
     id: number,
     first_name: string,
     last_name: string,
     slug?: string,
-    abilities?: [],
+    abilities?: AbilityProps[],
     role?: string,
     salary?: string,
     phone?: string,
     email?: string,
     favourite?: boolean,
-    similar_candidates?: CandidateProps[]
+    similar_candidates?: NonPercentageAbilitiesCandidateProps[]
 }
 
 type Details = Omit<CandidateProps, 'slug' | 'id' | 'favourite'> & { is_purchased: boolean }
+
+export type NonPercentageAbilitiesCandidateProps = Omit<CandidateProps, 'abilities'> & { abilities?: string[] }
 
 export default function Candidate() {
     const auth = useAppSelector(state => state.login)
@@ -59,7 +62,7 @@ export default function Candidate() {
 
     useEffect(() => {
         setLoading(prev => ({...prev, page: true}))
-        axios.get(`/api/oferty/${slug}-${id}?u=` + user_id, { headers: { 'Authorization': 'Bearer ' + access }})
+        axios.get(`/api/oferty/${slug}-${id}`, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)
             .then(data => setCandidateDetails(data))
             .finally(() => setLoading(prev => ({...prev, page: false})))
@@ -137,11 +140,7 @@ export default function Candidate() {
                     <div className="flex flex-col">
                         <h2 className="font-semibold text-xl mb-6">Istotne umiejętności kandydata</h2>
                         <div className="flex flex-wrap gap-4 max-w-[5in]">
-                            {!loading.page ? candidateDetails.abilities?.map(ab => (
-                            <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]" key={ab}>
-                                <h4 className="text-sm font-semibold text-primary" key={ab + 'content'}>{ab}</h4>
-                            </div>
-                            )) : <>
+                            {!loading.page ? candidateDetails.abilities?.map(ab => <AbilityRange {...ab} key={ab.name} />) : <>
                                 <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
                                 <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
                                 <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
@@ -170,7 +169,23 @@ export default function Candidate() {
     )
 }
 
-const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }: CandidateProps) => {
+const AbilityRange = ({ name, percentage }: AbilityProps) => {
+    if(!percentage || percentage < 1) return <></>
+    return (
+        <div className="flex flex-col gap-2">
+            <h4>{name}</h4>
+            <div className="bg-[linear-gradient(180deg,#2F66F4_0%,#0D9AE9_100%)] rounded-full h-8">
+                <div className={`relative bg-[linear-gradient(180deg,#2F66F4_-81.35%,#0D9AE9_100%)] w-[${percentage}%]`}>
+                    <div className="rounded-full absolute right-0 bottom-[120%] shadow-primarySmall bg-white">
+                        <span className="font-bold text-primary right-[110%] top-2 z-10">{percentage}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }: NonPercentageAbilitiesCandidateProps) => {
     return (
         <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">

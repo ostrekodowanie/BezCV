@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import CandidateFilter from "../components/offers/CandidateFilter"
-import { CandidateProps } from "./Candidate"
+import { CandidateProps, NonPercentageAbilitiesCandidateProps } from "./Candidate"
 import Candidate from './Candidate'
 import { Link, useSearchParams } from "react-router-dom"
 import { useAppSelector } from "../main"
@@ -32,7 +32,7 @@ const CandidateList = () => {
     const auth = useAppSelector(state => state.login)
     const { access } = auth.tokens
     const [searchParams] = useSearchParams()
-    const [candidates, setCandidates] = useState<CandidateProps[]>([])
+    const [candidates, setCandidates] = useState<NonPercentageAbilitiesCandidateProps[]>([])
     const [page, setPage] = useState(1)
     const [count, setCount] = useState(0)
     const [hasMore, setHasMore] = useState(true)
@@ -114,9 +114,11 @@ const CandidateList = () => {
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilities }: CandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilities }: NonPercentageAbilitiesCandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFavourite, setIsFavourite] = useState(favourite)
+
+    console.log(abilities)
 
     const handleLike = async () => {
         setIsFavourite(prev => !prev)
