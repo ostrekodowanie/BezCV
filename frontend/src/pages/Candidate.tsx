@@ -25,6 +25,8 @@ export interface CandidateProps {
 
 type Details = Omit<CandidateProps, 'slug' | 'id' | 'favourite'> & { is_purchased: boolean }
 
+export type NonPercentageAbilitiesCandidateProps = Omit<CandidateProps, 'abilities'> & { abilities?: string[] }
+
 export default function Candidate() {
     const auth = useAppSelector(state => state.login)
     const { id, slug } = useParams()
@@ -153,7 +155,7 @@ export default function Candidate() {
                     <div className="flex flex-col w-full">
                         <h2 className="font-semibold text-xl mb-6">Ci kandydaci mogą Cię zainteresować</h2>
                         <div className="flex flex-col gap-6 w-full">
-                            {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
+                            {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} abilities={cand.abilities?.map(item => item.name)} key={cand.id} />) : <> 
                                 <SuggestedCandidateLoader />
                                 <SuggestedCandidateLoader />
                                 <SuggestedCandidateLoader />
@@ -183,7 +185,7 @@ const AbilityRange = ({ name, percentage }: AbilityProps) => {
     )
 }
 
-const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }: CandidateProps) => {
+const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }: NonPercentageAbilitiesCandidateProps) => {
     return (
         <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -195,7 +197,7 @@ const SuggestedCandidate = ({ id, first_name, last_name, slug, role, abilities }
                 <div className="flex flex-wrap self-start items-center gap-4">
                     {abilities?.map(ab => (
                         <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]">
-                            <h4 className="text-primary text-[0.75rem] font-semibold">{ab.name}</h4>
+                            <h4 className="text-primary text-[0.75rem] font-semibold">{ab}</h4>
                         </div>
                     ))}
                 </div>
