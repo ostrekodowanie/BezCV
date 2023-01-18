@@ -46,7 +46,7 @@ interface CandidateVerifyRef extends CandidateProps {
     setUnVerified: Dispatch<SetStateAction<CandidateProps[]>>
 }
 
-interface AbilityProps {
+export interface AbilityProps {
     name: string,
     percentage: number
 }

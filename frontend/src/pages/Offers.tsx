@@ -104,7 +104,7 @@ const CandidateList = () => {
             <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} />
                 <InfiniteScroll className={`flex flex-col bg-white shadow-primaryBig rounded-3xl relative gap-6 flex-1 min-h-[80vh] sm:ml-8 p-4`} next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
-                    {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
+                    {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} abilities={candidate.abilities?.map(item => item.name)} key={candidate.id} />) : <OffersLoader />}
                 </InfiniteScroll>
             </div>
             <div className="flex items-center w-max ml-auto mb-4">
@@ -114,7 +114,7 @@ const CandidateList = () => {
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilities }: CandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilities }: Omit<CandidateProps, 'abilities'> & { abilities?: string[] }) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFavourite, setIsFavourite] = useState(favourite)
 

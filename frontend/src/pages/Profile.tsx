@@ -130,13 +130,13 @@ const Purchased = () => {
                     <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
                     <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
                     <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
-                </> : purchased.length > 0 ? purchased.map(cand => <CandidatePurchased {...cand} key={cand.id} />) : <h2>Brak zakupionych kontaktów!</h2>}
+                </> : purchased.length > 0 ? purchased.map(cand => <CandidatePurchased {...cand} abilities={cand.abilities?.map(item => item.name)} key={cand.id} />) : <h2>Brak zakupionych kontaktów!</h2>}
             </div>
         </div>
     )
 }
 
-const CandidatePurchased = ({ id, first_name, last_name, slug, role, abilities }: CandidateProps) => {
+const CandidatePurchased = ({ id, first_name, last_name, slug, role, abilities }: Omit<CandidateProps, 'abilities'> & { abilities?: string[] }) => {
     return (
         <Link to={'/oferty/' + slug + '-' + id}  className="flex flex-col gap-6 w-full rounded-3xl px-6 py-3 hover:bg-[#FAFAFA] transition-colors ">
             <div className="flex items-center gap-6">
