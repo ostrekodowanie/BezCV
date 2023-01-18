@@ -135,11 +135,11 @@ export default function Candidate() {
                     {loading.purchase && <Loader />}    
                 </div>
             }
-            <div className="flex flex-col gap-8 md:grid grid-cols-[1fr_3fr]">
+            <div className="flex flex-col gap-8 lg:grid grid-cols-[2fr_5fr]">
                 <div className="bg-white rounded-3xl p-10 flex flex-wrap shadow-primaryBig gap-8">
                     <div className="flex flex-col">
                         <h2 className="font-semibold text-xl mb-6">Istotne umiejętności kandydata</h2>
-                        <div className="flex flex-wrap gap-4 max-w-[5in]">
+                        <div className="flex flex-col gap-6">
                             {!loading.page ? candidateDetails.abilities?.map(ab => <AbilityRange {...ab} key={ab.name} />) : <>
                                 <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
                                 <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
@@ -173,11 +173,12 @@ const AbilityRange = ({ name, percentage }: AbilityProps) => {
     if(!percentage || percentage < 1) return <></>
     return (
         <div className="flex flex-col gap-2">
-            <h4>{name}</h4>
-            <div className="bg-[linear-gradient(180deg,#2F66F4_0%,#0D9AE9_100%)] rounded-full h-8">
-                <div className={`relative bg-[linear-gradient(180deg,#2F66F4_-81.35%,#0D9AE9_100%)] w-[${percentage}%]`}>
-                    <div className="rounded-full absolute right-0 bottom-[120%] shadow-primarySmall bg-white">
-                        <span className="font-bold text-primary right-[110%] top-2 z-10">{percentage}%</span>
+            <h4 className="font-semibold text-sm">{name}</h4>
+            <div className="bg-[#2F66F4]/20 rounded-full h-6">
+                <div style={{ width: percentage + '%' }} className='relative bg-[linear-gradient(180deg,#2F66F4_-81.35%,#0D9AE9_100%)] rounded-full h-full'>
+                    <div className="rounded-full absolute right-0 translate-x-[50%] h-6 w-6 bottom-[140%] shadow-primarySmall bg-white flex items-center justify-center">
+                        <span className="font-bold text-primary right-[120%] top-0 text-sm z-10 absolute">{percentage}%</span>
+                        <div className="bg-primary h-[35%] w-[35%] rounded-full" />
                     </div>
                 </div>
             </div>
