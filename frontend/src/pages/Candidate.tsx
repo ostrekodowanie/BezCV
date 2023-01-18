@@ -20,7 +20,7 @@ export interface CandidateProps {
     phone?: string,
     email?: string,
     favourite?: boolean,
-    similar_candidates?: CandidateProps[]
+    similar_candidates?: NonPercentageAbilitiesCandidateProps[]
 }
 
 type Details = Omit<CandidateProps, 'slug' | 'id' | 'favourite'> & { is_purchased: boolean }
@@ -155,7 +155,7 @@ export default function Candidate() {
                     <div className="flex flex-col w-full">
                         <h2 className="font-semibold text-xl mb-6">Ci kandydaci mogą Cię zainteresować</h2>
                         <div className="flex flex-col gap-6 w-full">
-                            {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} abilities={cand.abilities?.map(item => item.name)} key={cand.id} />) : <> 
+                            {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
                                 <SuggestedCandidateLoader />
                                 <SuggestedCandidateLoader />
                                 <SuggestedCandidateLoader />
@@ -170,7 +170,7 @@ export default function Candidate() {
 }
 
 const AbilityRange = ({ name, percentage }: AbilityProps) => {
-    if(percentage < 1) return <></>
+    if(!percentage || percentage < 1) return <></>
     return (
         <div className="flex flex-col gap-2">
             <h4>{name}</h4>

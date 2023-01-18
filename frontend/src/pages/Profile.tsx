@@ -108,7 +108,7 @@ const CandidateFavourite = ({ id, first_name, last_name, slug, i, setFavourites 
 }
 
 const Purchased = () => {
-    const [purchased, setPurchased] = useState<CandidateProps[]>([])
+    const [purchased, setPurchased] = useState<NonPercentageAbilitiesCandidateProps[]>([])
     const [loading, setLoading] = useState(true)
     const auth = useAppSelector(state => state.login)
     const { id } = auth.data
@@ -130,7 +130,7 @@ const Purchased = () => {
                     <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
                     <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
                     <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
-                </> : purchased.length > 0 ? purchased.map(cand => <CandidatePurchased {...cand} abilities={cand.abilities?.map(item => item.name)} key={cand.id} />) : <h2>Brak zakupionych kontaktów!</h2>}
+                </> : purchased.length > 0 ? purchased.map(cand => <CandidatePurchased {...cand} key={cand.id} />) : <h2>Brak zakupionych kontaktów!</h2>}
             </div>
         </div>
     )
