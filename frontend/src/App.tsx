@@ -8,7 +8,7 @@ import PublicRoute from "./utils/PublicRoute"
 import PrivateRoute from "./utils/PrivateRoute"
 import Profile from "./pages/Profile"
 import Verify from "./pages/signup/Verify"
-import { ReactElement, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { ReactElement, useLayoutEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "./main"
 import { login, logout } from "./reducers/login"
 import jwtDecode from 'jwt-decode'
@@ -20,6 +20,7 @@ import AdminRoute from "./utils/AdminRoute"
 import AdminPanel from "./pages/AdminPanel"
 import Points from "./pages/Points"
 import getUserInfo from "./utils/getUserInfo"
+import AccountProvider from "./reducers/AccountProvider"
 
 const loginString: string | null = localStorage.getItem('user')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)
@@ -76,25 +77,27 @@ export default function App() {
   if(loading) return <div className="w-screen h-screen flex items-center justify-center"><Loader /></div>
 
   return (
-    <>
-      <Header />
-      <main style={{minHeight: '100vh'}}>
-        <ScrollTop>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/oferty/*" element={<PrivateRoute><Offers /></PrivateRoute>} />
-            <Route path="/kontakt" element={<Contact />} />
-            <Route path="/logowanie/*" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
-            <Route path="/rejestracja/verify/*" element={<PublicRoute><Verify /></PublicRoute>} />
-            <Route path='/profil' element={<PrivateRoute><Profile /></PrivateRoute>} />
-            <Route path='/punkty' element={<PrivateRoute><Points /></PrivateRoute>} />
-            <Route path='/administracja' element={<AdminRoute><AdminPanel /></AdminRoute>} />
-          </Routes>
-        </ScrollTop>
-      </main>
-      <Footer />
-    </>
+    <AccountProvider>
+      <>
+        <Header />
+        <main style={{minHeight: '100vh'}}>
+          <ScrollTop>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/oferty/*" element={<PrivateRoute><Offers /></PrivateRoute>} />
+              <Route path="/kontakt" element={<Contact />} />
+              <Route path="/logowanie/*" element={<PublicRoute><Login /></PublicRoute>} />
+              <Route path="/rejestracja/*" element={<PublicRoute><SignUp /></PublicRoute>} />
+              <Route path="/rejestracja/verify/*" element={<PublicRoute><Verify /></PublicRoute>} />
+              <Route path='/profil' element={<PrivateRoute><Profile /></PrivateRoute>} />
+              <Route path='/punkty' element={<PrivateRoute><Points /></PrivateRoute>} />
+              <Route path='/administracja' element={<AdminRoute><AdminPanel /></AdminRoute>} />
+            </Routes>
+          </ScrollTop>
+        </main>
+        <Footer />
+      </>
+    </AccountProvider>
   )
 }
 

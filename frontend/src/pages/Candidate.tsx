@@ -61,6 +61,7 @@ export default function Candidate() {
     }
 
     useEffect(() => {
+        console.log({ slug, id})
         setLoading(prev => ({...prev, page: true}))
         axios.get(`/api/oferty/${slug}-${id}`, { headers: { 'Authorization': 'Bearer ' + access }})
             .then(res => res.data)

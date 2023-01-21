@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { FormEvent, useState } from 'react'
-import FilledButton from '../FilledButton'
-import { inputStyles } from '../../pages/Contact'
-import Loader from '../Loader'
+import FilledButton from '../../FilledButton'
+import { inputStyles } from '../../../pages/Contact'
+import Loader from '../../Loader'
 
 export default function CandidateForm() {
     const [status, setStatus] = useState<'loading' | boolean | undefined>(undefined)

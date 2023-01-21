@@ -1,5 +1,5 @@
 import axios from "axios"
-import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useState } from "react"
 import { useLocation } from "react-router"
 import { FilterProps as FilterStateProps } from "../../pages/Offers"
 
