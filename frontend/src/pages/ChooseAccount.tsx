@@ -1,6 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
 import Control from "react-control-js";
-import { Link } from "react-router-dom";
 import { arrowRight } from "../assets/general";
 import { landingMain, orangeArrowRight } from "../assets/home/home";
 import { AccountType } from "../reducers/AccountProvider";
