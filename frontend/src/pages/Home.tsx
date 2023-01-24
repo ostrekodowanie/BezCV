@@ -1,5 +1,3 @@
-import Landing from "./ChooseAccount";
-import CandidateForm from "../components/home/candidate/CandidateForm";
 import { useContext } from "react";
 import { AccountContext } from "../reducers/AccountProvider";
 import CandidateLanding from "../components/home/candidate/CandidateLanding";
@@ -11,7 +9,6 @@ export default function Home() {
     return (
         <>
             {account === 'employer' ? <EmployerLanding /> : <CandidateLanding />}
-            <CandidateForm />
         </>
     )
 }

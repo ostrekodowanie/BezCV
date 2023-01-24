@@ -21,6 +21,7 @@ import AdminPanel from "./pages/AdminPanel"
 import Points from "./pages/Points"
 import getUserInfo from "./utils/getUserInfo"
 import AccountProvider from "./reducers/AccountProvider"
+import FindWork from "./pages/FindWork"
 
 const loginString: string | null = localStorage.getItem('user')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)
@@ -91,6 +92,7 @@ export default function App() {
               <Route path="/rejestracja/verify/*" element={<PublicRoute><Verify /></PublicRoute>} />
               <Route path='/profil' element={<PrivateRoute><Profile /></PrivateRoute>} />
               <Route path='/punkty' element={<PrivateRoute><Points /></PrivateRoute>} />
+              <Route path='/praca/*' element={<FindWork />} />
               <Route path='/administracja' element={<AdminRoute><AdminPanel /></AdminRoute>} />
             </Routes>
           </ScrollTop>
