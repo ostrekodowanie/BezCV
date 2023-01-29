@@ -5,5 +5,5 @@ import landingMain from './landing_main.png'
 export {
     landingShadow,
     orangeArrowRight,
-    landingMain
+    landingMain,
 }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,7 +8,7 @@
 *::after,
 *::before {
   box-sizing: border-box;
-  font-family: 'Cabin', sans-serif;
+  font-family: 'Lexend', sans-serif;
 }
 
 html, body {
@@ -16,11 +16,20 @@ html, body {
 }
 
 body {
-  color: #171A23;
+  color: #141B30;
 }
 
 .text-primary {
   background: linear-gradient(263.78deg, #2F66F4 -16.49%, #0D9AE9 96.33%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  text-shadow: 0px 5px 16px rgba(47, 102, 244, 0.34);
+}
+
+.text-secondary {
+  background: linear-gradient(273.6deg, #F98D3D 9.32%, #F9AE3D 77.43%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
@@ -33,7 +42,13 @@ body {
   transition: all 200ms ease-out;
 }
 
-.bg-primary:hover {
+.bg-secondary {
+  box-shadow: 0px 16px 34px rgba(250, 175, 62, 0.2);
+  transition: all 200ms ease-out;
+}
+
+button.bg-primary:hover,
+button.bg-secondary:hover {
   transform: scale(1.05);
 }
 
@@ -44,6 +59,28 @@ body {
 
 .control-package {
   max-width: none !important;
+}
+
+.list-accEmp {
+  list-style-image: url('./assets/account/emp_pipe.svg');
+  padding-left: 1rem;
+}
+
+.list-accCand {
+  list-style-image: url('./assets/account/cand_pipe.svg');
+  padding-left: 1rem;
+}
+
+.border-primary {
+  border-image: linear-gradient(90.04deg, #2F66F4 24.53%, #0D9AE9 82.58%) !important;
+}
+
+.border-secondary {
+  border-image: linear-gradient(273.6deg, #F98D3D 9.32%, #F9AE3D 77.43%) !important;
+}
+
+li::marker {
+  margin-right: 3rem !important;
 }
 
 @media all and (min-width: 768px) {

@@ -1,29 +1,51 @@
-import Control from "react-control-js";
-import { arrowRight } from "../assets/general";
-import { landingMain, orangeArrowRight } from "../assets/home/home";
+import Control, { Controller } from "react-control-js";
+import { buttonArrow, candUnderline, empUnderline } from "../assets/account/account";
 import { AccountType } from "../reducers/AccountProvider";
 
 export const inputStyles = 'py-3 px-6 rounded shadow-[0px_6px_132px_rgba(76,101,234,0.08)] bg-white placeholder:text-[#B4BFF7] font-medium text-primary'
 
+const pros = {
+    employer: [
+        'w naszej bazie znajdziesz wyselekcjonowanych pracowników gotowych do pracy od zaraz',
+        'wstępnie przygotowujemy kandydatów, określając ich kompetencje miękkie',
+        'nie musisz tworzyć ogłoszenia o pracę',
+        'wybierasz osoby, które spełniają Twoje oczekiwania względem pracy na stanowisku: Sprzedaż, Administracja oraz Obsług Klienta',
+        'zmniejszysz koszt pozyskania pracownika i skrócisz czas trwania rekrutacji'
+    ],
+    candidate: [
+        'znajdziesz pracę, która wykorzystuje Twoje mocne strony',
+        'uzyskasz większą satysfakcję z pracy, dzięki bardziej precyzyjnemu dopasowaniu swoich umiejętności do stanowiska',
+        'nie będziesz musiał tworzyć swojego CV, przygotujemy profil dla Ciebie zupełnie za darmo',
+        'sprawdzisz swoje kompetencje, porównując je do innych osób na rynku',
+        'będziesz dostawać oferty pracy zgodne z Twoimi oczekiwaniami finansowymi'
+    ]
+}
+
 export default function ChooseAccount({ setAccount }: { setAccount: (account: AccountType) => void }) {
     return (
-        <section className="padding py-[1.4in] md:py-[2in] md:items-center flex flex-col min-h-screen xl:grid xl:gap-8 grid-cols-[1fr_1fr] relative">
-            <Control delay={200} ease='ease-out' opacity={1} element={
-            <div className="flex flex-col gap-3 md:text-center md:items-center xl:items-start xl:text-left xl:mb-8 max-w-[5.8in]">
-                <h2 className="flex items-center tracking-widest gap-4 text-sm md:text-base">
-                    <span className="px-2 bg-lightPrimary text-primary rounded-full">BEZCV</span>
-                    TO NUMER 1 NA RYNKU OFERT PRACY
-                </h2>
-                <h1 className="font-bold text-4xl text-font md:text-5xl md:text-[min(calc(1rem+2.5vw),3.4rem)] md:leading-tight">To nie <span className="relative inline-flex items-center">korporacje<div className="bg-primary rounded-full animation-scale h-[5px] mt-2 -right-2 -left-2 absolute" /></span><br /> tworzą wielkie<br />sukcesy, lecz <span className="relative">ludzie <div className="absolute -z-10 right-0 -left-2 h-[0.6em] rounded-tl-full rounded-br-full rounded-tr rounded-bl bottom-0 bg-[#FEEDE0] animation-scale-y" /></span></h1>
-                <p className="text-[rgba(23,26,35,0.63)] text-sm xl:text-base mt-4 leading-loose xl:leading-loose sm:max-w-[65%] xl:max-w-[88%]">Lorem ipsum dolor sit amet consectetur. Elit a nisi pharetra est vulputate. Nunc dolor elementum nunc imperdiet ut enim proin. Vitae sit convallis nulla neque enim diam.</p>
-                <div className="flex items-center flex-wrap gap-6 mt-6 text-sm font-bold">
-                    <button onClick={() => setAccount('employer')} className="py-3 px-6 text-white bg-primary hover:bg-darkPrimary transition-colors rounded-full flex items-center">Jestem pracodawcą<img className="ml-2 max-h-[1em]" src={arrowRight} alt='' /></button>
-                    <button onClick={() => setAccount('worker')} className="py-3 px-6 rounded-full hover:text-secondary transition duration-300 bg-white shadow-[0px_25px_63px_rgba(138,138,138,0.16)] hover:shadow-[0px_38px_69px_rgba(249,141,61,0.14)] flex items-center">Szukam pracy<img className="ml-2 max-h-[1em]" src={orangeArrowRight} alt='' /></button>
-                </div>
-            </div>
-            } />
-            {/* <img className="absolute right-0 bottom-0 max-w-[50vw]" src={landingShadow} alt="" /> */}
-            <img className="mt-24 mx-[12vw] xl:mx-0 xl:mt-0" src={landingMain} alt="" />
+        <section className="px-[8vw] md:px-[16vw] 2xl:px-[20vw] py-[8vw] xl:py-0 min-h-screen xl:flex items-center relative">
+            <Controller className="md:items-center flex flex-col xl:grid gap-8 grid-cols-2" opacity={1} stagger={100} ease='ease-out'>
+                <Control element={
+                    <div className="relative flex flex-col items-stretch gap-8 bg-white shadow-primaryBig rounded-t-3xl rounded-b after:bg-primary after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[4px] after:rounded-full px-8 py-10 md:p-12">
+                        <h2 className="font-bold text-center text-2xl">Jestem <span className="text-primary">pracodawcą!</span></h2>
+                        <h3 className="max-w-[80%] text-xl font-medium">Dlaczego <div className="relative inline-block"><span className="relative z-10">warto</span> <img className="absolute -bottom-1" src={empUnderline} alt="" /></div> <span className="font-semibold">rekrutować</span> za pomocą <span className="font-semibold">BezCV?</span></h3>
+                        <ul className="flex flex-col gap-6 text-[.95rem] text-[#3C4663] font-medium list-accEmp">
+                            {pros.employer.map(pro => <li key={pro}><span className="ml-2 block" key={'pro:'+pro}>{pro}</span></li>)}
+                        </ul>
+                        <button onClick={() => setAccount('employer')} className="bg-primary w-full rounded-full mt-6 py-4 text-[.8rem] font-bold text-white flex items-center justify-center">Jestem pracodawcą <img className="ml-2" src={buttonArrow} alt="" /></button>
+                    </div>
+                } />
+                <Control element={
+                    <div className="relative flex flex-col items-stretch gap-8 bg-white shadow-secondaryBig rounded-t-3xl rounded-b after:bg-secondary after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[4px] after:rounded-full px-8 py-10 md:p-12">
+                        <h2 className="font-bold text-center text-2xl">Chcę zostać <span className="text-secondary">kandydatem</span> do pracy!</h2>
+                        <h3 className="max-w-[80%] text-xl font-medium">Dlaczego <div className="relative inline-block"><span className="relative z-10">warto</span> <img className="absolute -bottom-1" src={candUnderline} alt="" /></div> <span className="font-semibold">znaleźć pracę</span> za pomocą <span className="font-semibold">BezCV?</span></h3>
+                        <ul className="flex flex-col gap-6 text-[.95rem] text-[#3C4663] font-medium list-accCand">
+                            {pros.employer.map(pro => <li key={pro}><span className="ml-2 block" key={'pro:'+pro}>{pro}</span></li>)}
+                        </ul>
+                        <button onClick={() => setAccount('worker')} className="bg-secondary w-full rounded-full mt-6 py-4 text-[.8rem] font-bold text-white flex items-center justify-center">Jestem kandydatem do pracy <img className="ml-2" src={buttonArrow} alt="" /></button>
+                    </div>
+                } />
+            </Controller>
         </section>
     )
 }
