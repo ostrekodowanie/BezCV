@@ -23,7 +23,7 @@ export default function Header() {
 
 const Logo = () => <Link to='/'>BezCV</Link>
 
-const lineStyle = 'h-[3px] w-full bg-primary transition rounded-xl'
+const lineStyle = 'h-[3px] w-full transition rounded-xl'
 
 const Nav = () => {
     const { account } = useContext(AccountContext)
@@ -56,9 +56,9 @@ const Nav = () => {
                 )}
             </div>
             <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 md:hidden h-5 w-8 justify-between cursor-pointer'>
-                <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(45deg)', maxWidth: '100%'} : { maxWidth: '60%' }} className={lineStyle}></div>
-                <div style={active ? {opacity: 0} : {}} className={lineStyle}></div>
-                <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(-45deg)', maxWidth: '100%'} : { maxWidth: '60%', marginLeft: 'auto'}} className={lineStyle}></div>
+                <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(45deg)', maxWidth: '100%'} : { maxWidth: '60%' }} className={`${account === 'worker' ? 'bg-secondary' : 'bg-primary'} ${lineStyle}`}></div>
+                <div style={active ? {opacity: 0} : {}} className={`${account === 'worker' ? 'bg-secondary' : 'bg-primary'} ${lineStyle}`}></div>
+                <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(-45deg)', maxWidth: '100%'} : { maxWidth: '60%', marginLeft: 'auto'}} className={`${account === 'worker' ? 'bg-secondary' : 'bg-primary'} ${lineStyle}`}></div>
             </div>
         </>
     )
@@ -71,7 +71,8 @@ type CustomLink = {
 }
 
 const CustomLink = ({children, to, className}: CustomLink) => {
+    const { account } = useContext(AccountContext)
     const activePath = useResolvedPath(to)
     const isActive = useMatch({path: `${activePath.pathname}/*`, end: true})
-    return <Link to={to} className={`${className && className} transition-colors font-semibold ${isActive ? 'text-[#2F66F4]' : 'hover:text-[#2F66F4]'}`}>{children}</Link>
+    return <Link to={to} className={`${className && className} transition-colors font-semibold ${isActive ? account === 'employer' ? 'text-[#2F66F4]' : 'text-[#F98D3D]' : account === 'employer' ? 'hover:text-[#2F66F4]' : 'hover:text-[#F98D3D]'}`}>{children}</Link>
 }

@@ -29,6 +29,7 @@ module.exports = {
       },
       boxShadow: {
         primarySmall: '0px 4px 14px rgba(12, 50, 250, 0.1)',
+        secondarySmall: '0px 41px 122px rgba(47, 102, 244, 0.1)',
         boxPrimary: '6px -6px 65px rgba(47, 102, 244, 0.06), -6px 6px 65px rgba(47, 102, 244, 0.06)',
         primaryBig: '0px 14px 69px rgba(47, 102, 244, 0.09)',
         secondaryBig: '0px 56px 114px rgba(250, 175, 62, 0.12)'
