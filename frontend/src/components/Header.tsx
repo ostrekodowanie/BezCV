@@ -6,12 +6,16 @@ import { AccountContext } from "../reducers/AccountProvider"
 
 export default function Header() {
     const [down, setDown] = useState(false)
+    const location = useLocation()
     
     useEffect(() => {
+        if(location.pathname.includes('ankieta')) return
         const cb = () => setDown(window.scrollY > 100);
         window.addEventListener("scroll", cb)
         return () => window.removeEventListener("scroll", cb)
     }, [])
+
+    if(location.pathname.includes('ankieta')) return <></>
 
     return (
         <header className={`flex items-center justify-between min-h-[5rem] padding fixed left-0 right-0 z-30 top-0 transition-all bg-white ${down ? 'shadow-primarySmall md:min-h-[5rem]' : 'md:min-h-[6rem]'}`}>

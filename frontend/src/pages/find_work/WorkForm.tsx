@@ -1,42 +1,44 @@
 import axios from "axios"
-import { Dispatch, FormEvent, SetStateAction, useState } from "react"
+import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
+import Loader from "../../components/Loader"
 import { defaultQuestions, QuestionProps } from "../../constants/findWork"
+import { RoleType } from "../../constants/workForm"
 import { inputStyles } from "../Contact"
+import ChooseRole from "./ChooseRole"
+import ProgressBar from "./ProgressBar"
+import Question from "./Question"
 
 export default function WorkForm() {
-    const [answers, setAnswers] = useState<any>({})
+    const [role, setRole] = useState<RoleType>()
+    const [questions, setQuestions] = useState<QuestionProps[]>(defaultQuestions)
+    const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
+    const [basicAnswers, setBasicAnswers] = useState([])
+    const [roleAnswers, setRoleAnswers] = useState([])
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
-        const resp = await axios.post('/api/candidate/add', JSON.stringify({ answers }), {
+        const resp = await axios.post('/api/candidate/add', JSON.stringify(basicAnswers), {
             headers: { 'Content-Type': 'application/json' }
         })
 
         if(resp.status === 200) return
     }
 
+    if(role && activeQuestionIndex > defaultQuestions.length) return <></>
+
     return (
-        <section className="padding py-[1in] md:py-[1.4in] 2xl:py-[2in] bg-white">
-            <form onSubmit={handleSubmit} className="mt-8">
-                <ol className="flex flex-col gap-8 list-decimal list-inside">
-                    {defaultQuestions.map((q, i) => <Question {...q} setAnswers={setAnswers} i={i + 1} key={q.name} />)}
-                </ol>
-                <button className="bg-primary rounded-full py-3 px-6 max-w-max text-white text-sm mt-12">Dalej</button>
-            </form>
+        <section className="padding flex flex-col items-center py-[.6in] justify-between min-h-screen">
+            <div className="flex flex-col items-center gap-6 max-w-[8in] h-full">
+                {activeQuestionIndex === defaultQuestions.length ? <ChooseRole setQuestion={setActiveQuestionIndex} /> : <>
+                    <ProgressBar progress={activeQuestionIndex / questions.length} />
+                    <div className="flex flex-col items-center text-center gap-2">
+                        <small className="text-base">{activeQuestionIndex} / <span className="text-[#D3C5BB]">{questions.length}</span></small>
+                        <h2 className="text-3xl font-bold">{questions[activeQuestionIndex].question}</h2>
+                    </div>
+                    <Question setQuestion={setActiveQuestionIndex} {...questions[activeQuestionIndex]} />
+                </>}
+            </div>
         </section>
     )
 }
 
-const Question = ({ name, question, type, answers, i, setAnswers }: QuestionProps & { i: number, setAnswers: Dispatch<SetStateAction<any>> }) => {
-    return (
-        <li className="flex flex-col gap-3">
-            <label htmlFor={name}>{i}. {question}</label>
-            {type === 'checkbox' || type === 'radio' ?
-                answers?.map(ans => <div className="flex items-center gap-3">
-                    <input type={type} value={ans} onChange={e => setAnswers((prev: {}) => ({ ...prev, [name]: e.target.value }))} id={ans} name={name} />
-                    <label htmlFor={ans}>{ans}</label>
-                </div>)
-            : <input className={'max-w-[6in] ' + inputStyles.input} type='text' onChange={e => setAnswers((prev: {}) => ({ ...prev, [name]: e.target.value }))} id={name} name='find_work' />}
-        </li>
-    )
-}

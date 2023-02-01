@@ -10,7 +10,7 @@ export default function Introduction() {
                 <p>Wypełniając tą ankietę możesz rozpędzić swoją zawodową karierę. Będziesz za darmo otrzymywać oferty pracy tylko od firm, które szukają osoby o Twoim profilu. </p>
                 <p>Efekt? Większa satysfakcja z pracy i więcej możliwości rozwoju</p>
                 <p className="my-8"><strong>Ankieta zajmie Ci około 9 minut</strong> - masz możliwość nie udzielania odpowiedzi. Im więcej nam o sobie opowiesz tym większa szansa, że znajdziemy Ci wymarzoną pracę. </p>
-                <Link to='/praca/ankieta' className="bg-primary rounded-full py-3 px-6 max-w-max text-white text-sm">Zaczynajmy!</Link>
+                <Link to='/praca/ankieta' className="bg-secondary rounded-full py-3 px-6 max-w-max text-white text-sm">Zaczynajmy!</Link>
             </div>
         </section>
     )
