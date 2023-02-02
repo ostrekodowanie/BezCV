@@ -47,10 +47,19 @@ body {
   transition: all 200ms ease-out;
 }
 
+button.bg-primary,
+button.bg-secondary,
+a.bg-primary,
+a.bg-secondary,
+.scale {
+  transition: transform 250ms ease-out;
+}
+
 button.bg-primary:hover,
 button.bg-secondary:hover,
 a.bg-primary:hover,
-a.bg-secondary:hover {
+a.bg-secondary:hover,
+.scale:hover {
   transform: scale(1.05);
 }
 

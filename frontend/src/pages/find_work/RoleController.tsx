@@ -1,41 +1,18 @@
 import axios from "axios";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { createContext, Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import Loader from "../../components/Loader";
 import { QuestionProps } from "../../constants/findWork";
-import { RoleType } from "../../constants/workForm";
-import ProgressBar from "./ProgressBar";
+import { ControllerContextType, roles, RoleType } from "../../constants/workForm";
 import Question from "./Question";
 
-interface RoleProps {
-    name: RoleType,
-    title: string,
-    image: string
-}
-
-const roles: RoleProps[] = [
-    {
-        name: 'office_administration',
-        title: 'Administracja biurowa',
-        image: ''
-    },
-    {
-        name: 'customer_service',
-        title: 'Obsługa klienta',
-        image: ''
-    },
-    {
-        name: 'selling',
-        title: 'Sprzedaż',
-        image: ''
-    },
-]
+export const RoleControllerContext = createContext<ControllerContextType>(null!)
 
 export default function RoleController() {
     const [role, setRole] = useState<RoleType | null>(null)
     const [questions, setQuestions] = useState<QuestionProps[]>([])
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
+    const [answers, setAnswers] = useState({})
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -46,18 +23,21 @@ export default function RoleController() {
             .finally(() => setLoading(false))
     }, [role])
 
+    const contextValue = useMemo(() => ({
+        activeQuestionIndex,
+        setActiveQuestionIndex,
+        answers,
+        setAnswers,
+        questionsLength: questions.length
+    }), [activeQuestionIndex, setActiveQuestionIndex, answers, setAnswers, questions])
+
     if(!role) return <ChooseRole setRole={setRole} />
-    if(loading) return <Loader />
+    if(loading || !questions[activeQuestionIndex]) return <Loader />
 
     return (
-        <>
-            <ProgressBar progress={activeQuestionIndex / questions.length} />
-            <div className="flex flex-col items-center text-center gap-2 max-w-full">
-                <small className="text-base font-semibold">{activeQuestionIndex + 1} / <span className="text-[#D3C5BB]">{questions.length}</span></small>
-                <h2 className="text-3xl font-bold">{questions[activeQuestionIndex].question}</h2>
-            </div>
-            <Question setQuestion={setActiveQuestionIndex} {...questions[activeQuestionIndex]} />
-        </>
+        <RoleControllerContext.Provider value={contextValue}>
+            <Question {...questions[activeQuestionIndex]} />
+        </RoleControllerContext.Provider>
     )
 }
 
