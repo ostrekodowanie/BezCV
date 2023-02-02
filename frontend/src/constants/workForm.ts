@@ -1,6 +1,6 @@
-export const radioInputStyles = 'px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold flex items-center gap-4 cursor-pointer'
+export const radioInputStyles = 'min-w-0 px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold flex items-center gap-4 cursor-pointer'
 
-export const textInputStyles = 'px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold placeholder:text-[#D3C5BB]'
+export const textInputStyles = 'px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold placeholder:font-medium placeholder:text-[#D3C5BB] max-w-[6in] min-w-0'
 
 export type RangeNumberKey = {
     number: number,
@@ -30,4 +30,4 @@ export const rangeNumberKeys: RangeNumberKey[] = [
     },
 ]
 
-export type RoleType = 'office_management' | 'selling' | 'customer_service'
+export type RoleType = 'office_administration' | 'selling' | 'customer_service'
