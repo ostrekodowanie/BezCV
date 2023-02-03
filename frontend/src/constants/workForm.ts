@@ -59,6 +59,10 @@ export const roles: RoleProps[] = [
     },
 ]
 
+export type AnswerType = {
+    [name: string]: string
+}
+
 export type StepContextType = {
     step: 'role' | 'candidate',
     setStep: Dispatch<SetStateAction<'role' | 'candidate'>>
@@ -67,7 +71,7 @@ export type StepContextType = {
 export type ControllerContextType = {
     activeQuestionIndex: number,
     setActiveQuestionIndex: Dispatch<SetStateAction<number>>,
-    answers: {},
-    setAnswers: Dispatch<SetStateAction<{}>>,
+    answers: AnswerType,
+    setAnswers: Dispatch<SetStateAction<AnswerType>>,
     questionsLength: number
 }

@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useEffect, useRef, useState } from "react";
+import { FormEvent, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import { defaultQuestionsLength, QuestionProps } from "../../constants/findWork";
@@ -8,12 +8,12 @@ import ProgressBar from "./ProgressBar";
 import { RoleControllerContext } from "./RoleController";
 import { StepContext } from "./WorkForm";
 
-export default function Question({ question, type, answers, placeholder }: QuestionProps) {
+export default function Question({ question, type, placeholder, name, ...rest }: QuestionProps) {
     const timer = useRef<any>(null)
+    const questionAnswers = rest.answers
     const [secondsLeft, setSecondsLeft] = useState(15)
     const { step, setStep } = useContext(StepContext)
-    const { activeQuestionIndex, setActiveQuestionIndex, questionsLength } = useContext(step === 'candidate' ? CandidateControllerContext : RoleControllerContext)
-    const [answer, setAnswer] = useState('')
+    const { activeQuestionIndex, setActiveQuestionIndex, questionsLength, answers, setAnswers } = useContext(step === 'candidate' ? CandidateControllerContext : RoleControllerContext)
 
     useEffect(() => {
         if(step === 'candidate') return
@@ -21,10 +21,12 @@ export default function Question({ question, type, answers, placeholder }: Quest
         return () => clearTimeout(timer.current)
     }, [secondsLeft])
 
+    useLayoutEffect(() => {
+        if(!answers[name]) setAnswers(prev => ({ ...prev, [name]: '' }))
+    }, [question])
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
-        if(!answer) return
-        setAnswer('')
         if(activeQuestionIndex === defaultQuestionsLength) return setStep('role')
         setActiveQuestionIndex(prev => prev + 1)
     }
@@ -38,19 +40,19 @@ export default function Question({ question, type, answers, placeholder }: Quest
             </div>
             <form className="flex flex-col flex-1 items-center justify-between gap-8 w-full md:w-[7in]" onSubmit={handleSubmit}>
                 <div className="flex flex-col items-center w-full gap-6 mt-8">
-                    {(type === 'checkbox' || type === 'radio') && answers?.map(ans => 
+                    {(type === 'checkbox' || type === 'radio') && questionAnswers?.map(ans => 
                         <label className={radioInputStyles} htmlFor={ans} key={'label:' + ans}>
-                            <input value={ans} type={type} key={ans} id={ans} name={question} onChange={e => setAnswer(e.target.value)} />
+                            <input value={ans} type={type} key={ans} id={ans} name={question} onChange={e => setAnswers(prev => ({ ...prev, [name]: e.target.value }))} />
                             {ans}
                         </label>
                     )}
                     {type === 'range' && <>
-                        <input type='range' min={1} max={6} onChange={e => setAnswer(e.target.value)} />
+                        <input type='range' min={1} max={6} onChange={e => setAnswers(prev => ({ ...prev, [name]: e.target.value }))} />
                         <div className="flex justify-center gap-4 flex-wrap max-w-max">
                             {rangeNumberKeys.map(k => <RangeKey {...k} key={k.key} /> )}
                         </div>
                     </>}
-                    {(type === 'text' || type === 'email' || type === 'tel') && <input className={textInputStyles} autoComplete="off" required={step === 'candidate'} value={answer} onChange={e => setAnswer(e.target.value)} id={question} placeholder={placeholder} type={type} />}
+                    {(type === 'text' || type === 'email' || type === 'tel') && <input className={textInputStyles} autoComplete="off" required={step === 'candidate'} value={answers[name]} onChange={e => setAnswers(prev => ({ ...prev, [name]: e.target.value }))} id={question} placeholder={placeholder} type={type} />}
                 </div>
                 <div className="flex justify-between items-center gap-4 flex-wrap self-end">
                     {step === 'role' && <div className="flex flex-col gap-2">
