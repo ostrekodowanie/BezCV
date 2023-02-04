@@ -4,10 +4,7 @@ import { useAppSelector } from "../main"
 
 export type AccountType = 'employer' | 'worker' | null
 
-export const AccountContext = createContext<{ account: AccountType, setAccount?: (account: AccountType) => void }>({
-    account: null,
-    setAccount: undefined
-})
+export const AccountContext = createContext<{ account: AccountType, setAccount: (account: AccountType) => void }>(null!)
 
 const accountFromStorage = localStorage.getItem('account')
 const defaultAccount: AccountType | null = accountFromStorage ? accountFromStorage as AccountType : null
