@@ -33,7 +33,7 @@ const boxes: BoxProps[] = [
 
 export default function HowToFind() {
     return (
-        <section className="padding pt-[1in] md:pt-[1.4in] 2xl:pt-[1.8in] items-center relative">
+        <section className="padding py-[1in] md:pb-[1.4in] items-center relative">
             <h2 className="text-center text-3xl leading-tight xl:text-4xl xl:leading-tight mx-auto font-semibold mb-8 md:mb-16 max-w-[7in]">W jaki sposób mogę znaleźć <div className='inline-block relative'><span className='relative z-10'>kandydata</span><img className='absolute left-0 right-0 bottom-0' src={underline} alt='' /></div> do pracy <span className='font-bold'>jeszcze dzisiaj?</span></h2>
             <Controller opacity={1} onScroll={true} stagger={80} ease='ease-out' className="flex flex-col gap-8 xl:grid grid-cols-4 xl:items-stretch">
                 {boxes.map((box, i) => <Control element={<Box i ={i + 1} {...box} />} key={box.image} />)}

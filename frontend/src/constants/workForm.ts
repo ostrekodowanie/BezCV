@@ -34,7 +34,6 @@ export const rangeNumberKeys: RangeNumberKey[] = [
 
 export type RoleType = 'office_administration' | 'selling' | 'customer_service'
 
-
 export interface RoleProps {
     name: RoleType,
     title: string,

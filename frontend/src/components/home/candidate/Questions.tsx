@@ -1,3 +1,4 @@
+import Control from "react-control-js"
 import { q1, q2, q3 } from "../../../assets/home/candidate/candidate"
 
 interface QuestionListProps {
@@ -52,15 +53,15 @@ export default function Questions() {
     return (
         <section className="padding flex flex-col relative">
             <div className="flex flex-col items-center gap-16 xl:grid grid-cols-2 my-16">
-                <img className="max-w-[4in] xl:max-w-[5in]" src={q1} alt="" />
+                <img className="w-full max-w-[4in] xl:max-w-[5in]" src={q1} alt="" />
                 <QuestionList {...questionLists[0]} />
             </div>
             <div className="flex flex-col items-center gap-16 xl:grid grid-cols-2 my-16">
                 <QuestionList {...questionLists[1]} />
-                <img className="max-w-[4in] xl:max-w-[5in] order-first xl:order-last" src={q2} alt="" />
+                <img className="w-full max-w-[4in] xl:max-w-[5.5in] justify-self-end order-first xl:order-last" src={q2} alt="" />
             </div>
             <div className="flex flex-col items-center gap-16 xl:grid grid-cols-2 my-16">
-                <img className="max-w-[4in] xl:max-w-[5in]" src={q3} alt="" />
+                <img className="w-full max-w-[4in] xl:max-w-[5in]" src={q3} alt="" />
                 <QuestionList {...questionLists[2]} />
             </div>
         </section>
@@ -72,7 +73,7 @@ const QuestionList = ({ question, answers }: QuestionListProps) => {
         <div className="flex flex-col gap-8">
             <h2 className="font-semibold text-3xl">{question}</h2>
             <ul className="flex flex-col gap-6 text-[.95rem] text-[#3C4663] font-medium list-accCand">
-                {answers.map(ans => <li key={ans}><span className="ml-2 block" key={'answer:'+ans}>{ans}</span></li>)}
+                {answers.map(ans => <Control opacity={1} x={-10} onScroll ease='ease-in-out' element={<li key={ans}><span className="ml-2 block" key={'answer:'+ans}>{ans}</span></li>} />)}
             </ul>
         </div>
     )

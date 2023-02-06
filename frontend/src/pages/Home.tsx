@@ -10,6 +10,9 @@ import WhatNext from "../components/home/candidate/WhatNext";
 import HowToFind from "../components/home/employer/HowToFind";
 import EmployerBanner from "../components/home/employer/Banner";
 import Points from "../components/home/employer/Points";
+import TutorialMenu from "../components/home/TutorialMenu";
+import PersonalDataSecurity from "../components/home/candidate/PersonalDataSecurity";
+import SoftCandidateSkills from "../components/home/employer/SoftCandidateSkills";
 
 export default function Home() {
     const { account } = useContext(AccountContext)
@@ -17,6 +20,8 @@ export default function Home() {
         <>  
             <EmployerLanding />
             <HowToFind />
+            <TutorialMenu />
+            <SoftCandidateSkills />
             <EmployerBanner />
             <Points />
         </>
@@ -28,6 +33,8 @@ export default function Home() {
             <Questions />
             <CandidateBanner />
             <WhatNext />
+            <TutorialMenu />
+            <PersonalDataSecurity />
         </>
     )
     return <div className="w-screen h-screen flex items-center justify-center"><Loader /></div>

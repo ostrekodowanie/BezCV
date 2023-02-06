@@ -131,3 +131,15 @@ li::marker {
   animation: animationScaleY 700ms ease-in-out 700ms forwards;
   transform-origin: bottom;
 }
+
+.underline-animation {
+  transform: scaleX(0%);
+  transform-origin: right;
+  animation: underline-animation 200ms ease-out 300ms forwards;
+}
+
+@keyframes underline-animation {
+  100% {
+    transform: scaleX(100%);
+  }
+}
