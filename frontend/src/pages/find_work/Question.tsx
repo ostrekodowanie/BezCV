@@ -6,7 +6,7 @@ import { RangeNumberKey, rangeNumberKeys, textInputStyles, radioInputStyles } fr
 import { CandidateControllerContext } from "./CandidateController";
 import ProgressBar from "./ProgressBar";
 import { RoleControllerContext } from "./RoleController";
-import { StepContext } from "./WorkForm";
+import { StepContext } from "./Survey";
 
 export default function Question({ question, type, placeholder, name, ...rest }: QuestionProps) {
     const timer = useRef<any>(null)
@@ -38,7 +38,7 @@ export default function Question({ question, type, placeholder, name, ...rest }:
                 <small className="text-base font-semibold">{activeQuestionIndex + 1} / <span className="text-[#D3C5BB]">{questionsLength}</span></small>
                 <h2 className="text-3xl font-bold text-center w-full max-w-[8in]">{question}</h2>
             </div>
-            <form className="flex flex-col flex-1 items-center justify-between gap-8 w-full md:w-[7in]" onSubmit={handleSubmit}>
+            <form className="flex flex-col flex-1 items-center justify-between gap-8 w-full" onSubmit={handleSubmit}>
                 <div className="flex flex-col items-center w-full gap-6 mt-8">
                     {(type === 'checkbox' || type === 'radio') && questionAnswers?.map(ans => 
                         <label className={radioInputStyles} htmlFor={ans} key={'label:' + ans}>
