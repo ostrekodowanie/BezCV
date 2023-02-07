@@ -45,4 +45,5 @@ urlpatterns = [
     path('api/', include('apps.Admin.urls')),
     path('api/', include('apps.Favourites.urls')),
     path('api/', include('apps.Points.urls')),
+    path('api/', include('apps.Survey.urls')),
 ]

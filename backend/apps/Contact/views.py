@@ -5,6 +5,8 @@ from rest_framework.response import Response
 
 from .serializers import ContactFormSerializer
 
+import os
+
 
 class ContactFormView(views.APIView):
   serializer_class = ContactFormSerializer
@@ -17,7 +19,7 @@ class ContactFormView(views.APIView):
     send_mail(
     'BEZCV Formularz Kontaktowy',
     f'From: {data["first_name"]} {data["last_name"]}\n{data["email"]}\n{data["phone"]}\n\n{data["message"]}',
-    'portfoliositeexample@gmail.com',
+    os.environ.get('EMAIL'),
     ['divideproject.business@gmail.com'],
     fail_silently=False,
     )
