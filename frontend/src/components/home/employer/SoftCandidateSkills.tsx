@@ -1,11 +1,11 @@
 import Control from "react-control-js"
-import { bannerMan } from "../../../assets/home/candidate/candidate"
+import { bannerMan, underline } from "../../../assets/home/candidate/candidate"
 import { scs1, scs2 } from "../../../assets/home/employer/employer"
 
 export default function SoftCandidateSkills() {
     return (
         <section className="padding overflow-hidden relative">
-            <h2 className="text-center font-semibold max-w-[10in] text-3xl md:text-4xl md:leading-tight mx-auto">W jaki sposób określamy <span className="font-bold">kompetencje miękkie</span> kandydata do pracy?</h2>
+            <h2 className="text-center font-semibold max-w-[10in] text-3xl md:text-4xl md:leading-tight mx-auto">W jaki sposób określamy <span className="font-bold">kompetencje miękkie</span> <div className="relative inline-block"><span className="relative z-10">kandydata</span><img className="absolute bottom-0 w-full underline-animation" src={underline} alt="" /></div> do pracy?</h2>
             <div className="relative py-16 mt-8">
                 <div className="flex flex-col gap-16 text-[#3C4663]">
                     <Control opacity={1} x={-20} onScroll element={

@@ -44,7 +44,7 @@ export default function Points() {
 const Package = ({ points, price, image }: PackageProps) => {
     return (
         <div className="flex flex-col self-stretch h-full justify-end gap-4 rounded-3xl relative items-center py-6 px-12 pb-12 bg-white shadow-primaryBig flex-1">
-            {points === 15 && <div className='absolute -top-6 rounded-t-full text-sm rounded-br-full -right-6 h-12 pl-8 pr-16 font-bold flex items-center bg-white'>
+            {points === 15 && <div className='absolute shadow-[6px_-6px_65px_rgba(47,102,244,0.09),-6px_6px_65px_rgba(47,102,244,0.06)] -top-6 rounded-full text-sm -right-6 h-12 pl-8 pr-16 font-bold flex items-center bg-white'>
                 Bestseller
                 <div className='absolute h-12 w-12 right-0 p-2 flex items-center justify-center bg-secondary rounded-full'>
                     <img src={bestseller} alt="" />
@@ -56,7 +56,7 @@ const Package = ({ points, price, image }: PackageProps) => {
                 <img className='absolute bottom-[2px] min-w-[120%]' src={priceUnderline} alt="" />
             </h3>
             <h2 className="font-bold text-3xl w-max">{points} kontaktów</h2>
-            <ul className='list-outside list-disc marker:text-secondary sm:w-max mt-4 text-sm font-medium flex flex-col gap-3'>
+            <ul className='list-inside list-disc marker:text-[#F9AE3D] text-[#3C4663] sm:w-max mt-4 font-medium flex flex-col gap-3'>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
