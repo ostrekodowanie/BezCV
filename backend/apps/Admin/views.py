@@ -32,18 +32,18 @@ class VerifyCandidatesView(APIView):
 
             CandidateRoles.objects.create(candidate_id=id, role=Roles.objects.get(name=role))
 
-            email_message = EmailMessage(
-            subject='BezCV - Zgłoszenie',
-            body=f'''Dziękujemy za zgłoszenie!\n\n
-                Szczegóły:\n
-                Imię i nazwisko: {candidate.first_name} {candidate.last_name}\n
-                Email: {candidate.email}\n
-                Numer telefonu: {candidate.phone}\n
-                Zawód: {role}\n
-                Umiejętności: {', '.join(abilities)}''',
-            to=[candidate.email]
-            )
-            email_message.send()
+            #email_message = EmailMessage(
+            #subject='BezCV - Zgłoszenie',
+            #body=f'''Dziękujemy za zgłoszenie!\n\n
+            #    Szczegóły:\n
+            #    Imię i nazwisko: {candidate.first_name} {candidate.last_name}\n
+            #    Email: {candidate.email}\n
+            #    Numer telefonu: {candidate.phone}\n
+            #    Zawód: {role}\n
+            #    Umiejętności: {', '.join(abilities)}''',
+            #to=[candidate.email]
+            #)
+            #email_message.send()
 
             return Response({'Successfully verified'})
 
