@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router"
-import Introduction from "./find_work/Introduction"
-import Survey from "./find_work/Survey"
+import Introduction from "./survey/Introduction"
+import Survey from "./survey/Survey"
 
 export default function FindWork() {
     return (

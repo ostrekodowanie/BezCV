@@ -1,4 +1,5 @@
-import { FormEvent, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import axios from "axios";
+import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import { defaultQuestionsLength, QuestionProps } from "../../constants/findWork";
@@ -21,13 +22,15 @@ export default function Question({ question, type, placeholder, name, ...rest }:
         return () => clearTimeout(timer.current)
     }, [secondsLeft])
 
-    useLayoutEffect(() => {
-        if(!answers[name]) setAnswers(prev => ({ ...prev, [name]: '' }))
-    }, [question])
-
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
-        if(activeQuestionIndex === defaultQuestionsLength) return setStep('role')
+        if(activeQuestionIndex >= defaultQuestionsLength && step === 'candidate') {
+            return async () => { 
+            const resp = await axios.post('/api/survey/candidate', JSON.stringify(answers), {
+                headers: { 'Content-Type': 'application/json' }
+            })
+            if(resp.status === 200) setStep('role')
+        }}
         setActiveQuestionIndex(prev => prev + 1)
     }
 
