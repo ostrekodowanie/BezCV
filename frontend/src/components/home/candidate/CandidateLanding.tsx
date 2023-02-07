@@ -4,7 +4,7 @@ import { bgBoy, bgGirl, underline } from "../../../assets/home/candidate/candida
 export default function CandidateLanding() {
     return (
         <section className="padding pt-[1.4in] md:pt-[2in] pb-16 items-center flex flex-col gap-16 relative text-center overflow-hidden">
-            <h1 className="font-semibold text-3xl leading-snug md:text-4xl md:leading-snug xl:text-5xl xl:leading-snug">Znajdź <div className="relative inline-block"><span className="relative z-10">wymarzoną pracę</span><img className="absolute w-full -bottom-1 left-0" src={underline} alt="" /></div><br />bez tworzenia CV!</h1>
+            <h1 className="font-semibold text-3xl leading-snug md:text-4xl md:leading-snug xl:text-5xl xl:leading-snug">Znajdź <div className="relative inline-block"><span className="relative z-10">wymarzoną pracę</span><img className="absolute -bottom-1 left-0 w-full underline-animation" src={underline} alt="" /></div><br />bez tworzenia CV!</h1>
             <div className="flex flex-col md:grid grid-cols-2 gap-8">
                 <div className="bg-white p-10 pb-14 flex flex-col items-center gap-6 shadow-primaryBig rounded-3xl relative">
                     <Control className="absolute -bottom-[4in] -left-[17vw] -z-10 hidden md:block" ease='ease-out' opacity={1} x={-20} element={<img className="max-w-[calc(5.5in+2vw)]" src={bgGirl} alt="" />} />

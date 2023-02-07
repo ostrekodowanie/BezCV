@@ -17,7 +17,7 @@ export default function RoleController() {
 
     useEffect(() => {
         if(!role) return
-        axios.get('/api/questions?r=' + role)
+        axios.get('/api/survey?c=' + role)
             .then(res => res.data)
             .then(data => setQuestions(data))
             .finally(() => setLoading(false))

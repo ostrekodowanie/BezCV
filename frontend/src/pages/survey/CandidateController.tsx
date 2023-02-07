@@ -8,7 +8,7 @@ export const CandidateControllerContext = createContext<ControllerContextType>(n
 
 export default function CandidateController() {
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
-    const [answers, setAnswers] = useState<AnswerType>({})
+    const [answers, setAnswers] = useState<AnswerType>(defaultQuestions.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}))
 
     const contextValue = useMemo(() => ({
         activeQuestionIndex,

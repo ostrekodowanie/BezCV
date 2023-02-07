@@ -13,6 +13,9 @@ import Points from "../components/home/employer/Points";
 import TutorialMenu from "../components/home/TutorialMenu";
 import PersonalDataSecurity from "../components/home/candidate/PersonalDataSecurity";
 import SoftCandidateSkills from "../components/home/employer/SoftCandidateSkills";
+import DesktopSurvey from "../components/home/employer/DesktopSurvey";
+import IsEnough from "../components/home/employer/IsEnough";
+import HowToFindJob from "../components/home/candidate/HowToFindJob";
 
 export default function Home() {
     const { account } = useContext(AccountContext)
@@ -22,6 +25,8 @@ export default function Home() {
             <HowToFind />
             <TutorialMenu />
             <SoftCandidateSkills />
+            <DesktopSurvey />
+            <IsEnough />
             <EmployerBanner />
             <Points />
         </>
@@ -31,6 +36,7 @@ export default function Home() {
             <CandidateLanding />
             <Introduction />
             <Questions />
+            <HowToFindJob />
             <CandidateBanner />
             <WhatNext />
             <TutorialMenu />
