@@ -30,7 +30,7 @@ const Logo = () => <Link to='/'>BezCV</Link>
 const lineStyle = 'h-[3px] w-full transition rounded-xl'
 
 const Nav = () => {
-    const { account } = useContext(AccountContext)
+    const { account, setAccount } = useContext(AccountContext)
     const [active, setActive] = useState(false)
     const auth = useAppSelector(state => state.login)
     const location = useLocation()
@@ -58,8 +58,8 @@ const Nav = () => {
                         <Link className="bg-primary transition-colors font-semibold border-primary text-white rounded-full flex items-center py-2 px-6" to='/rejestracja'>Zarejestruj się</Link>
                     </>
                 )}
-                {/* {account === 'employer' && <button onClick={() => setAccount('worker')} className="bg-secondary font-semibold text-white rounded-full flex items-center py-2 px-6 md:ml-2">Zostań kandydatem!</button>}
-                {account === 'worker' && <button onClick={() => setAccount('employer')} className="bg-primary font-semibold text-white rounded-full flex items-center py-2 px-6 md:ml-2">Zostań pracodawcą!</button>} */}
+                {account === 'employer' && <button onClick={() => setAccount('worker')} className="bg-secondary font-semibold text-white rounded-full flex items-center py-2 px-6 md:ml-2">Zostań kandydatem!</button>}
+                {account === 'worker' && <button onClick={() => setAccount('employer')} className="bg-primary font-semibold text-white rounded-full flex items-center py-2 px-6 md:ml-2">Zostań pracodawcą!</button>}
             </div>
             <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 md:hidden h-5 w-8 justify-between cursor-pointer'>
                 <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(45deg)', maxWidth: '100%'} : { maxWidth: '60%' }} className={`${account === 'worker' ? 'bg-secondary' : 'bg-primary'} ${lineStyle}`}></div>

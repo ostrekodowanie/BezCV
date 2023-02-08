@@ -20,7 +20,8 @@ export default function Survey() {
             <Link className="absolute left-16 top-8" to='/praca'>Powrót</Link>
             <div className="flex flex-col items-center gap-6 w-full mt-16 sm:mt-0">
                 <StepContext.Provider value={contextValue}>
-                    {step === 'role' ? <RoleController /> : <CandidateController />}
+                    {step === 'role' && <RoleController />}
+                    {step === 'candidate' && <CandidateController />}
                 </StepContext.Provider>
             </div>
             <div className="self-center justify-self-end relative">

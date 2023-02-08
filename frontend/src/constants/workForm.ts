@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
+import { QuestionProps } from "./findWork"
 
 export const radioInputStyles = 'min-w-0 px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold flex items-center gap-4 cursor-pointer'
 
@@ -59,7 +60,7 @@ export const roles: RoleProps[] = [
 ]
 
 export type AnswerType = {
-    [name: string]: string
+    [K in QuestionProps['name']]: string | string[]
 }
 
 export type StepContextType = {
@@ -70,7 +71,15 @@ export type StepContextType = {
 export type ControllerContextType = {
     activeQuestionIndex: number,
     setActiveQuestionIndex: Dispatch<SetStateAction<number>>,
+    questionsLength: number
+}
+
+export type CandidateControllerContextType = ControllerContextType & {
     answers: AnswerType,
     setAnswers: Dispatch<SetStateAction<AnswerType>>,
-    questionsLength: number
+}
+
+export type RoleControllerContextType = ControllerContextType & {
+    answers: number[],
+    setAnswers: Dispatch<SetStateAction<number[]>>,
 }

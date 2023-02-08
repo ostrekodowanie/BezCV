@@ -1,14 +1,19 @@
 import { createContext, useMemo, useState } from "react";
 import Loader from "../../components/Loader";
 import { defaultQuestions } from "../../constants/findWork";
-import { AnswerType, ControllerContextType } from "../../constants/workForm";
+import { AnswerType, CandidateControllerContextType } from "../../constants/workForm";
 import Question from "./Question";
 
-export const CandidateControllerContext = createContext<ControllerContextType>(null!)
+
+
+export const CandidateControllerContext = createContext<CandidateControllerContextType>(null!)
 
 export default function CandidateController() {
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
-    const [answers, setAnswers] = useState<AnswerType>(defaultQuestions.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}))
+    const [answers, setAnswers] = useState<AnswerType>(defaultQuestions.reduce((acc, { name }) => {
+        if(name === 'preferred_professions') return { ...acc, [name]: [] }
+        return { ...acc, [name]: '' }
+    }, {} as AnswerType))
 
     const contextValue = useMemo(() => ({
         activeQuestionIndex,
@@ -16,7 +21,7 @@ export default function CandidateController() {
         answers,
         setAnswers,
         questionsLength: defaultQuestions.length
-    }), [activeQuestionIndex, setActiveQuestionIndex, answers, setAnswers])
+    }), [activeQuestionIndex, setActiveQuestionIndex, answers, setAnswers, defaultQuestions.length])
 
     if(!defaultQuestions[activeQuestionIndex]) return <Loader />
 

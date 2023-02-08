@@ -1,19 +1,39 @@
 import { HTMLInputTypeAttribute } from "react"
 
-export interface QuestionProps {
+type CustomInput = {
     name: string,
-    question: string,
+    label: string,
     type: HTMLInputTypeAttribute,
+    value?: string
+}
+
+export interface QuestionProps {
+    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education',
+    question: string,
+    type: HTMLInputTypeAttribute | 'custom',
     answers?: string[],
-    placeholder?: string
+    placeholder?: string,
+    customInputs?: CustomInput[]
 }
 
 export const defaultQuestions: QuestionProps[] = [
     {
         name: 'name',
         question: 'Podaj proszę swoje imię i nazwisko.',
-        type: 'text',
-        placeholder: 'Tutaj wpisz swoje imię i nazwisko'
+        type: 'custom',
+        placeholder: 'Tutaj wpisz swoje imię i nazwisko',
+        customInputs: [
+            {
+                name: 'first_name',
+                label: 'Imię',
+                type: 'text'
+            },
+            {
+                name: 'last_name',
+                label: 'Nazwisko',
+                type: 'text'
+            },
+        ]
     },
     {
         name: 'phone',
@@ -28,13 +48,13 @@ export const defaultQuestions: QuestionProps[] = [
         placeholder: 'Tutaj wpisz swój email'
     },
     {
-        name: 'role',
+        name: 'preferred_professions',
         question: 'W których zawodach chciałbyś pracować?',
         type: 'checkbox',
         answers: ['Sprzedaż', 'Obsługa klienta', 'Administracja biurowa'],
     },
     {
-        name: 'salary',
+        name: 'salary_expectation',
         question: 'Jakiego wynagrodzenia oczekujesz?',
         type: 'radio',
         answers: [
@@ -48,7 +68,7 @@ export const defaultQuestions: QuestionProps[] = [
         ],
     },
     {
-        name: 'time',
+        name: 'availability',
         question: 'Jaka jest Twoja dyspozycyjność?',
         type: 'radio',
         answers: [
@@ -58,7 +78,7 @@ export const defaultQuestions: QuestionProps[] = [
         ],
     },
     {
-        name: 'employed',
+        name: 'job_position',
         question: 'Jakie jest Twoje obecne lub poprzednie stanowisko w pracy?',
         type: 'text',
         placeholder: 'Tutaj wpisz swoje stanowisko'

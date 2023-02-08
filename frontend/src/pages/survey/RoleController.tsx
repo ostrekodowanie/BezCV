@@ -3,16 +3,16 @@ import { createContext, Dispatch, SetStateAction, useEffect, useMemo, useState }
 import { buttonArrow } from "../../assets/account/account";
 import Loader from "../../components/Loader";
 import { QuestionProps } from "../../constants/findWork";
-import { ControllerContextType, roles, RoleType } from "../../constants/workForm";
+import { RoleControllerContextType, roles, RoleType } from "../../constants/workForm";
 import Question from "./Question";
 
-export const RoleControllerContext = createContext<ControllerContextType>(null!)
+export const RoleControllerContext = createContext<RoleControllerContextType>(null!)
 
 export default function RoleController() {
     const [role, setRole] = useState<RoleType | null>(null)
     const [questions, setQuestions] = useState<QuestionProps[]>([])
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
-    const [answers, setAnswers] = useState({})
+    const [answers, setAnswers] = useState<number[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {

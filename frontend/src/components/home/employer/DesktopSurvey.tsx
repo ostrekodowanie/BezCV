@@ -4,7 +4,7 @@ import { desktopSurvey } from "../../../assets/home/home";
 export default function DesktopSurvey() {
     return (
         <section className="padding py-[1in] md:py-[1.4in] relative overflow-hidden">
-            <div className="flex items-center gap-6 absolute left-[5vw] hidden md:flex xl:left-[8vw] top-[1in]">
+            <div className="items-center gap-6 absolute left-[5vw] hidden md:flex xl:left-[8vw] top-[1in]">
                 <img className="max-h-[1in] xl:max-h-[20vh]" src={orangeArrowBottom} alt='' />
                 <img className="max-h-[1in] xl:max-h-[20vh]" src={orangeArrowBottom} alt='' />
             </div>

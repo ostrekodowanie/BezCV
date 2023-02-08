@@ -28,7 +28,7 @@ export default function Introduction() {
                     <p><span className="font-bold">Efekt?</span> Większa <span className="font-bold">satysfakcja</span> z pracy i więcej możliwości <span className="font-bold">rozwoju.</span></p>
                 </div>} />
                 <Control element={<div className="flex flex-col gap-4">
-                    <div className="rounded-full bg-secondary h-12 w-12 font-bold flex items-center justify-center text-white">3</div>
+                    <div className="rounded-full bg-secondary h-12 w-12 font-bold flex items-center justify-center text-white">4</div>
                     <p><span className="font-bold">Ankieta</span> zajmie Ci <span className="font-bold">około 9 minut</span> - masz możliwość nie udzielania odpowiedzi. Im więcej nam o sobie opowiesz tym większa szansa, że <span className="font-bold">znajdziemy Ci wymarzoną pracę.</span></p>
                 </div>} />
                 <Control opacity={1} delay={200} element={<Link to='/praca/ankieta' className="bg-secondary font-bold rounded-full py-3 px-6 max-w-max text-white text-sm self-start flex items-center">Zaczynajmy! <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></Link>} />

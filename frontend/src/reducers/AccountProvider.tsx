@@ -1,6 +1,7 @@
 import { createContext, useState } from "react"
 import ChooseAccount from "../pages/ChooseAccount"
 import { useAppSelector } from "../main"
+import { useNavigate } from "react-router"
 
 export type AccountType = 'employer' | 'worker' | null
 
@@ -11,10 +12,12 @@ const defaultAccount: AccountType | null = accountFromStorage ? accountFromStora
 
 export default function AccountProvider({ children }: { children: JSX.Element }) {
     const { logged } = useAppSelector(state => state.login)
+    const navigate = useNavigate()
     const [account, setAccount] = useState<AccountType>(logged ? 'employer' : defaultAccount)
 
     const changeAccount = (account: AccountType) => {
         if(account) localStorage.setItem('account', account)
+        navigate('/')
         setAccount(account)
     }
     
