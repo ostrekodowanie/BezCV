@@ -38,6 +38,8 @@ urlpatterns = [
     path('punkty', views.index),
     path('profil', views.index),
     path('administracja', views.index),
+    path('praca', views.index),
+    path('praca/ankieta', views.index),
 
     path('api/', include('apps.Auth.urls')),
     path('api/', include('apps.Contact.urls')),
