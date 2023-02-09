@@ -14,10 +14,9 @@ class CandidateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        candidate_slug = self.kwargs['slug']
         candidate_id = self.kwargs['pk']
 
-        candidate = get_candidate(self.request.user, candidate_slug, candidate_id)
+        candidate = get_candidate(self.request.user, candidate_id)
         abilities = [{'name': ability.ability.name, 'percentage': ability.percentage} for ability in candidate.candidateabilities_candidate.all()]
         role = candidate.candidateroles_candidate.role.name
 
@@ -39,10 +38,9 @@ class CandidateView(APIView):
         for similar_candidate in similar_candidates:
             similar_candidate_dict = {
                 'id': similar_candidate.id,
-                'slug': similar_candidate.slug,
                 'first_name': similar_candidate.first_name[0] + '*' * (len(similar_candidate.first_name) - 1),
                 'last_name': similar_candidate.last_name[0] + '*' * (len(similar_candidate.last_name) - 1),
-                'abilities': [ability.ability.name for ability in similar_candidate.candidateabilities_candidate.all()],
+                'abilities': [ability.ability.name for ability in similar_candidate.candidateabilities_candidate.all().order_by('percentage')[3]],
                 'role': similar_candidate.candidateroles_candidate.role.name
             }
 
@@ -95,7 +93,7 @@ class OffersView(APIView):
         offset = (int(page) - 1) * per_page
 
         queryset = (Candidates.objects
-            .only('id', 'first_name', 'last_name', 'slug')
+            .only('id', 'first_name', 'last_name')
             .select_related('candidateroles_candidate__role')
             .prefetch_related('candidateabilities_candidate__ability')
             .prefetch_related('favouritecandidates_candidate')
@@ -125,7 +123,6 @@ class OffersView(APIView):
             result['email'] = hidden_email
 
             result['phone'] = '*********'
-            result['slug'] = candidate.slug
             result['favourite'] = candidate.favouritecandidates_candidate.exists()
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
             result['role'] = candidate.candidateroles_candidate.role.name
@@ -156,7 +153,7 @@ class SearchCandidateView(APIView):
             queries.add(Q(candidateroles_candidate__role__name__in=roles), Q.AND)
 
         queryset = (Candidates.objects
-            .only('id', 'first_name', 'last_name', 'slug')
+            .only('id', 'first_name', 'last_name')
             .select_related('candidateroles_candidate__role')
             .prefetch_related('candidateabilities_candidate__ability')
             .prefetch_related('favouritecandidates_candidate')
@@ -179,7 +176,6 @@ class SearchCandidateView(APIView):
             result['email'] = hidden_email
 
             result['phone'] = '*********'
-            result['slug'] = candidate.slug
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
             result['role'] = candidate.candidateroles_candidate.role.name
 

@@ -11,8 +11,7 @@ class Professions(models.Model):
         verbose_name_plural = 'Professions'
 
     def __str__(self):
-        return '{} | {}'.format(
-            self.pk,
+        return '{}'.format(
             self.name
         )
 
@@ -42,7 +41,6 @@ class Candidates(models.Model):
                                                 ('wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)', 'wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)')])
     driving_license = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
-    slug = models.SlugField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -55,10 +53,6 @@ class Candidates(models.Model):
             self.email,
             self.phone,
         )
-
-    def save(self, *args, **kwargs):        
-        self.slug = '-'.join((slugify(self.first_name), slugify(self.last_name)))
-        super(Candidates, self).save(*args, **kwargs)
 
 class Roles(models.Model):
     name = models.CharField(max_length=255, unique=True)

@@ -15,7 +15,7 @@ def get_candidate(user, candidate_slug, candidate_id):
     
 def get_similar_candidates(user, role, abilities, candidate_id):
     similar_candidates = (Candidates.objects
-        .only('id', 'slug', 'first_name', 'last_name')
+        .only('id', 'first_name', 'last_name')
         .select_related('candidateroles_candidate__role')
         .prefetch_related('candidateabilities_candidate__ability')
         .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
@@ -30,7 +30,7 @@ def get_similar_candidates(user, role, abilities, candidate_id):
     if len(similar_candidates) < 5:
             remaining_count = 5 - len(similar_candidates)
             remaining_candidates = (Candidates.objects
-                .only('id', 'slug', 'first_name', 'last_name')
+                .only('id', 'first_name', 'last_name')
                 .select_related('candidateroles_candidate__role')
                 .prefetch_related('candidateabilities_candidate__ability')
                 .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
