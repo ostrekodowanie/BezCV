@@ -7,7 +7,7 @@ from itertools import chain
 
 def get_candidate(user, candidate_slug, candidate_id):
     return (Candidates.objects
-        .only('id', 'first_name', 'last_name', 'email', 'phone', 'salary')
+        .only('id', 'first_name', 'last_name', 'email', 'phone', 'salary_expectation')
         .select_related('candidateroles_candidate__role')
         .prefetch_related('candidateabilities_candidate__ability')
         .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))

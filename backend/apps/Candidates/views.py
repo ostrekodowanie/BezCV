@@ -27,7 +27,7 @@ class CandidateView(APIView):
             'last_name': candidate.last_name,
             'email': candidate.email,
             'phone': candidate.phone,
-            'salary': candidate.salary,
+            'salary_expectation': candidate.salary_expectation,
             'is_purchased': candidate.is_purchased,
             'abilities': abilities,
             'role': role
@@ -119,6 +119,12 @@ class OffersView(APIView):
             result['id'] = candidate.id
             result['first_name'] = candidate.first_name[0] + '*' * (len(candidate.first_name) - 1)
             result['last_name'] = candidate.last_name[0] + '*' * (len(candidate.last_name) - 1)
+
+            email_parts = candidate.email.split('@')
+            hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
+            result['email'] = hidden_email
+
+            result['phone'] = '*********'
             result['slug'] = candidate.slug
             result['favourite'] = candidate.favouritecandidates_candidate.exists()
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
@@ -167,6 +173,12 @@ class SearchCandidateView(APIView):
             result['id'] = candidate.id
             result['first_name'] = candidate.first_name[0] + '*' * (len(candidate.first_name) - 1)
             result['last_name'] = candidate.last_name[0] + '*' * (len(candidate.last_name) - 1)
+            
+            email_parts = candidate.email.split('@')
+            hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
+            result['email'] = hidden_email
+
+            result['phone'] = '*********'
             result['slug'] = candidate.slug
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
             result['role'] = candidate.candidateroles_candidate.role.name
