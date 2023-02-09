@@ -34,7 +34,7 @@ urlpatterns = [
     path('logowanie/reset-password/confirm', views.index),
     path('oferty', views.index),
     path('oferty/search', views.index),
-    path('oferty/<slug>-<id>', views.candidates),
+    path('oferty/<id>', views.candidates),
     path('punkty', views.index),
     path('profil', views.index),
     path('administracja', views.index),

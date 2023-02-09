@@ -1,17 +1,16 @@
-from django.db.models import Q, Exists, OuterRef, Count
+from django.db.models import Q, Exists, OuterRef
 
 from .models import Candidates, PurchasedOffers
-from apps.Favourites.models import FavouriteCandidates
 
 from itertools import chain
 
-def get_candidate(user, candidate_slug, candidate_id):
+def get_candidate(user, candidate_id):
     return (Candidates.objects
         .only('id', 'first_name', 'last_name', 'email', 'phone', 'salary_expectation')
         .select_related('candidateroles_candidate__role')
         .prefetch_related('candidateabilities_candidate__ability')
         .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
-        .get(Q(is_verified=True) & Q(slug=candidate_slug) & Q(id=candidate_id)))
+        .get(Q(is_verified=True) & Q(id=candidate_id)))
     
 def get_similar_candidates(user, role, abilities, candidate_id):
     similar_candidates = (Candidates.objects

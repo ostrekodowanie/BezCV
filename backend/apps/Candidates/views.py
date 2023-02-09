@@ -40,7 +40,8 @@ class CandidateView(APIView):
                 'id': similar_candidate.id,
                 'first_name': similar_candidate.first_name[0] + '*' * (len(similar_candidate.first_name) - 1),
                 'last_name': similar_candidate.last_name[0] + '*' * (len(similar_candidate.last_name) - 1),
-                'abilities': [ability.ability.name for ability in similar_candidate.candidateabilities_candidate.all().order_by('percentage')[3]],
+                'abilities': sorted([{'name': ability.ability.name, 'percentage': ability.percentage} for ability in similar_candidate.candidateabilities_candidate.all()],
+                   key=lambda x: x['percentage'], reverse=True)[:3],
                 'role': similar_candidate.candidateroles_candidate.role.name
             }
 
