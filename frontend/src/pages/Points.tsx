@@ -38,8 +38,8 @@ export default function Points() {
     return (
         <section className="padding py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen">
             <h1 className='flex flex-col gap-3 mb-12'>
-                <span className='font-semibold text-[0.95rem]'>Doładuj swoje konto w punkty</span>
-                <span className='text-3xl md:text-4xl font-bold'>i zdobądź <span className='relative'><span className='relative z-10'>pracowników!</span><img className='absolute -bottom-1 -right-3 -left-3 min-w-[115%]' src={titleUnderline} alt='' /></span></span>
+                <span className='text-[0.95rem]'>Doładuj swoje konto w punkty</span>
+                <span className='text-3xl md:text-4xl font-medium'>i zdobądź <span className='relative'><span className='relative z-10'>pracowników!</span><img className='absolute -bottom-1 -right-3 -left-3 min-w-[115%]' src={titleUnderline} alt='' /></span></span>
             </h1>
             {!chosen ?
                 <Controller stagger={50} opacity={1} ease='ease-out' delay={500} className="flex flex-wrap justify-center gap-8 xl:grid grid-cols-3">
@@ -56,26 +56,26 @@ export default function Points() {
 const Package = ({ setChosen, ...rest }: PackageProps & { setChosen: Dispatch<SetStateAction<PackageProps | null>> }) => {
     const { points, price, image } = rest
     return (
-        <div className="flex flex-col self-stretch h-full justify-end gap-4 rounded-3xl relative items-center py-6 px-12 bg-white shadow-primaryBig flex-1">
-            {points === 15 && <div className='absolute -top-6 rounded-t-full text-sm rounded-br-full -right-6 h-12 pl-8 pr-16 font-bold flex items-center bg-white'>
+        <div className="flex flex-col self-stretch h-full justify-end gap-4 rounded-3xl relative items-center p-12 bg-white shadow-primaryBig flex-1">
+            {points === 15 && <div className='absolute -top-6 rounded-t-full text-sm rounded-br-full -right-6 h-12 pl-8 pr-16 font-medium flex items-center bg-white'>
                 Bestseller
                 <div className='absolute h-12 w-12 right-0 p-2 flex items-center justify-center bg-secondary rounded-full'>
                     <img src={bestseller} alt="" />
                 </div>    
             </div>}
             <img className='mb-4 max-w-[1.8in] max-h-[1.3in]' src={image} alt="" />
-            <h3 className='font-bold relative flex flex-col items-center'>
+            <h3 className='font-medium relative flex flex-col items-center'>
                 <span className='relative z-10'>{price} zł</span>
                 <img className='absolute bottom-[2px] min-w-[120%]' src={priceUnderline} alt="" />
             </h3>
-            <h2 className="font-bold text-3xl w-max">{points} kontaktów</h2>
-            <ul className='list-outside list-disc marker:text-secondary sm:w-max mt-4 text-sm font-medium flex flex-col gap-3'>
+            <h2 className="font-medium text-3xl w-max">{points} kontaktów</h2>
+            <ul className='list-outside list-disc marker:text-[#F9AE3D] sm:w-max mt-4 text-sm flex flex-col gap-3'>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
             </ul>
-            <button onClick={() => setChosen(rest)} className='bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-full flex items-center py-3 px-6 mt-8'>Wybierz pakiet <img className='max-h-[1em] ml-2' src={arrowRight} alt="" /></button>
+            <button onClick={() => setChosen(rest)} className='bg-primary font-medium transition-colors text-[.75rem] max-w-max hover:bg-darkPrimary text-white rounded-full flex items-center py-4 px-8 mt-8'>Wybierz pakiet <img className='max-h-[1em] ml-2' src={arrowRight} alt="" /></button>
         </div>
     )
 }

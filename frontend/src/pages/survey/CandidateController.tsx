@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 import Loader from "../../components/Loader";
 import { defaultQuestions } from "../../constants/findWork";
 import { AnswerType, CandidateControllerContextType } from "../../constants/workForm";
@@ -24,8 +24,6 @@ export default function CandidateController() {
         setAnswers,
         questionsLength: defaultQuestions.length
     }), [activeQuestionIndex, setActiveQuestionIndex, answers, setAnswers, defaultQuestions.length])
-
-    useEffect(() => console.log(answers), [answers])
 
     if(!defaultQuestions[activeQuestionIndex]) return <Loader />
 
