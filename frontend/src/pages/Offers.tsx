@@ -7,12 +7,13 @@ import Candidate from './Candidate'
 import { Link, useSearchParams } from "react-router-dom"
 import { useAppSelector } from "../main"
 import InfiniteScroll from "react-infinite-scroll-component"
-import { emailIcon, liked, notLiked, phoneIcon } from "../assets/offers/offers"
+import { liked, notLiked } from "../assets/offers/offers"
+import { emailIcon, phoneIcon } from "../assets/candidate/candidate"
 
 export default function Offers() {
     return (
         <Routes>
-            <Route path='/:slug-:id' element={<Candidate />} />
+            <Route path='/:id' element={<Candidate />} />
             {['/', '/search/*'].map((path, index) => 
                 <Route path={path} element={<CandidateList />} key={index} />
             )}
@@ -101,7 +102,7 @@ const CandidateList = () => {
                     </select>
                 </div>
             </div>
-            <div className="flex flex-col sm:grid grid-cols-[2fr_7fr] mt-8 mb-12">
+            <div className="flex flex-col lg:grid grid-cols-[2fr_7fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} />
                 <InfiniteScroll className={`flex flex-col bg-white shadow-primaryBig rounded-3xl relativeflex-1 min-h-[80vh] sm:ml-8 p-4`} next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
                     {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
@@ -114,7 +115,7 @@ const CandidateList = () => {
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilities, phone, email }: NonPercentageAbilitiesCandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, favourite, role, abilities, phone, email }: NonPercentageAbilitiesCandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFavourite, setIsFavourite] = useState(favourite)
 
@@ -129,7 +130,7 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
     }
 
     return (
-        <Link to={'/oferty/' + slug + '-' + id} className="hover:bg-[#FAFAFA] transition-colors px-6 py-8 flex justify-between border-b-[1px] border-[#E6E7EA]">
+        <Link to={'/oferty/' + id} className="hover:bg-[#FAFAFA] transition-colors px-6 py-8 flex justify-between border-b-[1px] border-[#E6E7EA]">
             <div className="flex flex-col gap-4 flex-1">
                 <div className="flex items-center justify-between gap-6 flex-wrap">
                     <div className="flex items-center gap-6">

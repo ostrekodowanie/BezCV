@@ -50,16 +50,16 @@ const Nav = () => {
                 <CustomLink to='/kontakt'>Kontakt</CustomLink>
                 {account === 'employer' && (
                     logged ? <>
-                        <Link className="font-bold text-base md:ml-2" to='/profil'>{first_name}</Link>
-                        <Link className="font-bold text-base" to='/punkty'>{points} pkt.</Link>
+                        <Link className="font-semibold text-base md:ml-2" to='/profil'>{first_name}</Link>
+                        <Link className="font-semibold text-base" to='/punkty'>{points} pkt.</Link>
                     </> : 
                     <>
-                        <Link className="mt-4 md:mt-0 md:ml-4 font-semibold transition-colors flex items-center p-2 text-[#2F66F4] hover:text-darkPrimary" to='/logowanie'>Zaloguj się</Link>
-                        <Link className="bg-primary transition-colors font-semibold border-primary text-white rounded-full flex items-center py-2 px-6" to='/rejestracja'>Zarejestruj się</Link>
+                        <Link className="mt-4 md:mt-0 md:ml-4 font-medium transition-colors flex items-center p-2 text-[#2F66F4] hover:text-darkPrimary" to='/logowanie'>Zaloguj się</Link>
+                        <Link className="bg-primary transition-colors font-medium border-primary text-white rounded-full flex items-center py-2 px-6" to='/rejestracja'>Zarejestruj się</Link>
                     </>
                 )}
-                {account === 'employer' && <button onClick={() => setAccount('worker')} className="bg-secondary font-semibold text-white rounded-full flex items-center py-2 px-6 md:ml-2">Zostań kandydatem!</button>}
-                {account === 'worker' && <button onClick={() => setAccount('employer')} className="bg-primary font-semibold text-white rounded-full flex items-center py-2 px-6 md:ml-2">Zostań pracodawcą!</button>}
+                {account === 'employer' && <button onClick={() => setAccount('worker')} className="bg-secondary font-medium text-white rounded-full flex items-center py-2 px-6 md:ml-2">Zostań kandydatem!</button>}
+                {account === 'worker' && <button onClick={() => setAccount('employer')} className="bg-primary font-medium text-white rounded-full flex items-center py-2 px-6 md:ml-2">Zostań pracodawcą!</button>}
             </div>
             <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 md:hidden h-5 w-8 justify-between cursor-pointer'>
                 <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(45deg)', maxWidth: '100%'} : { maxWidth: '60%' }} className={`${account === 'worker' ? 'bg-secondary' : 'bg-primary'} ${lineStyle}`}></div>
@@ -80,5 +80,5 @@ const CustomLink = ({children, to, className}: CustomLink) => {
     const { account } = useContext(AccountContext)
     const activePath = useResolvedPath(to)
     const isActive = useMatch({path: `${activePath.pathname}/*`, end: true})
-    return <Link to={to} className={`${className && className} transition-colors font-semibold ${isActive ? account === 'employer' ? 'text-[#2F66F4]' : 'text-[#F98D3D]' : account === 'employer' ? 'hover:text-[#2F66F4]' : 'hover:text-[#F98D3D]'}`}>{children}</Link>
+    return <Link to={to} className={`${className && className} transition-colors font-medium ${isActive ? account === 'employer' ? 'text-[#2F66F4]' : 'text-[#F98D3D]' : account === 'employer' ? 'hover:text-[#2F66F4]' : 'hover:text-[#F98D3D]'}`}>{children}</Link>
 }
