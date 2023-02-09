@@ -4,7 +4,7 @@ import { Navigate } from "react-router";
 import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import { QuestionProps } from "../../constants/findWork";
-import { RangeNumberKey, rangeNumberKeys, textInputStyles, radioInputStyles } from "../../constants/workForm";
+import { RangeNumberKey, rangeNumberKeys, textInputStyles, radioInputStyles, AnswerType } from "../../constants/workForm";
 import { CandidateControllerContext } from "./CandidateController";
 import ProgressBar from "./ProgressBar";
 import { RoleControllerContext } from "./RoleController";
@@ -105,6 +105,7 @@ const CandidateInput = ({ question, type, placeholder, customInputs, name, ...re
         case 'text':
         case 'email':
         case 'tel':
+        default:
             return <input className={textInputStyles} autoComplete="off" required={true} value={answers[name]} onChange={e => setAnswers(prev => ({ ...prev, [name]: e.target.value }))} id={question} placeholder={placeholder} type={type} />
         case 'range':
             return (
@@ -119,7 +120,7 @@ const CandidateInput = ({ question, type, placeholder, customInputs, name, ...re
             return <>
                 {questionAnswers?.map(ans => 
                     <label className={radioInputStyles} htmlFor={ans} key={'label:' + ans}>
-                        <input value={ans} type={type} key={ans} id={ans} name={question} onChange={e => setAnswers(prev => ({ ...prev, [name]: [...prev[name], e.target.value] }))} />
+                        <input value={ans} type={type} key={ans} id={ans} name={question} onChange={e => setAnswers(prev => ({ ...prev, [name]: e.target.value }))} />
                         {ans}
                     </label>
                 )}
@@ -128,22 +129,23 @@ const CandidateInput = ({ question, type, placeholder, customInputs, name, ...re
             return <>
                 {questionAnswers?.map(ans => 
                     <label className={radioInputStyles} htmlFor={ans} key={'label:' + ans}>
-                        <input value={ans} type={type} key={ans} id={ans} name={question} onChange={e => setAnswers(prev => ({ ...prev, [name]: e.target.value }))} />
+                        <input value={ans} type={type} key={ans} id={ans} checked={answers[name].includes(ans)} name={question} onChange={e => {
+                            if(e.target.checked) return setAnswers(prev => ({ ...prev, [name]: [...prev[name], e.target.value] }))
+                            return setAnswers(prev => {
+                                let old = prev[name]
+                                if(typeof old === 'string') return prev
+                                let newArr = old.filter(item => item != e.target.value)
+                                return ({ ...prev, [name]: newArr })
+                            })
+                        }} />
                         {ans}
                     </label>
                 )}
             </>
         case 'custom':
             return <>
-                {customInputs?.map(input => 
-                    <div className="flex items-center gap-4">
-                        <label htmlFor={input.label}>{input.label}</label>
-                        <input className={textInputStyles} type={input.type} id={input.label} onChange={e => setAnswers(prev => ({ ...prev, [input.name]: e.target.value }))} />
-                    </div>    
-                )}
+                {customInputs?.map(input => <input className={textInputStyles} required type={input.type} value={answers[input.name]} placeholder={input.placeholder} id={input.name} onChange={e => setAnswers(prev => ({ ...prev, [input.name]: e.target.value }))} />)}
             </>
-        default:
-            return <Navigate to='/' />
     }
 }
 

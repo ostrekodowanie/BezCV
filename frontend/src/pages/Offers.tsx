@@ -2,12 +2,12 @@ import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import CandidateFilter from "../components/offers/CandidateFilter"
-import { CandidateProps, NonPercentageAbilitiesCandidateProps } from "./Candidate"
+import { NonPercentageAbilitiesCandidateProps } from "./Candidate"
 import Candidate from './Candidate'
 import { Link, useSearchParams } from "react-router-dom"
 import { useAppSelector } from "../main"
 import InfiniteScroll from "react-infinite-scroll-component"
-import { liked, notLiked } from "../assets/offers/offers"
+import { emailIcon, liked, notLiked, phoneIcon } from "../assets/offers/offers"
 
 export default function Offers() {
     return (
@@ -93,7 +93,7 @@ const CandidateList = () => {
     return (
         <section className="padding py-[1.4in] md:py-[2in] bg-white">
             <div className="flex flex-wrap gap-4 items-center justify-between">
-                <h1 className="font-semibold mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
+                <h1 className="font-medium mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
                 <div className="flex items-center gap-4">
                     <h4>Sortuj według:</h4>
                     <select className="bg-white font-medium">
@@ -101,9 +101,9 @@ const CandidateList = () => {
                     </select>
                 </div>
             </div>
-            <div className="flex flex-col sm:grid grid-cols-[1fr_3fr] mt-8 mb-12">
+            <div className="flex flex-col sm:grid grid-cols-[2fr_7fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} />
-                <InfiniteScroll className={`flex flex-col bg-white shadow-primaryBig rounded-3xl relative gap-6 flex-1 min-h-[80vh] sm:ml-8 p-4`} next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
+                <InfiniteScroll className={`flex flex-col bg-white shadow-primaryBig rounded-3xl relativeflex-1 min-h-[80vh] sm:ml-8 p-4`} next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
                     {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
                 </InfiniteScroll>
             </div>
@@ -114,13 +114,13 @@ const CandidateList = () => {
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilities }: NonPercentageAbilitiesCandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilities, phone, email }: NonPercentageAbilitiesCandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFavourite, setIsFavourite] = useState(favourite)
 
-    console.log(abilities)
-
-    const handleLike = async () => {
+    const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        e.stopPropagation()
         setIsFavourite(prev => !prev)
         if(isFavourite) return axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`)
         return axios.post('/api/profile/favourites/add', JSON.stringify({ employer: user_id, candidate: id }), {
@@ -129,29 +129,50 @@ const CandidateRef = ({ id, first_name, last_name, slug, favourite, role, abilit
     }
 
     return (
-        <div className="hover:bg-[#FAFAFA] transition-colors rounded-3xl p-6 flex justify-between">
-            <Link to={'/oferty/' + slug + '-' + id}  className="flex flex-col gap-6 flex-1">
-                <div className="flex items-center gap-6">
-                    <div className="h-16 w-16 rounded-full flex justify-center items-center bg-[#F6F6F6]">
-                        <h4 className="font-bold text-2xl">{first_name.charAt(0)}</h4>
+        <Link to={'/oferty/' + slug + '-' + id} className="hover:bg-[#FAFAFA] transition-colors px-6 py-8 flex justify-between border-b-[1px] border-[#E6E7EA]">
+            <div className="flex flex-col gap-4 flex-1">
+                <div className="flex items-center justify-between gap-6 flex-wrap">
+                    <div className="flex items-center gap-6">
+                        <div className="h-16 w-16 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
+                            <h4 className="text-xl text-primary">{first_name.charAt(0)}</h4>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h5 className="text-sm">Kandydat</h5>
+                            <h3 className="text-sm font-medium">{first_name} {last_name}</h3>
+                        </div>
                     </div>
-                    <div className="flex flex-col">
-                        <h3 className="text-xl font-bold">{first_name} {last_name}</h3>
-                        <h3 className="font-bold text-primary">{role}</h3>
+                    <div className="flex items-center gap-6">
+                        <div className="h-16 w-16 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
+                            <img className="max-w-[60%] max-h-[60%]" src={emailIcon} alt="" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h5 className="text-sm">Email</h5>
+                            <h3 className="text-sm font-medium">{email ?? '******@***.com'}</h3>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-6">
+                        <div className="h-16 w-16 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
+                            <img className="max-w-[60%] max-h-[60%]" src={phoneIcon} alt="" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h5 className="text-sm">Numer telefonu</h5>
+                            <h3 className="text-sm font-medium">+48 {phone ?? '*** *** ***'}</h3>
+                        </div>
                     </div>
                 </div>
+                <h4 className="text-sm mt-2">Preferowane stanowisko: <span className="text-primary font-semibold">{role}</span></h4>
                 <div className="flex flex-wrap gap-4">
                     {abilities?.map(ab => (
                         <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]">
-                            <h4 className="text-primary text-sm font-semibold">{ab}</h4>
+                            <h4 className="text-primary text-[.75rem] font-medium">{ab}</h4>
                         </div>
                     ))}
                 </div>
-            </Link>
-            <button className="flex items-center self-end gap-3 w-max h-max rounded-full py-3 px-6 bg-[#EBF0FE]" onClick={handleLike}>
-                <h3 className="text-primary text-sm font-semibold hidden sm:block">{isFavourite ? 'Polubiono' : 'Dodaj do ulubionych'}</h3>
-                <img className="max-h-[1em]" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} />
+            </div>
+            <button type='button' className="flex items-center self-end gap-3 w-max h-max rounded-full py-4 px-8 bg-[#EBF0FE]" onClick={handleLike}>
+                <h3 className="text-primary text-[.8rem] font-medium hidden sm:block">{isFavourite ? 'Polubiono' : 'Dodaj do ulubionych'}</h3>
+                <img className="max-h-[.9em]" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} />
             </button>
-        </div>
+        </Link>
     )
 }

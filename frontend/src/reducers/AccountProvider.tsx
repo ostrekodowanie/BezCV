@@ -18,6 +18,11 @@ export default function AccountProvider({ children }: { children: JSX.Element })
     const changeAccount = (account: AccountType) => {
         if(account) localStorage.setItem('account', account)
         navigate('/')
+        document.documentElement.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
         setAccount(account)
     }
     

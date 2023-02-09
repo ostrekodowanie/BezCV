@@ -22,8 +22,8 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
     return (
         <div className="flex flex-col gap-8 px-8 py-6 bg-white shadow-primaryBig rounded-3xl min-h-[80vh] flex-1 sticky top-36">
             <div>
-                {allFilters.roles.length > 0 ? <h4 className="font-semibold mb-4">Zawody</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
-                <div className="flex flex-col gap-3">
+                {allFilters.roles.length > 0 ? <h4 className="font-medium mb-6">Zawody</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
+                <div className="flex flex-col gap-4">
                     {allFilters.roles.length > 0 ? allFilters.roles.map(role => <RoleCheckBox role={role} setFilter={setFilter} key={role} />) :
                     <>
                         <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
@@ -34,8 +34,8 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                 </div>
             </div>
             <div>
-                {allFilters.abilities.length > 0 ? <h4 className="font-semibold mb-4">Umiejętności</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
-                <div className="flex flex-col gap-3">
+                {allFilters.abilities.length > 0 ? <h4 className="font-medium mb-6">Umiejętności</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
+                <div className="flex flex-col gap-4">
                     {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <AbilityCheckBox ability={ability} setFilter={setFilter} key={ability} />) :
                     <>
                         <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
@@ -66,7 +66,7 @@ const AbilityCheckBox = ({ ability, setFilter }: { ability: string, setFilter: D
     }
 
     return (
-        <div className='flex items-center'>
+        <div className='flex items-center text-sm'>
             <input type='checkbox' onChange={handleChange} checked={checked} name="abilities" id={ability}/>
             <label className="ml-4" htmlFor={ability}>{ability}</label>
         </div>
@@ -88,7 +88,7 @@ const RoleCheckBox = ({ role, setFilter }: { role: string, setFilter: Dispatch<S
     }
 
     return (
-        <div className='flex items-center'>
+        <div className='flex items-center text-sm'>
             <input type='checkbox' onChange={handleChange} checked={checked} name="abilities" id={role}/>
             <label className="ml-4" htmlFor={role}>{role}</label>
         </div>

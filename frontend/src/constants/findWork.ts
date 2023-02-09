@@ -1,14 +1,15 @@
 import { HTMLInputTypeAttribute } from "react"
+import { AnswerType } from "./workForm"
 
 type CustomInput = {
-    name: string,
-    label: string,
+    name: keyof AnswerType,
+    placeholder: string,
     type: HTMLInputTypeAttribute,
     value?: string
 }
 
 export interface QuestionProps {
-    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education',
+    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name',
     question: string,
     type: HTMLInputTypeAttribute | 'custom',
     answers?: string[],
@@ -25,12 +26,12 @@ export const defaultQuestions: QuestionProps[] = [
         customInputs: [
             {
                 name: 'first_name',
-                label: 'Imię',
+                placeholder: 'Tutaj wpisz swoje imię',
                 type: 'text'
             },
             {
                 name: 'last_name',
-                label: 'Nazwisko',
+                placeholder: 'Tutaj wpisz swoje nazwisko',
                 type: 'text'
             },
         ]
