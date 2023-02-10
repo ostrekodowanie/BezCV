@@ -36,7 +36,6 @@ class Candidates(models.Model):
     experience_customer_service = models.IntegerField(default=0)
     experience_administration = models.IntegerField(default=0)
     education = models.CharField(max_length=255, choices=[
-                                                ('wykształcenie podstawowe (posiadają osoby, które ukończyły szkołę podstawową)', 'wykształcenie podstawowe (posiadają osoby, które ukończyły szkołę podstawową)'), 
                                                 ('wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)', 'wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)'), 
                                                 ('wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)', 'wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)')])
     driving_license = models.BooleanField(default=False)

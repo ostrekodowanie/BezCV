@@ -1,25 +1,26 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import FilledButton from "../../components/FilledButton"
 import Loader from "../../components/Loader"
 
 export default function Verify() {
+    const [searchParams] = useSearchParams()
+    const token = searchParams.get('token')
     const [status, setStatus] = useState({
         ok: false,
         message: ''
     })
-    const location = useLocation()
+    
     useEffect(() => {
-        const token = location.search.split("=").pop()
-            axios.get(`/api/signup/verify?token=${token}`)
-                .then(() => setStatus({...status, ok: true}))
-                .catch(err => setStatus({
-                    ok: false,
-                    message: typeof err.response.data === 'string' ? err.response.data : 'Wystąpił błąd!'
-                }))
-    }, [])
+        if(!token) return
+        axios.get(`/api/signup/verify?token=${token}`)
+            .then(() => setStatus({...status, ok: true}))
+            .catch(err => setStatus({
+                ok: false,
+                message: typeof err.response.data === 'string' ? err.response.data : 'Wystąpił błąd!'
+            }))
+    }, [token])
     return (
         <section className="padding py-[1.4in] flex items-center justify-center">
             <div className="flex flex-col gap-4 text-center items-center xl:items-start xl:w-max">

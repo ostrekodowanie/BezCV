@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
+import { customerService, officeAdministration, selling } from "../assets/survey/survey"
 import { QuestionProps } from "./findWork"
 
 export const radioInputStyles = 'min-w-0 px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold flex items-center gap-4 cursor-pointer'
@@ -45,41 +46,37 @@ export const roles: RoleProps[] = [
     {
         name: 'office_administration',
         title: 'Administracja biurowa',
-        image: ''
+        image: officeAdministration
     },
     {
         name: 'customer_service',
         title: 'Obsługa klienta',
-        image: ''
+        image: customerService
     },
     {
         name: 'selling',
         title: 'Sprzedaż',
-        image: ''
+        image: selling
     },
 ]
 
-export type AnswerType = {
+export type CandidateAnswerType = {
     [K in QuestionProps['name']]: string | string[]
 }
 
-export type StepContextType = {
+export type RoleAnswerType = number[]
+
+export type SurveyContextType = {
     step: 'role' | 'candidate',
-    setStep: Dispatch<SetStateAction<'role' | 'candidate'>>
+    setStep: Dispatch<SetStateAction<'role' | 'candidate'>>,
+    candidateAnswers: CandidateAnswerType,
+    setCandidateAnswers: Dispatch<SetStateAction<CandidateAnswerType>>,
+    roleAnswers: RoleAnswerType,
+    setRoleAnswers: Dispatch<SetStateAction<RoleAnswerType>>
 }
 
 export type ControllerContextType = {
     activeQuestionIndex: number,
     setActiveQuestionIndex: Dispatch<SetStateAction<number>>,
     questionsLength: number
-}
-
-export type CandidateControllerContextType = ControllerContextType & {
-    answers: AnswerType,
-    setAnswers: Dispatch<SetStateAction<AnswerType>>,
-}
-
-export type RoleControllerContextType = ControllerContextType & {
-    answers: number[],
-    setAnswers: Dispatch<SetStateAction<number[]>>,
 }

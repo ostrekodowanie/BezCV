@@ -143,3 +143,14 @@ li::marker {
     transform: scaleX(100%);
   }
 }
+
+.animate-opacity {
+  opacity: 0;
+  animation: animate-opacity 250ms ease-out forwards;
+}
+
+@keyframes animate-opacity {
+  100% {
+    opacity: 1;
+  }
+}
