@@ -33,14 +33,14 @@ class PurchaseOfferSerializer(serializers.ModelSerializer):
 
 
 class PurchasedOffersSerializer(serializers.ModelSerializer):
-    role = serializers.SerializerMethodField()
+    professions = serializers.SerializerMethodField()
     abilities = serializers.SerializerMethodField()
     class Meta:
         model = Candidates
-        fields = ('id', 'first_name', 'last_name', 'role', 'abilities')
+        fields = ('id', 'first_name', 'last_name', 'professions', 'abilities')
 
-    def get_role(self, obj):
-        return obj.candidateroles_candidate.role.name
+    def get_professions(self, obj):
+        return [profession.profession.name for profession in obj.candidateprofession_candidate.all()]
 
     def get_abilities(self, obj):
         return [ability.ability.name for ability in obj.candidateabilities_candidate.all()]

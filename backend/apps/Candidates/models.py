@@ -5,14 +5,16 @@ from apps.Auth.models import User
 
 
 class Professions(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = 'Professions'
 
     def __str__(self):
         return '{}'.format(
-            self.name
+            self.name,
         )
 
 
@@ -21,7 +23,7 @@ class Candidates(models.Model):
     last_name = models.CharField(max_length=40)
     email = models.EmailField(max_length=255, unique=True)
     phone = models.CharField(max_length=255, unique=True)
-    preferred_professions = models.ManyToManyField(Professions)
+    preferred_professions = models.ManyToManyField(Professions, through='CandidateProfessions')
     salary_expectation = models.CharField(max_length=100, choices=[
                                                         ('mniej niż 2999 zł', 'mniej niż 2999 zł'), 
                                                         ('od 3000 zł do 3499 zł', 'od 3000 zł do 3499 zł'), 
@@ -35,8 +37,7 @@ class Candidates(models.Model):
     experience_sales = models.IntegerField(default=0)
     experience_customer_service = models.IntegerField(default=0)
     experience_administration = models.IntegerField(default=0)
-    education = models.CharField(max_length=255, choices=[
-                                                ('wykształcenie podstawowe (posiadają osoby, które ukończyły szkołę podstawową)', 'wykształcenie podstawowe (posiadają osoby, które ukończyły szkołę podstawową)'), 
+    education = models.CharField(max_length=255, choices=[ 
                                                 ('wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)', 'wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)'), 
                                                 ('wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)', 'wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)')])
     driving_license = models.BooleanField(default=False)
@@ -54,31 +55,17 @@ class Candidates(models.Model):
             self.phone,
         )
 
-class Roles(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+class CandidateProfessions(models.Model):
+    candidate = models.ForeignKey(
+        Candidates, on_delete=models.CASCADE, related_name='candidateprofessions_candidate')
+    profession = models.ForeignKey(
+        Professions, on_delete=models.CASCADE, related_name='candidateprofessions_profession')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = 'Roles'
-
-    def __str__(self):
-        return '{} | {}'.format(
-            self.pk,
-            self.name,
-        )
-
-class CandidateRoles(models.Model):
-    candidate = models.OneToOneField(
-        Candidates, on_delete=models.CASCADE, related_name='candidateroles_candidate', unique=True)
-    role = models.ForeignKey(
-        Roles, on_delete=models.CASCADE, related_name='candidateroles_ability')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name_plural = 'Candidate roles'
-        unique_together = [['candidate', 'role']]
+        verbose_name_plural = 'Candidate professions'
+        unique_together = [['candidate', 'profession']]
 
     def __str__(self):
         return '{}'.format(

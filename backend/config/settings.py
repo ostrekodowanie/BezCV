@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'apps.Auth',
     'apps.Contact',
     'apps.Candidates',
-    'apps.Admin',
     'apps.Favourites',
     'apps.Points',
     'apps.Survey',

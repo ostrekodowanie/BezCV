@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
-from .models import Candidates, Abilities, PurchasedOffers, Roles
+from .models import Candidates, Abilities, PurchasedOffers, Professions
 from .utils import get_candidate, get_similar_candidates
 
 
@@ -18,7 +18,7 @@ class CandidateView(APIView):
 
         candidate = get_candidate(self.request.user, candidate_id)
         abilities = [{'name': ability.ability.name, 'percentage': ability.percentage} for ability in candidate.candidateabilities_candidate.all()]
-        role = candidate.candidateroles_candidate.role.name
+        professions = [profession.profession.name for profession in candidate.candidateprofession_candidate.all()]
 
         data = {
             'id': candidate.id,
@@ -29,10 +29,10 @@ class CandidateView(APIView):
             'salary_expectation': candidate.salary_expectation,
             'is_purchased': candidate.is_purchased,
             'abilities': abilities,
-            'role': role
+            'professions': professions
         }
 
-        similar_candidates = get_similar_candidates(self.request.user, role, [ability.ability.name for ability in candidate.candidateabilities_candidate.all()], candidate_id)
+        similar_candidates = get_similar_candidates(self.request.user, professions, [ability.ability.name for ability in candidate.candidateabilities_candidate.all()], candidate_id)
 
         similar_candidate_data = []
         for similar_candidate in similar_candidates:
@@ -42,7 +42,7 @@ class CandidateView(APIView):
                 'last_name': similar_candidate.last_name[0] + '*' * (len(similar_candidate.last_name) - 1),
                 'abilities': sorted([{'name': ability.ability.name, 'percentage': ability.percentage} for ability in similar_candidate.candidateabilities_candidate.all()],
                    key=lambda x: x['percentage'], reverse=True)[:3],
-                'role': similar_candidate.candidateroles_candidate.role.name
+                'professions': [profession.profession.name for profession in similar_candidate.candidateprofession_candidate.all()]
             }
 
             #adv order by
@@ -126,7 +126,7 @@ class OffersView(APIView):
             result['phone'] = '*********'
             result['favourite'] = candidate.favouritecandidates_candidate.exists()
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
-            result['role'] = candidate.candidateroles_candidate.role.name
+            result['professions'] = [profession.profession.name for profession in candidate.candidateprofession_candidate.all()]
             results.append(result)
 
         return Response({'count': total_count, 'results': results})
@@ -137,7 +137,7 @@ class SearchCandidateView(APIView):
 
     def get(self, request, *args, **kwargs):
         abilities = self.request.GET.get('a')
-        roles = self.request.GET.get('r')
+        professions = self.request.GET.get('p')
         page = self.request.GET.get('page', 1)
 
         per_page = 10
@@ -149,13 +149,13 @@ class SearchCandidateView(APIView):
             abilities_list = abilities.split(',')
             queries.add(Q(candidateabilities_candidate__ability__name__in=abilities_list), Q.AND)
         
-        if roles:
-            roles = roles.split(',')
-            queries.add(Q(candidateroles_candidate__role__name__in=roles), Q.AND)
+        if professions:
+            professions_list = professions.split(',')
+            queries.add(Q(candidateprofessions_candidate__profession__name__in=professions_list), Q.AND)
 
         queryset = (Candidates.objects
             .only('id', 'first_name', 'last_name')
-            .select_related('candidateroles_candidate__role')
+            .select_related('candidateprofessions_candidate__profession')
             .prefetch_related('candidateabilities_candidate__ability')
             .prefetch_related('favouritecandidates_candidate')
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
@@ -178,7 +178,7 @@ class SearchCandidateView(APIView):
 
             result['phone'] = '*********'
             result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
-            result['role'] = candidate.candidateroles_candidate.role.name
+            result['professions'] = candidate.candidateprofessions_candidate.role.name
 
             matching_abilities_count = 0
 
@@ -202,11 +202,11 @@ class SearchCandidateView(APIView):
 class FiltersView(APIView):
     def get(self, request):
         abilities = Abilities.objects.values_list('name', flat=True).annotate(ability_count=Count('name')).order_by('ability_count')
-        roles = Roles.objects.values_list('name', flat=True).annotate(role_count=Count('name')).order_by('role_count')
+        professions = Professions.objects.values_list('name', flat=True).annotate(profession_count=Count('name')).order_by('profession_count')
 
         data = {
             'abilities': abilities,
-            'roles': roles,
+            'professions': professions,
         }
 
         return Response(data)
