@@ -46,10 +46,10 @@ class EmailCheckView(APIView):
 
     def get(self, request, email):
         if Candidates.objects.filter(email=email).exists():
-            candidate = Candidates.objects.get(email=email)
-            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
-            candidate.access_code = code
-            candidate.save()
+            #candidate = Candidates.objects.get(email=email)
+            #code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+            #candidate.access_code = code
+            #candidate.save()
 
             '''send_mail(
                 'Access code',
@@ -59,7 +59,7 @@ class EmailCheckView(APIView):
                 fail_silently=False,
             )'''
 
-            return Response({'Access code sent to your email.'}, status=status.HTTP_200_OK)
+            return Response({'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'Email is available.'}, status=status.HTTP_200_OK)
     
