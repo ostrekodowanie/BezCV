@@ -8,10 +8,9 @@ class FavouriteCandidatesSerializer(serializers.ModelSerializer):
     last_name = serializers.SerializerMethodField()
     class Meta:
         model = Candidates
-        fields = ('id', 'first_name', 'last_name', 'email', 'phone', 'slug')
+        fields = ('id', 'first_name', 'last_name', 'email', 'phone')
 
     def get_first_name(self, obj):
-        print(obj)
         if obj.purchasedoffers_candidate.filter(employer=self.context['request'].user).exists():
             return obj.first_name
         return obj.first_name[0] + '*' * (len(obj.first_name) - 1)
