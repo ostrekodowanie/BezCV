@@ -22,6 +22,7 @@ import Points from "./pages/Points"
 import getUserInfo from "./utils/getUserInfo"
 import AccountProvider from "./reducers/AccountProvider"
 import FindWork from "./pages/SurveyRoute"
+import Popup from "./components/popups/Popup"
 
 const loginString: string | null = localStorage.getItem('user')
 const loginFromLocalStorage = loginString && JSON.parse(loginString)

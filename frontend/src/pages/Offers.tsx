@@ -92,19 +92,19 @@ const CandidateList = () => {
     )
 
     return (
-        <section className="padding py-[1.4in] md:py-[2in] bg-white">
-            <div className="flex flex-wrap gap-4 items-center justify-between">
-                <h1 className="font-medium mb-4 text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
+        <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[18vw] py-[1.4in] md:py-[2in] bg-white">
+            <div className="flex flex-wrap gap-6 items-center justify-between mx-[8vw] sm:mx-0">
+                <h1 className="font-medium text-3xl xl:text-4xl">Wyszukaj pracownika</h1>
                 <div className="flex items-center gap-4">
                     <h4>Sortuj według:</h4>
                     <select className="bg-white font-medium">
-                        <option>Najnowsze oferty</option>
+                        <option className="font-medium">Najnowsze oferty</option>
                     </select>
                 </div>
             </div>
             <div className="flex flex-col lg:grid grid-cols-[2fr_7fr] mt-8 mb-12">
                 <CandidateFilter setFilter={setFilter} />
-                <InfiniteScroll className={`flex flex-col bg-white shadow-primaryBig rounded-3xl relativeflex-1 min-h-[80vh] sm:ml-8 p-4`} next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
+                <InfiniteScroll className={`flex flex-col bg-white shadow-primaryBig sm:rounded-3xl relative flex-1 min-h-[80vh] lg:ml-8 px-[8vw] py-4 sm:p-4`} next={() => setPage(prev => prev + 1)} hasMore={hasMore} loader={<OffersLoader />} dataLength={candidates.length}>
                     {candidates.length > 0 ? candidates.map(candidate => <CandidateRef {...candidate} key={candidate.id} />) : <OffersLoader />}
                 </InfiniteScroll>
             </div>
@@ -130,8 +130,8 @@ const CandidateRef = ({ id, first_name, last_name, favourite, role, abilities, p
     }
 
     return (
-        <Link to={'/oferty/' + id} className="hover:bg-[#FAFAFA] transition-colors px-6 py-8 flex justify-between border-b-[1px] border-[#E6E7EA]">
-            <div className="flex flex-col gap-4 flex-1">
+        <Link to={'/oferty/' + id} className="sm:hover:bg-[#FAFAFA] transition-colors sm:px-6 py-8 flex flex-col sm:flex-row sm:justify-between border-b-[1px] gap-8 border-[#E6E7EA]">
+            <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between gap-6 flex-wrap">
                     <div className="flex items-center gap-6">
                         <div className="h-16 w-16 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
@@ -170,9 +170,8 @@ const CandidateRef = ({ id, first_name, last_name, favourite, role, abilities, p
                     ))}
                 </div>
             </div>
-            <button type='button' className="flex items-center self-end gap-3 w-max h-max rounded-full py-4 px-8 bg-[#EBF0FE]" onClick={handleLike}>
-                <h3 className="text-primary text-[.8rem] font-medium hidden sm:block">{isFavourite ? 'Polubiono' : 'Dodaj do ulubionych'}</h3>
-                <img className="max-h-[.9em]" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} />
+            <button type='button' className="flex items-center justify-center self-end rounded-full h-12 w-12 bg-[#EBF0FE] relative" onClick={handleLike}>
+                <img className="max-h-[40%] max-w-[40%]" src={isFavourite ? liked : notLiked} alt={isFavourite ? 'Polubiono' : 'Polub'} />
             </button>
         </Link>
     )

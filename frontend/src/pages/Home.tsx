@@ -16,11 +16,13 @@ import SoftCandidateSkills from "../components/home/employer/SoftCandidateSkills
 import DesktopSurvey from "../components/home/employer/DesktopSurvey";
 import IsEnough from "../components/home/employer/IsEnough";
 import HowToFindJob from "../components/home/candidate/HowToFindJob";
+import Popup from "../components/popups/Popup";
 
 export default function Home() {
     const { account } = useContext(AccountContext)
     if(account === 'employer') return (
         <>  
+            <Popup />
             <EmployerLanding />
             <HowToFind />
             <TutorialMenu />
@@ -33,6 +35,7 @@ export default function Home() {
     )
     if(account === 'worker') return (
         <>
+            <Popup />
             <CandidateLanding />
             <Introduction />
             <Questions />

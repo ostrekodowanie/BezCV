@@ -68,8 +68,8 @@ export default function Candidate() {
     }, [points, id])
     
     return (
-        <section className="padding py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8">
-            <div className="bg-white rounded-3xl shadow-primaryBig p-10">
+        <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[18vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8">
+            <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
                 {loading.page ? <div className="flex items-center gap-4 mb-8">
                     <div className="w-[1in] h-[2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                     <div className="w-[1.6in] h-[2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
@@ -128,15 +128,15 @@ export default function Candidate() {
                     </div>
                 </div>
             </div>
-            {loading.page ? <Loader /> : !candidateDetails.is_purchased && 
-                <div className="flex items-center gap-4">
+            {loading.page ? <div className="ml-[8vw] sm:ml-0"><Loader /></div> : !candidateDetails.is_purchased && 
+                <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
                     <button onClick={handlePurchase} className="bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-full flex items-center py-3 px-6">Wykup kontakt za 1 punkt</button>
                     {loading.purchase && <Loader />}    
                 </div>
             }
             <div className="flex flex-col gap-8 lg:grid grid-cols-[1fr_2fr]">
-                <div className="bg-white rounded-3xl p-10 flex flex-wrap shadow-primaryBig gap-8">
-                    <div className="flex flex-col">
+                <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-8">
+                    <div className="flex flex-col w-full">
                         <h2 className="font-medium text-xl mb-6">Istotne umiejętności kandydata</h2>
                         <div className="flex flex-col gap-6">
                             {!loading.page ? candidateDetails.abilities?.map(ab => <AbilityRange {...ab} key={ab.name} />) : <>
@@ -150,7 +150,7 @@ export default function Candidate() {
                         </div>
                     </div>
                 </div>
-                <div className="bg-white rounded-3xl p-10 flex flex-wrap shadow-primaryBig gap-8">
+                <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 flex flex-wrap shadow-primaryBig gap-8">
                     <div className="flex flex-col w-full">
                         <h2 className="font-medium text-xl mb-6">Ci kandydaci mogą Cię zainteresować</h2>
                         <div className="flex flex-col gap-6 w-full">
@@ -193,7 +193,7 @@ const SuggestedCandidate = ({ id, first_name, last_name, role, abilities }: NonP
                 <div className="h-14 w-14 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="text-primary">{first_name.charAt(0)}</h4></div>
                 <div className="flex flex-col mr-8 gap-1 w-max">
                     <h4 className="text-sm w-max font-medium">{first_name} {last_name}</h4>
-                    <h4 className="text-[.8rem] w-max">Preferowane stanowisko: <span className="font-medium text-primary">{role}</span></h4>
+                    <h4 className="text-[.8rem] w-max"><span className="hidden sm:inline">Preferowane stanowisko:</span> <span className="font-medium text-primary">{role}</span></h4>
                 </div>
                 {/* <div className="flex items-center gap-4">
                     {abilities?.map(ab => (
@@ -203,7 +203,7 @@ const SuggestedCandidate = ({ id, first_name, last_name, role, abilities }: NonP
                     ))}
                 </div> */}
             </div>
-            <Link className="border-primary rounded-full w-max min-w-max text-[.8rem] py-2 px-4 border-[1px] hover:text-[#2F66F4] transition-colors font-medium" to={`/oferty/${id}`}>Pokaż profil</Link>
+            <Link className="border-primary rounded-full w-max min-w-max text-[.8rem] border-[1px] hover:text-[#2F66F4] transition-colors font-medium" to={`/oferty/${id}`}>Pokaż profil</Link>
         </div>
     )
 }

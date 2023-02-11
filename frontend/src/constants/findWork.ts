@@ -1,8 +1,8 @@
 import { HTMLInputTypeAttribute } from "react"
-import { AnswerType } from "./workForm"
+import { CandidateAnswerType } from "./workForm"
 
 type CustomInput = {
-    name: keyof AnswerType,
+    name: keyof CandidateAnswerType,
     placeholder: string,
     type: HTMLInputTypeAttribute,
     value?: string
@@ -81,8 +81,20 @@ export const defaultQuestions: QuestionProps[] = [
     {
         name: 'job_position',
         question: 'Jakie jest Twoje obecne lub poprzednie stanowisko w pracy?',
-        type: 'text',
-        placeholder: 'Tutaj wpisz swoje stanowisko'
+        type: 'custom',
+        placeholder: 'Tutaj wpisz swoje stanowisko',
+        customInputs: [
+            {
+                placeholder: 'Tutaj wpisz swoje stanowisko',
+                name: 'job_position',
+                type: 'text'
+            },
+            {
+                placeholder: 'Chcę znaleźć pierwszą pracę',
+                name: 'job_position',
+                type: 'checkbox'
+            }
+        ]
     },
     {
         name: 'experience',
@@ -95,10 +107,8 @@ export const defaultQuestions: QuestionProps[] = [
         question: 'Jakie posiadasz wykształcenie?',
         type: 'radio',
         answers: [
-            'wykształcenie podstawowe (posiadają osoby, które ukończyły szkołę podstawową)',
             'wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)',
-            'wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia)',
-            'uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)'
+            'wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)',
         ],
     },
     {
