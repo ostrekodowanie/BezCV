@@ -95,7 +95,7 @@ class OffersView(APIView):
 
         queryset = (Candidates.objects
             .only('id', 'first_name', 'last_name')
-            .select_related('candidateroles_candidate__role')
+            .select_related('candidateprofessions_candidate__profession')
             .prefetch_related('candidateabilities_candidate__ability')
             .prefetch_related('favouritecandidates_candidate')
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
