@@ -125,7 +125,8 @@ class OffersView(APIView):
 
             result['phone'] = '*********'
             result['favourite'] = candidate.favouritecandidates_candidate.exists()
-            result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
+            result['abilities'] = sorted([{'name': ability.ability.name, 'percentage': ability.percentage} for ability in candidate.candidateabilities_candidate.all()],
+                   key=lambda x: x['percentage'], reverse=True)[:3]
             result['professions'] = [profession.profession.name for profession in candidate.candidateprofession_candidate.all()]
             results.append(result)
 
@@ -177,7 +178,8 @@ class SearchCandidateView(APIView):
             result['email'] = hidden_email
 
             result['phone'] = '*********'
-            result['abilities'] = [ability.ability.name for ability in candidate.candidateabilities_candidate.all()]
+            result['abilities'] = sorted([{'name': ability.ability.name, 'percentage': ability.percentage} for ability in candidate.candidateabilities_candidate.all()],
+                   key=lambda x: x['percentage'], reverse=True)[:3]
             result['professions'] = candidate.candidateprofessions_candidate.role.name
 
             matching_abilities_count = 0
