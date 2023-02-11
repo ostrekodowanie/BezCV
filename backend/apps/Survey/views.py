@@ -51,13 +51,13 @@ class EmailCheckView(APIView):
             candidate.access_code = code
             candidate.save()
 
-            send_mail(
+            '''send_mail(
                 'Access code',
                 f'Your access code is: {code}',
                 os.environ.get('EMAIL'),
                 [email],
                 fail_silently=False,
-            )
+            )'''
 
             return Response({'Access code sent to your email.'}, status=status.HTTP_200_OK)
 
