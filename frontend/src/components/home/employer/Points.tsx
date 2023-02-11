@@ -30,7 +30,7 @@ export default function Points() {
     return (
         <section className="padding py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen">
             <div className='flex flex-col gap-4 mb-20'>
-                <h2 className='text-3xl md:text-4xl font-semibold mb-4'>Rejestracja w BezCV jest <div className='inline-block relative'><span className='relative z-10'>zupełnie darmowa!</span><img className='absolute left-0 right-0 -bottom-2 w-full' src={underline} alt="" /></div></h2>
+                <h2 className='text-3xl md:text-4xl font-semibold mb-4'>Rejestracja w BezCV jest <div className='inline-block relative'><span className='relative z-10'>zupełnie darmowa!</span><Control onScroll x={-30} duration={100} opacity={1} className="absolute bottom-0 w-full" element={<img className="max-w-full" src={underline} alt="" />} /></div></h2>
                 <p className='text-sm leading-loose font-medium text-[#3C4663] max-w-[7in]'>Dzięki temu możesz zobaczyć naszą bazę i sprawdzić, czy posiadamy kandydatów odpowiednich do pracy dla Twojego przedsiębiorstwa.</p>
                 <p className='text-sm leading-loose font-medium text-[#3C4663]'>Natomiast, jeżeli chcesz wykupić dostęp do danych kontaktowych kandydatów masz 3 opcje:</p>
             </div>

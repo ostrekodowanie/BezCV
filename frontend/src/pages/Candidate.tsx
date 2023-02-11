@@ -14,17 +14,15 @@ export interface CandidateProps {
     first_name: string,
     last_name: string,
     abilities?: AbilityProps[],
-    role?: string,
-    salary?: string,
+    profession?: string,
+    salary_expectation?: string,
     phone?: string,
     email?: string,
     favourite?: boolean,
-    similar_candidates?: NonPercentageAbilitiesCandidateProps[]
+    similar_candidates?: CandidateProps[]
 }
 
 type Details = Omit<CandidateProps, | 'id' | 'favourite'> & { is_purchased: boolean }
-
-export type NonPercentageAbilitiesCandidateProps = Omit<CandidateProps, 'abilities'> & { abilities?: string[] }
 
 export default function Candidate() {
     const auth = useAppSelector(state => state.login)
@@ -45,8 +43,8 @@ export default function Candidate() {
         email: '',
         phone: '',
         abilities: [],
-        role: '',
-        salary: '',
+        profession: '',
+        salary_expectation: '',
         similar_candidates: []
     })
 
@@ -110,7 +108,7 @@ export default function Candidate() {
                                 <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                             </> : <>
                                 <h4 className="text-sm">Stanowisko</h4>
-                                <h3 className="font-medium text-sm">{candidateDetails.role}</h3>
+                                <h3 className="font-medium text-sm">{candidateDetails.profession}</h3>
                             </>}
                         </div>
                     </div>
@@ -122,7 +120,7 @@ export default function Candidate() {
                                 <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                             </> : <>
                                 <h4 className="text-sm">Oczekiwania finansowe</h4>
-                                <h3 className="font-medium text-sm">{candidateDetails.salary} zł</h3>
+                                <h3 className="font-medium text-sm">{candidateDetails.salary_expectation} zł</h3>
                             </>}
                         </div>
                     </div>
@@ -186,22 +184,22 @@ const AbilityRange = ({ name, percentage }: AbilityProps) => {
     )
 }
 
-const SuggestedCandidate = ({ id, first_name, last_name, role, abilities }: NonPercentageAbilitiesCandidateProps) => {
+const SuggestedCandidate = ({ id, first_name, last_name, profession, abilities }: CandidateProps) => {
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
+        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+            <div className="flex flex-col xl:flex-row xl:items-center gap-4">
                 <div className="h-14 w-14 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="text-primary">{first_name.charAt(0)}</h4></div>
                 <div className="flex flex-col mr-8 gap-1 w-max">
                     <h4 className="text-sm w-max font-medium">{first_name} {last_name}</h4>
-                    <h4 className="text-[.8rem] w-max"><span className="hidden sm:inline">Preferowane stanowisko:</span> <span className="font-medium text-primary">{role}</span></h4>
+                    <h4 className="text-[.8rem] w-max"><span className="hidden sm:inline">Preferowane stanowisko:</span> <span className="font-medium text-primary">{profession}</span></h4>
                 </div>
-                {/* <div className="flex items-center gap-4">
-                    {abilities?.map(ab => (
+                <div className="flex flex-wrap items-center gap-4">
+                    {abilities?.map(ab => ab.name).map(ab => (
                         <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]">
                             <h4 className="text-primary text-[.75rem] font-medium">{ab}</h4>
                         </div>
                     ))}
-                </div> */}
+                </div>
             </div>
             <Link className="border-primary rounded-full w-max min-w-max text-[.8rem] border-[1px] hover:text-[#2F66F4] transition-colors font-medium" to={`/oferty/${id}`}>Pokaż profil</Link>
         </div>

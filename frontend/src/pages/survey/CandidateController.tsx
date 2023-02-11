@@ -4,7 +4,7 @@ import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import Loader from "../../components/Loader";
 import { defaultQuestions, QuestionProps } from "../../constants/findWork";
-import { radioInputStyles, RangeNumberKey, rangeNumberKeys, textInputStyles } from "../../constants/workForm";
+import { radioInputStyles, textInputStyles } from "../../constants/workForm";
 import ProgressBar from "./ProgressBar";
 import { SurveyContext } from "./Survey";
 
@@ -12,18 +12,24 @@ export default function CandidateController() {
     const { candidateAnswers, setStep } = useContext(SurveyContext)
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
     const { question } = defaultQuestions[activeQuestionIndex]
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
-        if(activeQuestionIndex >= defaultQuestions.length - 2) {
-            axios.post('/api/survey/candidate', JSON.stringify(candidateAnswers), {
+        if(activeQuestionIndex >= defaultQuestions.length - 1) {
+            setLoading(true)
+            return axios.post('/api/survey/candidate', JSON.stringify(candidateAnswers), {
                 headers: { 'Content-Type': 'application/json' }
             }).then(() => setStep('role'))
+            .catch(err => setError(typeof err.response.data.detail === 'string' ? err.response.data.detail : 'Wystąpił błąd!'))
+            .finally(() => setLoading(false))
         }
         setActiveQuestionIndex(prev => prev + 1)
     }
 
-    if(activeQuestionIndex >= defaultQuestions.length - 1) return <Loader />
+    if(loading) return <Loader />
+    if(error) return <p className="text-red-400 mt-16">{error}</p>
 
     return (
         <>
@@ -36,7 +42,7 @@ export default function CandidateController() {
                 <div className="flex flex-col items-center w-full gap-6 mt-8">
                     <CandidateInput {...defaultQuestions[activeQuestionIndex]} />
                 </div>
-                <div className="flex justify-between items-center gap-4 flex-wrap self-end">
+                <div className="flex justify-between items-center gap-4 flex-wrap self-end mt-8 xl:mt-0">
                     {activeQuestionIndex > 0 && <button type='button' onClick={() => setActiveQuestionIndex(prev => prev - 1)} className="rounded-full text-[.8rem] text-secondary scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-bold py-4 px-8 bg-[#FEF4E4] self-end flex items-center"><img className="mr-2 max-h-[.9em]" src={prevArrow} alt="<-" /> Poprzednie pytanie</button>}
                     <button className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center">Następne pytanie <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" /></button>
                 </div>
@@ -55,15 +61,6 @@ const CandidateInput = ({ question, type, placeholder, customInputs, name, ...re
         case 'tel':
         default:
             return <input className={textInputStyles} autoComplete="off" required={true} value={candidateAnswers[name]} onChange={e => setCandidateAnswers(prev => ({ ...prev, [name]: e.target.value }))} id={question} placeholder={placeholder} type={type} />
-        case 'range':
-            return (
-                <>
-                    <input type='range' min={1} max={6} onChange={e => setCandidateAnswers(prev => ({ ...prev, [name]: e.target.value }))} />
-                    <div className="flex justify-center gap-4 flex-wrap max-w-max">
-                        {rangeNumberKeys.map(k => <RangeKey {...k} key={k.key} /> )}
-                    </div>
-                </>
-            )
         case 'radio':
             return <>
                 {questionAnswers?.map(ans => 
@@ -93,7 +90,7 @@ const CandidateInput = ({ question, type, placeholder, customInputs, name, ...re
         case 'custom':
             return <>
                 {customInputs?.map(input => {
-                    if(input.type === 'checkbox') return <label className="flex items-center gap-2 text-sm self-start" htmlFor={'checkbox:'+input.name}>
+                    if(input.type === 'checkbox') return <label className="flex items-center gap-2 text-sm self-start w-max" htmlFor={'checkbox:'+input.name}>
                         <input className={textInputStyles} required checked={candidateAnswers[input.name] === input.placeholder} type={input.type} value={input.placeholder} id={'checkbox:'+input.name} onChange={e => e.target.checked ? setCandidateAnswers(prev => ({ ...prev, [input.name]: e.target.value })) : setCandidateAnswers(prev => ({ ...prev, [input.name]: '' }))} />
                         {input.placeholder}
                     </label>
@@ -101,18 +98,4 @@ const CandidateInput = ({ question, type, placeholder, customInputs, name, ...re
                 })}
             </>
     }
-}
-
-const RangeKey = ({ number, key }: RangeNumberKey) => {
-    return (
-        <div className="flex flex-col gap-4">
-            <div className="rounded-full h-24 w-24 flex items-center justify-center">
-                <span className="text-xl">{number}</span>
-            </div>
-            <div className="text-center">
-                <h5 className="font-medium text-sm">{number} oznacza</h5>
-                <h4 className="font-bold text-sm">{key}</h4>
-            </div>
-        </div>
-    )
 }

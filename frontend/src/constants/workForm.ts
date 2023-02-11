@@ -8,33 +8,33 @@ export const textInputStyles = 'px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_
 
 export type RangeNumberKey = {
     number: number,
-    key: string
+    text: string
 }
 
 export const rangeNumberKeys: RangeNumberKey[] = [
     {
         number: 1,
-        key: 'Zdecydowanie nie'
+        text: 'Zdecydowanie nie'
     },
     {
         number: 2,
-        key: 'Raczej nie'
+        text: 'Raczej nie'
     },
     {
         number: 3,
-        key: 'Nie mam zdania'
+        text: 'Nie mam zdania'
     },
     {
         number: 4,
-        key: 'Raczej tak'
+        text: 'Raczej tak'
     },
     {
         number: 5,
-        key: 'Zdecydowanie tak'
+        text: 'Zdecydowanie tak'
     },
 ]
 
-export type RoleType = 'office_administration' | 'selling' | 'customer_service'
+export type RoleType = 'office_administration' | 'sales' | 'customer_service'
 
 export interface RoleProps {
     name: RoleType,
@@ -54,7 +54,7 @@ export const roles: RoleProps[] = [
         image: customerService
     },
     {
-        name: 'selling',
+        name: 'sales',
         title: 'Sprzedaż',
         image: selling
     },
@@ -64,15 +64,18 @@ export type CandidateAnswerType = {
     [K in QuestionProps['name']]: string | string[]
 }
 
-export type RoleAnswerType = number[]
+export type RoleAnswerType = {
+    question: number,
+    answer: number
+}
 
 export type SurveyContextType = {
     step: 'role' | 'candidate',
     setStep: Dispatch<SetStateAction<'role' | 'candidate'>>,
     candidateAnswers: CandidateAnswerType,
     setCandidateAnswers: Dispatch<SetStateAction<CandidateAnswerType>>,
-    roleAnswers: RoleAnswerType,
-    setRoleAnswers: Dispatch<SetStateAction<RoleAnswerType>>
+    roleAnswers: RoleAnswerType[],
+    setRoleAnswers: Dispatch<SetStateAction<RoleAnswerType[]>>
 }
 
 export type ControllerContextType = {
