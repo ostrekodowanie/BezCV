@@ -18,7 +18,7 @@ class CandidateView(APIView):
 
         candidate = get_candidate(self.request.user, candidate_id)
         abilities = [{'name': ability.ability.name, 'percentage': ability.percentage} for ability in candidate.candidateabilities_candidate.all()]
-        professions = [profession.profession.name for profession in candidate.candidateprofession_candidate.all()]
+        professions = [profession.profession.name for profession in candidate.candidateprofessions_candidate.all()]
 
         data = {
             'id': candidate.id,
@@ -42,7 +42,7 @@ class CandidateView(APIView):
                 'last_name': similar_candidate.last_name[0] + '*' * (len(similar_candidate.last_name) - 1),
                 'abilities': sorted([{'name': ability.ability.name, 'percentage': ability.percentage} for ability in similar_candidate.candidateabilities_candidate.all()],
                    key=lambda x: x['percentage'], reverse=True)[:3],
-                'professions': [profession.profession.name for profession in similar_candidate.candidateprofession_candidate.all()]
+                'professions': [profession.profession.name for profession in similar_candidate.candidateprofessions_candidate.all()]
             }
 
             #adv order by
