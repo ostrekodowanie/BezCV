@@ -15,7 +15,7 @@ interface RoleQuestion {
 
 export default function RoleController() {
     const { candidateAnswers, roleAnswers, setRoleAnswers } = useContext(SurveyContext)
-    const { email } = candidateAnswers
+    const { first_name, email } = candidateAnswers
     const [numericalAnswer, setNumericalAnswer] = useState<number>(1)
     const [role, setRole] = useState<RoleType | null>(null)
     const [questions, setQuestions] = useState<RoleQuestion[]>([])
@@ -42,7 +42,7 @@ export default function RoleController() {
     }
 
     useEffect(() => {
-        if(activeQuestionIndex < questions.length) return
+        if(activeQuestionIndex < questions.length || questions.length === 0) return
         axios.post('/api/survey/answers', JSON.stringify({ candidate: email, answers: roleAnswers }), {
             headers: { 'Content-Type': 'application/json' }
         }).then(() => setIsFinished(true))
@@ -56,12 +56,12 @@ export default function RoleController() {
             .finally(() => setLoading(false))
     }, [role])
 
+    if(isFinished && typeof first_name === 'string') return <Finished firstName={first_name} />
+
     if(!role) return <ChooseRole setRole={setRole} />
     if(loading ||!questions[activeQuestionIndex]) return <Loader />
 
     const { text } = questions[activeQuestionIndex]
-
-    if(isFinished) return <Finished />
 
     return (
         <>
