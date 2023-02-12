@@ -31,7 +31,7 @@ export default function Survey() {
 
     return (
         <section className="padding flex flex-col gap-12 justify-center pt-[.6in] pb-[1.4in] min-h-screen relative xl:grid grid-cols-[2fr_1fr]">
-            <Link className="absolute left-16 top-8" to='/praca'>Powrót</Link>
+            <Link className="absolute left-[8vw] sm:left-16 top-8" to='/praca'>Powrót</Link>
             <div className="flex flex-col items-center gap-6 w-full mt-16 sm:mt-0">
                 <SurveyContext.Provider value={contextValue}>
                     {step === 'role' && <RoleController />}
