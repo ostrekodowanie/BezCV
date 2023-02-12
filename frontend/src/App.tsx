@@ -16,8 +16,6 @@ import Offers from "./pages/Offers"
 import Contact from "./pages/Contact"
 import axios from "axios"
 import Loader from "./components/Loader"
-import AdminRoute from "./utils/AdminRoute"
-import AdminPanel from "./pages/AdminPanel"
 import Points from "./pages/Points"
 import getUserInfo from "./utils/getUserInfo"
 import AccountProvider from "./reducers/AccountProvider"
@@ -93,9 +91,9 @@ export default function App() {
               <Route path='/profil' element={<PrivateRoute><Profile /></PrivateRoute>} />
               <Route path='/punkty' element={<PrivateRoute><Points /></PrivateRoute>} />
               <Route path='/praca/*' element={<FindWork />} />
-              <Route path='/administracja' element={<AdminRoute><AdminPanel /></AdminRoute>} />
             </Routes>
           </ScrollTop>
+          <Popup />
         </main>
         <Footer />
       </>

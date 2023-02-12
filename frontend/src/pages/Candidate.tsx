@@ -7,7 +7,11 @@ import { cashIcon, emailIcon, percentageTriangle, phoneIcon, role } from "../ass
 import Loader from "../components/Loader"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
-import { AbilityProps } from "./AdminPanel"
+
+export interface AbilityProps {
+    name: string,
+    percentage: number
+}
 
 export interface CandidateProps {
     id: number,
