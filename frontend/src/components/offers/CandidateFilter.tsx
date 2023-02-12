@@ -11,7 +11,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
     const [mobileActive, setMobileActive] = useState(false)
     const [allFilters, setAllFilters] = useState<FilterStateProps>({
         abilities: [],
-        roles: []
+        professions: []
     })
 
     useEffect(() => {
@@ -25,9 +25,9 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
             <button type="button" onClick={() => setMobileActive(prev => !prev)} className="lg:hidden font-medium mb-4 text-left ml-[8vw] sm:ml-0">{!mobileActive ? 'Filtruj' : 'Zamknij'}</button>
             <div className={`flex-col gap-8 px-8 py-6 mb-4 lg:mb-0 transition-all bg-white shadow-primaryBig sm:rounded-3xl min-h-[80vh] relative ${mobileActive ? 'flex' : 'hidden lg:flex'}`}>
                 <div>
-                    {allFilters.roles.length > 0 ? <h4 className="font-medium mb-6">Zawody</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
+                    {allFilters.professions.length > 0 ? <h4 className="font-medium mb-6">Zawody</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
                     <div className="flex flex-col gap-4">
-                        {allFilters.roles.length > 0 ? allFilters.roles.map(role => <RoleCheckBox role={role} setFilter={setFilter} key={role} />) :
+                        {allFilters.professions.length > 0 ? allFilters.professions.map(role => <RoleCheckBox role={role} setFilter={setFilter} key={role} />) :
                         <>
                             <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
                             <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
@@ -87,7 +87,7 @@ const RoleCheckBox = ({ role, setFilter }: { role: string, setFilter: Dispatch<S
     }, [])
 
     const handleChange = () => {
-        setFilter(prev => ({ ...prev, roles: checked ? prev.roles.filter(r => r !== role) : [...prev.roles, role] }))
+        setFilter(prev => ({ ...prev, professions: checked ? prev.professions.filter(r => r !== role) : [...prev.professions, role] }))
         setChecked(prev => !prev)
     }
 

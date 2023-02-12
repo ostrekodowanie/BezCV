@@ -6,7 +6,7 @@ import { isEnoughMan, isEnoughWoman } from '../../../assets/home/employer/employ
 export default function IsEnough() {
     return (
         <section className="padding pt-[1in] overflow-visible lg:overflow-hidden relative">
-            <h2 className="text-center font-semibold max-w-[10in] text-3xl md:text-4xl md:leading-tight mx-auto">Czy taki formularz wystarczy do sprawdzenia <span className="font-bold">kompetencji miękkich</span> <div className="relative inline-block"><span className="relative z-10">kandydata</span><img className="absolute bottom-0 w-full underline-animation" src={underline} alt="" /></div> do pracy?</h2>
+            <h2 className="text-center font-semibold max-w-[10in] text-3xl md:text-4xl md:leading-tight mx-auto">Czy taki formularz wystarczy do sprawdzenia <span className="font-bold">kompetencji miękkich</span> <div className="relative inline-block"><span className="relative z-10">kandydata</span><Control onScroll x={-30} opacity={1} className="absolute bottom-0 w-full" element={<img className="max-w-full" src={underline} alt="" />} /></div> do pracy?</h2>
             <div className="relative pt-16 lg:pt-[3in] flex flex-col md:grid md:grid-cols-2 xl:grid-cols-[4fr_5fr] gap-8 lg:gap-[1in] text-[#3C4663] lg:items-end">
                 <div className="relative">
                     <Control className="hidden lg:block" opacity={1} x={-20} ease='ease-out' viewPort={0.6} onScroll element={<img src={isEnoughMan} alt="" />} />

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import { descIcon } from "../assets/profile/profile"
 import { useAppDispatch, useAppSelector } from "../main"
 import { logout } from "../reducers/login"
-import { CandidateProps, NonPercentageAbilitiesCandidateProps } from "./Candidate"
+import { CandidateProps } from "./Candidate"
 
 export default function Profile() {
     const dispatch = useAppDispatch()
@@ -43,7 +43,7 @@ export default function Profile() {
                     <input onChange={handleSubmit} accept="image/png, image/jpeg" className='absolute -z-10 opacity-0' type='file' id="profile-photo" />
                     <div className="flex flex-col gap-2">
                         <h4 className="text-primary text-sm">Pracodawca</h4>
-                        <h1 className="font-medium text-2xl">{first_name} {last_name}</h1>
+                        <h1 className="font-semibold text-2xl">{first_name} {last_name}</h1>
                     </div>
                 </div>
                 <div className="flex-1 rounded-3xl bg-[#F8F9FB] flex flex-col px-8 py-6 gap-4">
@@ -108,7 +108,7 @@ const CandidateFavourite = ({ id, first_name, last_name, i, setFavourites }: Can
 }
 
 const Purchased = () => {
-    const [purchased, setPurchased] = useState<NonPercentageAbilitiesCandidateProps[]>([])
+    const [purchased, setPurchased] = useState<CandidateProps[]>([])
     const [loading, setLoading] = useState(true)
     const auth = useAppSelector(state => state.login)
     const { id } = auth.data
@@ -136,7 +136,7 @@ const Purchased = () => {
     )
 }
 
-const CandidatePurchased = ({ id, first_name, last_name, role, abilities }: NonPercentageAbilitiesCandidateProps) => {
+const CandidatePurchased = ({ id, first_name, last_name, profession, abilities }: CandidateProps) => {
     return (
         <Link to={'/oferty/' + id}  className="flex flex-col gap-6 w-full rounded-3xl px-6 py-3 hover:bg-[#FAFAFA] transition-colors ">
             <div className="flex items-center gap-6">
@@ -145,11 +145,11 @@ const CandidatePurchased = ({ id, first_name, last_name, role, abilities }: NonP
                 </div>
                 <div className="flex flex-col">
                     <h3 className="font-medium text-sm">{first_name} {last_name}</h3>
-                    <h3 className="text-[.75rem]">Preferowane stanowisko: <span className="font-medium text-primary">{role}</span></h3>
+                    <h3 className="text-[.75rem]">Preferowane stanowisko: <span className="font-medium text-primary">{profession}</span></h3>
                 </div>
             </div>
             <div className="flex flex-wrap gap-4">
-                {abilities?.splice(0, 3).map(ab => (
+                {abilities?.map(ab => ab.name).map(ab => (
                     <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]">
                         <h4 className="text-primary text-[.75rem] font-medium">{ab}</h4>
                     </div>

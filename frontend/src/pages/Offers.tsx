@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import CandidateFilter from "../components/offers/CandidateFilter"
-import { NonPercentageAbilitiesCandidateProps } from "./Candidate"
+import { CandidateProps } from "./Candidate"
 import Candidate from './Candidate'
 import { Link, useSearchParams } from "react-router-dom"
 import { useAppSelector } from "../main"
@@ -23,7 +23,7 @@ export default function Offers() {
 
 export interface FilterProps {
     abilities: string[],
-    roles: string[]
+    professions: string[]
 }
 
 const CandidateList = () => {
@@ -33,13 +33,13 @@ const CandidateList = () => {
     const auth = useAppSelector(state => state.login)
     const { access } = auth.tokens
     const [searchParams] = useSearchParams()
-    const [candidates, setCandidates] = useState<NonPercentageAbilitiesCandidateProps[]>([])
+    const [candidates, setCandidates] = useState<CandidateProps[]>([])
     const [page, setPage] = useState(1)
     const [count, setCount] = useState(0)
     const [hasMore, setHasMore] = useState(true)
     const [filter, setFilter] = useState<FilterProps>({
         abilities: searchParams.get('a')?.split(',') || [],
-        roles: searchParams.get('r')?.split(',') || []
+        professions: searchParams.get('r')?.split(',') || []
     })
 
     useEffect(() => {
@@ -47,10 +47,10 @@ const CandidateList = () => {
         setPage(1)
         setHasMore(true)
         let url = '/oferty'
-        if(filter.abilities.length > 0 || filter.roles.length > 0) {
+        if(filter.abilities.length > 0 || filter.professions.length > 0) {
             let searchArr = [
                 filter.abilities.length > 0 && 'a=' + filter.abilities.map(ability => ability).join(','),
-                filter.roles.length > 0 && 'r=' + filter.roles.map(role => role).join(','),
+                filter.professions.length > 0 && 'p=' + filter.professions.map(role => role).join(','),
             ]
             url = `/oferty/search?${searchArr.length > 0 && searchArr.map(item => item).filter(item => item).join("&")}`
         }
@@ -115,9 +115,18 @@ const CandidateList = () => {
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, favourite, role, abilities, phone, email }: NonPercentageAbilitiesCandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, favourite, abilities, phone, email }: CandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFavourite, setIsFavourite] = useState(favourite)
+    console.log({
+        id,
+        first_name,
+        last_name,
+        favourite,
+        abilities,
+        phone,
+        email
+    })
 
     const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
@@ -161,9 +170,9 @@ const CandidateRef = ({ id, first_name, last_name, favourite, role, abilities, p
                         </div>
                     </div>
                 </div>
-                <h4 className="text-sm mt-2">Preferowane stanowisko: <span className="text-primary font-semibold">{role}</span></h4>
+                <h4 className="text-sm mt-2">Preferowane stanowisko: <span className="text-primary font-semibold"></span></h4>
                 <div className="flex flex-wrap gap-4">
-                    {abilities?.map(ab => (
+                    {abilities?.map(ab => ab.name).map(ab => (
                         <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]">
                             <h4 className="text-primary text-[.75rem] font-medium">{ab}</h4>
                         </div>

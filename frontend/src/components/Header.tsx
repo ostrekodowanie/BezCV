@@ -50,8 +50,8 @@ const Nav = () => {
                 <CustomLink to='/kontakt'>Kontakt</CustomLink>
                 {account === 'employer' && (
                     logged ? <>
-                        <Link className="font-semibold text-base md:ml-2" to='/profil'>{first_name}</Link>
-                        <Link className="font-semibold text-base" to='/punkty'>{points} pkt.</Link>
+                        <CustomLink className="font-semibold text-base md:ml-2" to='/profil'>{first_name}</CustomLink>
+                        <CustomLink className="font-semibold text-base" to='/punkty'>{points + ' pkt.'}</CustomLink>
                     </> : 
                     <>
                         <Link className="mt-4 md:mt-0 md:ml-4 font-medium transition-colors flex items-center p-2 text-[#2F66F4] hover:text-darkPrimary" to='/logowanie'>Zaloguj się</Link>

@@ -4,6 +4,7 @@ import surveyIntroductionMan from './survey_introduction_man.svg'
 import selling from './selling.svg'
 import officeAdministration from './office_administration.svg'
 import customerService from './customer_service.svg'
+import timeLeft from './time_left.svg'
 
 export {
     surveyMan,
@@ -11,5 +12,6 @@ export {
     surveyIntroductionMan,
     selling,
     officeAdministration,
-    customerService
+    customerService,
+    timeLeft
 }

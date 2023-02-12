@@ -17,6 +17,7 @@ import bgBoy from './bg_boy.svg'
 import bgGirl from './bg_girl.svg'
 import pdsMan from './pds_man.svg'
 import pdsWoman from './pds_woman.svg'
+import tutorialUnderline from './tutorial_underline.svg'
 
 export {
     introductionBg,
@@ -37,5 +38,6 @@ export {
     bgGirl,
     bgBoy,
     pdsMan,
-    pdsWoman
+    pdsWoman,
+    tutorialUnderline
 }
