@@ -14,6 +14,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from cloudinary.uploader import upload, destroy
+
 from . import serializers
 from .models import User
 
@@ -161,3 +163,18 @@ class UpdateUserView(generics.UpdateAPIView):
     parser_classes = (MultiPartParser, FormParser)
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+    def perform_update(self, serializer):
+        print(self.request.FILES)
+        image = self.request.FILES.get('image')
+        print(image)
+        if image:
+            if not image.name.endswith(('.jpeg', '.jpg', '.png')):
+                return Response({'error': 'Invalid image format. Only jpeg, jpg, and png formats are accepted.'}, status=status.HTTP_400_BAD_REQUEST)
+            public_id = self.get_object().image.split("/")[-1].split(".")[0]
+            destroy('BezCV/Users/' + public_id)
+            result = upload(self.request.data.get('image'), folder='BezCV/Users')
+            url = result.get("url")
+            serializer.save(image=url)
+        else:
+            serializer.save()

@@ -39,6 +39,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         return instance
 
 class UserSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
     class Meta:
         model =  User
         fields = ('first_name', 'last_name', 'email', 'desc', 'image', 'nip', 'points', 'is_staff')
