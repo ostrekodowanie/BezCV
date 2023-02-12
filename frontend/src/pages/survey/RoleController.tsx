@@ -35,7 +35,7 @@ export default function RoleController() {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
         if(!numericalAnswer) return
-        setRoleAnswers(prev => [...prev, [questions[activeQuestionIndex].id, numericalAnswer ]])
+        setRoleAnswers(prev => [...prev, [questions[activeQuestionIndex].id, numericalAnswer]])
         setActiveQuestionIndex(prev => prev + 1)
         setNumericalAnswer(1)
         setSecondsLeft(15)
@@ -43,7 +43,7 @@ export default function RoleController() {
 
     useEffect(() => {
         if(activeQuestionIndex < questions.length) return
-        axios.post('/api/survey/answers', JSON.stringify(roleAnswers), {
+        axios.post('/api/survey/answers', JSON.stringify({ candidate: email, answers: roleAnswers }), {
             headers: { 'Content-Type': 'application/json' }
         }).then(() => setIsFinished(true))
     }, [roleAnswers])
