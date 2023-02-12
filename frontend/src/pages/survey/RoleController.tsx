@@ -35,7 +35,7 @@ export default function RoleController() {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
         if(!numericalAnswer) return
-        setRoleAnswers(prev => [...prev, { question: questions[activeQuestionIndex].id, answer: numericalAnswer }])
+        setRoleAnswers(prev => [...prev, [questions[activeQuestionIndex].id, numericalAnswer ]])
         setActiveQuestionIndex(prev => prev + 1)
         setNumericalAnswer(1)
         setSecondsLeft(15)

@@ -64,10 +64,7 @@ export type CandidateAnswerType = {
     [K in QuestionProps['name']]: string | string[]
 }
 
-export type RoleAnswerType = {
-    question: number,
-    answer: number
-}
+export type RoleAnswerType = [number, number]
 
 export type SurveyContextType = {
     step: 'role' | 'candidate',
