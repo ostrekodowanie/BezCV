@@ -23,8 +23,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    re_path('images/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-
     path('', views.index),
     path('kontakt', views.index),
     path('rejestracja', views.index),

@@ -156,7 +156,7 @@ class SearchCandidateView(APIView):
 
         queryset = (Candidates.objects
             .only('id', 'first_name', 'last_name')
-            .select_related('candidateprofessions_candidate__profession')
+            .prefetch_related('candidateprofessions_candidate__profession')
             .prefetch_related('candidateabilities_candidate__ability')
             .prefetch_related('favouritecandidates_candidate')
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
@@ -180,7 +180,7 @@ class SearchCandidateView(APIView):
             result['phone'] = '*********'
             result['abilities'] = sorted([{'name': ability.ability.name, 'percentage': ability.percentage} for ability in candidate.candidateabilities_candidate.all()],
                    key=lambda x: x['percentage'], reverse=True)[:3]
-            result['professions'] = candidate.candidateprofessions_candidate.role.name
+            result['professions'] = [profession.profession.name for profession in candidate.candidateprofessions_candidate.all()]
 
             matching_abilities_count = 0
 

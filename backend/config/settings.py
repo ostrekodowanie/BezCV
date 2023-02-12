@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from datetime import timedelta
-import os
+import os, cloudinary
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -146,9 +146,11 @@ if DEBUG:
 else:
         STATIC_ROOT = os.path.join(BASE_DIR, '../frontend/dist/assets')
 
-MEDIA_URL = 'images/'
-
-MEDIA_ROOT = BASE_DIR / 'images'
+cloudinary.config( 
+  cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),   
+  api_key = os.environ.get('CLOUDINARY_API_KEY'), 
+  api_secret = os.environ.get('CLOUDINARY_API_SECRET') 
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
