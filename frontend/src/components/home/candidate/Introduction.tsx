@@ -33,7 +33,7 @@ export default function Introduction() {
                 <img className='object-cover h-[62vh]' src={introductionBg} alt="" />
             </div>
             <div className="flex flex-wrap gap-8 justify-between items-center text-white py-[1in]">
-                <h2 className="text-3xl md:text-4xl font-semibold leading-snug md:leading-snug relative">W BezCV jest ponad <span className="text-4xl md:text-5xl"><CountUp end={40} enableScrollSpy useEasing /></span><br />zarejestrowanych pracodawców<img className="absolute left-full max-w-[15vw] top-4 hidden 2xl:block" src={bannerArrow} alt="" /></h2>
+                <h2 className="text-3xl md:text-4xl font-semibold leading-snug md:leading-snug relative">W BezCV jest ponad <span className="text-4xl md:text-5xl"><CountUp end={40} enableScrollSpy useEasing /></span><br />zarejestrowanych pracodawców<Control className="absolute left-full top-4 hidden 2xl:block" onScroll opacity={1} x={-30} duration={250} ease='ease-in-out' element={<img className="max-w-[15vw]" src={bannerArrow} alt="" />} /></h2>
                 <h2 className="text-xl font-medium xl:text-right">którzy szukają kandydata do<br/>pracy w 3 sektorach</h2>
                 <Controller opacity={1} onScroll viewPort={0.9} ease='ease-out' stagger={80} className="flex justify-center gap-8 flex-wrap xl:grid grid-cols-3 mt-8">
                     {roles.map(role => <Control element={<RoleBox {...role} key={role.title} />} key={'ctrl' + role.title} />)}

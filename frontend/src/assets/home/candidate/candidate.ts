@@ -7,6 +7,7 @@ import q2 from './q2.svg'
 import q3 from './q3.svg'
 import underline from './underline.svg'
 import bannerMan from './banner_man.svg'
+import bannerGirl from './banner_girl.svg'
 import triangle from './triangle.svg'
 import minutesUnderline from './minutes_underline.svg'
 import wn1 from './wn1.svg'
@@ -39,5 +40,6 @@ export {
     bgBoy,
     pdsMan,
     pdsWoman,
-    tutorialUnderline
+    tutorialUnderline,
+    bannerGirl
 }
