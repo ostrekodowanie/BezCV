@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import { descIcon } from "../assets/profile/profile"
 import { useAppDispatch, useAppSelector } from "../main"
 import { logout } from "../reducers/login"
-import { CandidateProps } from "./Candidate"
+import { CandidateProps, NonPercentageAbilitiesCandidateProps } from "./Candidate"
 
 export default function Profile() {
     const dispatch = useAppDispatch()
@@ -108,7 +108,7 @@ const CandidateFavourite = ({ id, first_name, last_name, i, setFavourites }: Can
 }
 
 const Purchased = () => {
-    const [purchased, setPurchased] = useState<CandidateProps[]>([])
+    const [purchased, setPurchased] = useState<NonPercentageAbilitiesCandidateProps[]>([])
     const [loading, setLoading] = useState(true)
     const auth = useAppSelector(state => state.login)
     const { id } = auth.data
@@ -136,7 +136,7 @@ const Purchased = () => {
     )
 }
 
-const CandidatePurchased = ({ id, first_name, last_name, profession, abilities }: CandidateProps) => {
+const CandidatePurchased = ({ id, first_name, last_name, profession, abilities }: NonPercentageAbilitiesCandidateProps) => {
     return (
         <Link to={'/oferty/' + id}  className="flex flex-col gap-6 w-full rounded-3xl px-6 py-3 hover:bg-[#FAFAFA] transition-colors ">
             <div className="flex items-center gap-6">
@@ -149,7 +149,7 @@ const CandidatePurchased = ({ id, first_name, last_name, profession, abilities }
                 </div>
             </div>
             <div className="flex flex-wrap gap-4">
-                {abilities?.map(ab => ab.name).map(ab => (
+                {abilities?.map(ab => (
                     <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]">
                         <h4 className="text-primary text-[.75rem] font-medium">{ab}</h4>
                     </div>

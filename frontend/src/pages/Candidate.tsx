@@ -28,6 +28,10 @@ export interface CandidateProps {
 
 type Details = Omit<CandidateProps, | 'id' | 'favourite'> & { is_purchased: boolean }
 
+export type NonPercentageAbilitiesCandidateProps = Omit<CandidateProps, 'abilities'> & {
+    abilities: string[]
+}
+
 export default function Candidate() {
     const auth = useAppSelector(state => state.login)
     const { id } = useParams()
