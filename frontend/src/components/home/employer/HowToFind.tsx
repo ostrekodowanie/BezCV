@@ -22,7 +22,7 @@ const boxes: BoxProps[] = [
     {
         image: htf3,
         title: 'Wykupienie dostępu do kandydata',
-        desc: 'Znalazłeś pasujących kandydatów? Dodaj ich do ulubionych, żeby Ci nie uciekli. Następnie wybierasz jeden z zestawów pakietów, który Cię interesuje. Dostęp do danych kontaktowych 1 osoby kosztuje 1 token. W miesiącu możesz maksymalnie wykupić dostęp do 15 osób. '
+        desc: 'Znalazłeś pasujących kandydatów? Dodaj ich do ulubionych, żeby Ci nie uciekli. Następnie wybierasz jeden z zestawów pakietów, który Cię interesuje. Dostęp do danych kontaktowych 1 osoby kosztuje 1 token.'
     },
     {
         image: htf4,

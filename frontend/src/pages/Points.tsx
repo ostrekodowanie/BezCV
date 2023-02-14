@@ -68,7 +68,7 @@ const Package = ({ setChosen, ...rest }: PackageProps & { setChosen: Dispatch<Se
                 <span className='relative z-10'>{price} zł</span>
                 <img className='absolute bottom-[2px] min-w-[120%]' src={priceUnderline} alt="" />
             </h3>
-            <h2 className="font-medium text-3xl w-max">{points} kontaktów</h2>
+            <h2 className="font-semibold text-3xl w-max">{points} kontaktów</h2>
             <ul className='list-outside list-disc marker:text-[#F9AE3D] sm:w-max mt-4 text-sm flex flex-col gap-3'>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>
                 <li>Lorem ipsum dolor sit amet consectetur.</li>

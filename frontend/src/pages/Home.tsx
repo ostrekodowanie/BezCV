@@ -22,7 +22,6 @@ export default function Home() {
     const { account } = useContext(AccountContext)
     if(account === 'employer') return (
         <>  
-            <Popup />
             <EmployerLanding />
             <HowToFind />
             <TutorialMenu />
@@ -35,7 +34,6 @@ export default function Home() {
     )
     if(account === 'worker') return (
         <>
-            <Popup />
             <CandidateLanding />
             <Introduction />
             <Questions />
