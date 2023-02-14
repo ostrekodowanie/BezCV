@@ -118,15 +118,6 @@ const CandidateList = () => {
 const CandidateRef = ({ id, first_name, last_name, favourite, abilities, phone, email }: CandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFavourite, setIsFavourite] = useState(favourite)
-    console.log({
-        id,
-        first_name,
-        last_name,
-        favourite,
-        abilities,
-        phone,
-        email
-    })
 
     const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()

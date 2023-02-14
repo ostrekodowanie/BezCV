@@ -21,7 +21,7 @@ export default function EmployerLanding() {
                     <p className="text-sm text-[#3C4663] leading-loose max-w-[4in]">dzięki naszemu rozwiązaniu. Dopasowanie kandydatów do Twoich <span className="font-semibold">indywidualnych wymagań</span> pozwala <span className="font-semibold">zmniejszyć koszt</span> pozyskania pracownika i <span className="font-semibold">skrócić czas trwania rekrutacji.</span></p>
                 </div>
             </div>
-            <Link to='/rejestracja' className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-[14px] px-10 bg-primary">Znajdź pracownika <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></Link>
+            <Link to='/oferty' className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-[14px] px-10 bg-primary">Znajdź pracownika <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></Link>
         </section>
         <div className="relative overflow-hidden h-[40vh]">
             <div className="absolute -left-[2in] -right-[8vw] bg-empbg bg-cover -z-10 bg-no-repeat top-0 h-full" />
