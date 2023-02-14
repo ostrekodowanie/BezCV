@@ -3,6 +3,7 @@ import { useResolvedPath, useMatch, useLocation } from 'react-router'
 import { useContext, useEffect, useState } from 'react'
 import { useAppSelector } from "../main"
 import { AccountContext } from "../reducers/AccountProvider"
+import { arrowRight } from "../assets/general"
 
 export default function Header() {
     const [down, setDown] = useState(false)
@@ -55,10 +56,10 @@ const Nav = () => {
                     </> : 
                     <>
                         <Link className="mt-4 md:mt-0 md:ml-4 font-medium transition-colors flex items-center p-2 text-[#2F66F4] hover:text-darkPrimary" to='/logowanie'>Zaloguj się</Link>
-                        <Link className="bg-primary transition-colors font-medium border-primary text-white rounded-full flex items-center py-2 px-6" to='/rejestracja'>Zarejestruj się za darmo!</Link>
+                        <Link className="bg-primary transition-colors font-medium border-primary text-white rounded-full flex items-center text-[.8rem] py-3 px-8" to='/rejestracja'>Zarejestruj się za darmo!<img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></Link>
                     </>
                 )}
-                {account === 'worker' && <Link className="bg-secondary transition-colors font-medium border-primary text-white rounded-full flex items-center py-2 px-6 mt-4 md:mt-0 md:ml-4" to='/praca'>Wypełnij formularz!</Link>}
+                {account === 'worker' && <Link className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-3 px-8 bg-secondary md:mt-0 md:ml-4" to='/praca'>Wypełnij formularz <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></Link>}
             </div>
             <div onClick={() => setActive(prev => !prev)} className='burger flex flex-col relative z-50 md:hidden h-5 w-8 justify-between cursor-pointer'>
                 <div style={active ? {position: 'absolute', top: '50%', transform: 'translateY(-50%) rotate(45deg)', maxWidth: '100%'} : { maxWidth: '60%' }} className={`${account === 'worker' ? 'bg-secondary' : 'bg-primary'} ${lineStyle}`}></div>

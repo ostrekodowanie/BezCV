@@ -17,8 +17,8 @@ export default function EmployerLanding() {
                 </div>
                 <div className="bg-white p-10 flex flex-col gap-4 shadow-[0px_4px_79px_-2px_rgba(56,95,194,0.19)] rounded-3xl relative">
                     <Control className="absolute -bottom-full -right-[19vw] -z-10 hidden md:block" opacity={1} x={20} ease='ease-out' element={<img className="max-w-[calc(6.5in+2vw)]" src={bgGirl} alt="" />} />
-                    <h2 className="md:text-xl font-bold text-left">Nie tylko osoby chętne...</h2>
-                    <p className="text-sm text-[#3C4663] leading-loose max-w-[4in]"><span className="font-bold">do pracy</span> - ale także kandydatów o sprecyzowanych umiejętnościach, dopasowanych do <span className="font-semibold">Twoich indywidualnych wymagań.</span></p>
+                    <h2 className="md:text-xl font-bold text-left">Oszczędzaj czas i pieniądze...</h2>
+                    <p className="text-sm text-[#3C4663] leading-loose max-w-[4in]">dzięki naszemu rozwiązaniu. Dopasowanie kandydatów do Twoich <span className="font-semibold">indywidualnych wymagań</span> pozwala <span className="font-semibold">zmniejszyć koszt</span> pozyskania pracownika i <span className="font-semibold">skrócić czas trwania rekrutacji.</span></p>
                 </div>
             </div>
             <Link to='/rejestracja' className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-[14px] px-10 bg-primary">Znajdź pracownika <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></Link>
