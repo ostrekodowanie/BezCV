@@ -1,9 +1,13 @@
+import { useContext } from "react"
+import { AccountContext } from "../reducers/AccountProvider"
+
 export default function Footer() {
+    const { account } = useContext(AccountContext)
     return (
         <footer className="bg-[#F6F7F9] padding py-16 flex flex-wrap 2xl:flex md:grid-cols-2 md:grid gap-8 justify-between">
             <div className="flex flex-col gap-4">
                 <strong className="font-medium text-3xl">BezCV</strong>
-                <p className="text-[#3C4663] 2xl:max-w-[3in] text-sm">Lorem ipsum dolor sit amet consectetur. Nam facilisis egestas vel quis sed enim bibendum. Eget fames nunc aliquet blandit magna.</p>
+                <p className="text-[#3C4663] 2xl:max-w-[3in] text-sm">{account === 'employer' ? 'Bez problemu rekrutujesz, bez problemu pracujesz. Zwiększamy satysfakcję z pracy i pracownika.' : 'Bez problemu pracujesz, bez problemu rekrutujesz. Zwiększamy satysfakcję z pracy i pracownika.'}</p>
             </div>
             <div className="flex flex-col gap-4">
                 <strong className="font-medium uppercase">Linki 1</strong>
