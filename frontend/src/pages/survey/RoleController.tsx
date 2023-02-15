@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Dispatch, FormEvent, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { timeLeft } from "../../assets/survey/survey";
 import Loader from "../../components/Loader";

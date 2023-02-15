@@ -9,7 +9,7 @@ import ProgressBar from "./ProgressBar";
 import { SurveyContext } from "./Survey";
 
 export default function CandidateController() {
-    const { candidateAnswers, setStep } = useContext(SurveyContext)
+    const { candidateAnswers, setStep, setIsSurveyFilled } = useContext(SurveyContext)
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
     const { question, type } = defaultQuestions[activeQuestionIndex]
     const [loading, setLoading] = useState(false)
@@ -22,9 +22,15 @@ export default function CandidateController() {
         if(type === 'email') {
             setCredentialsLoading(true)
             return axios.get('/api/survey/email/' + candidateAnswers.email)
-            .then(() => setActiveQuestionIndex(prev => prev + 1))
-            .catch(() => setStep('role'))
-            .finally(() => setCredentialsLoading(false))
+            .then(res => {
+                switch(res.status) {
+                    case 200:
+                        return setActiveQuestionIndex(prev => prev + 1)
+                    case 204:
+                        setIsSurveyFilled(res.data)
+                        return setStep('role')
+                }
+            }).finally(() => setCredentialsLoading(false))
         }
 
         if(type === 'tel') {
