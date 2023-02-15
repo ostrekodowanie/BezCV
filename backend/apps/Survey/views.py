@@ -56,10 +56,10 @@ class CandidateAnswersView(APIView):
         3.Wybranej stawki: {candidate.salary_expectation}
         4.Dostępności: {candidate.availability}
         5.Wcześniejszej lub obecnej pozycji w pracy: {candidate.job_position}
-        6.Doświadczenia w:
-        - dziale sprzedaży: {candidate.experience_sales} miesięcy
-        - dziale obsługi klienta: {candidate.experience_customer_service} miesięcy
-        - dziale administracji biurowej: {candidate.experience_administration} miesięcy
+        6.Doświadczenia na stanowiskach:
+        - sprzedaży: {candidate.experience_sales} miesięcy
+        - obsługi klienta: {candidate.experience_customer_service} miesięcy
+        - administracji biurowej: {candidate.experience_administration} miesięcy
         7.Edukacji: {candidate.education}
         8.Posiadania prawo jazdy: {candidate.driving_license}
         '''
@@ -67,7 +67,7 @@ class CandidateAnswersView(APIView):
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=input_text,
-            max_tokens=1024,
+            max_tokens=2048,
             n=1,
             stop=None,
             temperature=0.2,
