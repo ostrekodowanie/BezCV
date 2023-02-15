@@ -20,19 +20,18 @@ export default function Form() {
         password: ''
     })
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setStatus('loading')
         if(employerDetails.nip.length !== 10) return setStatus('NIP powinien posiadać 10 cyfr!')
         if(confPassword !== employerDetails.password) return setStatus('Hasła się nie zgadzają!')
         if(employerDetails.password.length < 6) return setStatus('Hasło musi posiadać co najmniej 6 znaków!')
-        axios.post('/api/signup', JSON.stringify(employerDetails), {
+        await axios.post('/api/signup', JSON.stringify(employerDetails), {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(() => setStatus(true))
-        .catch(err => setStatus(err.response.data ? err.response.data : 'Wystąpił błąd!'))
-
+        }).catch(err => setStatus(err.response.data ? err.response.data : 'Wystąpił błąd!'))
+        return setStatus(true)
     }
 
     if(status === true) return <section className='padding'>
