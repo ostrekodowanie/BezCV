@@ -10,7 +10,7 @@ export default function IsEnough() {
             <div className="relative pt-16 lg:pt-[3in] flex flex-col md:grid md:grid-cols-2 xl:grid-cols-[4fr_5fr] gap-8 lg:gap-[1in] text-[#3C4663] lg:items-end">
                 <div className="relative">
                     <img className="hidden lg:block" src={isEnoughMan} alt="" />
-                    <Control className="lg:absolute lg:bottom-[117%] lg:-right-[30%]" opacity={1} x={-20} onScroll element={
+                    <Control className="lg:absolute lg:bottom-[117%] lg:-right-[30%]" opacity={1} x={20} onScroll element={
                         <div className="rounded-3xl p-8 bg-white shadow-[2px_42px_58px_rgba(28,87,237,0.11)] relative md:max-w-[5in]">
                             <div className="text-5xl absolute left-8 translate-y-[-20%] top-0 text-primary font-bold">“</div>
                             <p className="text-sm leading-relaxed font-medium relative z-10">Oczywiście, że nie. BezCV jest pierwszym etapem rekrutacji, pozwala Ci oszczędzić czas i pieniądze. Koniec z przeglądaniem setek CV.</p>

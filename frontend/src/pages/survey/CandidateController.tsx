@@ -24,9 +24,9 @@ export default function CandidateController() {
             return axios.get('/api/survey/email/' + candidateAnswers.email)
             .then(res => {
                 switch(res.status) {
-                    case 200:
-                        return setActiveQuestionIndex(prev => prev + 1)
                     case 204:
+                        return setActiveQuestionIndex(prev => prev + 1)
+                    case 200:
                         setIsSurveyFilled(res.data)
                         return setStep('role')
                 }
