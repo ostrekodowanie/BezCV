@@ -93,7 +93,6 @@ export default function App() {
               <Route path='/praca/*' element={<FindWork />} />
             </Routes>
           </ScrollTop>
-          <Popup />
         </main>
         <Footer />
       </>

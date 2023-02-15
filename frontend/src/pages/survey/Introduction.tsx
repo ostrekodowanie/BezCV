@@ -31,7 +31,7 @@ export default function Introduction() {
                     <div className="rounded-full bg-secondary h-12 w-12 font-bold flex items-center justify-center text-white">4</div>
                     <p><span className="font-bold">Ankieta</span> zajmie Ci <span className="font-bold">około 9 minut</span> - masz możliwość nie udzielania odpowiedzi. Im więcej nam o sobie opowiesz tym większa szansa, że <span className="font-bold">znajdziemy Ci wymarzoną pracę.</span></p>
                 </div>} />
-                <Control opacity={1} delay={200} element={<Link to='/praca/ankieta' className="bg-primary transition-colors font-medium border-primary text-white rounded-full flex items-center text-[.8rem] py-3 px-8 self-start max-w-max">Zaczynajmy! <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></Link>} />
+                <Control opacity={1} delay={200} element={<Link to='/praca/ankieta' className="bg-secondary transition-colors font-medium border-primary text-white rounded-full flex items-center text-[.8rem] py-3 px-8 self-start max-w-max">Zaczynajmy! <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></Link>} />
             </Controller>
         </section>
     )
