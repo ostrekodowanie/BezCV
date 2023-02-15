@@ -37,7 +37,7 @@ class Questions(models.Model):
     
 class CandidateAnswers(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.CASCADE, related_name='candidateanswers_question')
-    candidate = models.ForeignKey(Candidates, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(Candidates, on_delete=models.CASCADE, related_name='candidateanswers_candidate')
     answer = models.PositiveSmallIntegerField(
         choices=(
             (1, "Zdecydowanie nie"),

@@ -1,4 +1,5 @@
 from django.core.mail import send_mail
+from django.db.models import Count, Q
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -49,7 +50,7 @@ class CandidateAnswersView(APIView):
         worst_abilities = [ability['name'] for ability in sorted_abilities[-3:][::-1]]
         professions = ', '.join(professions)
         input_text = f'''
-        Oto rozbudowany opis kandydata (w trzeciej osobie) zachęcający pracodawców na podstawie jego:
+        Oto rozbudowany opis kandydata oraz jego możliwości (w trzeciej osobie, bez określania płci, rodzaj męski) zachęcający pracodawców na podstawie jego:
         1.Najlepszych umiejętności: {best_abilities}
         2.Najgorszych umiejętności: {worst_abilities}
         2.Preferowanych zawodów: {professions}
@@ -59,7 +60,7 @@ class CandidateAnswersView(APIView):
         6.Doświadczenia na stanowiskach:
         - sprzedaży: {candidate.experience_sales} miesięcy
         - obsługi klienta: {candidate.experience_customer_service} miesięcy
-        - administracji biurowej: {candidate.experience_administration} miesięcy
+        - administracji biurowej: {candidate.experience_office_administration} miesięcy
         7.Edukacji: {candidate.education}
         8.Posiadania prawo jazdy: {candidate.driving_license}
         '''
@@ -67,10 +68,10 @@ class CandidateAnswersView(APIView):
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=input_text,
-            max_tokens=2048,
+            max_tokens=1500,
             n=1,
             stop=None,
-            temperature=0.2,
+            temperature=0.3,
         )
 
         description = response.choices[0].text.strip()
@@ -103,10 +104,26 @@ class EmailCheckView(APIView):
                 [email],
                 fail_silently=False,
             )'''
+            completed_categories = set()
+            answered_questions = CandidateAnswers.objects.filter(candidate__email=email).select_related('question')
 
-            return Response({'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+            for answer in answered_questions:
+                categories = set(answer.question.category.all())
+                if categories:
+                    completed_categories.update(categories)
 
-        return Response({'Email is available.'}, status=status.HTTP_200_OK)
+            category_dict = {}
+            for category in QuestionCategories.objects.all():
+                category_questions = Questions.objects.filter(category=category)
+                user_questions = answered_questions.filter(question__in=category_questions)
+                if len(user_questions) == len(category_questions):
+                    category_dict[category.name] = True
+                else:
+                    category_dict[category.name] = False
+
+            return Response(category_dict, status=status.HTTP_200_OK)
+
+        return Response({'Email is available.'}, status=status.HTTP_204_NO_CONTENT)
     
 
 class PhoneCheckView(APIView):

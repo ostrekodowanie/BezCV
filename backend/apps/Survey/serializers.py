@@ -23,7 +23,7 @@ class CandidatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
         fields = ['first_name', 'last_name', 'email', 'phone', 'salary_expectation', 'availability', 'job_position',
-                  'experience_sales', 'experience_customer_service', 'experience_administration', 'education',
+                  'experience_sales', 'experience_customer_service', 'experience_office_administration', 'education',
                   'driving_license', 'preferred_professions']
 
     def create(self, validated_data):
@@ -43,7 +43,7 @@ class CandidatesSerializer(serializers.ModelSerializer):
         message += 'Pozycja zawodowa: ' + candidate.job_position + '\n'
         message += 'Doświadczenie w sprzedaży: ' + str(candidate.experience_sales) + '\n'
         message += 'Doświadczenie w obsłudze klienta: ' + str(candidate.experience_customer_service) + '\n'
-        message += 'Doświadczenie w administracji: ' + str(candidate.experience_administration) + '\n'
+        message += 'Doświadczenie w administracji: ' + str(candidate.experience_office_administration) + '\n'
         message += 'Wykształcenie: ' + candidate.education + '\n'
         driving_license = 'Tak' if candidate.driving_license else 'Nie'
         message += 'Prawo jazdy: ' + driving_license + '\n'
