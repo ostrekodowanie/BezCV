@@ -23,7 +23,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
     return (
         <>
             <button type="button" onClick={() => setMobileActive(prev => !prev)} className="lg:hidden font-medium mb-4 text-left ml-[8vw] sm:ml-0">{!mobileActive ? 'Filtruj' : 'Zamknij'}</button>
-            <div className={`flex-col gap-8 px-8 py-6 mb-4 lg:mb-0 transition-all bg-white shadow-primaryBig sm:rounded-3xl min-h-[80vh] relative ${mobileActive ? 'flex' : 'hidden lg:flex'}`}>
+            <div className={`flex-col gap-8 px-8 py-6 mb-4 lg:mb-0 lg:self-start transition-all bg-white shadow-primaryBig sm:rounded-3xl min-h-[80vh] relative ${mobileActive ? 'flex' : 'hidden lg:flex'}`}>
                 <div>
                     {allFilters.professions.length > 0 ? <h4 className="font-medium mb-6">Zawody</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
                     <div className="flex flex-col gap-4">
