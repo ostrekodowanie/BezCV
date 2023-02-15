@@ -3,7 +3,10 @@ import { Dispatch, FormEvent, SetStateAction, useContext, useEffect, useMemo, us
 import { buttonArrow } from "../../assets/account/account";
 import { timeLeft } from "../../assets/survey/survey";
 import Loader from "../../components/Loader";
-import { RangeNumberKey, rangeNumberKeys, roles, RoleType } from "../../constants/workForm";
+import FinishLoader from "../../components/survey/FinishLoader";
+import RangeKey from "../../components/survey/RangeKey";
+import RoleChoosePage from "../../components/survey/RoleChoosePage";
+import { rangeNumberKeys, roles, RoleType } from "../../constants/workForm";
 import Finished from "./Finished";
 import ProgressBar from "./ProgressBar";
 import { SurveyContext } from "./Survey";
@@ -23,7 +26,9 @@ export default function RoleController() {
     const [loading, setLoading] = useState(true)
     const timer = useRef<any>(null)
     const [secondsLeft, setSecondsLeft] = useState(15)
+    const [isFinishing, setIsFinishing] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
+    const [error, setError] = useState('')
 
     useEffect(() => {
         if(!questions[activeQuestionIndex]) return
@@ -43,9 +48,12 @@ export default function RoleController() {
 
     useEffect(() => {
         if(activeQuestionIndex < questions.length || questions.length === 0) return
+        setIsFinishing(true)
         axios.post('/api/survey/answers', JSON.stringify({ candidate: email, answers: roleAnswers }), {
             headers: { 'Content-Type': 'application/json' }
         }).then(() => setIsFinished(true))
+        .catch(err => setError(typeof err.response.data.detail === 'string' ? err.response.data.detail : 'Wystąpił błąd!'))
+        .finally(() => setIsFinishing(false))
     }, [roleAnswers])
 
     useEffect(() => {
@@ -58,7 +66,10 @@ export default function RoleController() {
 
     if(isFinished && typeof first_name === 'string') return <Finished firstName={first_name} />
 
-    if(!role) return <ChooseRole setRole={setRole} />
+    if(isFinishing) return <FinishLoader />
+
+    if(!role) return <RoleChoosePage setRole={setRole} />
+    if(error) return <p className="text-red-400 mt-16">{error}</p>
     if(loading ||!questions[activeQuestionIndex]) return <Loader />
 
     const { text } = questions[activeQuestionIndex]
@@ -89,42 +100,5 @@ export default function RoleController() {
                 </div>
             </form>
         </>
-    )
-}
-
-const ChooseRole = ({ setRole }: { setRole: Dispatch<SetStateAction<RoleType | null>>}) => {
-    const [chosen, setChosen] = useState<RoleType | null>(null)
-    return (
-        <>
-            <form className="flex flex-wrap items-center flex-1 max-h-[80%] my-auto justify-between gap-8 w-full" onSubmit={() => setRole(chosen)}>
-                <div className="flex flex-col gap-8">
-                    <h2 className="text-3xl font-bold text-center w-full max-w-[8in] mx-auto">Wybierz zawód</h2>
-                    <div className="flex flex-col w-full gap-4 sm:grid grid-cols-3">
-                        {roles.map(role => 
-                            <label className={`p-12 w-full text-center flex flex-col cursor-pointer font-semibold gap-8 max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${chosen === role.name && 'outline-[2px] outline-[#F98D3D] text-secondary'}`} htmlFor={role.name} key={'label:' + role.name}>
-                                <input className="absolute left-8 top-8" value={role.name} type='radio' key={role.name} id={role.name} onChange={e => e.target.checked && setChosen(role.name)} name='role' />
-                                <img className="max-w-[1.6in] max-h-[1.2in]" src={role.image} alt="" />
-                                {role.title}
-                            </label>
-                        )}
-                    </div>
-                </div>
-                <button type='submit' className="rounded-full text-[.8rem] text-white ml-auto self-end font-bold py-4 px-8 bg-secondary flex items-center mt-8 xl:mt-0">Rozpocznij ankietę <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="" /></button>
-            </form>
-        </>
-    )
-}
-
-const RangeKey = ({ number, text, numericalAnswer }: RangeNumberKey & { numericalAnswer: number }) => {
-    return (
-        <div className="flex flex-col items-center gap-4">
-            <div className={`rounded-full h-16 w-16 transition-colors flex items-center justify-center shadow-[0px_7px_37px_-2px_rgba(215,105,23,0.13)] ${number === numericalAnswer ? 'bg-[#F9AE3D] text-white' : 'bg-white text-font'}`}>
-                <span className="text-xl font-semibold">{number}</span>
-            </div>
-            <div className="text-center">
-                <h5 className="font-medium text-sm">{number} oznacza</h5>
-                <h4 className="font-bold text-sm">“{text}”</h4>
-            </div>
-        </div>
     )
 }

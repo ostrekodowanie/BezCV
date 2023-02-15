@@ -30,6 +30,7 @@ export default function Home() {
             <IsEnough />
             <EmployerBanner />
             <Points />
+            <Popup />
         </>
     )
     if(account === 'worker') return (
@@ -42,6 +43,7 @@ export default function Home() {
             <WhatNext />
             <TutorialMenu />
             <PersonalDataSecurity />
+            <Popup />
         </>
     )
     return <div className="w-screen h-screen flex items-center justify-center"><Loader /></div>
