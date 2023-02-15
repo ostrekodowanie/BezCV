@@ -8,9 +8,7 @@ from apps.Candidates.models import Candidates
 from .models import Questions, CandidateAnswers, QuestionCategories
 from .serializers import QuestionSerializer, CandidatesSerializer
 
-import string
-import random
-import os
+import string, random , os, openai
 
 
 class QuestionsByCategoryView(generics.ListAPIView):
@@ -34,6 +32,48 @@ class CandidateAnswersView(APIView):
             for question, answer in answers
         ]
         CandidateAnswers.objects.bulk_create(candidate_answers)
+        if not candidate.is_visible:
+            candidate.is_visible = True
+        
+        sorted_abilities = sorted(
+            [{'name': ability.ability.name, 'percentage': ability.percentage}
+            for ability in candidate.candidateabilities_candidate.all()],
+            key=lambda x: x['percentage'], reverse=True)
+        professions = [profession.profession.name for profession in candidate.candidateprofessions_candidate.all()]
+        best_abilities = [ability['name'] for ability in sorted_abilities[:3]]
+        worst_abilities = [ability['name'] for ability in sorted_abilities[-3:][::-1]]
+        professions = ', '.join(professions)
+        input_text = f'''
+        Oto rozbudowany opis kandydata zachęcający pracodawców na podstawie jego:
+        1.Najlepsze umiejętności: {best_abilities}
+        2.Najgorsze umiejętności: {worst_abilities}
+        2.Preferowanych zawodów: {professions}
+        3.Wybranej stawki: {candidate.salary_expectation}
+        4.Dostępności: {candidate.availability}
+        5.Wcześniejszej lub obecnej pozycji w pracy: {candidate.job_position}
+        6.Doświadczenia w:
+        - dziale sprzedaży: {candidate.experience_sales} miesięcy
+        - dziale obsługi klienta: {candidate.experience_customer_service} miesięcy
+        - dziale administracji biurowej: {candidate.experience_administration} miesięcy
+        7.Edukacji: {candidate.education}
+        8.Posiadania prawo jazdy: {candidate.driving_license}
+        '''
+        
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=input_text,
+            max_tokens=1024,
+            n=1,
+            stop=None,
+            temperature=0.5,
+        )
+
+        description = response.choices[0].text.strip()
+
+        candidate.desc = description
+
+        candidate.save()
+
         return Response({'success'})
 
 

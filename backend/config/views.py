@@ -6,6 +6,6 @@ def index(request):
     return render(request, 'dist/index.html')
 
 def candidates(request, id):
-    candidates = Candidates.objects.filter(is_verified=True)
+    candidates = Candidates.objects.filter(is_visible=True)
     get_object_or_404(candidates, id=id)
     return render(request, 'dist/index.html')

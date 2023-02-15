@@ -29,7 +29,8 @@ class CandidateView(APIView):
             'salary_expectation': candidate.salary_expectation,
             'is_purchased': candidate.is_purchased,
             'abilities': abilities,
-            'professions': professions
+            'professions': professions,
+            'desc': candidate.desc
         }
 
         similar_candidates = get_similar_candidates(self.request.user, professions, [ability.ability.name for ability in candidate.candidateabilities_candidate.all()], candidate_id)
@@ -71,18 +72,6 @@ class CandidateView(APIView):
 
         return Response(data)
 
-class CandidateAddView(generics.CreateAPIView):
-    serializer_class = serializers.CandidateAddSerializer
-
-    def perform_create(self, serializer):
-        email = serializer.validated_data.get('email')
-        phone = serializer.validated_data.get('phone')
-        if Candidates.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Email jest już przypisany do istniejącego konta')
-        if Candidates.objects.filter(phone=phone).exists():
-            raise serializers.ValidationError('Numer telefonu jest już przypisany do kandydata')
-        serializer.save()
-
 
 class OffersView(APIView):
     permission_classes = [IsAuthenticated]
@@ -99,7 +88,7 @@ class OffersView(APIView):
             .prefetch_related('candidateabilities_candidate__ability')
             .prefetch_related('favouritecandidates_candidate')
             .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
-            .filter(Q(is_verified=True) & Q(is_purchased=False))
+            .filter(Q(is_visible=True) & Q(is_purchased=False))
         )
 
         total_count = queryset.count()
@@ -144,7 +133,7 @@ class SearchCandidateView(APIView):
         per_page = 10
         offset = (int(page) - 1) * per_page
 
-        queries = Q(is_verified=True)
+        queries = Q(is_visible=True)
 
         if abilities:     
             abilities_list = abilities.split(',')

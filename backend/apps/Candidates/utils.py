@@ -10,7 +10,7 @@ def get_candidate(user, candidate_id):
         .prefetch_related('candidateprofessions_candidate__profession')
         .prefetch_related('candidateabilities_candidate__ability')
         .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
-        .get(Q(is_verified=True) & Q(id=candidate_id)))
+        .get(Q(is_visible=True) & Q(id=candidate_id)))
     
 def get_similar_candidates(user, professions, abilities, candidate_id):
     similar_candidates = (Candidates.objects
@@ -19,7 +19,7 @@ def get_similar_candidates(user, professions, abilities, candidate_id):
         .prefetch_related('candidateabilities_candidate__ability')
         .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
         .distinct()
-        .filter(Q(is_verified=True) 
+        .filter(Q(is_visible=True) 
             & Q(is_purchased=False) 
             & Q(candidateprofessions_candidate__profession__name__in=professions) 
             & Q(candidateabilities_candidate__ability__name__in=abilities) 
@@ -34,7 +34,7 @@ def get_similar_candidates(user, professions, abilities, candidate_id):
                 .prefetch_related('candidateabilities_candidate__ability')
                 .annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=user, candidate_id=OuterRef('pk'))))
                 .distinct()
-                .filter(Q(is_verified=True) 
+                .filter(Q(is_visible=True) 
                     & Q(is_purchased=False) 
                     & ~Q(candidateprofessions_candidate__profession__name__in=professions) 
                     & Q(candidateabilities_candidate__ability__name__in=abilities) 

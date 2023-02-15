@@ -3,22 +3,6 @@ from rest_framework.validators import ValidationError
 
 from .models import Candidates, PurchasedOffers
 
-class CandidateAddSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-            error_messages={
-                'unique': 'Email jest już przypisany do kandydata'
-            }
-        )
-    phone = serializers.CharField(
-            error_messages={
-                'unique': 'Numer telefonu jest już przypisany do kandydata'
-            }
-        )
-        
-    class Meta:
-        model = Candidates
-        fields = ('first_name', 'last_name', 'email', 'phone')
-
 
 class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:

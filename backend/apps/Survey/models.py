@@ -43,8 +43,8 @@ class CandidateAnswers(models.Model):
             (1, "Zdecydowanie nie"),
             (2, "Raczej nie"),
             (3, "Nie mam zdania"),
-            (5, "Raczej tak"),
-            (6, "Zdecydowanie tak"),
+            (4, "Raczej tak"),
+            (5, "Zdecydowanie tak"),
         ))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
