@@ -3,13 +3,14 @@ import RoleController from "./RoleController"
 import CandidateController from "./CandidateController"
 import { createContext, useMemo, useState } from "react"
 import { surveyMan, triangle } from "../../assets/survey/survey"
-import { CandidateAnswerType, RoleAnswerType, SurveyContextType } from "../../constants/workForm"
+import { CandidateAnswerType, initialFilledState, IsFilled, RoleAnswerType, SurveyContextType } from "../../constants/workForm"
 import { defaultQuestions } from "../../constants/findWork"
 
 export const SurveyContext = createContext<SurveyContextType>(null!)
 
 export default function Survey() {
     const [step, setStep] = useState<'role' | 'candidate'>('candidate')
+    const [isSurveyFilled, setIsSurveyFilled] = useState<IsFilled>(initialFilledState)
     const [roleAnswers, setRoleAnswers] = useState<RoleAnswerType[]>([])
     const [candidateAnswers, setCandidateAnswers] = useState<CandidateAnswerType>(defaultQuestions.reduce((acc, { name, type, customInputs }) => {
         if(name === 'preferred_professions') return { ...acc, [name]: [] }
@@ -26,8 +27,10 @@ export default function Survey() {
         roleAnswers,
         setRoleAnswers,
         candidateAnswers,
-        setCandidateAnswers
-    }), [step, setStep, roleAnswers, setRoleAnswers, candidateAnswers, setCandidateAnswers])
+        setCandidateAnswers,
+        isSurveyFilled,
+        setIsSurveyFilled
+    }), [step, setStep, roleAnswers, setRoleAnswers, candidateAnswers, setCandidateAnswers, isSurveyFilled, setIsSurveyFilled])
 
     return (
         <section className="padding flex flex-col gap-12 justify-center pt-[.6in] pb-[1.4in] min-h-screen relative xl:grid grid-cols-[2fr_1fr]">
