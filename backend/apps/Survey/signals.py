@@ -8,7 +8,6 @@ from apps.Candidates.models import CandidateAbilities
 def update_percentage(sender, instance, **kwargs):
     candidate = instance.candidate
     ability = instance.question.abilityquestions_question.first().ability
-    print(ability)
     candidate_ability, created = CandidateAbilities.objects.get_or_create(
         candidate=candidate, ability=ability)
     if created:

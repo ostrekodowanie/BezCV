@@ -36,7 +36,7 @@ class Candidates(models.Model):
     job_position = models.CharField(max_length=100)
     experience_sales = models.IntegerField(default=0)
     experience_customer_service = models.IntegerField(default=0)
-    experience_administration = models.IntegerField(default=0)
+    experience_office_administration = models.IntegerField(default=0)
     education = models.CharField(max_length=255, choices=[ 
                                                 ('wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)', 'wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)'), 
                                                 ('wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)', 'wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)')])

@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from apps.Candidates.models import Candidates
 from .models import Questions, CandidateAnswers, QuestionCategories
 from .serializers import QuestionSerializer, CandidatesSerializer
+from .signals import update_percentage
 
 import string, random , os, openai
 
@@ -32,6 +33,10 @@ class CandidateAnswersView(APIView):
             for question, answer in answers
         ]
         CandidateAnswers.objects.bulk_create(candidate_answers)
+
+        for answer in candidate_answers:
+            update_percentage(None, instance=answer)
+
         if not candidate.is_visible:
             candidate.is_visible = True
         
@@ -44,9 +49,9 @@ class CandidateAnswersView(APIView):
         worst_abilities = [ability['name'] for ability in sorted_abilities[-3:][::-1]]
         professions = ', '.join(professions)
         input_text = f'''
-        Oto rozbudowany opis kandydata zachęcający pracodawców na podstawie jego:
-        1.Najlepsze umiejętności: {best_abilities}
-        2.Najgorsze umiejętności: {worst_abilities}
+        Oto rozbudowany opis kandydata (w trzeciej osobie) zachęcający pracodawców na podstawie jego:
+        1.Najlepszych umiejętności: {best_abilities}
+        2.Najgorszych umiejętności: {worst_abilities}
         2.Preferowanych zawodów: {professions}
         3.Wybranej stawki: {candidate.salary_expectation}
         4.Dostępności: {candidate.availability}
@@ -65,7 +70,7 @@ class CandidateAnswersView(APIView):
             max_tokens=1024,
             n=1,
             stop=None,
-            temperature=0.5,
+            temperature=0.2,
         )
 
         description = response.choices[0].text.strip()
