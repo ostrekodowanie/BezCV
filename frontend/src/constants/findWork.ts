@@ -5,11 +5,12 @@ type CustomInput = {
     name: keyof CandidateAnswerType,
     placeholder: string,
     type: HTMLInputTypeAttribute,
-    value?: string
+    value?: string,
+    label?: string
 }
 
 export interface QuestionProps {
-    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name',
+    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration',
     question: string,
     type: HTMLInputTypeAttribute | 'custom',
     answers?: string[],
@@ -99,8 +100,28 @@ export const defaultQuestions: QuestionProps[] = [
     {
         name: 'experience',
         question: 'Jakie posiadasz doświadczenie w pracy na wybranych stanowiskach? (wpisz liczbę miesięcy pracy na takim lub podobnym stanowisku)',
-        type: 'text',
-        placeholder: 'Tutaj wpisz swoje doświadczenie'
+        type: 'custom',
+        placeholder: 'Tutaj wpisz swoje doświadczenie',
+        customInputs: [
+            {
+                name: 'experience_sales',
+                placeholder: 'Tutaj wpisz swoje doświadczenie',
+                type: 'text',
+                label: 'Sprzedaż'
+            },
+            {
+                name: 'experience_customer_service',
+                placeholder: 'Tutaj wpisz swoje doświadczenie',
+                type: 'text',
+                label: 'Obsługa klienta'
+            },
+            {
+                name: 'experience_office_administration',
+                placeholder: 'Tutaj wpisz swoje doświadczenie',
+                type: 'text',
+                label: 'Administracja biurowa'
+            },
+        ]
     },
     {
         name: 'education',

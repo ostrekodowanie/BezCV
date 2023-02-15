@@ -91,10 +91,15 @@ const CandidateInput = ({ question, type, placeholder, customInputs, name, ...re
             return <>
                 {customInputs?.map(input => {
                     if(input.type === 'checkbox') return <label className="flex items-center gap-2 text-sm self-start w-max" htmlFor={'checkbox:'+input.name}>
-                        <input className={textInputStyles} required checked={candidateAnswers[input.name] === input.placeholder} type={input.type} value={input.placeholder} id={'checkbox:'+input.name} onChange={e => e.target.checked ? setCandidateAnswers(prev => ({ ...prev, [input.name]: e.target.value })) : setCandidateAnswers(prev => ({ ...prev, [input.name]: '' }))} />
+                        <input className={textInputStyles} checked={candidateAnswers[input.name] === input.placeholder} type={input.type} value={input.placeholder} id={'checkbox:'+input.name} onChange={e => e.target.checked ? setCandidateAnswers(prev => ({ ...prev, [input.name]: e.target.value })) : setCandidateAnswers(prev => ({ ...prev, [input.name]: '' }))} />
                         {input.placeholder}
                     </label>
-                    return <input className={textInputStyles} required type={input.type} value={candidateAnswers[input.name]} placeholder={input.placeholder} id={input.name} onChange={e => setCandidateAnswers(prev => ({ ...prev, [input.name]: e.target.value }))} />
+                    return (
+                        <div className="flex flex-col gap-4 self-stretch">
+                            {input.label && <label className="text-sm font-medium" htmlFor={input.name}>{input.label}:</label>}
+                            <input className={textInputStyles} required type={input.type} value={candidateAnswers[input.name]} placeholder={input.placeholder} id={input.name} onChange={e => setCandidateAnswers(prev => ({ ...prev, [input.name]: e.target.value }))} />
+                        </div>
+                    )
                 })}
             </>
     }
