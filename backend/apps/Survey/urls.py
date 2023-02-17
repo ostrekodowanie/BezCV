@@ -8,5 +8,6 @@ urlpatterns = [
   path('survey/candidate', views.CandidateCreateView.as_view()),
   path('survey/email/<str:email>', views.EmailCheckView.as_view()),
   path('survey/phone/<str:phone>', views.PhoneCheckView.as_view()),
-  path('survey/status', views.SurveyStatusView.as_view()),
+  path('survey/code', views.SendCodeView.as_view()),
+  path('survey/code/verify', views.CheckCodeView.as_view()),
 ]

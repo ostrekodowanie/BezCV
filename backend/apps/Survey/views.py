@@ -6,11 +6,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from apps.Candidates.models import Candidates
-from .models import Questions, CandidateAnswers, QuestionCategories
+from .models import Questions, CandidateAnswers, QuestionCategories, GeneratedCodes
 from .serializers import QuestionSerializer, CandidatesSerializer
 from .signals import update_percentage
 
-import string, random , os, openai
+import string, random , os, openai, datetime
 
 
 class QuestionsByCategoryView(generics.ListAPIView):
@@ -89,21 +89,54 @@ class CandidateCreateView(generics.CreateAPIView):
 
 
 class EmailCheckView(APIView):
-
     def get(self, request, email):
         if Candidates.objects.filter(email=email).exists():
-            #candidate = Candidates.objects.get(email=email)
-            #code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
-            #candidate.access_code = code
-            #candidate.save()
+            return Response({'Email is available.'}, status=status.HTTP_200_OK)
+        return Response({'Email is available.'}, status=status.HTTP_204_NO_CONTENT)
+    
 
-            '''send_mail(
-                'Access code',
-                f'Your access code is: {code}',
-                os.environ.get('EMAIL'),
-                [email],
-                fail_silently=False,
-            )'''
+class PhoneCheckView(APIView):
+    def get(self, request, phone):
+        if Candidates.objects.filter(phone=phone).exists():
+            return Response({'Phone number already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Phone number is available.'}, status=status.HTTP_200_OK)
+    
+
+class SendCodeView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        candidate = Candidates.objects.get(email=email)
+
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        
+        if candidate.access_code:
+            candidate.access_code.all().delete()
+        
+        GeneratedCodes.objects.create(candidate=candidate, code=code)
+
+        send_mail(
+            'BezCV - Kod dostępu',
+            f'Twój kod dostępu to: {code}',
+            os.environ.get('EMAIL'),
+            [email],
+            fail_silently=False,
+        )
+
+        return Response({'Access code sent successfully'}, status=200)
+    
+
+class CheckCodeView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        code = request.data.get('code')
+        candidate = Candidates.objects.get(email=email)
+
+        try:
+            generated_code = GeneratedCodes.objects.get(candidate=candidate, code=code)
+        except GeneratedCodes.DoesNotExist:
+            return Response({'Access code is not valid'}, status=400)
+
+        if (datetime.datetime.now(datetime.timezone.utc) - generated_code.created_at).total_seconds() <= 600:
             completed_categories = set()
             answered_questions = CandidateAnswers.objects.filter(candidate__email=email).select_related('question')
 
@@ -120,30 +153,6 @@ class EmailCheckView(APIView):
                     category_dict[category.name] = True
                 else:
                     category_dict[category.name] = False
-
-            return Response(category_dict, status=status.HTTP_200_OK)
-
-        return Response({'Email is available.'}, status=status.HTTP_204_NO_CONTENT)
-    
-
-class PhoneCheckView(APIView):
-    
-    def get(self, request, phone):
-        if Candidates.objects.filter(phone=phone).exists():
-            return Response({'Phone number already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({'Phone number is available.'}, status=status.HTTP_200_OK)
-    
-
-class SurveyStatusView(APIView):
-
-    def get(self, request):
-        email = self.request.GET.get('e')
-        answered_questions = Questions.objects.filter(candidateanswers_question__candidate__email=email)
-        categories = list(set(question.category.all() for question in answered_questions))
-        survey_statuses = {}
-        for category in QuestionCategories.objects.all():
-            if category in categories:
-                survey_statuses[category.name] = True
-            else:
-                survey_statuses[category.name] = False
-        return Response(survey_statuses)
+            return Response(category_dict, status=200)
+        else:
+            return Response({'Access code expired'}, status=400)

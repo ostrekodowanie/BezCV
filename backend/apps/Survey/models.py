@@ -80,8 +80,8 @@ class AbilityQuestions(models.Model):
     
 
 class GeneratedCodes(models.Model):
-    code = models.UUIDField(default=uuid.uuid4, unique=True)
-    candidate = models.ForeignKey(Candidates, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    candidate = models.ForeignKey(Candidates, on_delete=models.CASCADE, related_name="access_code")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -89,4 +89,4 @@ class GeneratedCodes(models.Model):
         verbose_name_plural = 'Generated codes'
 
     def __str__(self):
-        return self.code
+        return self.created_at
