@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import ConfettiExplosion from "react-confetti-explosion"
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router"
 import { Link } from "react-router-dom"
@@ -40,6 +41,7 @@ export default function Candidate() {
     const { points } = auth.data
     const user_id = auth.data.id
     const { access, refresh } = auth.tokens
+    const [success, setSuccess] = useState(false)
     const [loading, setLoading] = useState({
         page: true,
         purchase: false
@@ -61,7 +63,10 @@ export default function Candidate() {
         setLoading(prev => ({...prev, purchase: true}))
         let data = { candidate: id, employer: user_id, refresh }
         const resp = await axios.post('/api/oferty/purchase', data)
-        if(resp.status === 201) dispatch(purchase())
+        if(resp.status === 201) {
+            dispatch(purchase())
+            setSuccess(true)
+        }
         return setLoading(prev => ({...prev, purchase: false}))
     }
 
@@ -137,7 +142,8 @@ export default function Candidate() {
             {loading.page ? <div className="ml-[8vw] sm:ml-0"><Loader /></div> : !candidateDetails.is_purchased && 
                 <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
                     <button onClick={handlePurchase} className="bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-full flex items-center py-3 px-6">Wykup kontakt za 1 punkt</button>
-                    {loading.purchase && <Loader />}    
+                    {loading.purchase && <Loader />}
+                    {success && <ConfettiExplosion />}  
                 </div>
             }
             <div className="flex flex-col gap-8 lg:grid grid-cols-[1fr_2fr]">

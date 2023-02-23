@@ -47,8 +47,7 @@ const Nav = () => {
             <div className={`flex flex-col md:flex-row justify-center items-center bg-white gap-4 text-sm font-medium absolute top-0 md:relative left-full transition-transform ${active && '-translate-x-full'} md:left-auto h-screen md:h-full w-screen md:w-max`}>
                 {account === 'employer' && !logged && <button onClick={() => setAccount('worker')} className="text-[#F98D3D] hover:text-darkSecondary font-medium md:mr-2">Przełącz na widok kandydata</button>}
                 {account === 'worker' && <button onClick={() => setAccount('employer')} className="text-[#2F66F4] hover:text-darkPrimary font-medium md:mr-2">Przełącz na widok pracodawcy</button>}
-                {account === 'employer' && <CustomLink to={logged ? '/oferty' : '/logowanie'}>Jak wygląda nasza baza?</CustomLink>}
-                {account === 'worker' && <HowToFindJobHashLink />}
+                <HashLink />
                 {account === 'employer' && (
                     logged ? <>
                         <CustomLink className="font-semibold text-base md:ml-2" to='/profil'>{first_name}</CustomLink>
@@ -83,7 +82,8 @@ const CustomLink = ({children, to, className}: CustomLink) => {
     return <Link to={to} className={`${className && className} transition-colors font-medium ${isActive ? account === 'employer' ? 'text-[#2F66F4]' : 'text-[#F98D3D]' : account === 'employer' ? 'hover:text-[#2F66F4]' : 'hover:text-[#F98D3D]'}`}>{children}</Link>
 }
 
-const HowToFindJobHashLink = () => {
+const HashLink = () => {
+    const { account } = useContext(AccountContext)
     const navigate = useNavigate()
     const handleScroll = () => {
         navigate('/')
@@ -91,5 +91,5 @@ const HowToFindJobHashLink = () => {
         section?.scrollIntoView({ behavior: 'smooth' });
     }
 
-    return <button type='button' className="transition-colors font-medium hover:text-[#F98D3D]" onClick={handleScroll}>Co muszę zrobić, aby dostać pracę?</button>
+    return <button type='button' className={`transition-colors font-medium ${account === 'worker' ? 'hover:text-[#F98D3D]' : 'hover:text-[#2F66F4]'}`} onClick={handleScroll}>{account === 'worker' ? 'Co muszę zrobić, aby dostać pracę?' : 'Jak wygląda nasza baza?'}</button>
 }

@@ -1,19 +1,21 @@
 import axios from "axios";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import Loader from "../../components/Loader";
+import EmailCodePopup from "../../components/survey/EmailCodePopup";
 import { defaultQuestions, QuestionProps } from "../../constants/findWork";
 import { radioInputStyles, textInputStyles } from "../../constants/workForm";
 import ProgressBar from "./ProgressBar";
 import { SurveyContext } from "./Survey";
 
 export default function CandidateController() {
-    const { candidateAnswers, setStep, setIsSurveyFilled } = useContext(SurveyContext)
+    const { candidateAnswers, setStep } = useContext(SurveyContext)
     const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
     const { question, type } = defaultQuestions[activeQuestionIndex]
     const [loading, setLoading] = useState(false)
     const [credentialsLoading, setCredentialsLoading] = useState(false)
+    const [emailCodePopupActive, setEmailCodePopupActive] = useState(false)
     const [credentialsError, setCredentialsError] = useState('')
     const [error, setError] = useState('')
 
@@ -21,19 +23,15 @@ export default function CandidateController() {
         e.preventDefault()
         if(type === 'email') {
             setCredentialsLoading(true)
-            return axios.get('/api/survey/email/' + candidateAnswers.email)
-            .then(res => {
-                switch(res.status) {
-                    case 204:
-                        return setActiveQuestionIndex(prev => prev + 1)
-                    case 200:
-                        setIsSurveyFilled(res.data)
-                        return setStep('role')
-                }
-            }).finally(() => setCredentialsLoading(false))
+            return axios.post('/api/survey/email', candidateAnswers.email, {
+                headers: { 'Content-Type': 'application/json'}
+            }).then(() => setEmailCodePopupActive(true))
+            .catch(() => setEmailCodePopupActive(true))
+            .finally(() => setCredentialsLoading(false))
         }
 
         if(type === 'tel') {
+            if(candidateAnswers.phone.length !== 9) return setCredentialsError('Numer telefonu powinien zawierać 9 cyfr!')
             setCredentialsLoading(true)
             return axios.get('/api/survey/phone/' + candidateAnswers.phone)
             .then(() => setActiveQuestionIndex(prev => prev + 1))
@@ -52,6 +50,10 @@ export default function CandidateController() {
         setActiveQuestionIndex(prev => prev + 1)
     }
 
+    useEffect(() => {
+        setError('')
+    }, [activeQuestionIndex])
+
     if(loading) return <Loader />
     if(error) return <p className="text-red-400 mt-16">{error}</p>
 
@@ -62,16 +64,19 @@ export default function CandidateController() {
                 <small className="text-base font-semibold">{activeQuestionIndex + 1} / <span className="text-[#D3C5BB]">{defaultQuestions.length}</span></small>
                 <h2 className="text-3xl font-bold text-center w-full max-w-[8in]">{question}</h2>
             </div>
-            <form className="flex flex-col flex-1 items-center justify-between gap-8 w-full" onSubmit={handleSubmit}>
+            <form className="flex flex-col flex-1 items-center justify-between gap-8 w-full relative" onSubmit={handleSubmit}>
                 <div className="flex flex-col items-center w-full gap-6 mt-8">
                     <CandidateInput {...defaultQuestions[activeQuestionIndex]} />
                 </div>
                 <div className="flex justify-between items-center gap-4 flex-wrap self-end mt-8 xl:mt-0">
                     {credentialsLoading && <Loader />}
-                    {!credentialsLoading && credentialsError && <p className="text-red-400 mt-16">{credentialsError}</p>}
-                    {activeQuestionIndex > 0 && <button type='button' onClick={() => setActiveQuestionIndex(prev => prev - 1)} className="rounded-full text-[.8rem] text-secondary scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-bold py-4 px-8 bg-[#FEF4E4] self-end flex items-center"><img className="mr-2 max-h-[.9em]" src={prevArrow} alt="<-" /> Poprzednie pytanie</button>}
-                    <button className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center">Następne pytanie <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" /></button>
+                    {!credentialsLoading && credentialsError && <p className="text-red-400 max-w-full">{credentialsError}</p>}
+                    <div className="flex items-center flex-wrap gap-4 flex-1">
+                        {activeQuestionIndex > 0 && <button type='button' onClick={() => setActiveQuestionIndex(prev => prev - 1)} className="rounded-full text-[.8rem] text-secondary scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-bold py-4 px-8 bg-[#FEF4E4] self-end flex items-center"><img className="mr-2 max-h-[.9em]" src={prevArrow} alt="<-" /> Poprzednie pytanie</button>}
+                        <button className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center">Następne pytanie <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" /></button>
+                    </div>
                 </div>
+                {emailCodePopupActive && <EmailCodePopup setActiveQuestionIndex={setActiveQuestionIndex} setEmailCodePopupActive={setEmailCodePopupActive} />}
             </form>
         </>
     )
@@ -123,7 +128,7 @@ const CandidateInput = ({ question, type, placeholder, customInputs, name, ...re
                     return (
                         <div className="flex flex-col gap-4 self-stretch">
                             {input.label && <label className="text-sm font-medium" htmlFor={input.name}>{input.label}:</label>}
-                            <input className={textInputStyles} required type={input.type} value={candidateAnswers[input.name]} placeholder={input.placeholder} id={input.name} onChange={e => setCandidateAnswers(prev => ({ ...prev, [input.name]: e.target.value }))} />
+                            <input className={textInputStyles} required type={input.type} autoComplete='off' value={candidateAnswers[input.name]} placeholder={input.placeholder} id={input.name} onChange={e => setCandidateAnswers(prev => ({ ...prev, [input.name]: e.target.value }))} />
                         </div>
                     )
                 })}

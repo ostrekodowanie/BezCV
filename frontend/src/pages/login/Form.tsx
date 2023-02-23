@@ -67,17 +67,20 @@ export default function Form() {
                         <input className={inputStyles.input} required autoComplete="off" type='password' name='password' id='password' onChange={e => setCredentials(prev => { return { ...prev, password: e.target.value }})} />
                     </div>
                 </div>
-                <span className="mt-6 mb-4 text-left">Zapomniałeś hasła? <Link className="text-primary font-medium hover:text-darkPrimary transition-colors" to='/logowanie/odzyskiwanie'>Zresetuj hasło</Link></span>
-                <p className='text-[rgba(23,26,35,0.6)] text-left text-sm max-w-[4in]'>Logując się do serwisu bezcv akceptujesz regulamin w jego obecnej postaci oraz politykę prywatności</p>
+                <div className='flex gap-4 flex-wrap justify-between mt-8 mb-4'>
+                    <span className="text-left">Zapomniałeś hasła? <Link className="text-[#2F66F4] font-medium hover:text-darkPrimary transition-colors" to='/logowanie/odzyskiwanie'>Zresetuj hasło</Link></span>
+                    <div className='flex items-center gap-4'>
+                        {status.message === 'loading' && <Loader />}
+                        {!status.ok && status.message && status.message !== 'loading' && <span className='text-red-400 font-medium'>{status.message}</span>}
+                        <FilledButton type='submit'>Zaloguj się</FilledButton>
+                    </div>
+                </div>
+                <p className='text-[rgba(23,26,35,0.6)] text-left text-sm max-w-[4in]'>Logując się do bezCV akceptujesz regulamin oraz politykę prywatności serwisu</p>
                 <div className='relative flex items-center mt-4 mb-2'>
-                    <span className="relative mx-auto bg-white px-6 xl:px-10 py-3 z-10">Nie posiadasz konta? <Link className="text-primary font-medium hover:text-darkPrimary transition-colors" to='/rejestracja'>Zarejestruj się</Link></span>
+                    <span className="relative mx-auto bg-white px-6 xl:px-10 py-3 z-10">Nie posiadasz konta? <Link className="text-[#2F66F4] font-medium hover:text-darkPrimary transition-colors" to='/rejestracja'>Zarejestruj się</Link></span>
                     <div className='bg-[#DFDFDF] absolute left-0 right-0 h-[2px]' />
                 </div>
-                <div className='flex items-center gap-6'>
-                    <FilledButton type='submit'>Zaloguj</FilledButton>
-                    {!status.ok && status.message && status.message !== 'loading' && <span className='text-red-400 font-medium'>{status.message}</span>}
-                    {status.message === 'loading' && <Loader />}
-                </div>
+                
             </form>
         </div>
     )
