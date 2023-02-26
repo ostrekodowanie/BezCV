@@ -50,6 +50,7 @@ const Nav = () => {
                 <HashLink />
                 {account === 'employer' && (
                     logged ? <>
+                        <CustomLink to='/oferty'>Wyszukiwarka kandydatów</CustomLink>
                         <CustomLink className="font-semibold text-base md:ml-2" to='/profil'>{first_name}</CustomLink>
                         <CustomLink className="font-semibold text-base" to='/punkty'>{points + ' pkt.'}</CustomLink>
                     </> : 

@@ -4,15 +4,13 @@ import ConfettiExplosion from "react-confetti-explosion"
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router"
 import { Link } from "react-router-dom"
-import { cashIcon, emailIcon, percentageTriangle, phoneIcon, role } from "../assets/candidate/candidate"
+import { cashIcon, emailIcon, phoneIcon, role } from "../assets/candidate/candidate"
+import { bcvToken } from "../assets/general"
+import AbilityRange, { AbilityProps } from "../components/candidate/AbilityRange"
 import Loader from "../components/Loader"
+import CircleChart from "../components/offers/CircleChart"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
-
-export interface AbilityProps {
-    name: string,
-    percentage: number
-}
 
 export interface CandidateProps {
     id: number,
@@ -24,6 +22,7 @@ export interface CandidateProps {
     phone?: string,
     email?: string,
     favourite?: boolean,
+    desc?: string,
     similar_candidates?: CandidateProps[]
 }
 
@@ -41,7 +40,7 @@ export default function Candidate() {
     const { points } = auth.data
     const user_id = auth.data.id
     const { access, refresh } = auth.tokens
-    const [success, setSuccess] = useState(false)
+    const [confetti, setConfetti] = useState(false)
     const [loading, setLoading] = useState({
         page: true,
         purchase: false
@@ -54,6 +53,7 @@ export default function Candidate() {
         phone: '',
         abilities: [],
         profession: '',
+        desc: '',
         salary_expectation: '',
         similar_candidates: []
     })
@@ -65,7 +65,7 @@ export default function Candidate() {
         const resp = await axios.post('/api/oferty/purchase', data)
         if(resp.status === 201) {
             dispatch(purchase())
-            setSuccess(true)
+            setConfetti(true)
         }
         return setLoading(prev => ({...prev, purchase: false}))
     }
@@ -133,23 +133,132 @@ export default function Candidate() {
                                 <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                             </> : <>
                                 <h4 className="text-sm">Oczekiwania finansowe</h4>
-                                <h3 className="font-medium text-sm">{candidateDetails.salary_expectation} zł</h3>
+                                <h3 className="font-medium text-sm">{candidateDetails.salary_expectation}</h3>
                             </>}
                         </div>
                     </div>
                 </div>
             </div>
-            {loading.page ? <div className="ml-[8vw] sm:ml-0"><Loader /></div> : !candidateDetails.is_purchased && 
-                <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
-                    <button onClick={handlePurchase} className="bg-primary transition-colors text-sm max-w-max font-medium hover:bg-darkPrimary text-white rounded-full flex items-center py-3 px-6">Wykup kontakt za 1 punkt</button>
-                    {loading.purchase && <Loader />}
-                    {success && <ConfettiExplosion />}  
+            <div className="flex flex-col xl:grid grid-cols-[1fr_2fr] xl:grid-rows-[max-content_1fr_max-content] gap-8">
+                {loading.page ? <div className="ml-[8vw] sm:ml-0"><Loader /></div> : !candidateDetails.is_purchased &&
+                    <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
+                        <button onClick={handlePurchase} className="rounded-full max-w-max justify-center xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10 bg-primary">Wykup kontakt za 1 token <img className="max-h-[1.4em] ml-2" src={bcvToken} alt="bCV" /></button>
+                        {loading.purchase && <Loader />}
+                    </div>
+                }
+                <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-span-2">
+                    <h2 className="mb-6 font-bold mx-[8vw] sm:mx-0">Opis kandydata na podstawie AI</h2>
+                    <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB]">
+                        <p className="font-medium text-[.8rem] leading-loose">{candidateDetails.desc}</p>
+                    </div>
                 </div>
-            }
-            <div className="flex flex-col gap-8 lg:grid grid-cols-[1fr_2fr]">
-                <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-8">
-                    <div className="flex flex-col w-full">
-                        <h2 className="font-medium text-xl mb-6">Istotne umiejętności kandydata</h2>
+                <div className={`flex flex-col gap-8 ${candidateDetails.is_purchased ? 'row-[1/4]' : 'row-[2/4]'} col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10`}>
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img className="max-w-[60%] max-h-[60%]" src={emailIcon} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm">Email</h4>
+                                <h3 className="font-medium text-sm">{candidateDetails.email}</h3>
+                            </>}
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img className="max-w-[60%] max-h-[60%]" src={phoneIcon} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm">Numer telefonu</h4>
+                                <h3 className="font-medium text-sm">+48 {candidateDetails.phone}</h3>
+                            </>}
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img src={role} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm">Stanowisko</h4>
+                                <h3 className="font-medium text-sm">{candidateDetails.profession}</h3>
+                            </>}
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img src={cashIcon} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm">Oczekiwania finansowe</h4>
+                                <h3 className="font-medium text-sm">{candidateDetails.salary_expectation}</h3>
+                            </>}
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white sm:rounded-3xl shadow-primaryBig py-10 sm:p-10 flex justify-evenly flex-wrap col-[2/3] xl:flex-nowrap gap-6">
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img className="max-w-[60%] max-h-[60%]" src={emailIcon} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm">Email</h4>
+                                <h3 className="font-medium text-sm">{candidateDetails.email}</h3>
+                            </>}
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img className="max-w-[60%] max-h-[60%]" src={phoneIcon} alt="" /></div>
+                        <div className="flex flex-col gap-1">
+                            {loading.page ? <>
+                                <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                            </> : <>
+                                <h4 className="text-sm">Numer telefonu</h4>
+                                <h3 className="font-medium text-sm">+48 {candidateDetails.phone}</h3>
+                            </>}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {confetti && <ConfettiExplosion className="absolute top-[40vh] right-[50%] translate-x-[-50%]" />}
+            <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:px-6 shadow-primaryBig gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
+                <CircleChart profession='sales' percentage={70} />
+                <CircleChart profession='office_administration' percentage={70} />
+                <CircleChart profession='customer_service' percentage={70} />
+            </div>
+            <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
+                <div className="flex flex-col w-full">
+                    <h2 className="font-medium text-xl mb-6">Umiejętności kandydata do pracy na każdym stanowisku</h2>
+                    <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+                        <div className="flex flex-col gap-6">
+                            {!loading.page ? candidateDetails.abilities?.map(ab => <AbilityRange {...ab} key={ab.name} />) : <>
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                            </>}
+                        </div>
+                        <div className="flex flex-col gap-6">
+                            {!loading.page ? candidateDetails.abilities?.map(ab => <AbilityRange {...ab} key={ab.name} />) : <>
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                                <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                            </>}
+                        </div>
                         <div className="flex flex-col gap-6">
                             {!loading.page ? candidateDetails.abilities?.map(ab => <AbilityRange {...ab} key={ab.name} />) : <>
                                 <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
@@ -162,39 +271,25 @@ export default function Candidate() {
                         </div>
                     </div>
                 </div>
-                <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 flex flex-wrap shadow-primaryBig gap-8">
-                    <div className="flex flex-col w-full">
-                        <h2 className="font-medium text-xl mb-6">Ci kandydaci mogą Cię zainteresować</h2>
-                        <div className="flex flex-col gap-6 w-full">
-                            {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
-                                <SuggestedCandidateLoader />
-                                <SuggestedCandidateLoader />
-                                <SuggestedCandidateLoader />
-                                <SuggestedCandidateLoader />
-                            </>}
-                        </div>
+                <div className="flex flex-col w-full">
+                    <h2 className="font-medium text-xl mb-6">Na co zwrócić uwagę przy kontakcie z kandydatem</h2>
+                    
+                </div>
+            </div>
+            <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 flex flex-wrap shadow-primaryBig gap-8">
+                <div className="flex flex-col w-full">
+                    <h2 className="font-medium text-xl mb-6">Ci kandydaci mogą Cię zainteresować</h2>
+                    <div className="flex flex-col gap-6 w-full">
+                        {!loading.page ? candidateDetails.similar_candidates?.map(cand => <SuggestedCandidate {...cand} key={cand.id} />) : <> 
+                            <SuggestedCandidateLoader />
+                            <SuggestedCandidateLoader />
+                            <SuggestedCandidateLoader />
+                            <SuggestedCandidateLoader />
+                        </>}
                     </div>
                 </div>
             </div>
         </section>       
-    )
-}
-
-const AbilityRange = ({ name, percentage }: AbilityProps) => {
-    if(!percentage || percentage < 1) return <></>
-    return (
-        <div className="flex flex-col gap-3">
-            <h4 className={`w-full max-w-[60%] font-medium text-[.8rem] ${percentage < 60 ? 'text-right self-end' : 'text-left self-start'}`}>{name}</h4>
-            <div className="bg-[#2F66F4]/20 rounded-full h-[1.4rem]">
-                <div style={{ width: percentage + '%' }} className='relative bg-[linear-gradient(180deg,#2F66F4_-81.35%,#0D9AE9_100%)] rounded-full h-full'>
-                    <div className="rounded-full absolute right-0 translate-x-[50%] h-6 w-6 bottom-[120%] shadow-primarySmall bg-white flex items-center justify-center">
-                        <span className="font-medium text-primary right-[125%] -top-1 z-10 absolute">{percentage}%</span>
-                        <div className="bg-primary h-[35%] w-[35%] rounded-full" />
-                        <img className="absolute top-[50%] left-0 w-full -z-10" src={percentageTriangle} alt="" />
-                    </div>
-                </div>
-            </div>
-        </div>
     )
 }
 
