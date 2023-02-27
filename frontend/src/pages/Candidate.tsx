@@ -8,7 +8,7 @@ import { cashIcon, emailIcon, phoneIcon, role } from "../assets/candidate/candid
 import { bcvToken } from "../assets/general"
 import AbilityRange, { AbilityProps } from "../components/candidate/AbilityRange"
 import Loader from "../components/Loader"
-import CircleChart from "../components/offers/CircleChart"
+import CircleChart from "../components/candidate/CircleChart"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
 
@@ -79,7 +79,7 @@ export default function Candidate() {
     }, [points, id])
     
     return (
-        <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[18vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8">
+        <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8">
             <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
                 {loading.page ? <div className="flex items-center gap-4 mb-8">
                     <div className="w-[1in] h-[2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
@@ -230,10 +230,10 @@ export default function Candidate() {
                 </div>
             </div>
             {confetti && <ConfettiExplosion className="absolute top-[40vh] right-[50%] translate-x-[-50%]" />}
-            <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:px-6 shadow-primaryBig gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
+            <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto py-10 sm:px-6 shadow-primaryBig gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
                 <CircleChart profession='sales' percentage={70} />
-                <CircleChart profession='office_administration' percentage={70} />
-                <CircleChart profession='customer_service' percentage={70} />
+                <CircleChart profession='office_administration' percentage={60} />
+                <CircleChart profession='customer_service' percentage={98} />
             </div>
             <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
                 <div className="flex flex-col w-full">
@@ -300,7 +300,7 @@ const SuggestedCandidate = ({ id, first_name, last_name, profession, abilities }
                 <div className="h-14 w-14 bg-[#F8F8F8] rounded-full flex items-center justify-center"><h4 className="text-primary">{first_name.charAt(0)}</h4></div>
                 <div className="flex flex-col mr-8 gap-1 w-max">
                     <h4 className="text-sm w-max font-medium">{first_name} {last_name}</h4>
-                    <h4 className="text-[.8rem] w-max"><span className="hidden sm:inline">Preferowane stanowisko:</span> <span className="font-medium text-primary">{profession}</span></h4>
+                    <h4 className="text-[.8rem] w-max"><span className="hidden sm:inline">Szuka pracy w:</span> <span className="font-medium text-primary">{profession}</span></h4>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
                     {abilities?.map(ab => ab.name).map(ab => (

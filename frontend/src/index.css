@@ -177,3 +177,15 @@ input[type="range"]::-ms-thumb {
   from { stroke-dashoffset:-calc(-2 * 3.14159 * 155px); }
   to { stroke-dashoffset: 0; }
 } */
+
+@keyframes abilities-slider {
+  from {
+    transform: translateX(0%);
+  } to {
+    transform: translateX(-100%);
+  }
+}
+
+.abilities-slider {
+  animation: abilities-slider 80s alternate linear infinite 200ms;
+}
