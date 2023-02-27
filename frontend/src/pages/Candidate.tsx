@@ -146,9 +146,9 @@ export default function Candidate() {
                         {loading.purchase && <Loader />}
                     </div>
                 }
-                <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-span-2">
+                <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-span-2 flex flex-col">
                     <h2 className="mb-6 font-bold mx-[8vw] sm:mx-0">Opis kandydata na podstawie AI</h2>
-                    <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB] h-full">
+                    <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB] flex-1">
                         <p className="font-medium text-[.8rem] leading-loose">{candidateDetails.desc}</p>
                     </div>
                 </div>
