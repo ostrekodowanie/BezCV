@@ -73,7 +73,7 @@ export default function App() {
     return () => clearTimeout(timer.current)
   }, [refresh])
 
-  if(loading) return <div className="w-screen h-screen flex items-center justify-center"><Loader /></div>
+  if(loading) return <div className="w-screen h-screen flex items-center justify-center"><span className="animate-pulse font-medium text-3xl">Bez<span className="text-primary">CV</span></span></div>
 
   return (
     <AccountProvider>

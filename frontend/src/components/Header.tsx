@@ -26,7 +26,7 @@ export default function Header() {
     )
 }
 
-const Logo = () => <Link to='/'>BezCV</Link>
+const Logo = () => <Link className="font-medium" to='/'>Bez<span className="text-primary">CV</span></Link>
 
 const lineStyle = 'h-[3px] w-full transition rounded-xl'
 

@@ -88,7 +88,7 @@ export default function Candidate() {
                     <h2 className="text-primary">Kandydat</h2>
                     <h1 className="font-medium text-xl xl:text-2xl">{candidateDetails.first_name} {candidateDetails.last_name}</h1>
                 </div>}
-                <div className="flex flex-wrap gap-6 xl:flex-nowrap xl:justify-between">
+                <div className="flex flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
                     <div className="flex items-center gap-4">
                         <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img className="max-w-[60%] max-h-[60%]" src={emailIcon} alt="" /></div>
                         <div className="flex flex-col gap-1">
@@ -148,7 +148,7 @@ export default function Candidate() {
                 }
                 <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-span-2">
                     <h2 className="mb-6 font-bold mx-[8vw] sm:mx-0">Opis kandydata na podstawie AI</h2>
-                    <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB]">
+                    <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB] h-full">
                         <p className="font-medium text-[.8rem] leading-loose">{candidateDetails.desc}</p>
                     </div>
                 </div>
