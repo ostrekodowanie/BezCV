@@ -10,7 +10,7 @@ type CustomInput = {
 }
 
 export interface QuestionProps {
-    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration',
+    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'date_of_birth' | 'region' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration',
     question: string,
     type: HTMLInputTypeAttribute | 'custom',
     answers?: string[],
@@ -51,8 +51,8 @@ export const defaultQuestions: QuestionProps[] = [
     },
     {
         name: 'preferred_professions',
-        question: 'W których zawodach chciałbyś pracować?',
-        type: 'checkbox',
+        question: 'W którym zawodzie najbardziej chciałbyś pracować?',
+        type: 'radio',
         answers: ['Sprzedaż', 'Obsługa klienta', 'Administracja biurowa'],
     },
     {
@@ -70,6 +70,12 @@ export const defaultQuestions: QuestionProps[] = [
         ],
     },
     {
+        name: 'date_of_birth',
+        type: 'date',
+        question: 'Podaj swoją datę urodzenia',
+        placeholder: 'Tutaj wprowadź datę'
+    },
+    {
         name: 'availability',
         question: 'Jaka jest Twoja dyspozycyjność?',
         type: 'radio',
@@ -78,6 +84,11 @@ export const defaultQuestions: QuestionProps[] = [
             'pół etatu',
             'cały etat'
         ],
+    },
+    {
+        name: 'region',
+        question: 'W jakim województwie chciałbyś pracować?',
+        type: 'text'
     },
     {
         name: 'job_position',

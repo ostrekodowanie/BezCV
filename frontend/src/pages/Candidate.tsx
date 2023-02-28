@@ -6,31 +6,12 @@ import { useNavigate, useParams } from "react-router"
 import { Link } from "react-router-dom"
 import { cashIcon, emailIcon, phoneIcon, role } from "../assets/candidate/candidate"
 import { bcvToken } from "../assets/general"
-import AbilityRange, { AbilityProps } from "../components/candidate/AbilityRange"
+import AbilityRange from "../components/candidate/AbilityRange"
 import Loader from "../components/Loader"
 import CircleChart from "../components/candidate/CircleChart"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
-
-export interface CandidateProps {
-    id: number,
-    first_name: string,
-    last_name: string,
-    abilities?: AbilityProps[],
-    profession?: string,
-    salary_expectation?: string,
-    phone?: string,
-    email?: string,
-    favourite?: boolean,
-    desc?: string,
-    similar_candidates?: CandidateProps[]
-}
-
-type Details = Omit<CandidateProps, | 'id' | 'favourite'> & { is_purchased: boolean }
-
-export type NonPercentageAbilitiesCandidateProps = Omit<CandidateProps, 'abilities'> & {
-    abilities: string[]
-}
+import { CandidateProps, Details, initialDetailsState } from "../constants/candidate"
 
 export default function Candidate() {
     const auth = useAppSelector(state => state.login)
@@ -45,18 +26,7 @@ export default function Candidate() {
         page: true,
         purchase: false
     })
-    const [candidateDetails, setCandidateDetails] = useState<Details>({
-        is_purchased: false,
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone: '',
-        abilities: [],
-        profession: '',
-        desc: '',
-        salary_expectation: '',
-        similar_candidates: []
-    })
+    const [candidateDetails, setCandidateDetails] = useState<Details>(initialDetailsState)
 
     const handlePurchase = async () => {
         if(points < 1) return navigate('/punkty')
@@ -231,9 +201,9 @@ export default function Candidate() {
             </div>
             {confetti && <ConfettiExplosion className="absolute top-[40vh] right-[50%] translate-x-[-50%]" />}
             <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto py-10 sm:px-6 shadow-primaryBig gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
-                <CircleChart profession='sales' percentage={70} />
-                <CircleChart profession='office_administration' percentage={60} />
-                <CircleChart profession='customer_service' percentage={98} />
+                <CircleChart profession='sales' percentage={candidateDetails.percentage_by_category?.sales || 0} />
+                <CircleChart profession='office_administration' percentage={candidateDetails.percentage_by_category?.office_administration || 0} />
+                <CircleChart profession='customer_service' percentage={candidateDetails.percentage_by_category?.customer_service || 0} />
             </div>
             <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
                 <div className="flex flex-col w-full">

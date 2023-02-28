@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import CandidateFilter from "../components/offers/CandidateFilter"
-import { CandidateProps } from "./Candidate"
+import { CandidateProps } from "../constants/candidate"
 import Candidate from './Candidate'
 import { Link, useSearchParams } from "react-router-dom"
 import { useAppSelector } from "../main"
@@ -116,15 +116,15 @@ const CandidateList = () => {
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, favourite, abilities, phone, email, profession }: CandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, is_followed, abilities, phone, email, profession }: CandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
-    const [isFavourite, setIsFavourite] = useState(favourite)
+    const [isFollowed, setIsFollowed] = useState(is_followed)
 
     const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         e.stopPropagation()
-        setIsFavourite(prev => !prev)
-        if(isFavourite) return axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`)
+        setIsFollowed(prev => !prev)
+        if(isFollowed) return axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`)
         return axios.post('/api/profile/favourites/add', JSON.stringify({ employer: user_id, candidate: id }), {
             headers: { 'Content-Type': 'application/json' }
         })

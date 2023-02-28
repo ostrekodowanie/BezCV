@@ -4,13 +4,13 @@ import { Link } from "react-router-dom"
 import { descIcon, profilePictureUpload } from "../assets/profile/profile"
 import { useAppDispatch, useAppSelector } from "../main"
 import { logout } from "../reducers/login"
-import { CandidateProps, NonPercentageAbilitiesCandidateProps } from "./Candidate"
+import { CandidateProps, NonPercentageAbilitiesCandidateProps } from "../constants/candidate"
 
 export default function Profile() {
     const dispatch = useAppDispatch()
     const auth = useAppSelector(state => state.login)
     const { id, first_name, last_name, image, desc } = auth.data
-    const [profilePicture, setProfilePicture] = useState<any>(image ? '/' + image.split('/').splice(3).join('/') : image)
+    const [profilePicture, setProfilePicture] = useState<any>(image)
     const { access, refresh } = auth.tokens
 
     const handleLogout = async () => {
