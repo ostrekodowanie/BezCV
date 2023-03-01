@@ -5,6 +5,7 @@ import emailIcon from './email.svg'
 import phoneIcon from './phone.svg'
 import cashIcon from './cash.svg'
 import percentageTriangle from './percentage_triangle.svg'
+import pdf from './pdf.svg'
 
 export {
     role,
@@ -13,5 +14,6 @@ export {
     emailIcon,
     phoneIcon,
     cashIcon,
-    percentageTriangle
+    percentageTriangle,
+    pdf
 }

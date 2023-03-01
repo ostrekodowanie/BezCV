@@ -2,14 +2,14 @@ import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { Route, Routes, useLocation, useNavigate } from "react-router"
 import CandidateFilter from "../components/offers/CandidateFilter"
-import { CandidateProps } from "../constants/candidate"
+import { CandidateProps, offersCategoryPercantageBox } from "../constants/candidate"
 import Candidate from './Candidate'
 import { Link, useSearchParams } from "react-router-dom"
 import { useAppSelector } from "../main"
 import InfiniteScroll from "react-infinite-scroll-component"
-import { liked, notLiked } from "../assets/offers/offers"
 import { emailIcon, phoneIcon } from "../assets/candidate/candidate"
 import { arrowRight } from "../assets/general"
+import CategoryPercantageBox from "../components/offers/CategoryPercentageBox"
 
 export default function Offers() {
     return (
@@ -24,7 +24,8 @@ export default function Offers() {
 
 export interface FilterProps {
     abilities: string[],
-    professions: string[]
+    professions: string[],
+    availability: string[]
 }
 
 const CandidateList = () => {
@@ -40,7 +41,8 @@ const CandidateList = () => {
     const [hasMore, setHasMore] = useState(true)
     const [filter, setFilter] = useState<FilterProps>({
         abilities: searchParams.get('a')?.split(',') || [],
-        professions: searchParams.get('r')?.split(',') || []
+        professions: searchParams.get('professions')?.split(',') || [],
+        availability: searchParams.get('availability')?.split(',') || []
     })
 
     useEffect(() => {
@@ -116,7 +118,7 @@ const CandidateList = () => {
     )
 }
 
-const CandidateRef = ({ id, first_name, last_name, is_followed, abilities, phone, email, profession }: CandidateProps) => {
+const CandidateRef = ({ id, first_name, last_name, is_followed, percentage_by_category, phone, email, profession }: CandidateProps) => {
     const user_id = useAppSelector(state => state.login.data.id)
     const [isFollowed, setIsFollowed] = useState(is_followed)
 
@@ -190,11 +192,7 @@ const CandidateRef = ({ id, first_name, last_name, is_followed, abilities, phone
             </div>
             <div className="flex items-center gap-4 justify-between flex-wrap sm:flex-nowrap">
                 <div className="flex flex-wrap gap-4">
-                    {abilities?.map(ab => ab.name).map(ab => (
-                        <div className="flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#EBF0FE]">
-                            <h4 className="text-primary text-[.75rem] font-medium">{ab}</h4>
-                        </div>
-                    ))}
+                    {offersCategoryPercantageBox.map(box => <CategoryPercantageBox {...box} percentage={percentage_by_category[box.name]} />)}
                 </div>
                 <button className="rounded-full max-w-max text-white text-[.75rem] font-semibold flex items-center py-3 px-10 bg-primary" type='button'>Zobacz profil<img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></button>
             </div>

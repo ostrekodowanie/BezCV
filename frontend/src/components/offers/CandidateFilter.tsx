@@ -11,7 +11,8 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
     const [mobileActive, setMobileActive] = useState(false)
     const [allFilters, setAllFilters] = useState<FilterStateProps>({
         abilities: [],
-        professions: []
+        professions: [],
+        availability: []
     })
 
     useEffect(() => {
@@ -36,10 +37,24 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                         </>}
                     </div>
                 </div>
-                <div>
+                {/* <div>
                     {allFilters.abilities.length > 0 ? <h4 className="font-semibold mb-6">Umiejętności</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
                     <div className="flex flex-col gap-4">
                         {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <AbilityCheckBox ability={ability} setFilter={setFilter} key={ability} />) :
+                        <>
+                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                        </>}
+                    </div>
+                </div> */}
+                <div>
+                    {allFilters.availability.length > 0 ? <h4 className="font-semibold mb-6">Dyspozycyjność</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
+                    <div className="flex flex-col gap-4">
+                        {allFilters.availability.length > 0 ? allFilters.availability.map(availability => <AvailabilityCheckBox availability={availability} setFilter={setFilter} key={availability} />) :
                         <>
                             <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
                             <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
@@ -73,6 +88,28 @@ const AbilityCheckBox = ({ ability, setFilter }: { ability: string, setFilter: D
         <div className='flex items-center text-[.75rem] font-medium'>
             <input type='checkbox' onChange={handleChange} checked={checked} name="abilities" id={ability}/>
             <label className="ml-4" htmlFor={ability}>{ability}</label>
+        </div>
+    )
+}
+
+const AvailabilityCheckBox = ({ availability, setFilter }: { availability: string, setFilter: Dispatch<SetStateAction<FilterStateProps>> }) => {
+    const location = useLocation()
+    const [checked, setChecked] = useState(false)
+
+    useLayoutEffect(() => {
+        const decodedSearch = decodeURIComponent(location.search);
+        setChecked(decodedSearch.includes(availability))
+    }, [])
+
+    const handleChange = () => {
+        setFilter(prev => ({ ...prev, availability: checked ? prev.availability.filter(ab => ab !== availability) : [...prev.availability, availability] }))
+        setChecked(prev => !prev)
+    }
+
+    return (
+        <div className='flex items-center text-[.75rem] font-medium'>
+            <input type='checkbox' onChange={handleChange} checked={checked} name="abilities" id={availability}/>
+            <label className="ml-4" htmlFor={availability}>{availability}</label>
         </div>
     )
 }

@@ -21,7 +21,7 @@ const professionTitle = (profession: RoleType): string => {
 
 export default function CircleChart({ profession, percentage }: CircleChartProps) {
     const circleRef = useRef<SVGCircleElement>(null)
-    const color = professionColorMap[profession]
+    const color = professionColorMap[profession].color
     const title = professionTitle(profession)
     const radius = 155
     const circumference = 2 * Math.PI * radius
@@ -57,12 +57,6 @@ export default function CircleChart({ profession, percentage }: CircleChartProps
                 </div>
             </div>
             <svg className="absolute left-0 top-0 rotate-90" xmlns="https://www.w3.org/2000/svg" version="1.1" width={340} height={340}>
-                <defs>
-                    <linearGradient>
-                        <stop></stop>
-                        <stop></stop>
-                    </linearGradient>
-                </defs>
                 <circle 
                     className="circle-chart" 
                     cx={170} cy={170} r={155} 

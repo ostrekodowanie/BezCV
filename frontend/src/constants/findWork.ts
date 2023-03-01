@@ -10,7 +10,7 @@ type CustomInput = {
 }
 
 export interface QuestionProps {
-    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'date_of_birth' | 'region' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration',
+    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'date_of_birth' | 'province' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration',
     question: string,
     type: HTMLInputTypeAttribute | 'custom',
     answers?: string[],
@@ -86,9 +86,10 @@ export const defaultQuestions: QuestionProps[] = [
         ],
     },
     {
-        name: 'region',
+        name: 'province',
         question: 'W jakim województwie chciałbyś pracować?',
-        type: 'text'
+        type: 'text',
+        placeholder: 'Tutaj wpisz województwo'
     },
     {
         name: 'job_position',
