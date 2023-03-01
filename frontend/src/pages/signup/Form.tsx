@@ -68,24 +68,28 @@ export default function Form() {
                         <input className={inputStyles.input} required type='password' name='confPassword' id='confPassword' onChange={e => setConfPassword(e.target.value)} />
                     </div>
                 </div>
-                <div className='relative flex gap-4 items-center justify-start mt-6'>
-                    <input type='checkbox' required id='statute' name='signup' onChange={e => setAccepts(prev => ({ ...prev, statute: e.target.checked }))} />
-                    <label className='text-sm' htmlFor='statute'>Akceptuję regulamin</label>
+                <div className='flex items-center gap-4 flex-wrap justify-between my-4'>
+                    <div className='flex flex-col gap-4'>
+                        <div className='relative flex gap-4 items-center justify-start mt-6'>
+                            <input type='checkbox' required id='statute' name='signup' onChange={e => setAccepts(prev => ({ ...prev, statute: e.target.checked }))} />
+                            <label className='text-sm' htmlFor='statute'>Akceptuję regulamin</label>
+                        </div>
+                        <div className='relative flex gap-4 items-center justify-start'>
+                            <input type='checkbox' required id='policy' name='signup' onChange={e => setAccepts(prev => ({ ...prev, policy: e.target.checked }))} />
+                            <label className='text-sm' htmlFor='policy'>Akceptuję politykę prywatności</label>
+                        </div>
+                    </div>
+                    <div className='flex items-center gap-4'>
+                        {status === 'loading' && <Loader />}
+                        {status && status !== 'loading' && <span className='text-red-400 font-medium'>{status}</span>}
+                        <FilledButton type='submit'>Załóż konto</FilledButton>
+                    </div>
                 </div>
-                <div className='relative flex gap-4 items-center justify-start'>
-                    <input type='checkbox' required id='policy' name='signup' onChange={e => setAccepts(prev => ({ ...prev, policy: e.target.checked }))} />
-                    <label className='text-sm' htmlFor='policy'>Akceptuję politykę prywatności</label>
-                </div>
-                
                 <div className='relative flex items-center mt-4 mb-2'>
-                    <span className="relative mx-auto bg-white px-6 xl:px-10 py-3 z-10">Już posiadasz konto? <Link className="text-primary font-semibold hover:text-darkPrimary transition-colors" to='/logowanie'>Zaloguj się</Link></span>
+                    <span className="relative mx-auto bg-white px-6 xl:px-10 py-3 z-10">Już posiadasz konto? <Link className="text-[#2F66F4] font-semibold hover:text-darkPrimary transition-colors" to='/logowanie'>Zaloguj się</Link></span>
                     <div className='bg-[#DFDFDF] absolute left-0 right-0 h-[2px]' />
                 </div>
-                <div className='flex items-center gap-4'>
-                    <FilledButton type='submit'>Załóż konto</FilledButton>
-                    {status && status !== 'loading' && <span className='text-red-400 font-medium'>{status}</span>}
-                    {status === 'loading' && <Loader />}
-                </div>
+                
             </form>
         </div>
     )

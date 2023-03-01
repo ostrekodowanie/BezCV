@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -167,4 +167,25 @@ input[type="range"]::-ms-thumb {
   border: 8px solid #FFFFFF;
   box-shadow: 0px 4px 25px -2px rgba(215, 105, 23, 0.33);
   border-radius: 50%;
+}
+
+/* .circle-chart {
+  animation: chart 1s ease-in-out forwards 300ms;
+}
+
+@keyframes chart {
+  from { stroke-dashoffset:-calc(-2 * 3.14159 * 155px); }
+  to { stroke-dashoffset: 0; }
+} */
+
+@keyframes abilities-slider {
+  from {
+    transform: translateX(0%);
+  } to {
+    transform: translateX(-100%);
+  }
+}
+
+.abilities-slider {
+  animation: abilities-slider 80s linear infinite 200ms;
 }

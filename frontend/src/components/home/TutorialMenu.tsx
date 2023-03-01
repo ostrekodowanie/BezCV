@@ -36,7 +36,7 @@ export default function TutorialMenu() {
     return (
         <section className='padding pb-[1in] md:pb-[1.4in] 2xl:pb-[1.8in] hidden xl:block text-white'>
             <RoleStateContext.Provider value={contextValue}>
-                <div className={`${account === 'worker' ? 'bg-secondary' : 'bg-primary'} rounded-3xl p-10 md:p-16 flex flex-col gap-4`}>
+                <div className={`${account === 'worker' ? 'bg-secondary' : 'bg-primary'} rounded-3xl p-10 md:p-16 flex flex-col max-w-[90%] mx-auto gap-4`}>
                     <Title account={account} />
                     <div className={`flex items-center gap-2 py-2 px-4 ${account === 'worker' ? 'bg-[rgba(249,191,123,0.61)]' : 'bg-[rgba(255,255,255,0.3)]'} my-8 w-max rounded-full`}>
                         {roles.map(role => <RoleButton {...role} />)}

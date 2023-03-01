@@ -32,7 +32,6 @@ DEBUG = os.environ.get('DEBUG', default=True)
 
 ALLOWED_HOSTS = ['127.0.0.1', 'bezcv.up.railway.app']
 
-
 # Application definition
 
 INSTALLED_APPS = [

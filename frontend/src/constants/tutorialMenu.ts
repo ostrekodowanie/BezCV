@@ -18,7 +18,7 @@ export const candidateAnswers: TutorialAnswerProps[] = [
     {
         position: 'left-[80%] top-[52%]',
         title: 'Potencjalni kandydaci',
-        desc: 'To tutaj wyświetlają się pracodawcom profile kandydatów, z którymi będziesz konkurował o pracę'
+        desc: 'Tutaj wyświetlamy pracodawcom profile kandydatów, z którymi konkurujesz o pracę'
     },
 ]
 
@@ -36,6 +36,6 @@ export const employerAnswers: TutorialAnswerProps[] = [
     {
         position: 'left-[80%] top-[52%]',
         title: 'Potencjalni kandydaci',
-        desc: 'To tutaj wyświetlają się profile, które znacząco przypominają cechami wybranego przez Ciebie kandydata'
+        desc: 'Tutaj wyświetlamy Ci profile, które znacząco przypominają cechami wybranego przez Ciebie kandydata'
     },
 ]
