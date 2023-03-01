@@ -3,7 +3,7 @@ from django.core.mail import EmailMessage
 from rest_framework import serializers
 
 from .models import Questions
-from apps.Candidates.models import Candidates, Professions, CandidateProfessions
+from apps.Candidates.models import Candidates
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -12,25 +12,16 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ['id', 'text']
 
 
-class PreferredProfessionField(serializers.StringRelatedField):
-    def to_internal_value(self, data):
-        profession = Professions.objects.get(name=data)
-        return profession
-
-class CandidatesSerializer(serializers.ModelSerializer):
-    preferred_professions = PreferredProfessionField(many=True)
+class CandidateCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Candidates
-        fields = ['first_name', 'last_name', 'email', 'phone', 'salary_expectation', 'availability', 'job_position',
+        fields = ['first_name', 'last_name', 'email', 'phone', 'birth_date', 'salary_expectation', 'availability', 'job_position',
                   'experience_sales', 'experience_customer_service', 'experience_office_administration', 'education',
-                  'driving_license', 'preferred_professions']
+                  'driving_license', 'preferred_profession']
 
     def create(self, validated_data):
-        preferred_professions_data = validated_data.pop('preferred_professions')
         candidate = Candidates.objects.create(**validated_data)
-        for profession in preferred_professions_data:
-            CandidateProfessions.objects.create(candidate=candidate, profession=profession)
 
         subject = 'Potwierdzenie rejestracji kandydata'
         message = 'Dziękujemy za rejestrację w naszej bazie kandydatów. Poniżej znajdują się informacje, które zostały przesłane:\n'
@@ -38,6 +29,7 @@ class CandidatesSerializer(serializers.ModelSerializer):
         message += 'Nazwisko: ' + candidate.last_name + '\n'
         message += 'E-mail: ' + candidate.email + '\n'
         message += 'Telefon: ' + candidate.phone + '\n'
+        message += 'Data urodzenia: ' + candidate.birth_date + '\n'
         message += 'Oczekiwania finansowe: ' + str(candidate.salary_expectation) + '\n'
         message += 'Dostępność: ' + str(candidate.availability) + '\n'
         message += 'Pozycja zawodowa: ' + candidate.job_position + '\n'
@@ -47,7 +39,7 @@ class CandidatesSerializer(serializers.ModelSerializer):
         message += 'Wykształcenie: ' + candidate.education + '\n'
         driving_license = 'Tak' if candidate.driving_license else 'Nie'
         message += 'Prawo jazdy: ' + driving_license + '\n'
-        message += 'Preferowane zawody: ' + ', '.join([profession.name for profession in preferred_professions_data]) + '\n'
+        message += 'Preferowane stanowisko: ' + candidate.preferred_profession + '\n'
         
         to_email = candidate.email
         email = EmailMessage(subject, message, to=[to_email])

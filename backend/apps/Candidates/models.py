@@ -1,5 +1,4 @@
 from django.db import models
-from slugify import slugify
 
 from apps.Auth.models import User
 
@@ -18,12 +17,33 @@ class Professions(models.Model):
         )
 
 
+class Abilities(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Abilities'
+
+    def __str__(self):
+        return '{} | {}'.format(
+            self.pk,
+            self.name,
+        )
+
+
 class Candidates(models.Model):
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
     email = models.EmailField(max_length=255, unique=True)
     phone = models.CharField(max_length=255, unique=True)
-    preferred_professions = models.ManyToManyField(Professions, through='CandidateProfessions')
+    birth_date = models.DateField()
+    province = models.CharField(max_length=255)
+    preferred_profession = models.CharField(max_length=100, choices=[
+                                                        ('Sprzedaż', 'Sprzedaż'), 
+                                                        ('Administracja biurowa', 'Administracja biurowa'), 
+                                                        ('Obsługa klienta', 'Obsługa klienta')])
+    abilities = models.ManyToManyField(Abilities, through='CandidateAbilities')
     salary_expectation = models.CharField(max_length=100, choices=[
                                                         ('mniej niż 2999 zł', 'mniej niż 2999 zł'), 
                                                         ('od 3000 zł do 3499 zł', 'od 3000 zł do 3499 zł'), 
@@ -56,36 +76,6 @@ class Candidates(models.Model):
             self.phone,
         )
 
-class CandidateProfessions(models.Model):
-    candidate = models.ForeignKey(
-        Candidates, on_delete=models.CASCADE, related_name='candidateprofessions_candidate')
-    profession = models.ForeignKey(
-        Professions, on_delete=models.CASCADE, related_name='candidateprofessions_profession')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name_plural = 'Candidate professions'
-        unique_together = [['candidate', 'profession']]
-
-    def __str__(self):
-        return '{}'.format(
-            self.pk,
-        )
-
-class Abilities(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name_plural = 'Abilities'
-
-    def __str__(self):
-        return '{} | {}'.format(
-            self.pk,
-            self.name,
-        )
 
 class CandidateAbilities(models.Model):
     candidate = models.ForeignKey(

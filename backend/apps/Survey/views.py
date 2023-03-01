@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from apps.Candidates.models import Candidates
 from .models import Questions, CandidateAnswers, QuestionCategories, GeneratedCodes
-from .serializers import QuestionSerializer, CandidatesSerializer
+from .serializers import QuestionSerializer, CandidateCreateSerializer
 from .signals import update_percentage
 
 import string, random , os, openai, datetime
@@ -85,7 +85,7 @@ class CandidateAnswersView(APIView):
 
 class CandidateCreateView(generics.CreateAPIView):
     queryset = Candidates.objects.all()
-    serializer_class = CandidatesSerializer
+    serializer_class = CandidateCreateSerializer
 
 
 class EmailCheckView(APIView):

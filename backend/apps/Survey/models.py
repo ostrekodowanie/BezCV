@@ -1,8 +1,6 @@
 from django.db import models
 from apps.Candidates.models import Candidates, Abilities
 
-import uuid
-
 
 class QuestionCategories(models.Model):
     name = models.CharField(max_length=100)
@@ -19,7 +17,7 @@ class QuestionCategories(models.Model):
 
 class Questions(models.Model):
     text = models.CharField(max_length=255)
-    category = models.ManyToManyField(QuestionCategories)
+    category = models.ManyToManyField(QuestionCategories, related_name='questions_category')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
