@@ -6,6 +6,7 @@ from .models import Candidates, PurchasedOffers, CandidateAbilities
 
 
 class CandidateSerializer(serializers.ModelSerializer):
+    profession = serializers.SerializerMethodField()
     ability_charts = serializers.SerializerMethodField()
     abilities = serializers.SerializerMethodField()
     worst_abilities = serializers.SerializerMethodField()
@@ -14,12 +15,14 @@ class CandidateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
         fields = [
-            'similar_candidates',
             'is_purchased',
             'first_name', 
             'last_name', 
             'email', 
-            'phone', 
+            'phone',
+            'birth_date',
+            'province',
+            'profession',
             'salary_expectation', 
             'availability', 
             'job_position',
@@ -28,7 +31,8 @@ class CandidateSerializer(serializers.ModelSerializer):
             'desc',
             'ability_charts',
             'abilities',
-            'worst_abilities'
+            'worst_abilities',
+            'similar_candidates'
             ]
     
     def to_representation(self, instance):
@@ -76,6 +80,53 @@ class CandidateSerializer(serializers.ModelSerializer):
             better_than[category] = percentage_difference
 
         return better_than
+    
+    def get_profession(self, obj):
+        abilities = obj.candidateabilities_candidate.annotate(
+            category=F('ability__abilityquestions_ability__question__category__name')
+        ).values('category').annotate(average_percentage=Avg('percentage'))
+                
+        profession = max(abilities, key=lambda k: k['average_percentage'])['category']
+        return profession
+
+    
+    '''def get_ability_charts(self, obj):
+        main_candidate_abilities = obj.candidateabilities_candidate.annotate(
+            category=F('ability__abilityquestions_ability__question__category__name')
+        ).values('category').annotate(average_percentage=Avg('percentage'))
+
+        main_candidate_abilities_dict = {}
+        for ability in main_candidate_abilities:
+            category = ability['category']
+            average = round(ability['average_percentage'])
+            main_candidate_abilities_dict[category] = average
+
+        candidates = Candidates.objects.all()
+        
+        charts = {}
+        
+        for candidate in candidates:
+            candidate_abilities = candidate.candidateabilities_candidate.annotate(
+                category=F('ability__abilityquestions_ability__question__category__name')
+            ).values('category').annotate(average_percentage=Avg('percentage'))
+
+        candidate_abilities_dict = {}
+        for ability in candidate_abilities:
+            category = ability['category']
+            average = round(ability['average_percentage'])
+            candidate_abilities_dict[category] = average
+        
+        better_than = {}
+        for category in candidate_abilities_dict:
+            main_candidate_percentage = main_candidate_abilities_dict[category]
+            all_candidate_percentages = candidate_abilities_dict[category]
+            num_better_candidates = len([p for p in all_candidate_percentages if p > main_candidate_percentage])
+            total_candidates = len(candidates)
+            better_than[category] = round(total_candidates / num_better_candidates * 100)
+        
+        charts[candidate.id] = better_than
+    
+        return charts'''
 
     def get_abilities(self, obj):
         abilities = obj.candidateabilities_candidate.annotate(
@@ -137,6 +188,7 @@ class CandidateSerializer(serializers.ModelSerializer):
 class CandidatesSerializer(serializers.ModelSerializer):
     percentage_by_category = serializers.SerializerMethodField()
     is_followed = serializers.SerializerMethodField()
+    profession = serializers.SerializerMethodField()
 
     class Meta:
         model = Candidates
@@ -146,7 +198,8 @@ class CandidatesSerializer(serializers.ModelSerializer):
             'first_name', 
             'last_name',
             'phone',
-            'birth_date',
+            'province',
+            'profession',
             'salary_expectation', 
             'availability', 
             'job_position',
@@ -166,6 +219,14 @@ class CandidatesSerializer(serializers.ModelSerializer):
         representation['last_name'] = hidden_last_name
         representation['phone'] = '*********'
         return representation
+    
+    def get_profession(self, obj):
+        abilities = obj.candidateabilities_candidate.annotate(
+            category=F('ability__abilityquestions_ability__question__category__name')
+        ).values('category').annotate(average_percentage=Avg('percentage'))
+                
+        profession = max(abilities, key=lambda k: k['average_percentage'])['category']
+        return profession
     
     def get_percentage_by_category(self, obj):
         abilities = obj.candidateabilities_candidate.annotate(
@@ -203,16 +264,15 @@ class PurchaseOfferSerializer(serializers.ModelSerializer):
 
 
 class PurchasedOffersSerializer(serializers.ModelSerializer):
-    professions = serializers.SerializerMethodField()
     abilities = serializers.SerializerMethodField()
     class Meta:
         model = Candidates
-        fields = ('id', 'first_name', 'last_name', 'professions', 'abilities')
+        fields = ('id', 'first_name', 'last_name', 'preferred_profession', 'abilities')
 
-    def get_professions(self, obj):
-        return [profession.profession.name for profession in obj.candidateprofessions_candidate.all()]
+    def get_abilities(self, obj):    
+        abilities = obj.candidateabilities_candidate.annotate(
+            name=F('ability__name'),
+            category=F('ability__abilityquestions_ability__question__category__name')
+        ).values('name').order_by('-percentage').distinct()[:3]
 
-    def get_abilities(self, obj):
-        abilities = sorted([{'name': ability.ability.name, 'percentage': ability.percentage} for ability in obj.candidateabilities_candidate.all()],
-                    key=lambda x: x['percentage'], reverse=True)[:3]
-        return [ability['name'] for ability in abilities]
+        return (ability['name'] for ability in abilities)

@@ -1,3 +1,5 @@
+from django.db.models import Exists, Q, OuterRef
+
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,7 +9,7 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 
 from . import serializers
-from .models import Candidates, Abilities, Professions
+from .models import Candidates, Abilities, Professions, PurchasedOffers
 
 
 class CandidateView(generics.RetrieveAPIView):
@@ -30,13 +32,13 @@ class StandardResultsSetPagination(PageNumberPagination):
 class CandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CandidatesSerializer
-    queryset = Candidates.objects.all()
     pagination_class = StandardResultsSetPagination
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = CandidatesFilter
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(is_visible=True)
+        queryset = (Candidates.objects.annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
+            .filter(Q(is_visible=True) & Q(is_purchased=False)))
 
         ordering = self.request.query_params.get('order', None)
 
