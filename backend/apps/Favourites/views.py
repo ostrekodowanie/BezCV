@@ -6,14 +6,6 @@ from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
 from .models import FavouriteCandidates
-from apps.Candidates.models import Candidates
-
-class FavouriteCandidatesView(generics.ListAPIView):
-    serializer_class = serializers.FavouriteCandidatesSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Candidates.objects.filter(favouritecandidates_candidate__employer_id=self.request.user)
 
 
 class AddToFavouritesView(generics.CreateAPIView):

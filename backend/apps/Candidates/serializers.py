@@ -1,4 +1,4 @@
-from django.db.models import F, Avg
+from django.db.models import F, Avg, Sum, Count
 
 from rest_framework import serializers
 
@@ -67,7 +67,6 @@ class CandidateSerializer(serializers.ModelSerializer):
 
         all_candidate_abilities_dict = {}
         for ability in all_candidate_abilities:
-            print(ability)
             category = ability['ability__abilityquestions_ability__question__category__name']
             average = round(ability['average_percentage'])
             all_candidate_abilities_dict[category] = average
@@ -82,12 +81,13 @@ class CandidateSerializer(serializers.ModelSerializer):
         return better_than
     
     def get_profession(self, obj):
-        abilities = obj.candidateabilities_candidate.annotate(
-            category=F('ability__abilityquestions_ability__question__category__name')
-        ).values('category').annotate(average_percentage=Avg('percentage'))
-                
-        profession = max(abilities, key=lambda k: k['average_percentage'])['category']
-        return profession
+        profession = obj.candidateabilities_candidate.values(
+            'ability__abilityquestions_ability__question__category__name').annotate(
+            avg_percentage=Avg('percentage')).order_by('-avg_percentage')[:1]
+        
+        profession_name = profession[0]['ability__abilityquestions_ability__question__category__name']
+
+        return profession_name
 
     
     '''def get_ability_charts(self, obj):
@@ -221,12 +221,13 @@ class CandidatesSerializer(serializers.ModelSerializer):
         return representation
     
     def get_profession(self, obj):
-        abilities = obj.candidateabilities_candidate.annotate(
-            category=F('ability__abilityquestions_ability__question__category__name')
-        ).values('category').annotate(average_percentage=Avg('percentage'))
-                
-        profession = max(abilities, key=lambda k: k['average_percentage'])['category']
-        return profession
+        profession = obj.candidateabilities_candidate.values(
+            'ability__abilityquestions_ability__question__category__name').annotate(
+            avg_percentage=Avg('percentage')).order_by('-avg_percentage')[:1]
+        
+        profession_name = profession[0]['ability__abilityquestions_ability__question__category__name']
+
+        return profession_name
     
     def get_percentage_by_category(self, obj):
         abilities = obj.candidateabilities_candidate.annotate(

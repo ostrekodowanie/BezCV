@@ -1,7 +1,11 @@
+from django.db.models import F, OuterRef, Subquery, Avg
+
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
 from .models import User
+from apps.Candidates.models import CandidateAbilities
+
 
 class SignUpSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -38,10 +42,12 @@ class SignUpSerializer(serializers.ModelSerializer):
 
         return instance
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model =  User
-        fields = ('first_name', 'last_name', 'email', 'desc', 'image', 'nip', 'points', 'is_staff')
+        fields = ('first_name', 'last_name', 'points', 'is_staff')
+
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False)
@@ -50,5 +56,129 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         model =  User
         fields = ('first_name', 'last_name', 'email', 'desc', 'image')
 
+
+class EmployerProfileSerializer(serializers.ModelSerializer):
+    stats = serializers.SerializerMethodField()
+    purchased_contacts = serializers.SerializerMethodField()
+    followed_contacts = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'first_name', 
+            'last_name', 
+            'image', 
+            'nip', 
+            'desc',
+            'stats',
+            'purchased_contacts',
+            'followed_contacts',
+            )
+        
+    def to_representation(self, instance):
+        employer_data = super().to_representation(instance)
+        employer = {
+            'employer': employer_data,
+            'stats': employer_data.pop('stats'),
+            'purchased_contacts': employer_data.pop('purchased_contacts'),
+            'followed_contacts': employer_data.pop('followed_contacts')
+        }
+        return employer
     
+    def get_stats(self, obj):
+        token_count = round(obj.points)
+        followed_count = len(obj.favouritecandidates_employer.all())
+        purchased_count = len(obj.purchasedoffers_employer.all())
+        stats_dict = {
+            'token_count': token_count,
+            'followed_count': followed_count,
+            'purchased_count': purchased_count
+        }
+        return stats_dict
+
+
+    
+    def get_purchased_contacts(self, obj):
+        purchased_contacts = obj.purchasedoffers_employer.annotate(
+            first_name=F('candidate__first_name'),
+            last_name=F('candidate__last_name'),
+            phone=F('candidate__phone'),
+            profession=Subquery(
+                CandidateAbilities.objects.filter(candidate=OuterRef('candidate')).values(
+                    'ability__abilityquestions_ability__question__category__name').annotate(
+                    avg_percentage=Avg('percentage')
+                ).order_by('-avg_percentage').values('ability__abilityquestions_ability__question__category__name')[:1]
+            )
+        ).values('candidate_id', 'first_name', 'last_name', 'phone', 'profession').order_by('-created_at')[:10]
+
+        return purchased_contacts
+    
+    def get_followed_contacts(self, obj):
+        abilities = CandidateAbilities.objects.filter(candidate=OuterRef('candidate')).values(
+            'ability__abilityquestions_ability__question__category__name').annotate(
+            avg_percentage=Avg('percentage')
+        ).order_by('-avg_percentage')
+        
+        followed_contacts = obj.favouritecandidates_employer.annotate(
+            first_name=F('candidate__first_name'),
+            last_name=F('candidate__last_name'),
+            phone=F('candidate__phone'),
+            job_position=F('candidate__job_position'),
+            salary_expectation=F('candidate__salary_expectation'),
+            availability=F('candidate__availability'),
+            province=F('candidate__province'),
+            education=F('candidate__education'),
+            driving_license=F('candidate__driving_license'),
+            profession=Subquery(
+                abilities.values('ability__abilityquestions_ability__question__category__name')[:1]
+            ),
+        ).values(
+            'candidate_id', 
+            'first_name', 
+            'last_name', 
+            'phone', 
+            'profession', 
+            'job_position', 
+            'salary_expectation', 
+            'availability',
+            'province',
+            'education',
+            'driving_license'
+        ).order_by('-created_at')[:5]
+
+        followed_contacts_array = []
+        for contact in followed_contacts:
+            candidate_abilities = CandidateAbilities.objects.filter(
+                candidate_id=contact['candidate_id']
+            ).annotate(
+                category=F('ability__abilityquestions_ability__question__category__name')
+            ).values('category').annotate(
+                average_percentage=Avg('percentage')
+            ).order_by('-average_percentage')
+
+            abilities_dict = {}
+            for ability in candidate_abilities:
+                category = ability['category']
+                average = round(ability['average_percentage'])
+                abilities_dict[category] = average
+
+            followed_contact = {
+                'candidate_id': contact['candidate_id'], 
+                'first_name': contact['first_name'], 
+                'last_name': contact['last_name'], 
+                'phone': contact['phone'], 
+                'profession': contact['profession'], 
+                'job_position': contact['job_position'], 
+                'salary_expectation': contact['salary_expectation'], 
+                'availability': contact['availability'],
+                'province': contact['province'],
+                'education': contact['education'],
+                'driving_license': contact['driving_license'],
+                'percentage_by_category': abilities_dict,
+            }
+            followed_contacts_array.append(followed_contact)
+
+        return followed_contacts_array
+
+
 

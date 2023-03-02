@@ -153,11 +153,13 @@ class PasswordResetConfirmView(views.APIView):
 
         return Response({'Hasło zostało zresetowane'}, status=status.HTTP_200_OK)
 
-# user
+
+# user/employer
 class UserView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [IsAuthenticated]
+
 
 class UpdateUserView(generics.UpdateAPIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -174,3 +176,9 @@ class UpdateUserView(generics.UpdateAPIView):
             serializer.save(image=url)
         else:
             serializer.save()
+
+
+class EmployerProfileView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.EmployerProfileSerializer
+    permission_classes = [IsAuthenticated]
