@@ -20,6 +20,10 @@ from . import serializers
 from .models import User
 
 import jwt
+from nip24 import *
+
+
+nip24 = NIP24Client()
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -64,20 +68,31 @@ class SignUpView(views.APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            user = serializer.data
+            nip = serializer.validated_data.pop('nip')
+            active = nip24.isActiveExt(Number.NIP, nip)
 
-            token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
+            if active:
+                serializer.save()
+                user = serializer.data
+
+                token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
+                
+                email_message = EmailMessage(
+                    subject='Potwierdź swoją rejestrację',
+                    body='Aby potwierdzić swoją rejestrację, kliknij w link: https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token),
+                    to=[user['email']]
+                )
+                email_message.send()
+                
+                return Response({'User created'}, 201)
             
-            email_message = EmailMessage(
-                subject='Potwierdź swoją rejestrację',
-                body='Aby potwierdzić swoją rejestrację, kliknij w link: https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token),
-                to=[user['email']]
-            )
-            email_message.send()
+            else:
+                if not nip24.getLastError():
+                    return Response('Firma zawiesiła lub zakończyła działalność', 400)
+                else:
+                    return Response(nip24.getLastError(), 400)
             
-            return Response({'User created'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, 400)
 
 
 class VerifyView(views.APIView):

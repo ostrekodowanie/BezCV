@@ -32,6 +32,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         nip = validated_data.get('nip')
         if User.objects.filter(nip=nip).exists():
             raise ValidationError('NIP jest już przypisany do istniejącego konta')
+        
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
 
