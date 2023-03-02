@@ -31,12 +31,10 @@ export default function CircleChart({ profession, percentage }: CircleChartProps
 
     useEffect(() => {
         const offsetValue = circumference - (percentage * circumference) / 100
-        if(!circleRef.current) return
+        if(!circleRef.current || !percentage) return
         const observer = new IntersectionObserver((entries) => {
             if(entries[0].isIntersecting) {
                 setOffset(offsetValue);
-            } else {
-                setOffset(circumference)
             }
         })
         observer.observe(circleRef.current)

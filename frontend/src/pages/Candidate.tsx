@@ -11,9 +11,8 @@ import Loader from "../components/Loader"
 import CircleChart from "../components/candidate/CircleChart"
 import { useAppSelector } from "../main"
 import { purchase } from "../reducers/login"
-import { CandidateProps, Details, initialDetailsState, offersCategoryPercantageBox } from "../constants/candidate"
+import { CandidateProps, Details, initialDetailsState } from "../constants/candidate"
 import { professionColorMap, ProfessionColorScheme } from "../constants/professionColorMap"
-import CategoryPercantageBox from "../components/offers/CategoryPercentageBox"
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!)
 
@@ -31,8 +30,20 @@ export default function Candidate() {
         purchase: false
     })
     const [candidateDetails, setCandidateDetails] = useState<Details>(initialDetailsState)
-    const colorScheme = candidateDetails.profession ? professionColorMap[candidateDetails.profession] : { gradient: '', color: '' };
-    const { color, gradient } = colorScheme
+    const colorScheme = candidateDetails.profession ? professionColorMap[candidateDetails.profession] : { 
+        color: '',
+        gradient: '',
+        startColor: {
+            value: '',
+            position: 0,
+
+        },
+        stopColor: {
+            value: '',
+            position: 1
+        }
+    };
+    const { gradient } = colorScheme
 
     const handlePurchase = async () => {
         if(points < 1) return navigate('/punkty')
@@ -60,14 +71,14 @@ export default function Candidate() {
                 <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
                     <div className="flex flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
                         <div className="flex items-center gap-4">
-                            <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold">{candidateDetails.first_name.charAt(0) + candidateDetails.last_name.charAt(0)}</div>
+                            <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold"><span style={{ backgroundImage: gradient }} className='bg-clip-text text-transparent'>{candidateDetails.first_name.charAt(0) + candidateDetails.last_name.charAt(0)}</span></div>
                             <div className="flex flex-col gap-1">
                                 {loading.page ? <>
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Kandydat</h4>
-                                    <h3 className="font-semibold text-sm">{candidateDetails.profession}</h3>
+                                    <h4 className="text-sm">Kandydat</h4>
+                                    <h3 className="font-semibold text-sm">{candidateDetails.first_name} {candidateDetails.last_name}</h3>
                                 </>}
                             </div>
                         </div>
@@ -78,7 +89,7 @@ export default function Candidate() {
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Szuka pracy w</h4>
+                                    <h4 className="text-sm">Szuka pracy w</h4>
                                     <h3 style={{ backgroundImage: gradient }} className="font-semibold text-sm bg-clip-text text-transparent">{candidateDetails.profession}</h3>
                                 </>}
                             </div>
@@ -90,8 +101,8 @@ export default function Candidate() {
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Oczekiwania finansowe</h4>
-                                    <h3 className="font-semibold text-sm">{candidateDetails.salary_expectation}</h3>
+                                    <h4 className="text-sm">Poprzednie stanowisko</h4>
+                                    <h3 className="font-semibold text-sm">{candidateDetails.job_position}</h3>
                                 </>}
                             </div>
                         </div>
@@ -112,14 +123,14 @@ export default function Candidate() {
                     </div>
                     <div className={`flex flex-col gap-8 ${candidateDetails.is_purchased ? 'row-[1/4]' : 'row-[2/4]'} col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10`}>
                         <div className="flex items-center gap-4">
-                            <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img className="max-w-[60%] max-h-[60%]" src={emailIcon} alt="" /></div>
+                            <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img className="max-w-[60%] max-h-[60%]" src={phoneIcon} alt="" /></div>
                             <div className="flex flex-col gap-1">
                                 {loading.page ? <>
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Email</h4>
-                                    <h3 className="font-semibold text-sm">{candidateDetails.email}</h3>
+                                    <h4 className="text-sm">Dyspozycyjność</h4>
+                                    <h3 className="font-semibold text-sm">{candidateDetails.availability}</h3>
                                 </>}
                             </div>
                         </div>
@@ -130,8 +141,20 @@ export default function Candidate() {
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Dyspozycyjność</h4>
+                                    <h4 className="text-sm">Wiek</h4>
                                     <h3 className="font-semibold text-sm">{candidateDetails.availability}</h3>
+                                </>}
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center"><img className="max-w-[60%] max-h-[60%]" src={emailIcon} alt="" /></div>
+                            <div className="flex flex-col gap-1">
+                                {loading.page ? <>
+                                    <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                    <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                                </> : <>
+                                    <h4 className="text-sm">Wykształcenie</h4>
+                                    <h3 className="font-semibold text-sm">{candidateDetails.education?.split('(')[0]}</h3>
                                 </>}
                             </div>
                         </div>
@@ -142,7 +165,7 @@ export default function Candidate() {
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Oczekiwania finansowe</h4>
+                                    <h4 className="text-sm">Oczekiwania finansowe</h4>
                                     <h3 className="font-semibold text-sm">{candidateDetails.salary_expectation}</h3>
                                 </>}
                             </div>
@@ -154,8 +177,8 @@ export default function Candidate() {
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Prawo jazdy kat. B</h4>
-                                    <h3 className="font-semibold text-sm">{candidateDetails.drivers_license}</h3>
+                                    <h4 className="text-sm">Prawo jazdy kat. B</h4>
+                                    <h3 className="font-semibold text-sm">{candidateDetails.drivers_license ? 'Tak' : 'Nie'}</h3>
                                 </>}
                             </div>
                         </div>
@@ -168,7 +191,7 @@ export default function Candidate() {
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Email</h4>
+                                    <h4 className="text-sm">Email</h4>
                                     <h3 className="font-semibold text-sm">{candidateDetails.email}</h3>
                                 </>}
                             </div>
@@ -180,7 +203,7 @@ export default function Candidate() {
                                     <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
                                 </> : <>
-                                    <h4 className="text-sm font-medium">Numer telefonu</h4>
+                                    <h4 className="text-sm">Numer telefonu</h4>
                                     <h3 className="font-semibold text-sm">+48 {candidateDetails.phone}</h3>
                                 </>}
                             </div>
@@ -189,16 +212,16 @@ export default function Candidate() {
                 </div>
                 {confetti && <ConfettiExplosion className="absolute top-[40vh] right-[50%] translate-x-[-50%]" />}
                 <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto py-10 sm:px-6 shadow-primaryBig gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
-                    <CircleChart profession='sales' percentage={candidateDetails.percentage_by_category?.sales || 0} />
-                    <CircleChart profession='office_administration' percentage={candidateDetails.percentage_by_category?.office_administration || 0} />
-                    <CircleChart profession='customer_service' percentage={candidateDetails.percentage_by_category?.customer_service || 0} />
+                    <CircleChart profession='sales' percentage={candidateDetails.ability_charts.sales} />
+                    <CircleChart profession='office_administration' percentage={candidateDetails.ability_charts.office_administration} />
+                    <CircleChart profession='customer_service' percentage={candidateDetails.ability_charts.customer_service} />
                 </div>
                 <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
                     <div className="flex flex-col w-full">
-                        <h2 className="font-bold text-lg mb-6">Umiejętności kandydata do pracy na każdym stanowisku</h2>
+                        <h2 className="font-bold text-lg mb-8">Umiejętności kandydata do pracy na każdym stanowisku</h2>
                         <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
                             <div className="flex flex-col gap-6">
-                                <h3 className="font-bold text-lg mb-4">Sprzedaż</h3>
+                                <h3 className="font-bold text-lg">Sprzedaż</h3>
                                 {!loading.page ? candidateDetails.abilities?.sales.map(ab => <AbilityRange {...ab} color={professionColorMap.sales.gradient} key={ab.name} />) : <>
                                     <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
@@ -209,7 +232,7 @@ export default function Candidate() {
                                 </>}
                             </div>
                             <div className="flex flex-col gap-6">
-                            <h3 className="font-bold text-lg mb-4">Administracja</h3>
+                            <h3 className="font-bold text-lg">Administracja</h3>
                                 {!loading.page ? candidateDetails.abilities?.office_administration.map(ab => <AbilityRange {...ab} color={professionColorMap.office_administration.gradient} key={ab.name} />) : <>
                                     <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
@@ -220,7 +243,7 @@ export default function Candidate() {
                                 </>}
                             </div>
                             <div className="flex flex-col gap-6">
-                            <h3 className="font-bold text-lg mb-4">Obsługa klienta</h3>
+                            <h3 className="font-bold text-lg">Obsługa klienta</h3>
                                 {!loading.page ? candidateDetails.abilities?.customer_service.map(ab => <AbilityRange {...ab} color={professionColorMap.customer_service.gradient} key={ab.name} />) : <>
                                     <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
                                     <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
@@ -248,7 +271,7 @@ export default function Candidate() {
                 </div>
                 {loading.page ? <div className="ml-[8vw] sm:ml-0"><Loader /></div> : 
                     <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
-                        <button type='button' style={{ backgroundImage: gradient }} className="rounded-full max-w-max justify-center xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10">Pobierz profil w formacie PDF <img className="max-h-[1.4em] ml-2" src={pdf} alt="" /></button>
+                        <button type='button' style={{ backgroundImage: candidateDetails.is_purchased ? gradient : 'linear-gradient(180deg, #7C9D8E 0%, #91B49F 100%)' }} disabled={!candidateDetails.is_purchased} className="rounded-full w-max justify-center text-white text-[.8rem] font-semibold flex items-center py-4 px-10">Pobierz profil w formacie PDF <img className="max-h-[1.4em] ml-2" src={pdf} alt="" /></button>
                     </div>
                 }
                 <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 flex flex-wrap shadow-primaryBig gap-8">
@@ -279,7 +302,7 @@ const SuggestedCandidate = ({ id, first_name, last_name, profession, percentage_
                     <h4 className="text-[.8rem] w-max"><span className="hidden sm:inline">Szuka pracy w:</span> <span className="font-semibold text-primary">{profession}</span></h4>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
-                    {offersCategoryPercantageBox.map(box => <CategoryPercantageBox {...box} percentage={percentage_by_category[box.name]} />)}
+                    {/* {offersCategoryPercantageBox.map(box => <CategoryPercantageBox {...box} percentage={percentage_by_category[box.name]} />)} */}
                 </div>
             </div>
             <Link className="border-primary rounded-full w-max min-w-max text-[.8rem] border-[1px] hover:text-[#2F66F4] transition-colors font-semibold" to={`/oferty/${id}`}>Pokaż profil</Link>

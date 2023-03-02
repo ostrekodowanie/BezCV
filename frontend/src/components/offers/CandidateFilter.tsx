@@ -10,7 +10,6 @@ interface FilterProps {
 export default function CandidateFilter({ setFilter }: FilterProps) {
     const [mobileActive, setMobileActive] = useState(false)
     const [allFilters, setAllFilters] = useState<FilterStateProps>({
-        abilities: [],
         professions: [],
         availability: []
     })
@@ -70,27 +69,27 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
     )
 }
 
-const AbilityCheckBox = ({ ability, setFilter }: { ability: string, setFilter: Dispatch<SetStateAction<FilterStateProps>> }) => {
-    const location = useLocation()
-    const [checked, setChecked] = useState(false)
+// const AbilityCheckBox = ({ ability, setFilter }: { ability: string, setFilter: Dispatch<SetStateAction<FilterStateProps>> }) => {
+//     const location = useLocation()
+//     const [checked, setChecked] = useState(false)
 
-    useLayoutEffect(() => {
-        const decodedSearch = decodeURIComponent(location.search);
-        setChecked(decodedSearch.includes(ability))
-    }, [])
+//     useLayoutEffect(() => {
+//         const decodedSearch = decodeURIComponent(location.search);
+//         setChecked(decodedSearch.includes(ability))
+//     }, [])
 
-    const handleChange = () => {
-        setFilter(prev => ({ ...prev, abilities: checked ? prev.abilities.filter(ab => ab !== ability) : [...prev.abilities, ability] }))
-        setChecked(prev => !prev)
-    }
+//     const handleChange = () => {
+//         setFilter(prev => ({ ...prev, abilities: checked ? prev.abilities.filter(ab => ab !== ability) : [...prev.abilities, ability] }))
+//         setChecked(prev => !prev)
+//     }
 
-    return (
-        <div className='flex items-center text-[.75rem] font-medium'>
-            <input type='checkbox' onChange={handleChange} checked={checked} name="abilities" id={ability}/>
-            <label className="ml-4" htmlFor={ability}>{ability}</label>
-        </div>
-    )
-}
+//     return (
+//         <div className='flex items-center text-[.75rem] font-medium'>
+//             <input type='checkbox' onChange={handleChange} checked={checked} name="abilities" id={ability}/>
+//             <label className="ml-4" htmlFor={ability}>{ability}</label>
+//         </div>
+//     )
+// }
 
 const AvailabilityCheckBox = ({ availability, setFilter }: { availability: string, setFilter: Dispatch<SetStateAction<FilterStateProps>> }) => {
     const location = useLocation()

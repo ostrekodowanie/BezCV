@@ -23,7 +23,7 @@ export default function Offers() {
 }
 
 export interface FilterProps {
-    abilities: string[],
+    // abilities: string[],
     professions: string[],
     availability: string[]
 }
@@ -40,7 +40,7 @@ const CandidateList = () => {
     const [count, setCount] = useState(0)
     const [hasMore, setHasMore] = useState(true)
     const [filter, setFilter] = useState<FilterProps>({
-        abilities: searchParams.get('a')?.split(',') || [],
+        // abilities: searchParams.get('a')?.split(',') || [],
         professions: searchParams.get('professions')?.split(',') || [],
         availability: searchParams.get('availability')?.split(',') || []
     })
@@ -50,10 +50,10 @@ const CandidateList = () => {
         setPage(1)
         setHasMore(true)
         let url = '/oferty'
-        if(filter.abilities.length > 0 || filter.professions.length > 0) {
+        if(filter.availability.length > 0 || filter.professions.length > 0) {
             let searchArr = [
-                filter.abilities.length > 0 && 'a=' + filter.abilities.map(ability => ability).join(','),
-                filter.professions.length > 0 && 'p=' + filter.professions.map(role => role).join(','),
+                filter.availability.length > 0 && 'availability=' + filter.availability.map(av => av).join(','),
+                filter.professions.length > 0 && 'professions=' + filter.professions.map(role => role).join(','),
             ]
             url = `/oferty/search?${searchArr.length > 0 && searchArr.map(item => item).filter(item => item).join("&")}`
         }
@@ -192,9 +192,9 @@ const CandidateRef = ({ id, first_name, last_name, is_followed, percentage_by_ca
             </div>
             <div className="flex items-center gap-4 justify-between flex-wrap sm:flex-nowrap">
                 <div className="flex flex-wrap gap-4">
-                    {offersCategoryPercantageBox.map(box => <CategoryPercantageBox {...box} percentage={percentage_by_category[box.name]} />)}
+                    {offersCategoryPercantageBox.map(box => <CategoryPercantageBox {...box} profession={profession} percentage={percentage_by_category[box.name]} />)}
                 </div>
-                <button className="rounded-full max-w-max text-white text-[.75rem] font-semibold flex items-center py-3 px-10 bg-primary" type='button'>Zobacz profil<img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></button>
+                <button className="rounded-full w-max text-white text-[.75rem] font-semibold flex items-center py-3 px-10 bg-primary" type='button'>Zobacz profil<img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" /></button>
             </div>
         </Link>
     )
