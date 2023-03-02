@@ -1,6 +1,10 @@
 import { AbilityProps } from "../components/candidate/AbilityRange"
 import { RoleType } from "./workForm"
 
+type PercentageByProfession = {
+    [p in RoleType]: number
+}
+
 export interface CandidateProps {
     id: number,
     first_name: string,
@@ -8,10 +12,8 @@ export interface CandidateProps {
     abilities?: {
         [t in RoleType]: AbilityProps[]
     },
-    profession: RoleType | '',
-    percentage_by_category: {
-        [p in RoleType]: number
-    },
+    profession?: RoleType,
+    percentage_by_category: PercentageByProfession,
     drivers_license?: boolean,
     job_position?: string,
     availability?: string,
@@ -23,10 +25,11 @@ export interface CandidateProps {
     similar_candidates?: CandidateProps[]
 }
 
-export type Details = Omit<CandidateProps, | 'id'> & { 
+export type Details = Omit<CandidateProps, | 'id' | 'percentage_by_category'> & { 
     is_purchased: boolean,
     worst_abilities: AbilityProps[],
     desc: string,
+    ability_charts: PercentageByProfession
 }
 
 export type NonPercentageAbilitiesCandidateProps = Omit<CandidateProps, 'abilities'> & {
@@ -45,10 +48,9 @@ export const initialDetailsState: Details = {
         'customer_service': [],
         'office_administration': []
     },
-    profession: '',
     desc: '',
     education: '',
-    percentage_by_category: {
+    ability_charts: {
         sales: 0,
         office_administration: 0,
         customer_service: 0
