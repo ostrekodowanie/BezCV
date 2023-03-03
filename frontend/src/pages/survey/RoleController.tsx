@@ -12,93 +12,144 @@ import ProgressBar from "./ProgressBar";
 import { SurveyContext } from "./Survey";
 
 interface RoleQuestion {
-    id: number,
-    text: string
+  id: number;
+  text: string;
 }
 
 export default function RoleController() {
-    const { candidateAnswers, roleAnswers, setRoleAnswers } = useContext(SurveyContext)
-    const { first_name, email } = candidateAnswers
-    const [numericalAnswer, setNumericalAnswer] = useState<number>(1)
-    const [role, setRole] = useState<RoleType | null>(null)
-    const [questions, setQuestions] = useState<RoleQuestion[]>([])
-    const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
-    const [loading, setLoading] = useState(true)
-    const timer = useRef<any>(null)
-    const [secondsLeft, setSecondsLeft] = useState(15)
-    const [isFinishing, setIsFinishing] = useState(false)
-    const [isFinished, setIsFinished] = useState(false)
-    const [error, setError] = useState('')
+  const { candidateAnswers, roleAnswers, setRoleAnswers } =
+    useContext(SurveyContext);
+  const { first_name, email } = candidateAnswers;
+  const [numericalAnswer, setNumericalAnswer] = useState<number>(1);
+  const [role, setRole] = useState<RoleType | null>(null);
+  const [questions, setQuestions] = useState<RoleQuestion[]>([]);
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const timer = useRef<any>(null);
+  const [secondsLeft, setSecondsLeft] = useState(15);
+  const [isFinishing, setIsFinishing] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+  const [error, setError] = useState("");
 
-    useEffect(() => {
-        if(!questions[activeQuestionIndex]) return
-        if(secondsLeft === 0) return setActiveQuestionIndex(prev => prev + 1)
-        timer.current = setTimeout(() => setSecondsLeft(prev => prev - 1), 1000);
-        return () => clearTimeout(timer.current)
-    }, [secondsLeft, questions])
+  useEffect(() => {
+    if (!questions[activeQuestionIndex]) return;
+    if (secondsLeft === 0) return setActiveQuestionIndex((prev) => prev + 1);
+    timer.current = setTimeout(() => setSecondsLeft((prev) => prev - 1), 1000);
+    return () => clearTimeout(timer.current);
+  }, [secondsLeft, questions]);
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault()
-        if(!numericalAnswer) return
-        setRoleAnswers(prev => [...prev, [questions[activeQuestionIndex].id, numericalAnswer]])
-        setActiveQuestionIndex(prev => prev + 1)
-        setNumericalAnswer(1)
-        setSecondsLeft(15)
-    }
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!numericalAnswer) return;
+    setRoleAnswers((prev) => [
+      ...prev,
+      [questions[activeQuestionIndex].id, numericalAnswer],
+    ]);
+    setActiveQuestionIndex((prev) => prev + 1);
+    setNumericalAnswer(1);
+    setSecondsLeft(15);
+  };
 
-    useEffect(() => {
-        if(activeQuestionIndex < questions.length || questions.length === 0) return
-        setIsFinishing(true)
-        axios.post('/api/survey/answers', JSON.stringify({ candidate: email, answers: roleAnswers }), {
-            headers: { 'Content-Type': 'application/json' }
-        }).then(() => setIsFinished(true))
-        .catch(err => setError(typeof err.response.data.detail === 'string' ? err.response.data.detail : 'Wystąpił błąd!'))
-        .finally(() => setIsFinishing(false))
-    }, [roleAnswers])
+  useEffect(() => {
+    if (activeQuestionIndex < questions.length || questions.length === 0)
+      return;
+    setIsFinishing(true);
+    axios
+      .post(
+        "/api/survey/answers",
+        JSON.stringify({ candidate: email, answers: roleAnswers }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then(() => setIsFinished(true))
+      .catch((err) =>
+        setError(
+          typeof err.response.data.detail === "string"
+            ? err.response.data.detail
+            : "Wystąpił błąd!"
+        )
+      )
+      .finally(() => setIsFinishing(false));
+  }, [roleAnswers]);
 
-    useEffect(() => {
-        if(!role) return
-        axios.get(`/api/survey?c=${role}&e=${email}`)
-            .then(res => res.data)
-            .then(data => setQuestions(data))
-            .finally(() => setLoading(false))
-    }, [role])
+  useEffect(() => {
+    if (!role) return;
+    axios
+      .get(`/api/survey?c=${role}&e=${email}`)
+      .then((res) => res.data)
+      .then((data) => setQuestions(data))
+      .finally(() => setLoading(false));
+  }, [role]);
 
-    if(isFinished && typeof first_name === 'string') return <Finished firstName={first_name} />
+  if (isFinished && typeof first_name === "string")
+    return <Finished firstName={first_name} />;
 
-    if(isFinishing) return <FinishLoader />
+  if (isFinishing) return <FinishLoader />;
 
-    if(!role) return <RoleChoosePage setRole={setRole} />
-    if(error) return <p className="text-red-400 mt-16">{error}</p>
-    if(loading ||!questions[activeQuestionIndex]) return <Loader />
+  if (!role) return <RoleChoosePage setRole={setRole} />;
+  if (error) return <p className="text-red-400 mt-16">{error}</p>;
+  if (loading || !questions[activeQuestionIndex]) return <Loader />;
 
-    const { text } = questions[activeQuestionIndex]
+  const { text } = questions[activeQuestionIndex];
 
-    return (
-        <>
-            <ProgressBar progress={activeQuestionIndex / questions.length} />
-            <div className="flex flex-col items-center text-center gap-2">
-                <small className="text-base font-semibold">{activeQuestionIndex + 1} / <span className="text-[#D3C5BB]">{questions.length}</span></small>
-                <h2 className="text-3xl font-bold text-center w-full max-w-[8in]">{text}</h2>
-            </div>
-            <form className="flex flex-col flex-1 items-center justify-between gap-8 w-full" onSubmit={handleSubmit}>
-                <div className="flex flex-col items-center w-full gap-6 mt-8">
-                    <div className="relative mb-8 xl:mb-16">
-                        <input className="bg-secondary" type='range' defaultValue={1} value={numericalAnswer} min={1} max={5} onChange={e => setNumericalAnswer(parseInt(e.target.value))} />
-                        <p className="absolute top-full right-[50%] translate-x-[-50%] font-bold text-xl">{numericalAnswer}</p>
-                    </div>
-                    <div className="flex justify-center gap-8 flex-wrap max-w-max">
-                        {rangeNumberKeys.map(k => <RangeKey {...k} numericalAnswer={numericalAnswer} key={k.number} /> )}
-                    </div>
-                </div>
-                <div className="flex justify-between items-center self-stretch gap-4 flex-wrap mt-8 xl:mt-0">
-                    <div className="flex flex-col gap-2">
-                        <h4 className="font-semibold flex items-center"><img className="max-h-[1.1em] mr-2" src={timeLeft} alt="" /> Pozostały czas</h4>
-                        <h3 className="text-secondary text-xl font-bold">{secondsLeft} sekund</h3>
-                    </div>
-                    <button className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center">Następne pytanie <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" /></button>
-                </div>
-            </form>
-        </>
-    )
+  return (
+    <>
+      <ProgressBar progress={activeQuestionIndex / questions.length} />
+      <div className="flex flex-col items-center text-center gap-2">
+        <small className="text-base font-semibold">
+          {activeQuestionIndex + 1} /{" "}
+          <span className="text-[#D3C5BB]">{questions.length}</span>
+        </small>
+        <h2 className="text-3xl font-bold text-center w-full max-w-[8in]">
+          {text}
+        </h2>
+      </div>
+      <form
+        className="flex flex-col flex-1 items-center justify-between gap-8 w-full"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex flex-col items-center w-full gap-6 mt-8">
+          <div className="relative mb-8 xl:mb-16">
+            <input
+              className="bg-secondary"
+              type="range"
+              defaultValue={1}
+              value={numericalAnswer}
+              min={1}
+              max={5}
+              onChange={(e) => setNumericalAnswer(parseInt(e.target.value))}
+            />
+            <p className="absolute top-full right-[50%] translate-x-[-50%] font-bold text-xl">
+              {numericalAnswer}
+            </p>
+          </div>
+          <div className="flex justify-center gap-8 flex-wrap max-w-max">
+            {rangeNumberKeys.map((k) => (
+              <RangeKey
+                {...k}
+                numericalAnswer={numericalAnswer}
+                key={k.number}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="flex justify-between items-center self-stretch gap-4 flex-wrap mt-8 xl:mt-0">
+          <div className="flex flex-col gap-2">
+            <h4 className="font-semibold flex items-center">
+              <img className="max-h-[1.1em] mr-2" src={timeLeft} alt="" />{" "}
+              Pozostały czas
+            </h4>
+            <h3 className="text-secondary text-xl font-bold">
+              {secondsLeft} sekund
+            </h3>
+          </div>
+          <button className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center">
+            Następne pytanie{" "}
+            <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
+          </button>
+        </div>
+      </form>
+    </>
+  );
 }

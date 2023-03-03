@@ -19,32 +19,38 @@ import HowToFindJob from "../components/home/candidate/HowToFindJob";
 import Popup from "../components/popups/Popup";
 
 export default function Home() {
-    const { account } = useContext(AccountContext)
-    if(account === 'employer') return (
-        <>  
-            <EmployerLanding />
-            <HowToFind />
-            <TutorialMenu />
-            <SoftCandidateSkills />
-            <DesktopSurvey />
-            <IsEnough />
-            <EmployerBanner />
-            <Points />
-            <Popup />
-        </>
-    )
-    if(account === 'worker') return (
-        <>
-            <CandidateLanding />
-            <Introduction />
-            <Questions />
-            <HowToFindJob />
-            <CandidateBanner />
-            <WhatNext />
-            <TutorialMenu />
-            <PersonalDataSecurity />
-            <Popup />
-        </>
-    )
-    return <div className="w-screen h-screen flex items-center justify-center"><Loader /></div>
+  const { account } = useContext(AccountContext);
+  if (account === "employer")
+    return (
+      <>
+        <EmployerLanding />
+        <HowToFind />
+        <TutorialMenu />
+        <SoftCandidateSkills />
+        <DesktopSurvey />
+        <IsEnough />
+        <EmployerBanner />
+        <Points />
+        <Popup />
+      </>
+    );
+  if (account === "worker")
+    return (
+      <>
+        <CandidateLanding />
+        <Introduction />
+        <Questions />
+        <HowToFindJob />
+        <CandidateBanner />
+        <WhatNext />
+        <TutorialMenu />
+        <PersonalDataSecurity />
+        <Popup />
+      </>
+    );
+  return (
+    <div className="w-screen h-screen flex items-center justify-center">
+      <Loader />
+    </div>
+  );
 }

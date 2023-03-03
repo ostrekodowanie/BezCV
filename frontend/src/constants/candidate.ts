@@ -60,22 +60,26 @@ export const initialDetailsState: Details = {
     worst_abilities: []
 }
 
-export type OffersCategoryPercantageBox = {
-    name: RoleType,
-    text: string
+export type RoleTextsType = {
+    profession: string,
+    offersCategoryPercantageBox: string
 }
 
-export const offersCategoryPercantageBox: OffersCategoryPercantageBox[] = [
-    {
-        name: 'sales',
-        text: 'sprzedażowe'
+export type MapTextToRoleType = {
+    [t in RoleType]: RoleTextsType
+}
+
+export const roleToTextMap: MapTextToRoleType = {
+    sales: {
+        profession: 'Sprzedaż',
+        offersCategoryPercantageBox: 'sprzedażowe'
     },
-    {
-        name: 'customer_service',
-        text: 'obsługi klienta'
+    customer_service: {
+        profession: 'Obsługa klienta',
+        offersCategoryPercantageBox: 'obsługi klienta'
     },
-    {
-        name: 'office_administration',
-        text: 'administracyjne'
+    office_administration: {
+        profession: 'Administracja',
+        offersCategoryPercantageBox: 'administracyjne'
     }
-]
+}
