@@ -21,6 +21,7 @@ export default function Profile() {
   const [profileData, setProfileData] =
     useState<ProfileDataType>(initialProfileData);
   const [profilePicture, setProfilePicture] = useState<any>(image);
+  const [loading, setLoading] = useState(true);
   const { access, refresh } = auth.tokens;
 
   const handleLogout = async () => {
@@ -53,11 +54,12 @@ export default function Profile() {
           Authorization: "Bearer " + access,
         },
       })
-      .then((res) => setProfileData(res.data));
+      .then((res) => setProfileData(res.data))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in] flex flex-col gap-8 xl:grid grid-cols-[6fr_5fr_5fr] grid-rows-[4in_max-content_3in]">
+    <section className="padding py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in] flex flex-col gap-8 xl:grid grid-cols-[6fr_5fr_5fr] grid-rows-[4in_max-content_max-content]">
       <div className="flex flex-col justify-between gap-6 p-10 shadow-primaryBig rounded-3xl row-span-2">
         <div className="flex items-center gap-6">
           <label className="cursor-pointer relative" htmlFor="profile-photo">
@@ -93,14 +95,16 @@ export default function Profile() {
             </h1>
           </div>
         </div>
-        <div className="rounded-3xl bg-[#F8F9FB] flex flex-col px-8 py-6 gap-4">
+        <div className="flex flex-col gap-4">
           <h3 className="font-medium flex items-center">
             <img className="max-h-[1.4em] mr-3" src={descIcon} alt="" />
             Informacje
           </h3>
-          <p className="text-[#4D5058] text-[.8rem] leading-relaxed my-6">
-            {desc}
-          </p>
+          <div className="rounded-3xl bg-[#F8F9FB] flex flex-col px-8 py-6 gap-4">
+            <p className="text-[#4D5058] text-[.8rem] leading-relaxed my-6">
+              {desc}
+            </p>
+          </div>
         </div>
         <button
           className="font-medium w-max transition-colors text-negative hover:text-darkNegative"
@@ -117,9 +121,12 @@ export default function Profile() {
         <img className="max-h-[1.2em] ml-2" src={bcvToken} alt="" />
       </Link>
       <ProfileDataContext.Provider value={profileData}>
-        <Stats {...profileData.stats} />
-        <Purchased purchased={profileData.purchased_contacts} />
-        <Followed followed={profileData.followed_contacts} />
+        <Stats {...profileData.stats} loading={loading} />
+        <Purchased
+          purchased={profileData.purchased_contacts}
+          loading={loading}
+        />
+        <Followed followed={profileData.followed_contacts} loading={loading} />
       </ProfileDataContext.Provider>
     </section>
   );

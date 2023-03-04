@@ -6,7 +6,7 @@ import { contactMain } from "../assets/contact/contact";
 
 export const inputStyles = {
   input:
-    "peer rounded-lg bg-[#FAFAFA] border-[#F5F5F6] border-[1px] focus:bg-[#F1F4FC] py-3 px-6 w-full transition-colors",
+    "peer rounded-xl border-[#CCCFD4] border-[1px] bg-[#FCFCFC] py-3 px-6 w-full",
 };
 
 export default function Contact() {

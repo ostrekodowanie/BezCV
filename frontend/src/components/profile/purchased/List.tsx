@@ -5,22 +5,22 @@ import CandidatePurchased from "./Candidate";
 
 const Purchased = ({
   purchased,
+  loading,
 }: {
   purchased: NonPercentageAbilitiesCandidateProps[];
+  loading: boolean;
 }) => {
-  const [loading, setLoading] = useState(true);
-
   return (
-    <div className="px-6 py-10 shadow-primaryBig flex flex-col gap-6 rounded-3xl col-[3/4] row-[1/4]">
-      <h2 className="font-medium text-xl ml-6 mb-2">Zakupione kontakty</h2>
-      <div className="flex flex-col gap-2">
+    <div className="px-6 py-10 shadow-primaryBig flex flex-col rounded-3xl col-[3/4] row-[1/4]">
+      <h2 className="font-medium text-xl ml-6 mb-4">Zakupione kontakty</h2>
+      <div className="flex flex-col">
         {loading ? (
-          <>
+          <div className="flex flex-col gap-6">
             <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
             <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
             <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
             <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
-          </>
+          </div>
         ) : purchased.length > 0 ? (
           purchased.map((cand) => (
             <CandidatePurchased {...cand} key={cand.id} />

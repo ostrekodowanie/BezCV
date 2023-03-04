@@ -53,3 +53,16 @@ export const professionColorMap: { [t in RoleType]: ProfessionColorScheme } = {
         }
     }
 }
+
+export const initialColorScheme: ProfessionColorScheme = {
+    gradient: "#141B30",
+    color: "#141B30",
+    stopColor: {
+        value: "#141B30",
+        position: 1
+    },
+    startColor: {
+        value: "#141B30",
+        position: 0
+    },
+  };

@@ -4,13 +4,7 @@ import ConfettiExplosion from "react-confetti-explosion";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import {
-  cashIcon,
-  emailIcon,
-  pdf,
-  phoneIcon,
-  role,
-} from "../assets/candidate/candidate";
+import { pdf } from "../assets/candidate/candidate";
 import { bcvToken } from "../assets/general";
 import AbilityRange from "../components/candidate/AbilityRange";
 import Loader from "../components/Loader";
@@ -21,11 +15,24 @@ import {
   CandidateProps,
   Details,
   initialDetailsState,
+  roleToTextMap,
 } from "../constants/candidate";
 import {
+  initialColorScheme,
   professionColorMap,
   ProfessionColorScheme,
 } from "../constants/professionColorMap";
+import {
+  AgeIcon,
+  AvailabilityIcon,
+  CashIcon,
+  DriversLicenseIcon,
+  EducationIcon,
+  EmailIcon,
+  JobPositionIcon,
+  PhoneIcon,
+  ProfessionIcon,
+} from "../assets/candidate/icons/icons";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -46,18 +53,7 @@ export default function Candidate() {
     useState<Details>(initialDetailsState);
   const colorScheme = candidateDetails.profession
     ? professionColorMap[candidateDetails.profession]
-    : {
-        color: "",
-        gradient: "",
-        startColor: {
-          value: "",
-          position: 0,
-        },
-        stopColor: {
-          value: "",
-          position: 1,
-        },
-      };
+    : initialColorScheme;
   const { gradient } = colorScheme;
 
   const handlePurchase = async () => {
@@ -87,7 +83,7 @@ export default function Candidate() {
     <ColorSchemeContext.Provider value={colorScheme}>
       <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8">
         <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
-          <div className="flex flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+          <div className="flex flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:flex xl:justify-between">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold">
                 <span
@@ -116,7 +112,7 @@ export default function Candidate() {
             </div>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img src={role} alt="" />
+                <ProfessionIcon {...colorScheme} />
               </div>
               <div className="flex flex-col gap-1">
                 {loading.page ? (
@@ -131,7 +127,8 @@ export default function Candidate() {
                       style={{ backgroundImage: gradient }}
                       className="font-semibold text-sm bg-clip-text text-transparent"
                     >
-                      {candidateDetails.profession}
+                      {candidateDetails.profession &&
+                        roleToTextMap[candidateDetails.profession].profession}
                     </h3>
                   </>
                 )}
@@ -139,7 +136,7 @@ export default function Candidate() {
             </div>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img src={cashIcon} alt="" />
+                <JobPositionIcon {...colorScheme} />
               </div>
               <div className="flex flex-col gap-1">
                 {loading.page ? (
@@ -152,6 +149,26 @@ export default function Candidate() {
                     <h4 className="text-sm">Poprzednie stanowisko</h4>
                     <h3 className="font-semibold text-sm">
                       {candidateDetails.job_position}
+                    </h3>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
+                <AvailabilityIcon {...colorScheme} />
+              </div>
+              <div className="flex flex-col gap-1">
+                {loading.page ? (
+                  <>
+                    <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                    <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                  </>
+                ) : (
+                  <>
+                    <h4 className="text-sm">Dyspozycyjność</h4>
+                    <h3 className="font-semibold text-sm">
+                      {candidateDetails.availability}
                     </h3>
                   </>
                 )}
@@ -200,35 +217,7 @@ export default function Candidate() {
           >
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img
-                  className="max-w-[60%] max-h-[60%]"
-                  src={phoneIcon}
-                  alt=""
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                {loading.page ? (
-                  <>
-                    <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                  </>
-                ) : (
-                  <>
-                    <h4 className="text-sm">Dyspozycyjność</h4>
-                    <h3 className="font-semibold text-sm">
-                      {candidateDetails.availability}
-                    </h3>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img
-                  className="max-w-[60%] max-h-[60%]"
-                  src={phoneIcon}
-                  alt=""
-                />
+                <AgeIcon {...colorScheme} />
               </div>
               <div className="flex flex-col gap-1">
                 {loading.page ? (
@@ -248,11 +237,7 @@ export default function Candidate() {
             </div>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img
-                  className="max-w-[60%] max-h-[60%]"
-                  src={emailIcon}
-                  alt=""
-                />
+                <EducationIcon {...colorScheme} />
               </div>
               <div className="flex flex-col gap-1">
                 {loading.page ? (
@@ -272,7 +257,7 @@ export default function Candidate() {
             </div>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img src={cashIcon} alt="" />
+                <CashIcon {...colorScheme} />
               </div>
               <div className="flex flex-col gap-1">
                 {loading.page ? (
@@ -292,7 +277,7 @@ export default function Candidate() {
             </div>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img src={role} alt="" />
+                <DriversLicenseIcon {...colorScheme} />
               </div>
               <div className="flex flex-col gap-1">
                 {loading.page ? (
@@ -314,11 +299,7 @@ export default function Candidate() {
           <div className="bg-white sm:rounded-3xl shadow-primaryBig py-10 sm:p-10 flex justify-evenly flex-wrap col-[2/3] xl:flex-nowrap gap-6">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img
-                  className="max-w-[60%] max-h-[60%]"
-                  src={emailIcon}
-                  alt=""
-                />
+                <EmailIcon {...colorScheme} />
               </div>
               <div className="flex flex-col gap-1">
                 {loading.page ? (
@@ -338,11 +319,7 @@ export default function Candidate() {
             </div>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <img
-                  className="max-w-[60%] max-h-[60%]"
-                  src={phoneIcon}
-                  alt=""
-                />
+                <PhoneIcon {...colorScheme} />
               </div>
               <div className="flex flex-col gap-1">
                 {loading.page ? (

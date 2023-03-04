@@ -2,14 +2,12 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 import CandidateFilter from "../components/offers/CandidateFilter";
-import { CandidateProps, roleToTextMap } from "../constants/candidate";
+import { CandidateProps } from "../constants/candidate";
 import Candidate from "./Candidate";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useAppSelector } from "../main";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { emailIcon, phoneIcon } from "../assets/candidate/candidate";
-import { arrowRight } from "../assets/general";
-import CategoryPercantageBox from "../components/offers/CategoryPercentageBox";
+import CandidateRef from "../components/offers/CandidateRef";
 
 export default function Offers() {
   return (
@@ -154,137 +152,5 @@ const CandidateList = () => {
         </h4>
       </div>
     </section>
-  );
-};
-
-export const CandidateRef = ({
-  id,
-  first_name,
-  last_name,
-  is_followed,
-  percentage_by_category,
-  phone,
-  email,
-  profession,
-}: CandidateProps) => {
-  const user_id = useAppSelector((state) => state.login.data.id);
-  const [isFollowed, setIsFollowed] = useState(is_followed);
-
-  const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsFollowed((prev) => !prev);
-    if (isFollowed)
-      return axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`);
-    return axios.post(
-      "/api/profile/favourites/add",
-      JSON.stringify({ employer: user_id, candidate: id }),
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  };
-
-  return (
-    <Link
-      to={"/oferty/" + id}
-      className="sm:hover:bg-[#FAFAFA] transition-colors sm:px-6 py-8 flex flex-col gap-8 border-b-[1px] border-[#E6E7EA]"
-    >
-      <div className="flex items-center justify-between gap-6 flex-wrap">
-        <div className="flex items-center gap-6">
-          <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
-            <h4 className="font-semibold text-primary">
-              {first_name.charAt(0) + last_name.charAt(0)}
-            </h4>
-          </div>
-          <div className="flex flex-col gap-1">
-            <h4 className="text-[.8rem]">
-              Szuka pracy w{" "}
-              <span className="text-primary">
-                {profession ? roleToTextMap[profession].profession : ""}
-              </span>
-            </h4>
-            <h3 className="text-sm font-medium">
-              {first_name} {last_name}
-            </h3>
-          </div>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
-            <img className="max-w-[60%] max-h-[60%]" src={emailIcon} alt="" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <h4 className="text-[.8rem]">Email</h4>
-            <h3 className="text-sm font-medium">{email ?? "******@***.com"}</h3>
-          </div>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
-            <img className="max-w-[60%] max-h-[60%]" src={phoneIcon} alt="" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <h4 className="text-[.8rem]">Numer telefonu</h4>
-            <h3 className="text-sm font-medium">
-              +48 {phone ?? "*** *** ***"}
-            </h3>
-          </div>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
-            <img className="max-w-[60%] max-h-[60%]" src={phoneIcon} alt="" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <h4 className="text-[.8rem]">Numer telefonu</h4>
-            <h3 className="text-sm font-medium">
-              +48 {phone ?? "*** *** ***"}
-            </h3>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-x-20 gap-y-4">
-        <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Dyspozycyjność</h4>
-          <h3 className="text-sm font-semibold">Cały etat</h3>
-        </div>
-        <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Miasto</h4>
-          <h3 className="text-sm font-semibold">Wrocław</h3>
-        </div>
-        <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Wykształcenie</h4>
-          <h3 className="text-sm font-semibold">Typ wykształcenia</h3>
-        </div>
-        <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Prawo jazdy kat. B</h4>
-          <h3 className="text-sm font-semibold">Tak</h3>
-        </div>
-      </div>
-      <div className="flex items-center gap-4 justify-between flex-wrap sm:flex-nowrap">
-        <div className="flex flex-wrap gap-4">
-          <CategoryPercantageBox
-            {...roleToTextMap["sales"]}
-            role={"sales"}
-            percentage={percentage_by_category["sales"]}
-          />
-          <CategoryPercantageBox
-            {...roleToTextMap["office_administration"]}
-            role={"office_administration"}
-            percentage={percentage_by_category["office_administration"]}
-          />
-          <CategoryPercantageBox
-            {...roleToTextMap["customer_service"]}
-            role={"customer_service"}
-            percentage={percentage_by_category["customer_service"]}
-          />
-        </div>
-        <button
-          className="rounded-full w-max text-white text-[.75rem] font-semibold flex items-center py-3 px-10 bg-primary"
-          type="button"
-        >
-          Zobacz profil
-          <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
-        </button>
-      </div>
-    </Link>
   );
 };

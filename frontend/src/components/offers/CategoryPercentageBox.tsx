@@ -4,11 +4,11 @@ import { RoleType } from "../../constants/workForm";
 
 const CategoryPercantageBox = ({
   offersCategoryPercantageBox,
-  profession,
+  name,
   percentage,
   role,
 }: RoleTextsType & { percentage: number; role?: RoleType }) => {
-  const isActive = role === profession;
+  const isActive = role === name;
   const { gradient } = role ? professionColorMap[role] : { gradient: "" };
   return (
     <div
@@ -17,11 +17,10 @@ const CategoryPercantageBox = ({
       } flex items-center gap-2 w-max rounded-full py-2 px-4 bg-[#F5F5F5]`}
     >
       <h4 className="text-[.75rem] font-medium">
-        Umiejętności{" "}
         {isActive ? (
           <span
             style={{ backgroundImage: gradient }}
-            className="bg-clip-text text-transparent"
+            className="bg-clip-text text-transparent font-semibold"
           >{`${offersCategoryPercantageBox} ${percentage}%`}</span>
         ) : (
           `${offersCategoryPercantageBox} ${percentage}%`

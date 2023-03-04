@@ -61,6 +61,7 @@ export const initialDetailsState: Details = {
 }
 
 export type RoleTextsType = {
+    name: RoleType,
     profession: string,
     offersCategoryPercantageBox: string
 }
@@ -71,15 +72,18 @@ export type MapTextToRoleType = {
 
 export const roleToTextMap: MapTextToRoleType = {
     sales: {
+        name: 'sales',
         profession: 'Sprzedaż',
-        offersCategoryPercantageBox: 'sprzedażowe'
+        offersCategoryPercantageBox: 'Sprzedażowe'
     },
     customer_service: {
+        name: 'customer_service',
         profession: 'Obsługa klienta',
-        offersCategoryPercantageBox: 'obsługi klienta'
+        offersCategoryPercantageBox: 'Obsługi klienta'
     },
     office_administration: {
+        name: 'office_administration',
         profession: 'Administracja',
-        offersCategoryPercantageBox: 'administracyjne'
+        offersCategoryPercantageBox: 'Administracyjne'
     }
 }
