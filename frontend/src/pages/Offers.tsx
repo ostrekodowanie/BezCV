@@ -117,10 +117,8 @@ const CandidateList = () => {
 
   return (
     <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1.4in] md:py-[2in] bg-white">
-      <div className="flex flex-wrap gap-6 items-center justify-between mx-[8vw] sm:mx-0">
-        <h1 className="font-medium text-3xl xl:text-4xl">
-          Wyszukaj pracownika
-        </h1>
+      <div className="flex flex-wrap gap-6 items-end justify-between mx-[8vw] sm:mx-0">
+        <h1 className="font-medium text-3xl xl:text-4xl">Znajdź pracownika</h1>
         <div className="flex items-center gap-4">
           <h4>Sortuj według:</h4>
           <select className="bg-white font-medium">
@@ -128,7 +126,7 @@ const CandidateList = () => {
           </select>
         </div>
       </div>
-      <div className="flex flex-col lg:grid grid-cols-[1fr_4fr] mt-8 mb-12">
+      <div className="flex flex-col lg:grid grid-cols-[1fr_4fr] mt-8 xl:my-12">
         <CandidateFilter setFilter={setFilter} />
         <InfiniteScroll
           className={`flex flex-col bg-white shadow-primaryBig sm:rounded-3xl relative flex-1 min-h-[80vh] lg:ml-8 px-[8vw] py-4 sm:p-4`}

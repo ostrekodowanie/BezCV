@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import Loader from "../../components/Loader";
@@ -37,8 +37,6 @@ export default function CandidateController() {
     }
 
     if (type === "tel") {
-      if (candidateAnswers.phone.length !== 9)
-        return setCredentialsError("Numer telefonu powinien zawierać 9 cyfr!");
       setCredentialsLoading(true);
       return axios
         .get("/api/survey/phone/" + candidateAnswers.phone)
@@ -90,7 +88,11 @@ export default function CandidateController() {
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col items-center w-full gap-6 mt-8">
-          <CandidateInput {...defaultQuestions[activeQuestionIndex]} />
+          {type === "tel" ? (
+            <PhoneInput />
+          ) : (
+            <CandidateInput {...defaultQuestions[activeQuestionIndex]} />
+          )}
         </div>
         <div className="flex justify-between items-center gap-4 flex-wrap self-end mt-8 xl:mt-0">
           {credentialsLoading && <Loader />}
@@ -114,13 +116,13 @@ export default function CandidateController() {
             </button>
           </div>
         </div>
-        {phoneCodePopupActive && (
-          <EmailCodePopup
-            setActiveQuestionIndex={setActiveQuestionIndex}
-            setPhoneCodePopupActive={setPhoneCodePopupActive}
-          />
-        )}
       </form>
+      {phoneCodePopupActive && (
+        <EmailCodePopup
+          setActiveQuestionIndex={setActiveQuestionIndex}
+          setPhoneCodePopupActive={setPhoneCodePopupActive}
+        />
+      )}
     </>
   );
 }
@@ -276,4 +278,29 @@ const CandidateInput = ({
         </>
       );
   }
+};
+
+const PhoneInput = () => {
+  const { candidateAnswers, setCandidateAnswers } = useContext(SurveyContext);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    value = value.replace(/\D/g, "");
+    value = value.replace(/(\d{3})(?=\d)/g, "$1 ");
+    value = value.slice(0, 11);
+    setCandidateAnswers((prev) => ({ ...prev, phone: value }));
+  };
+
+  return (
+    <input
+      className={textInputStyles}
+      autoComplete="off"
+      required={true}
+      value={candidateAnswers["phone"]}
+      onChange={handleChange}
+      id={"Pod jakim numerem pracodawca będzie mógł się z Tobą skontaktować?"}
+      placeholder={"Tutaj wpisz swój numer telefonu"}
+      type={"tel"}
+    />
+  );
 };

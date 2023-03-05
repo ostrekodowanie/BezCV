@@ -33,7 +33,10 @@ export default function PhoneCodePopup({
       .post(
         "/api/survey/phone/verify",
         JSON.stringify({
-          phone: candidateAnswers.phone,
+          phone:
+            typeof candidateAnswers.phone === "string"
+              ? candidateAnswers.phone.split(" ").join("")
+              : candidateAnswers.phone,
           code,
         }),
         { headers: { "Content-Type": "application/json" } }
@@ -54,29 +57,34 @@ export default function PhoneCodePopup({
   };
 
   return (
-    <form
-      className="absolute sm:left-[50%] sm:translate-x-[-50%] top-[40%] max-w-[6in] bg-white shadow-secondaryBig rounded-3xl p-6 flex flex-col gap-4 animate-opacity"
-      onSubmit={handleSubmit}
-    >
-      <p>Przesłaliśmy kod weryfikacyjny na podany przez Ciebie email.</p>
-      <input
-        className={textInputStyles}
-        onChange={(e) => setCode(e.target.value)}
-        required
-        autoComplete="off"
-        type="number"
-        name="email_code"
-        id="email_code"
-        placeholder="Tutaj wpisz swój kod"
-      />
-      <div className="flex items-center justify-end gap-4">
-        {loading && <Loader />}
-        {error && <p className="text-red-400">{error}</p>}
-        <button className="bg-secondary transition-colors font-medium border-primary text-white rounded-full flex items-center text-[.8rem] py-3 px-8 max-w-max">
-          Prześlij
-          <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
-        </button>
-      </div>
-    </form>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+      <form
+        className="max-w-[4in] w-full bg-white shadow-secondaryBig rounded-3xl px-6 sm:px-12 py-16 flex flex-col gap-8 animate-opacity"
+        onSubmit={handleSubmit}
+      >
+        <p className="font-medium text-center">
+          Przesłaliśmy SMS z kodem weryfikacyjnym na podany przez Ciebie numer
+          telefonu.
+        </p>
+        <input
+          className={textInputStyles}
+          onChange={(e) => setCode(e.target.value)}
+          required
+          autoComplete="off"
+          type="number"
+          name="phone_code"
+          id="phone_code"
+          placeholder="Tutaj wpisz swój kod"
+        />
+        <div className="flex items-center justify-end gap-4">
+          {loading && <Loader />}
+          {error && <p className="text-red-400">{error}</p>}
+          <button className="bg-secondary transition-colors font-medium border-primary text-white rounded-full flex items-center text-[.8rem] py-3 px-8 max-w-max">
+            Prześlij
+            <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

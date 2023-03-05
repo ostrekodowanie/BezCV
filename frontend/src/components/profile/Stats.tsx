@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { ProfileDataContext, StatsProps } from "../../constants/profile";
+import { StatsProps } from "../../constants/profile";
 import { useAppSelector } from "../../main";
 
 const Stats = ({
@@ -14,7 +13,9 @@ const Stats = ({
         <h3 className="font-semibold w-min">Dostępne tokeny</h3>
         <h4
           className={`text-4xl font-bold ${
-            loading ? "text-[#f4f4f4]" : "text-primary"
+            loading
+              ? "text-[#f4f4f4]"
+              : "text-transparent bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] bg-clip-text"
           }`}
         >
           {loading ? "24" : points}
@@ -24,7 +25,9 @@ const Stats = ({
         <h3 className="font-semibold w-min">Obserwowane kontakty</h3>
         <h4
           className={`text-4xl font-bold ${
-            loading ? "text-[#f4f4f4]" : "text-primary"
+            loading
+              ? "text-[#f4f4f4]"
+              : "text-transparent bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] bg-clip-text"
           }`}
         >
           {loading ? "12" : followed_count}
@@ -34,7 +37,9 @@ const Stats = ({
         <h3 className="font-semibold w-min">Zakupione kontakty</h3>
         <h4
           className={`text-4xl font-bold ${
-            loading ? "text-[#f4f4f4]" : "text-primary"
+            loading
+              ? "text-[#f4f4f4]"
+              : "text-transparent bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] bg-clip-text"
           }`}
         >
           {loading ? "5" : purchased_count}

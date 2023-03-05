@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import { NonPercentageAbilitiesCandidateProps } from "../../../constants/candidate";
-import { useAppSelector } from "../../../main";
 import CandidatePurchased from "./Candidate";
 
 const Purchased = ({
@@ -15,7 +13,7 @@ const Purchased = ({
       <h2 className="font-medium text-xl ml-6 mb-4">Zakupione kontakty</h2>
       <div className="flex flex-col">
         {loading ? (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 mt-4 mx-4">
             <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
             <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
             <div className="bg-[#f8f8f8] rounded-3xl min-h-[3rem] w-full" />
