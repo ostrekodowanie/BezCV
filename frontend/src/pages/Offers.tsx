@@ -13,9 +13,7 @@ export default function Offers() {
   return (
     <Routes>
       <Route path="/:id" element={<Candidate />} />
-      {["/", "/search/*"].map((path, index) => (
-        <Route path={path} element={<CandidateList />} key={index} />
-      ))}
+      <Route path="/" element={<CandidateList />} />
     </Routes>
   );
 }
@@ -24,6 +22,7 @@ export interface FilterProps {
   // abilities: string[],
   professions: string[];
   availability: string[];
+  salary: string[];
 }
 
 const CandidateList = () => {
@@ -41,6 +40,7 @@ const CandidateList = () => {
     // abilities: searchParams.get('a')?.split(',') || [],
     professions: searchParams.get("professions")?.split(",") || [],
     availability: searchParams.get("availability")?.split(",") || [],
+    salary: searchParams.get("salary")?.split(",") || [],
   });
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const CandidateList = () => {
         filter.professions.length > 0 &&
           "professions=" + filter.professions.map((role) => role).join(","),
       ];
-      url = `/oferty/search?${
+      url = `/oferty?${
         searchArr.length > 0 &&
         searchArr
           .map((item) => item)

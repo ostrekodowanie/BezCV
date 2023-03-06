@@ -12,7 +12,6 @@ import CircleChart from "../components/candidate/CircleChart";
 import { useAppSelector } from "../main";
 import { purchase } from "../reducers/login";
 import {
-  CandidateProps,
   Details,
   initialDetailsState,
   roleToTextMap,
@@ -33,6 +32,7 @@ import {
   PhoneIcon,
   ProfessionIcon,
 } from "../assets/candidate/icons/icons";
+import CandidateRef from "../components/offers/CandidateRef";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -187,7 +187,7 @@ export default function Candidate() {
                 <button
                   onClick={handlePurchase}
                   style={{ backgroundImage: gradient }}
-                  className="rounded-full max-w-max justify-center xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10"
+                  className="rounded-full max-w-max justify-center hover:scale-[1.02] transition-transform xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10"
                 >
                   Wykup kontakt za 1 token{" "}
                   <img
@@ -471,7 +471,7 @@ export default function Candidate() {
                   : "linear-gradient(180deg, #7C9D8E 0%, #91B49F 100%)",
               }}
               disabled={!candidateDetails.is_purchased}
-              className="rounded-full w-max justify-center text-white text-[.8rem] font-semibold flex items-center py-4 px-10"
+              className="rounded-full w-max hover:scale-[1.02] transition-transform justify-center text-white text-[.8rem] font-semibold flex items-center py-4 px-10"
             >
               Pobierz profil w formacie PDF{" "}
               <img className="max-h-[1.4em] ml-2" src={pdf} alt="" />
@@ -480,13 +480,13 @@ export default function Candidate() {
         )}
         <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 flex flex-wrap shadow-primaryBig gap-8">
           <div className="flex flex-col w-full">
-            <h2 className="font-bold text-xl mb-6">
+            <h2 className="font-bold text-lg mb-6">
               Ci kandydaci mogą Cię zainteresować
             </h2>
             <div className="flex flex-col gap-6 w-full">
               {!loading.page ? (
                 candidateDetails.similar_candidates?.map((cand) => (
-                  <SuggestedCandidate {...cand} key={cand.id} />
+                  <CandidateRef {...cand} key={cand.id} />
                 ))
               ) : (
                 <>
@@ -503,41 +503,6 @@ export default function Candidate() {
     </ColorSchemeContext.Provider>
   );
 }
-
-const SuggestedCandidate = ({
-  id,
-  first_name,
-  last_name,
-  profession,
-}: CandidateProps) => {
-  return (
-    <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-      <div className="flex flex-col xl:flex-row xl:items-center gap-4">
-        <div className="h-14 w-14 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-          <h4 className="text-primary">{first_name.charAt(0)}</h4>
-        </div>
-        <div className="flex flex-col mr-8 gap-1 w-max">
-          <h4 className="text-sm w-max font-semibold">
-            {first_name} {last_name}
-          </h4>
-          <h4 className="text-[.8rem] w-max">
-            <span className="hidden sm:inline">Szuka pracy w:</span>{" "}
-            <span className="font-semibold text-primary">{profession}</span>
-          </h4>
-        </div>
-        <div className="flex flex-wrap items-center gap-4">
-          {/* {offersCategoryPercantageBox.map(box => <CategoryPercantageBox {...box} percentage={percentage_by_category[box.name]} />)} */}
-        </div>
-      </div>
-      <Link
-        className="border-primary rounded-full w-max min-w-max text-[.8rem] border-[1px] hover:text-[#2F66F4] transition-colors font-semibold"
-        to={`/oferty/${id}`}
-      >
-        Pokaż profil
-      </Link>
-    </div>
-  );
-};
 
 const SuggestedCandidateLoader = () => {
   return (

@@ -18,10 +18,12 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
   const [mobileActive, setMobileActive] = useState(false);
   const [isActive, setIsActive] = useState({
     availability: false,
+    salary: false,
   });
   const [allFilters, setAllFilters] = useState<FilterStateProps>({
     professions: [],
     availability: [],
+    salary: [],
   });
 
   useEffect(() => {
@@ -126,6 +128,40 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
             )}
           </div>
         </div>
+        <HorizontalLine />
+        <div>
+          {allFilters.salary.length > 0 && (
+            <button
+              onClick={() =>
+                setIsActive((prev) => ({
+                  ...prev,
+                  salary: !prev.salary,
+                }))
+              }
+              className="flex items-center mb-6"
+            >
+              <img
+                className={`${
+                  isActive.salary ? "rotate-0" : "-rotate-90"
+                } transition-transform max-h-[.9em] mr-2`}
+                src={filtersMenuArrow}
+                alt=""
+              />
+              <h4 className="font-medium text-[14px]">Oczekiwania finansowe</h4>
+            </button>
+          )}
+          <div className="flex flex-col gap-4">
+            {allFilters.salary.length > 0 &&
+              isActive.salary &&
+              allFilters.salary.map((salary) => (
+                <SalaryCheckBox
+                  salary={salary}
+                  setFilter={setFilter}
+                  key={salary}
+                />
+              ))}
+          </div>
+        </div>
       </div>
     </>
   );
@@ -189,6 +225,47 @@ const AvailabilityCheckBox = ({
       />
       <label className="ml-4" htmlFor={availability}>
         {availability}
+      </label>
+    </div>
+  );
+};
+
+const SalaryCheckBox = ({
+  salary,
+  setFilter,
+}: {
+  salary: string;
+  setFilter: Dispatch<SetStateAction<FilterStateProps>>;
+}) => {
+  const location = useLocation();
+  const [checked, setChecked] = useState(false);
+
+  useLayoutEffect(() => {
+    const decodedSearch = decodeURIComponent(location.search);
+    setChecked(decodedSearch.includes(salary));
+  }, []);
+
+  const handleChange = () => {
+    setFilter((prev) => ({
+      ...prev,
+      availability: checked
+        ? prev.salary.filter((ab) => ab !== salary)
+        : [...prev.availability, salary],
+    }));
+    setChecked((prev) => !prev);
+  };
+
+  return (
+    <div className="flex items-center text-[14px] font-medium">
+      <input
+        type="checkbox"
+        onChange={handleChange}
+        checked={checked}
+        name="abilities"
+        id={salary}
+      />
+      <label className="ml-4" htmlFor={salary}>
+        {salary}
       </label>
     </div>
   );
