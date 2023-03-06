@@ -185,8 +185,8 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
                 abilities_dict[category] = average
                 
             if not obj.purchasedoffers_employer.filter(candidate=contact['id']).first():
-                contact['first_name'] = contact['first_name'][0] + '*' * len(contact['first_name'])
-                contact['last_name'] = contact['last_name'][0] + '*' * len(contact['last_name'])
+                contact['first_name'] = contact['first_name'][0] + '*' * (len(contact['first_name']) - 1)
+                contact['last_name'] = contact['last_name'][0] + '*' * (len(contact['last_name']) - 1)
                 
             followed_contact = {
                 'id': contact['id'],
