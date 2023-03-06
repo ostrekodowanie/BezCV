@@ -110,8 +110,9 @@ class PurchasedOffers(models.Model):
         unique_together = [['employer', 'candidate']]
 
     def __str__(self):
-        return '{}'.format(
+        return '{} | {}'.format(
             self.pk,
+            self.created_at
         )
 
 

@@ -1,7 +1,10 @@
-from django.db.models import F, OuterRef, Subquery, Avg
+from django.db.models import F, OuterRef, Subquery, Avg, Sum, ExpressionWrapper, IntegerField
+from django.utils import timezone
 
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
+
+from datetime import timedelta
 
 from .models import User
 from apps.Candidates.models import CandidateAbilities
@@ -45,9 +48,30 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    points = serializers.SerializerMethodField()
     class Meta:
         model =  User
         fields = ('first_name', 'last_name', 'points', 'is_staff')
+        
+    def get_points(self, obj):
+        last_month = timezone.now() - timedelta(days=30)
+        purchased_tokens = obj.purchasedpoints_employer.filter(
+            created_at__gte=last_month
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        oldest_token_date = obj.purchasedpoints_employer.filter(
+            created_at__gte=last_month
+        ).order_by('created_at').values_list('created_at', flat=True).first()
+        
+        if oldest_token_date:
+            purchased_contacts = obj.purchasedoffers_employer.filter(
+                created_at__gte=oldest_token_date
+            ).count()
+        else:
+            purchased_contacts = 0
+
+        remaining_tokens = purchased_tokens - purchased_contacts
+        return remaining_tokens
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
@@ -87,20 +111,17 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
         return employer
     
     def get_stats(self, obj):
-        token_count = round(obj.points)
         followed_count = len(obj.favouritecandidates_employer.all())
         purchased_count = len(obj.purchasedoffers_employer.all())
         stats_dict = {
-            'token_count': token_count,
             'followed_count': followed_count,
             'purchased_count': purchased_count
         }
         return stats_dict
-
-
     
     def get_purchased_contacts(self, obj):
-        purchased_contacts = obj.purchasedoffers_employer.annotate(
+        purchased_contacts = obj.purchasedoffers_employer.values().annotate(
+            id=F('candidate__id'),
             first_name=F('candidate__first_name'),
             last_name=F('candidate__last_name'),
             phone=F('candidate__phone'),
@@ -110,7 +131,7 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
                     avg_percentage=Avg('percentage')
                 ).order_by('-avg_percentage').values('ability__abilityquestions_ability__question__category__name')[:1]
             )
-        ).values('candidate_id', 'first_name', 'last_name', 'phone', 'profession').order_by('-created_at')[:10]
+        ).values('id', 'first_name', 'last_name', 'phone', 'profession').order_by('-created_at')[:10]
 
         return purchased_contacts
     
@@ -120,7 +141,8 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
             avg_percentage=Avg('percentage')
         ).order_by('-avg_percentage')
         
-        followed_contacts = obj.favouritecandidates_employer.annotate(
+        followed_contacts = obj.favouritecandidates_employer.values().annotate(
+            id=F('candidate__id'),
             first_name=F('candidate__first_name'),
             last_name=F('candidate__last_name'),
             phone=F('candidate__phone'),
@@ -134,10 +156,9 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
                 abilities.values('ability__abilityquestions_ability__question__category__name')[:1]
             ),
         ).values(
-            'candidate_id', 
+            'id', 
             'first_name', 
-            'last_name', 
-            'phone', 
+            'last_name',
             'profession', 
             'job_position', 
             'salary_expectation', 
@@ -150,7 +171,7 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
         followed_contacts_array = []
         for contact in followed_contacts:
             candidate_abilities = CandidateAbilities.objects.filter(
-                candidate_id=contact['candidate_id']
+                candidate_id=contact['id']
             ).annotate(
                 category=F('ability__abilityquestions_ability__question__category__name')
             ).values('category').annotate(
@@ -162,12 +183,15 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
                 category = ability['category']
                 average = round(ability['average_percentage'])
                 abilities_dict[category] = average
-
+                
+            if not obj.purchasedoffers_employer.filter(candidate=contact['id']).first():
+                contact['first_name'] = contact['first_name'][0] + '*' * (len(contact['first_name']) - 1)
+                contact['last_name'] = contact['last_name'][0] + '*' * (len(contact['last_name']) - 1)
+                
             followed_contact = {
-                'candidate_id': contact['candidate_id'], 
+                'id': contact['id'],
                 'first_name': contact['first_name'], 
-                'last_name': contact['last_name'], 
-                'phone': contact['phone'], 
+                'last_name': contact['last_name'],
                 'profession': contact['profession'], 
                 'job_position': contact['job_position'], 
                 'salary_expectation': contact['salary_expectation'], 
