@@ -9,7 +9,6 @@ class User(AbstractUser):
     desc = models.CharField(max_length=255, blank=True, null=True)
     image = models.CharField(max_length=255, blank=True, null=True)
     nip = models.CharField(max_length=255, unique=True)
-    points = models.DecimalField(decimal_places=0, max_digits=100, default=0)
     password = models.CharField(max_length=255)
     is_verified = models.BooleanField(default=False)
 
@@ -26,11 +25,3 @@ class User(AbstractUser):
             self.pk,
             self.email,
         )
-
-    def reduce_points(self):
-        self.points -= 1
-        super().save()
-
-    def purchase_points(self, amount):
-        self.points += amount
-        super().save()

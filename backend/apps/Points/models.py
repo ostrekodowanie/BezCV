@@ -14,8 +14,9 @@ class PaymentDetails(models.Model):
         verbose_name_plural = 'Payment Details'
 
     def __str__(self):
-        return '{} | {} | {}'.format(
+        return '{} | {} | {} | {}'.format(
             self.pk,
             self.amount,
             self.price,
+            self.created_at
         )
