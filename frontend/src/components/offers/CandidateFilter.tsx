@@ -8,6 +8,8 @@ import {
 } from "react";
 import { useLocation } from "react-router";
 import { filtersMenuArrow } from "../../assets/offers/offers";
+import { roleToTextMap } from "../../constants/candidate";
+import { RoleType } from "../../constants/workForm";
 import { FilterProps as FilterStateProps } from "../../pages/Offers";
 
 interface FilterProps {
@@ -275,7 +277,7 @@ const RoleCheckBox = ({
   role,
   setFilter,
 }: {
-  role: string;
+  role: RoleType;
   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
 }) => {
   const location = useLocation();
@@ -306,7 +308,7 @@ const RoleCheckBox = ({
         id={role}
       />
       <label className="ml-4" htmlFor={role}>
-        {role}
+        {roleToTextMap[role].profession}
       </label>
     </div>
   );
