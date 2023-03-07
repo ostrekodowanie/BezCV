@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { useAppSelector } from "../main";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CandidateRef from "../components/offers/CandidateRef";
+import { RoleType } from "../constants/workForm";
 
 export default function Offers() {
   return (
@@ -20,7 +21,7 @@ export default function Offers() {
 
 export interface FilterProps {
   // abilities: string[],
-  professions: string[];
+  professions: RoleType[];
   availability: string[];
   salary: string[];
 }
@@ -38,7 +39,8 @@ const CandidateList = () => {
   const [hasMore, setHasMore] = useState(true);
   const [filter, setFilter] = useState<FilterProps>({
     // abilities: searchParams.get('a')?.split(',') || [],
-    professions: searchParams.get("professions")?.split(",") || [],
+    professions:
+      (searchParams.get("professions")?.split(",") as RoleType[]) || [],
     availability: searchParams.get("availability")?.split(",") || [],
     salary: searchParams.get("salary")?.split(",") || [],
   });
@@ -106,15 +108,6 @@ const CandidateList = () => {
       .catch(() => setHasMore(false));
   }, [page]);
 
-  const OffersLoader = () => (
-    <div className="m-6 flex flex-col gap-6">
-      <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
-      <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
-      <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
-      <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
-    </div>
-  );
-
   return (
     <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1.4in] md:py-[2in] bg-white">
       <div className="flex flex-wrap gap-6 items-end justify-between mx-[8vw] sm:mx-0">
@@ -152,3 +145,12 @@ const CandidateList = () => {
     </section>
   );
 };
+
+const OffersLoader = () => (
+  <div className="m-6 flex flex-col gap-6">
+    <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
+    <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
+    <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
+    <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
+  </div>
+);

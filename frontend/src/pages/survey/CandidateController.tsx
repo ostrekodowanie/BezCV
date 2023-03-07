@@ -37,6 +37,8 @@ export default function CandidateController() {
     }
 
     if (type === "tel") {
+      if (candidateAnswers.phone.length < 11)
+        return setError("Nieprawidłowy numer telefonu!");
       setCredentialsLoading(true);
       return axios
         .get("/api/survey/phone/" + candidateAnswers.phone)
@@ -288,7 +290,10 @@ const PhoneInput = () => {
     value = value.replace(/\D/g, "");
     value = value.replace(/(\d{3})(?=\d)/g, "$1 ");
     value = value.slice(0, 11);
-    setCandidateAnswers((prev) => ({ ...prev, phone: value }));
+    setCandidateAnswers((prev) => ({
+      ...prev,
+      phone: value,
+    }));
   };
 
   return (
