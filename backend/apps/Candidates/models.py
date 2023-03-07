@@ -26,13 +26,13 @@ class Candidates(models.Model):
     birth_date = models.DateField()
     province = models.CharField(max_length=255)
     profession = models.CharField(max_length=100, choices=[
-                                                        ('Sales', 'Sales'), 
-                                                        ('Office administration', 'Office administration'), 
-                                                        ('Customer service', 'Customer service')])
+                                                        ('sales', 'sales'), 
+                                                        ('office_administration', 'office_administration'), 
+                                                        ('customer_service', 'customer_service')])
     preferred_profession = models.CharField(max_length=100, choices=[
-                                                        ('Sales', 'Sales'), 
-                                                        ('Office administration', 'Office administration'), 
-                                                        ('Customer service', 'Customer service')])
+                                                        ('sales', 'sales'), 
+                                                        ('office_administration', 'office_administration'), 
+                                                        ('customer_service', 'customer_service')])
     abilities = models.ManyToManyField(Abilities, through='CandidateAbilities')
     salary_expectation = models.CharField(max_length=100, choices=[
                                                         ('mniej niż 2999 zł', 'mniej niż 2999 zł'), 

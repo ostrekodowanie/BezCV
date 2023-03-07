@@ -170,7 +170,7 @@ class CandidateSerializer(serializers.ModelSerializer):
         return False
     
     def get_similar_candidates(self, obj):
-        similar_candidates = obj.objects.filter(preferred_profession=obj.preferred_profession).exclude(id=obj.id).order_by('-created_at').distinct()[:5]
+        similar_candidates = Candidates.objects.filter(profession=obj.profession).exclude(id=obj.id).order_by('-created_at').distinct()[:5]
         return similar_candidates.values(
             "id",
             "first_name",
