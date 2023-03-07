@@ -2,11 +2,11 @@ from django.db import models
 from apps.Candidates.models import Candidates, Abilities
 
 
-class QuestionCategories(models.Model):
+class Categories(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
-        verbose_name_plural = 'Question Categories'
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return '{} | {}'.format(
@@ -17,7 +17,7 @@ class QuestionCategories(models.Model):
 
 class Questions(models.Model):
     text = models.CharField(max_length=255)
-    category = models.ManyToManyField(QuestionCategories, related_name='questions_category')
+    category = models.ManyToManyField(Categories, related_name='questions_category')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -79,7 +79,7 @@ class AbilityQuestions(models.Model):
 
 class GeneratedCodes(models.Model):
     code = models.CharField(max_length=6)
-    candidate = models.ForeignKey(Candidates, on_delete=models.CASCADE, related_name="access_code")
+    candidate = models.OneToOneField(Candidates, on_delete=models.CASCADE, related_name="access_code")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

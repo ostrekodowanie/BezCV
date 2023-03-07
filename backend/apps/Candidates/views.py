@@ -9,7 +9,8 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 
 from . import serializers
-from .models import Candidates, Abilities, Professions, PurchasedOffers
+from .models import Candidates, Abilities, PurchasedOffers
+from apps.Survey.models import Categories
 
 
 class CandidateView(generics.RetrieveAPIView):
@@ -19,12 +20,13 @@ class CandidateView(generics.RetrieveAPIView):
 
 
 class CandidatesFilter(filters.FilterSet):
-    professions = filters.BaseInFilter(field_name='preferred_profession', lookup_expr='in')
+    professions = filters.BaseInFilter(field_name='profession', lookup_expr='in')
     availability =  filters.BaseInFilter(field_name='availability', lookup_expr='in')
+    salary = filters.BaseInFilter(field_name='salary_expectation', lookup_expr='in')
 
     class Meta:
         model = Candidates
-        fields = ['professions', 'availability']
+        fields = ['professions', 'availability', 'salary']
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 20
@@ -48,19 +50,21 @@ class CandidatesView(generics.ListAPIView):
             else:
                 queryset = queryset.order_by('created_at')
 
-        return queryset
+        return queryset.order_by('-created_at')
 
 
 class FiltersView(APIView):
     def get(self, request):
         abilities = Abilities.objects.values_list('name', flat=True).order_by('name')
-        professions = Professions.objects.values_list('name', flat=True).order_by('name')
-        availability = Candidates.objects.values_list('availability', flat=True).order_by('availability').distinct()
-
+        professions = Categories.objects.values_list('name', flat=True).order_by('name')
+        availability = Candidates.objects.values_list('availability', flat=True).order_by('availability')
+        salary = Candidates.objects.values_list('salary_expectation', flat=True).order_by('salary_expectation')
+        
         data = {
             'abilities': abilities,
             'professions': professions,
-            'availability': availability
+            'availability': availability,
+            'salary': salary
         }
 
         return Response(data)

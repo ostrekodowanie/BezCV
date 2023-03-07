@@ -1,16 +1,16 @@
-from django.core.mail import send_mail
-from django.db.models import Count, Q
+from django.db.models import Avg
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from apps.Candidates.models import Candidates
-from .models import Questions, CandidateAnswers, QuestionCategories, GeneratedCodes
+from .models import Questions, CandidateAnswers, Categories, GeneratedCodes
 from .serializers import QuestionSerializer, CandidateCreateSerializer
 from .signals import update_percentage
+from config.settings import client
 
-import string, random , os, openai, datetime
+import string, random , openai, datetime
 
 
 class QuestionsByCategoryView(generics.ListAPIView):
@@ -28,9 +28,9 @@ class CandidateAnswersView(APIView):
         candidate_email = request.data['candidate']
         answers = request.data['answers']
         candidate = Candidates.objects.get(email=candidate_email)
+        print(answers)
         candidate_answers = [
-            CandidateAnswers(question=Questions.objects.get(pk=question),
-                             candidate=candidate, answer=answer)
+            CandidateAnswers(question=Questions.objects.get(pk=question), answer=answer, candidate=candidate)
             for question, answer in answers
         ]
         CandidateAnswers.objects.bulk_create(candidate_answers)
@@ -45,15 +45,13 @@ class CandidateAnswersView(APIView):
             [{'name': ability.ability.name, 'percentage': ability.percentage}
             for ability in candidate.candidateabilities_candidate.all()],
             key=lambda x: x['percentage'], reverse=True)
-        professions = [profession.profession.name for profession in candidate.candidateprofessions_candidate.all()]
         best_abilities = [ability['name'] for ability in sorted_abilities[:3]]
         worst_abilities = [ability['name'] for ability in sorted_abilities[-3:][::-1]]
-        professions = ', '.join(professions)
         input_text = f'''
         Oto rozbudowany opis kandydata oraz jego możliwości (w trzeciej osobie, bez określania płci, rodzaj męski) zachęcający pracodawców na podstawie jego:
         1.Najlepszych umiejętności: {best_abilities}
         2.Najgorszych umiejętności: {worst_abilities}
-        2.Preferowanych zawodów: {professions}
+        2.Stanowiska: {candidate.preferred_profession}
         3.Wybranej stawki: {candidate.salary_expectation}
         4.Dostępności: {candidate.availability}
         5.Wcześniejszej lub obecnej pozycji w pracy: {candidate.job_position}
@@ -73,9 +71,15 @@ class CandidateAnswersView(APIView):
             stop=None,
             temperature=0.3,
         )
-
+        
+        profession = candidate.candidateabilities_candidate.values(
+            'ability__abilityquestions_ability__question__category__name').annotate(
+            avg_percentage=Avg('percentage')).order_by('-avg_percentage')[:1]
+        
+        profession_name = profession[0]['ability__abilityquestions_ability__question__category__name']
+        candidate.profession = profession_name
+        
         description = response.choices[0].text.strip()
-
         candidate.desc = description
 
         candidate.save()
@@ -91,21 +95,21 @@ class CandidateCreateView(generics.CreateAPIView):
 class EmailCheckView(APIView):
     def get(self, request, email):
         if Candidates.objects.filter(email=email).exists():
-            return Response({'Email is available.'}, status=status.HTTP_200_OK)
+            return Response({'Email already exists.'}, status=status.HTTP_200_OK)
         return Response({'Email is available.'}, status=status.HTTP_204_NO_CONTENT)
     
 
 class PhoneCheckView(APIView):
     def get(self, request, phone):
         if Candidates.objects.filter(phone=phone).exists():
-            return Response({'Phone number already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({'Phone number is available.'}, status=status.HTTP_200_OK)
+            return Response({'Phone number already exists.'}, status=200)
+        return Response({'Phone number is available.'}, status=204)
     
 
 class SendCodeView(APIView):
     def post(self, request):
-        email = request.data.get('email')
-        candidate = Candidates.objects.get(email=email)
+        phone = request.data.get('phone')
+        candidate = Candidates.objects.get(phone=phone)
 
         code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
         
@@ -114,31 +118,25 @@ class SendCodeView(APIView):
         
         GeneratedCodes.objects.create(candidate=candidate, code=code)
 
-        send_mail(
-            'BezCV - Kod dostępu',
-            f'Twój kod dostępu to: {code}',
-            os.environ.get('EMAIL'),
-            [email],
-            fail_silently=False,
-        )
+        client.sms.send(to=phone, message=f'Twój kod dostępu to: {code}', from_="Test")
 
         return Response({'Access code sent successfully'}, status=200)
     
 
 class CheckCodeView(APIView):
     def post(self, request):
-        email = request.data.get('email')
+        phone = request.data.get('phone')
         code = request.data.get('code')
-        candidate = Candidates.objects.get(email=email)
+        candidate = Candidates.objects.get(phone=phone)
 
         try:
-            generated_code = GeneratedCodes.objects.get(candidate=candidate, code=code)
+            generated_code = candidate.access_code.objects.get(code=code)
         except GeneratedCodes.DoesNotExist:
             return Response({'Access code is not valid'}, status=400)
 
         if (datetime.datetime.now(datetime.timezone.utc) - generated_code.created_at).total_seconds() <= 600:
             completed_categories = set()
-            answered_questions = CandidateAnswers.objects.filter(candidate__email=email).select_related('question')
+            answered_questions = candidate.candidateanswers_candidate.objects.all().select_related('question')
 
             for answer in answered_questions:
                 categories = set(answer.question.category.all())
@@ -146,8 +144,8 @@ class CheckCodeView(APIView):
                     completed_categories.update(categories)
 
             category_dict = {}
-            for category in QuestionCategories.objects.all():
-                category_questions = Questions.objects.filter(category=category)
+            for category in Categories.objects.all():
+                category_questions = category.questions_category.objects.all()
                 user_questions = answered_questions.filter(question__in=category_questions)
                 if len(user_questions) == len(category_questions):
                     category_dict[category.name] = True

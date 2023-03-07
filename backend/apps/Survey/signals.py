@@ -32,6 +32,7 @@ def update_percentage(sender, instance, **kwargs):
     candidate_ability.percentage = percentage
     candidate_ability.save()
 
+
 @receiver(post_delete, sender=CandidateAnswers)
 def update_percentage_after_delete(sender, instance, **kwargs):
     candidate = instance.candidate

@@ -3,20 +3,6 @@ from django.db import models
 from apps.Auth.models import User
 
 
-class Professions(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name_plural = 'Professions'
-
-    def __str__(self):
-        return '{}'.format(
-            self.name,
-        )
-
-
 class Abilities(models.Model):
     name = models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -39,10 +25,14 @@ class Candidates(models.Model):
     phone = models.CharField(max_length=255, unique=True)
     birth_date = models.DateField()
     province = models.CharField(max_length=255)
+    profession = models.CharField(max_length=100, choices=[
+                                                        ('Sales', 'Sales'), 
+                                                        ('Office administration', 'Office administration'), 
+                                                        ('Customer service', 'Customer service')])
     preferred_profession = models.CharField(max_length=100, choices=[
-                                                        ('Sprzedaż', 'Sprzedaż'), 
-                                                        ('Administracja biurowa', 'Administracja biurowa'), 
-                                                        ('Obsługa klienta', 'Obsługa klienta')])
+                                                        ('Sales', 'Sales'), 
+                                                        ('Office administration', 'Office administration'), 
+                                                        ('Customer service', 'Customer service')])
     abilities = models.ManyToManyField(Abilities, through='CandidateAbilities')
     salary_expectation = models.CharField(max_length=100, choices=[
                                                         ('mniej niż 2999 zł', 'mniej niż 2999 zł'), 

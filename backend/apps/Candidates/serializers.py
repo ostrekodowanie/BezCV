@@ -1,4 +1,4 @@
-from django.db.models import F, Avg, Sum, Count
+from django.db.models import F, Avg
 
 from rest_framework import serializers
 
@@ -6,7 +6,6 @@ from .models import Candidates, PurchasedOffers, CandidateAbilities
 
 
 class CandidateSerializer(serializers.ModelSerializer):
-    profession = serializers.SerializerMethodField()
     ability_charts = serializers.SerializerMethodField()
     abilities = serializers.SerializerMethodField()
     worst_abilities = serializers.SerializerMethodField()
@@ -79,17 +78,7 @@ class CandidateSerializer(serializers.ModelSerializer):
             better_than[category] = percentage_difference
 
         return better_than
-    
-    def get_profession(self, obj):
-        profession = obj.candidateabilities_candidate.values(
-            'ability__abilityquestions_ability__question__category__name').annotate(
-            avg_percentage=Avg('percentage')).order_by('-avg_percentage')[:1]
-        
-        profession_name = profession[0]['ability__abilityquestions_ability__question__category__name']
 
-        return profession_name
-
-    
     '''def get_ability_charts(self, obj):
         main_candidate_abilities = obj.candidateabilities_candidate.annotate(
             category=F('ability__abilityquestions_ability__question__category__name')
@@ -181,14 +170,24 @@ class CandidateSerializer(serializers.ModelSerializer):
         return False
     
     def get_similar_candidates(self, obj):
-        similar_candidates = Candidates.objects.filter(preferred_profession=obj.preferred_profession).exclude(id=obj.id).order_by('-created_at').distinct()[:5]
-        return similar_candidates.values()
+        similar_candidates = obj.objects.filter(preferred_profession=obj.preferred_profession).exclude(id=obj.id).order_by('-created_at').distinct()[:5]
+        return similar_candidates.values(
+            "id",
+            "first_name",
+            "last_name",
+            "profession",
+            "job_position",
+            "salary_expectation",
+            "availability",
+            "province",
+            "education", 
+            "driving_license"
+            )
     
 
 class CandidatesSerializer(serializers.ModelSerializer):
     percentage_by_category = serializers.SerializerMethodField()
     is_followed = serializers.SerializerMethodField()
-    profession = serializers.SerializerMethodField()
 
     class Meta:
         model = Candidates
@@ -219,15 +218,6 @@ class CandidatesSerializer(serializers.ModelSerializer):
         representation['last_name'] = hidden_last_name
         representation['phone'] = '*********'
         return representation
-    
-    def get_profession(self, obj):
-        profession = obj.candidateabilities_candidate.values(
-            'ability__abilityquestions_ability__question__category__name').annotate(
-            avg_percentage=Avg('percentage')).order_by('-avg_percentage')[:1]
-        
-        profession_name = profession[0]['ability__abilityquestions_ability__question__category__name']
-
-        return profession_name
     
     def get_percentage_by_category(self, obj):
         abilities = obj.candidateabilities_candidate.annotate(

@@ -1,4 +1,5 @@
 from django.core.mail import EmailMessage
+from django.db.models import Avg
 
 from rest_framework import serializers
 
@@ -29,7 +30,7 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
         message += 'Nazwisko: ' + candidate.last_name + '\n'
         message += 'E-mail: ' + candidate.email + '\n'
         message += 'Telefon: ' + candidate.phone + '\n'
-        message += 'Data urodzenia: ' + candidate.birth_date + '\n'
+        message += 'Data urodzenia: ' + candidate.birth_date.isoformat + '\n'
         message += 'Oczekiwania finansowe: ' + str(candidate.salary_expectation) + '\n'
         message += 'Dostępność: ' + str(candidate.availability) + '\n'
         message += 'Pozycja zawodowa: ' + candidate.job_position + '\n'

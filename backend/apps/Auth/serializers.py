@@ -125,22 +125,12 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
             first_name=F('candidate__first_name'),
             last_name=F('candidate__last_name'),
             phone=F('candidate__phone'),
-            profession=Subquery(
-                CandidateAbilities.objects.filter(candidate=OuterRef('candidate')).values(
-                    'ability__abilityquestions_ability__question__category__name').annotate(
-                    avg_percentage=Avg('percentage')
-                ).order_by('-avg_percentage').values('ability__abilityquestions_ability__question__category__name')[:1]
-            )
+            profession=F('candidate__profession'),
         ).values('id', 'first_name', 'last_name', 'phone', 'profession').order_by('-created_at')[:10]
 
         return purchased_contacts
     
     def get_followed_contacts(self, obj):
-        abilities = CandidateAbilities.objects.filter(candidate=OuterRef('candidate')).values(
-            'ability__abilityquestions_ability__question__category__name').annotate(
-            avg_percentage=Avg('percentage')
-        ).order_by('-avg_percentage')
-        
         followed_contacts = obj.favouritecandidates_employer.values().annotate(
             id=F('candidate__id'),
             first_name=F('candidate__first_name'),
@@ -152,9 +142,7 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
             province=F('candidate__province'),
             education=F('candidate__education'),
             driving_license=F('candidate__driving_license'),
-            profession=Subquery(
-                abilities.values('ability__abilityquestions_ability__question__category__name')[:1]
-            ),
+            profession=F('candidate__profession'),
         ).values(
             'id', 
             'first_name', 

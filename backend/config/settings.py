@@ -14,6 +14,7 @@ from datetime import timedelta
 import os, cloudinary, openai
 from pathlib import Path
 from dotenv import load_dotenv
+from smsapi.client import SmsApiPlClient
 
 load_dotenv()
 
@@ -214,3 +215,6 @@ CORS_ALLOW_CREDENTIALS = True
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 openai.api_key = os.environ.get('OPENAI_KEY')
+
+token = os.environ.get('SMSAPI_TOKEN') 
+client = SmsApiPlClient(access_token=token)
