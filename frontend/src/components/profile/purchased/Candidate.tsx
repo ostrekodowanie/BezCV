@@ -78,9 +78,7 @@ const ReportForm = ({
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [isOk, setIsOk] = useState<boolean | undefined>();
-  const user = useAppSelector((state) => state.login.data);
-  const userFirstName = user.first_name;
-  const userLastName = user.last_name;
+  const { access } = useAppSelector((state) => state.login.tokens);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -89,14 +87,12 @@ const ReportForm = ({
       .post(
         "/api/report",
         JSON.stringify({
-          first_name,
-          last_name,
           candidate: id,
           message,
         }),
         {
           headers: {
-            "Content-Type": "application/json",
+            Authorization: "Bearer " + access,
           },
         }
       )
@@ -124,34 +120,6 @@ const ReportForm = ({
           className="flex flex-col gap-8 sm:grid grid-cols-2 self-stretch mt-6"
           onSubmit={handleSubmit}
         >
-          <div className="flex flex-col gap-2">
-            <label
-              className="font-semibold text-[.8rem]"
-              htmlFor="report-first-name"
-            >
-              Imię
-            </label>
-            <input
-              type="text"
-              className={`${inputStyles.input} min-w-0 w-full max-w-full`}
-              defaultValue={userFirstName}
-              id="report-first-name"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              className="font-semibold text-[.8rem]"
-              htmlFor="report-last-name"
-            >
-              Nazwisko
-            </label>
-            <input
-              type="text"
-              defaultValue={userLastName}
-              className={`${inputStyles.input} min-w-0 w-full max-w-full`}
-              id="report-last-name"
-            />
-          </div>
           <div className="flex flex-col gap-2 col-span-2">
             <label
               className="font-semibold text-[.8rem]"

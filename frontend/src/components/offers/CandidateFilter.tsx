@@ -222,7 +222,7 @@ const AvailabilityCheckBox = ({
         type="checkbox"
         onChange={handleChange}
         checked={checked}
-        name="abilities"
+        name="availability-filter"
         id={availability}
       />
       <label className="ml-4" htmlFor={availability}>
@@ -250,9 +250,9 @@ const SalaryCheckBox = ({
   const handleChange = () => {
     setFilter((prev) => ({
       ...prev,
-      availability: checked
+      salary: checked
         ? prev.salary.filter((ab) => ab !== salary)
-        : [...prev.availability, salary],
+        : [...prev.salary, salary],
     }));
     setChecked((prev) => !prev);
   };
@@ -263,7 +263,7 @@ const SalaryCheckBox = ({
         type="checkbox"
         onChange={handleChange}
         checked={checked}
-        name="abilities"
+        name="salary-filter"
         id={salary}
       />
       <label className="ml-4" htmlFor={salary}>
@@ -304,7 +304,7 @@ const RoleCheckBox = ({
         type="checkbox"
         onChange={handleChange}
         checked={checked}
-        name="abilities"
+        name="profession-filter"
         id={role}
       />
       <label className="ml-4" htmlFor={role}>
