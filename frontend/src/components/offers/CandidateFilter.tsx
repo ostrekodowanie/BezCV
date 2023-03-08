@@ -32,7 +32,13 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
     axios
       .get("/api/candidate/filters")
       .then((res) => res.data)
-      .then((data) => setAllFilters(data));
+      .then((data) =>
+        setAllFilters({
+          professions: data.professions,
+          availability: ["cały etat", "pół etatu", "¼ etatu"],
+          salary: data.salary,
+        })
+      );
   }, []);
 
   return (
@@ -86,7 +92,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                     </div>
                 </div> */}
         <div>
-          {allFilters.availability.length > 0 ? (
+          {allFilters.professions.length > 0 ? (
             <button
               onClick={() =>
                 setIsActive((prev) => ({
