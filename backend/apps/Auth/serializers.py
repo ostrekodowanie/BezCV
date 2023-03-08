@@ -153,7 +153,8 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
             'availability',
             'province',
             'education',
-            'driving_license'
+            'driving_license',
+            'has_job'
         ).order_by('-created_at')[:5]
 
         followed_contacts_array = []

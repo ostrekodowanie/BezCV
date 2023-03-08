@@ -45,10 +45,12 @@ class CandidatesView(generics.ListAPIView):
         ordering = self.request.query_params.get('order', None)
 
         if ordering:
-            if ordering.startswith('-'):
-                queryset = queryset.order_by('-created_at')
-            else:
-                queryset = queryset.order_by('created_at')
+            if ordering == 'oldest':
+                return queryset.order_by('created_at')
+            elif ordering == 'salary_asc':
+                return queryset.order_by('salary_expectation')
+            elif ordering == 'salay_desc':
+                return queryset.order_by('-salary_expectation')
 
         return queryset.order_by('-created_at')
 
@@ -80,3 +82,8 @@ class PurchasedOffersListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Candidates.objects.filter(purchasedoffers_candidate__employer_id=self.request.user)
+    
+    
+class AddReportView(generics.CreateAPIView):
+    serializer_class = serializers.AddReportSerializer
+    permission_classes = [IsAuthenticated]
