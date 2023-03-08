@@ -137,7 +137,11 @@ export default function RoleController() {
         <div className="flex justify-between items-center self-stretch gap-4 flex-wrap mt-8 xl:mt-0">
           <div className="flex flex-col gap-2">
             <h4 className="font-semibold flex items-center">
-              <img className="max-h-[1.1em] mr-2" src={timeLeft} alt="" />{" "}
+              <img
+                className="max-h-[1.1em] mr-2 animate-spin"
+                src={timeLeft}
+                alt=""
+              />{" "}
               Pozostały czas
             </h4>
             <h3 className="text-secondary text-xl font-bold">

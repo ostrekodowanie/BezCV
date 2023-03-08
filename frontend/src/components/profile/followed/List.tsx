@@ -22,7 +22,7 @@ const Favourites = ({
         ) : followed.length > 0 ? (
           followed.map((cand) => <CandidateRef {...cand} />)
         ) : (
-          <h2>Brak ulubionych!</h2>
+          <h2 className="mx-auto mt-8">Brak ulubionych!</h2>
         )}
       </div>
     </div>

@@ -21,6 +21,7 @@ export interface CandidateProps {
     education?: string,
     phone?: string,
     email?: string,
+    has_job?: boolean,
     is_followed?: boolean,
     similar_candidates?: CandidateProps[]
 }

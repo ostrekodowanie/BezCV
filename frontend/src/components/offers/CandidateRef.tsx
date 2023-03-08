@@ -16,6 +16,7 @@ import {
 } from "../../constants/professionColorMap";
 import { useAppSelector } from "../../main";
 import CategoryPercantageBox from "./CategoryPercentageBox";
+import HasJob from "./HasJob";
 
 const CandidateRef = ({
   id,
@@ -23,15 +24,14 @@ const CandidateRef = ({
   last_name,
   is_followed,
   percentage_by_category,
-  phone,
   availability,
   salary_expectation,
   profession,
+  has_job,
 }: CandidateProps) => {
   const user_id = useAppSelector((state) => state.login.data.id);
   const [isFollowed, setIsFollowed] = useState(is_followed);
   const colorScheme: ProfessionColorScheme = initialColorScheme;
-  const { gradient } = colorScheme;
 
   const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ const CandidateRef = ({
   return (
     <Link
       to={"/oferty/" + id}
-      className="sm:hover:bg-[#FAFAFA] transition-colors sm:px-6 py-8 flex flex-col gap-8 border-b-[1px] border-[#E6E7EA]"
+      className="sm:hover:bg-[#FAFAFA] transition-colors sm:px-6 py-8 flex flex-col gap-8 border-b-[1px] border-[#E6E7EA] relative"
     >
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-6">
@@ -158,6 +158,7 @@ const CandidateRef = ({
           <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
         </button>
       </div>
+      {has_job && <HasJob />}
     </Link>
   );
 };

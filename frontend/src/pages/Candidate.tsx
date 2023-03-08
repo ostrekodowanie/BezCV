@@ -33,6 +33,7 @@ import {
   ProfessionIcon,
 } from "../assets/candidate/icons/icons";
 import CandidateRef from "../components/offers/CandidateRef";
+import HasJob from "../components/offers/HasJob";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -82,7 +83,8 @@ export default function Candidate() {
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
       <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8">
-        <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
+        <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] py-10 sm:p-10 overflow-hidden">
+          {candidateDetails.has_job && <HasJob />}
           <div className="flex flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:flex xl:justify-between">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold">

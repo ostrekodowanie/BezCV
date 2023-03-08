@@ -32,6 +32,7 @@ const CandidateList = () => {
   const firstRender = useRef(true);
   const auth = useAppSelector((state) => state.login);
   const { access } = auth.tokens;
+  const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const [candidates, setCandidates] = useState<CandidateProps[]>([]);
   const [page, setPage] = useState(1);
@@ -44,33 +45,33 @@ const CandidateList = () => {
     availability: searchParams.get("availability")?.split(",") || [],
     salary: searchParams.get("salary")?.split(",") || [],
   });
+  const [sort, setSort] = useState("");
 
   useEffect(() => {
-    setCandidates([]);
     setPage(1);
     setHasMore(true);
     let url = "/oferty";
+    let searchArr = [];
     if (filter.availability.length > 0 || filter.professions.length > 0) {
-      let searchArr = [
+      searchArr.push(
         filter.availability.length > 0 &&
           "availability=" + filter.availability.map((av) => av).join(","),
         filter.professions.length > 0 &&
-          "professions=" + filter.professions.map((role) => role).join(","),
-      ];
-      url = `/oferty?${
-        searchArr.length > 0 &&
-        searchArr
-          .map((item) => item)
-          .filter((item) => item)
-          .join("&")
-      }`;
+          "professions=" + filter.professions.map((role) => role).join(",")
+      );
     }
+    if (sort) searchArr.push("sort_by=" + sort);
+    url =
+      searchArr.length > 0
+        ? `/oferty?${searchArr.filter((item) => item).join("&")}`
+        : "/oferty";
     if (firstRender.current) url = location.pathname + location.search;
     firstRender.current = false;
     return navigate(url);
-  }, [filter]);
+  }, [filter, sort]);
 
   useEffect(() => {
+    setLoading(true);
     let isCancelled = false;
     let url = "/api" + location.pathname + location.search;
     axios
@@ -81,7 +82,8 @@ const CandidateList = () => {
         return data;
       })
       .then((data) => !isCancelled && setCandidates(data.results))
-      .catch(() => setHasMore(false));
+      .catch(() => setHasMore(false))
+      .finally(() => setLoading(false));
     return () => {
       isCancelled = true;
     };
@@ -114,8 +116,16 @@ const CandidateList = () => {
         <h1 className="font-medium text-3xl xl:text-4xl">Znajdź pracownika</h1>
         <div className="flex items-center gap-4">
           <h4>Sortuj według:</h4>
-          <select className="bg-white font-medium">
-            <option className="font-medium">Najnowsze oferty</option>
+          <select
+            className="bg-white font-medium max-w-[1.8in]"
+            onChange={(e) => setSort(e.target.value)}
+          >
+            <option value="">Najnowsze oferty</option>
+            <option value="oldest">Najstarsze oferty</option>
+            <option value="salary_asc">Oczekiwania finansowe - rosnąco</option>
+            <option value="salary_desc">
+              Oczekiwania finansowe - malejąco
+            </option>
           </select>
         </div>
       </div>
@@ -128,12 +138,14 @@ const CandidateList = () => {
           loader={<OffersLoader />}
           dataLength={candidates.length}
         >
-          {candidates.length > 0 ? (
+          {loading ? (
+            <OffersLoader />
+          ) : candidates.length > 0 ? (
             candidates.map((candidate) => (
               <CandidateRef {...candidate} key={candidate.id} />
             ))
           ) : (
-            <OffersLoader />
+            <h2 className="mx-auto mt-8">Nie odnaleziono kandytatów!</h2>
           )}
         </InfiniteScroll>
       </div>

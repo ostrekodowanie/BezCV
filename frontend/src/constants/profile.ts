@@ -24,3 +24,19 @@ export const initialProfileData: ProfileDataType = {
 }
 
 export const ProfileDataContext = createContext<ProfileDataType>(initialProfileData)
+
+export type InfoFormQuestion = {
+    question: string
+}
+
+export const infoFormQuestions: InfoFormQuestion[] = [
+    {
+        question: 'W jakiej branży działa Twoja firma?'
+    },
+    {
+        question: 'Ilu pracowników potrzebujesz?'
+    },
+    {
+        question: 'Na jakie stanowiska rekrutujesz?'
+    }
+]

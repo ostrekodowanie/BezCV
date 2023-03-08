@@ -2,10 +2,11 @@ import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { descIcon, profilePictureUpload } from "../../assets/profile/profile";
 import { useAppSelector } from "../../main";
+import InfoForm from "./InfoForm";
 
 export default function EmployerInfo() {
   const auth = useAppSelector((state) => state.login);
-  const { id, first_name, last_name, image, desc } = auth.data;
+  const { id, first_name, last_name, image, desc, nip } = auth.data;
   const [profilePicture, setProfilePicture] = useState<any>(image);
   const { access } = auth.tokens;
 
@@ -37,7 +38,7 @@ export default function EmployerInfo() {
                 alt=""
               />
             ) : (
-              <span className="text-primary text-xl sm:text-3xl font-semibold">
+              <span className="text-primary text-xl sm:text-2xl font-semibold">
                 {first_name.charAt(0) + last_name.charAt(0)}
               </span>
             )}
@@ -63,16 +64,21 @@ export default function EmployerInfo() {
           </h1>
         </div>
       </div>
+      <div className="rounded-3xl bg-[#F8F9FB] flex flex-col p-6 gap-4">
+        <h3 className="text-[#3C4663] text-sm">
+          <span className="font-medium">NIP: </span>
+          {nip ?? ""}
+        </h3>
+        <h3 className="text-[#3C4663] text-sm font-medium">
+          Nazwa Firmy: Przykładowa Nazwa Firmy
+        </h3>
+      </div>
       <div className="flex flex-col gap-4">
         <h3 className="font-medium flex items-center">
           <img className="max-h-[1.4em] mr-3" src={descIcon} alt="" />
           Informacje
         </h3>
-        <div className="rounded-3xl bg-[#F8F9FB] flex flex-col px-8 py-6 gap-4">
-          <p className="text-[#4D5058] text-[.8rem] leading-relaxed my-6">
-            {desc}
-          </p>
-        </div>
+        <InfoForm />
       </div>
     </div>
   );

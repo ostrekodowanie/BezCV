@@ -11,6 +11,7 @@ export interface LoginState {
         email: string,
         desc: string,
         image: string,
+        nip: string,
         points: number,
         abilities: string[]
     },
@@ -31,6 +32,7 @@ const initialState: LoginState = {
         email: '',
         desc: '',
         image: '',
+        nip: '',
         points: 0,
         abilities: []
     },

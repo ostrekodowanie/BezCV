@@ -24,7 +24,7 @@ const Purchased = ({
             <CandidatePurchased {...cand} key={cand.id} />
           ))
         ) : (
-          <h2>Brak zakupionych kontaktów!</h2>
+          <h2 className="mx-auto mt-8">Brak zakupionych kontaktów!</h2>
         )}
       </div>
     </div>
