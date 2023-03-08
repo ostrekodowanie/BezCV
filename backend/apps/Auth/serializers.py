@@ -143,6 +143,7 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
             education=F('candidate__education'),
             driving_license=F('candidate__driving_license'),
             profession=F('candidate__profession'),
+            has_job=F('candidate__has_job')
         ).values(
             'id', 
             'first_name', 
