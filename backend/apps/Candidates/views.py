@@ -59,13 +59,11 @@ class FiltersView(APIView):
     def get(self, request):
         abilities = Abilities.objects.values_list('name', flat=True).order_by('name')
         professions = Categories.objects.values_list('name', flat=True).order_by('name')
-        availability = Candidates.objects.values_list('availability', flat=True).order_by('availability')
         salary = Candidates.objects.values_list('salary_expectation', flat=True).order_by('salary_expectation')
         
         data = {
             'abilities': abilities,
             'professions': professions,
-            'availability': availability,
             'salary': salary
         }
 
