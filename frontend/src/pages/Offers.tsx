@@ -60,7 +60,7 @@ const CandidateList = () => {
           "professions=" + filter.professions.map((role) => role).join(",")
       );
     }
-    if (sort) searchArr.push("sort_by=" + sort);
+    if (sort) searchArr.push("order=" + sort);
     url =
       searchArr.length > 0
         ? `/oferty?${searchArr.filter((item) => item).join("&")}`

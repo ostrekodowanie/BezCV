@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from "react";
 import { useAppSelector } from "../main";
 import { AccountContext } from "../reducers/AccountProvider";
 import { arrowRight } from "../assets/general";
+import { profileIcon } from "../assets/profile/profile";
 
 export default function Header() {
   const [down, setDown] = useState(false);
@@ -83,11 +84,9 @@ const Nav = () => {
           (logged ? (
             <>
               <CustomLink to="/oferty">Wyszukiwarka kandydatów</CustomLink>
-              <CustomLink
-                className="font-semibold text-base md:ml-2"
-                to="/profil"
-              >
-                {first_name}
+              <CustomLink className="md:ml-2" to="/profil">
+                <img className="max-h-[1.1em] mr-2" src={profileIcon} alt="" />
+                Mój profil
               </CustomLink>
               <CustomLink className="font-semibold text-base" to="/punkty">
                 {points + " pkt."}
@@ -165,34 +164,6 @@ const Nav = () => {
   );
 };
 
-type CustomLink = {
-  children: JSX.Element | string;
-  to: string;
-  className?: string;
-};
-
-const CustomLink = ({ children, to, className }: CustomLink) => {
-  const { account } = useContext(AccountContext);
-  const activePath = useResolvedPath(to);
-  const isActive = useMatch({ path: `${activePath.pathname}/*`, end: true });
-  return (
-    <Link
-      to={to}
-      className={`${className && className} transition-colors font-medium ${
-        isActive
-          ? account === "employer"
-            ? "text-[#2F66F4]"
-            : "text-[#F98D3D]"
-          : account === "employer"
-          ? "hover:text-[#2F66F4]"
-          : "hover:text-[#F98D3D]"
-      }`}
-    >
-      {children}
-    </Link>
-  );
-};
-
 const HashLink = () => {
   const { account } = useContext(AccountContext);
   const navigate = useNavigate();
@@ -205,8 +176,8 @@ const HashLink = () => {
   return (
     <button
       type="button"
-      className={`transition-colors font-medium ${
-        account === "worker" ? "hover:text-[#F98D3D]" : "hover:text-[#2F66F4]"
+      className={`relative flex items-center after:transition-all font-medium after:bg-primary hover:after:max-w-[50%] after:max-w-[0%] after:absolute after:h-[2px] after:-bottom-1 after:rounded-full after:w-full after:block after:right-0 ${
+        account === "employer" ? "after:bg-primary" : "after:bg-secondary"
       }`}
       onClick={handleScroll}
     >
@@ -214,5 +185,32 @@ const HashLink = () => {
         ? "Co muszę zrobić, aby dostać pracę?"
         : "Jak wygląda nasza baza?"}
     </button>
+  );
+};
+
+type CustomLink = {
+  children: JSX.Element | string | (JSX.Element | string)[];
+  to: string;
+  className?: string;
+  icon?: JSX.Element;
+};
+
+const CustomLink = ({ children, to, className }: CustomLink) => {
+  const { account } = useContext(AccountContext);
+  const activePath = useResolvedPath(to);
+  const isActive = useMatch({ path: `${activePath.pathname}/*`, end: true });
+  return (
+    <Link
+      to={to}
+      className={`relative flex items-center after:transition-all font-medium ${
+        account === "employer" ? "after:bg-primary" : "after:bg-secondary"
+      } after:absolute after:h-[2px] after:-bottom-1 after:rounded-full after:w-full after:block after:right-0 ${
+        isActive
+          ? "after:max-w-[50%]"
+          : "hover:after:max-w-[50%] after:max-w-[0%]"
+      } ${className && className}`}
+    >
+      {children}
+    </Link>
   );
 };

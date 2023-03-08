@@ -2,10 +2,12 @@ import descIcon from './desc.svg'
 import profilePictureUpload from './profile_picture_upload.svg'
 import report from './report.svg'
 import infoFormButton from './info_form_button.svg'
+import profileIcon from './profile_icon.svg'
 
 export {
     descIcon,
     profilePictureUpload,
     report,
-    infoFormButton
+    infoFormButton,
+    profileIcon
 }
