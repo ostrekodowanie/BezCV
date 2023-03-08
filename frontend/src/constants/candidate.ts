@@ -20,6 +20,7 @@ export interface CandidateProps {
     salary_expectation?: string,
     education?: string,
     phone?: string,
+    province?: string,
     email?: string,
     has_job?: boolean,
     is_followed?: boolean,

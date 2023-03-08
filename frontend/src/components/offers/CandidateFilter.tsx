@@ -116,23 +116,25 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
           )}
           <div className="flex flex-col gap-4">
             {allFilters.availability.length > 0 ? (
-              isActive.availability &&
-              allFilters.availability.map((availability) => (
-                <AvailabilityCheckBox
-                  availability={availability}
-                  setFilter={setFilter}
-                  key={availability}
-                />
-              ))
+              <div className="flex flex-col gap-4">
+                {isActive.availability &&
+                  allFilters.availability.map((availability) => (
+                    <AvailabilityCheckBox
+                      availability={availability}
+                      setFilter={setFilter}
+                      key={availability}
+                    />
+                  ))}
+              </div>
             ) : (
-              <>
+              <div className="flex flex-col gap-4">
                 <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
                 <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
                 <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
                 <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
                 <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
                 <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-              </>
+              </div>
             )}
           </div>
         </div>

@@ -27,6 +27,9 @@ const CandidateRef = ({
   availability,
   salary_expectation,
   profession,
+  province,
+  education,
+  drivers_license,
   has_job,
 }: CandidateProps) => {
   const user_id = useAppSelector((state) => state.login.data.id);
@@ -114,19 +117,21 @@ const CandidateRef = ({
       <div className="flex flex-wrap gap-x-20 gap-y-4">
         <div className="flex flex-col gap-1">
           <h4 className="text-[.8rem]">Dyspozycyjność</h4>
-          <h3 className="text-sm font-semibold">Cały etat</h3>
+          <h3 className="text-sm font-semibold">{availability}</h3>
         </div>
         <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Miasto</h4>
-          <h3 className="text-sm font-semibold">Wrocław</h3>
+          <h4 className="text-[.8rem]">Rejon</h4>
+          <h3 className="text-sm font-semibold">{province}</h3>
         </div>
         <div className="flex flex-col gap-1">
           <h4 className="text-[.8rem]">Wykształcenie</h4>
-          <h3 className="text-sm font-semibold">Typ wykształcenia</h3>
+          <h3 className="text-sm font-semibold">{education?.split("(")[0]}</h3>
         </div>
         <div className="flex flex-col gap-1">
           <h4 className="text-[.8rem]">Prawo jazdy kat. B</h4>
-          <h3 className="text-sm font-semibold">Tak</h3>
+          <h3 className="text-sm font-semibold">
+            {drivers_license ? "Tak" : "Nie"}
+          </h3>
         </div>
       </div>
       <div className="flex items-center gap-4 justify-between flex-wrap sm:flex-nowrap">
