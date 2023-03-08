@@ -1,8 +1,9 @@
-from django.db.models import F, Avg
+from django.db.models import F, Avg, Prefetch
 
 from rest_framework import serializers
 
-from .models import Candidates, PurchasedOffers, CandidateAbilities
+from .models import Candidates, PurchasedOffers, CandidateAbilities, Reports
+from apps.Survey.models import Categories
 
 
 class CandidateSerializer(serializers.ModelSerializer):
@@ -14,6 +15,7 @@ class CandidateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
         fields = [
+            'has_job',
             'is_purchased',
             'first_name', 
             'last_name', 
@@ -53,69 +55,25 @@ class CandidateSerializer(serializers.ModelSerializer):
         main_candidate_abilities = obj.candidateabilities_candidate.annotate(
             category=F('ability__abilityquestions_ability__question__category__name')
         ).values('category').annotate(average_percentage=Avg('percentage'))
-
-        main_candidate_abilities_dict = {}
-        for ability in main_candidate_abilities:
-            category = ability['category']
-            average = round(ability['average_percentage'])
-            main_candidate_abilities_dict[category] = average
-
-        all_candidate_abilities = CandidateAbilities.objects.values(
-            'ability__abilityquestions_ability__question__category__name'
-        ).annotate(average_percentage=Avg('percentage'))
-
-        all_candidate_abilities_dict = {}
-        for ability in all_candidate_abilities:
-            category = ability['ability__abilityquestions_ability__question__category__name']
-            average = round(ability['average_percentage'])
-            all_candidate_abilities_dict[category] = average
-
-        better_than = {}
-        for category in main_candidate_abilities_dict:
-            main_candidate_percentage = main_candidate_abilities_dict[category]
-            all_candidate_percentage = all_candidate_abilities_dict.get(category, 0)
-            percentage_difference = main_candidate_percentage - all_candidate_percentage
-            better_than[category] = percentage_difference
-
-        return better_than
-
-    '''def get_ability_charts(self, obj):
-        main_candidate_abilities = obj.candidateabilities_candidate.annotate(
-            category=F('ability__abilityquestions_ability__question__category__name')
-        ).values('category').annotate(average_percentage=Avg('percentage'))
-
-        main_candidate_abilities_dict = {}
-        for ability in main_candidate_abilities:
-            category = ability['category']
-            average = round(ability['average_percentage'])
-            main_candidate_abilities_dict[category] = average
-
-        candidates = Candidates.objects.all()
         
-        charts = {}
+        total_candidate = Candidates.objects.exclude(id=obj.id).filter(is_visible=True)
+        worse_candidate_counts = {}
         
-        for candidate in candidates:
-            candidate_abilities = candidate.candidateabilities_candidate.annotate(
-                category=F('ability__abilityquestions_ability__question__category__name')
-            ).values('category').annotate(average_percentage=Avg('percentage'))
-
-        candidate_abilities_dict = {}
-        for ability in candidate_abilities:
-            category = ability['category']
-            average = round(ability['average_percentage'])
-            candidate_abilities_dict[category] = average
+        for main in main_candidate_abilities:
+            worse_candidate_count = 0
+            for candidate in total_candidate:
+                candidate_average_percentage = candidate.candidateabilities_candidate.annotate(
+                    category=F('ability__abilityquestions_ability__question__category__name')
+                ).values('category').filter(category=main['category']).aggregate(
+                    average_percentage=Avg('percentage')
+                )['average_percentage']
+                
+                if candidate_average_percentage is not None and candidate_average_percentage <= main['average_percentage']:
+                    worse_candidate_count += 1
+             
+            worse_candidate_counts[main['category']] = (worse_candidate_count / total_candidate.count()) * 100
         
-        better_than = {}
-        for category in candidate_abilities_dict:
-            main_candidate_percentage = main_candidate_abilities_dict[category]
-            all_candidate_percentages = candidate_abilities_dict[category]
-            num_better_candidates = len([p for p in all_candidate_percentages if p > main_candidate_percentage])
-            total_candidates = len(candidates)
-            better_than[category] = round(total_candidates / num_better_candidates * 100)
-        
-        charts[candidate.id] = better_than
-    
-        return charts'''
+        return worse_candidate_counts
 
     def get_abilities(self, obj):
         abilities = obj.candidateabilities_candidate.annotate(
@@ -169,9 +127,9 @@ class CandidateSerializer(serializers.ModelSerializer):
                 return True
         return False
     
-    def get_similar_candidates(self, obj):
-        similar_candidates = Candidates.objects.filter(profession=obj.profession).exclude(id=obj.id).order_by('-created_at').distinct()[:5]
-        return similar_candidates.values(
+    
+    def get_similar_candidates(self, obj):    
+        similar_candidates = Candidates.objects.filter(profession=obj.profession).exclude(id=obj.id).values(
             "id",
             "first_name",
             "last_name",
@@ -182,7 +140,23 @@ class CandidateSerializer(serializers.ModelSerializer):
             "province",
             "education", 
             "driving_license"
-            )
+        ).order_by('-created_at').distinct()[:5]
+        
+        
+        for candidate in similar_candidates:
+            abilities = CandidateAbilities.objects.filter(candidate_id=candidate['id']).annotate(
+                category=F('ability__abilityquestions_ability__question__category__name')
+            ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
+            
+            abilities_dict = {}
+            for ability in abilities:
+                category = ability['category']
+                average = round(ability['average_percentage'])
+                abilities_dict[category] = average
+            
+            candidate['percentage_by_category'] = abilities_dict
+        
+        return similar_candidates
     
 
 class CandidatesSerializer(serializers.ModelSerializer):
@@ -192,6 +166,7 @@ class CandidatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidates
         fields = [
+            'has_job',
             'created_at',
             'id',
             'first_name', 
@@ -223,7 +198,7 @@ class CandidatesSerializer(serializers.ModelSerializer):
         abilities = obj.candidateabilities_candidate.annotate(
             category=F('ability__abilityquestions_ability__question__category__name')
         ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
-
+        
         abilities_dict = {}
         for ability in abilities:
             category = ability['category']
@@ -241,17 +216,10 @@ class CandidatesSerializer(serializers.ModelSerializer):
         return False
 
 
-
 class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchasedOffers
         fields = '__all__'
-
-    def create(self, validated_data):
-        instance = PurchasedOffers.objects.create(**validated_data)
-        instance.employer.reduce_points()
-
-        return instance
 
 
 class PurchasedOffersSerializer(serializers.ModelSerializer):
@@ -267,3 +235,20 @@ class PurchasedOffersSerializer(serializers.ModelSerializer):
         ).values('name').order_by('-percentage').distinct()[:3]
 
         return (ability['name'] for ability in abilities)
+    
+    
+class AddReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reports
+        fields = ['candidate', 'message']
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        
+        instance = self.Meta.model.objects.create(
+            candidate=validated_data['candidate'],
+            message=validated_data['message'],
+            employer=user
+        )
+        
+        return instance

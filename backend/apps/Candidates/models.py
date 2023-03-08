@@ -51,6 +51,7 @@ class Candidates(models.Model):
                                                 ('wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)', 'wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)'), 
                                                 ('wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)', 'wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)')])
     driving_license = models.BooleanField(default=False)
+    has_job = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=False)
     desc = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -102,6 +103,26 @@ class PurchasedOffers(models.Model):
     def __str__(self):
         return '{} | {}'.format(
             self.pk,
+            self.created_at
+        )
+        
+        
+class Reports(models.Model):
+    employer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='reports')
+    candidate = models.ForeignKey(
+        Candidates, on_delete=models.CASCADE, related_name='reports')
+    message = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name_plural = 'Reports'
+        
+    def __str__(self):
+        return '{} | {} | {}'.format(
+            self.employer.email,
+            self.candidate.email,
             self.created_at
         )
 
