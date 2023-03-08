@@ -87,11 +87,12 @@ const ReportForm = ({
       .post(
         "/api/report",
         JSON.stringify({
-          candidate: id,
           message,
+          candidate: id,
         }),
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: "Bearer " + access,
           },
         }
