@@ -38,7 +38,7 @@ export default function Header() {
 
 const Logo = () => (
   <Link className="font-medium text-xl" to="/">
-    Bez<span className="text-primary">CV</span>
+    bez<span className="text-primary">CV</span>
   </Link>
 );
 
@@ -50,7 +50,7 @@ const Nav = () => {
   const auth = useAppSelector((state) => state.login);
   const location = useLocation();
   const { logged } = auth;
-  const { first_name, points } = auth.data;
+  const { points } = auth.data;
 
   useEffect(() => {
     setActive(false);
@@ -59,9 +59,14 @@ const Nav = () => {
   return (
     <>
       <div
-        className={`flex flex-col md:flex-row justify-center items-center bg-white gap-4 text-sm font-medium absolute top-0 md:relative left-full transition-transform ${
-          active && "-translate-x-full"
-        } md:left-auto h-screen md:h-full w-screen md:w-max`}
+        className={`bg-[#000000] absolute inset-0 w-screen h-screen z-10 md:hidden transition-opacity ${
+          active ? "opacity-40" : "opacity-0"
+        }`}
+      />
+      <div
+        className={`flex flex-col md:flex-row items-end bg-white gap-4 pt-[1.4in] md:pt-0 text-sm font-medium z-50 absolute px-[8vw] md:px-0 top-0 md:relative left-full transition-transform ${
+          active && "-translate-x-full md:translate-x-0"
+        } md:left-auto h-screen md:h-full md:items-center w-max`}
       >
         {account === "employer" && !logged && (
           <button
@@ -111,7 +116,7 @@ const Nav = () => {
           ))}
         {account === "worker" && (
           <Link
-            className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-3 px-8 bg-secondary md:mt-0 md:ml-4"
+            className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-3 px-8 bg-secondary mt-4 md:mt-0 md:ml-4"
             to="/praca"
           >
             Wypełnij formularz{" "}

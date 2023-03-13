@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import AvailabilityIcon from "../../assets/candidate/icons/AvailabilityIcon";
 import {
   CashIcon,
   PhoneIcon,
@@ -29,6 +28,7 @@ const CandidateRef = ({
   profession,
   province,
   education,
+  phone,
   drivers_license,
   has_job,
 }: CandidateProps) => {
@@ -97,11 +97,11 @@ const CandidateRef = ({
         </div>
         <div className="flex items-center gap-6">
           <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
-            <AvailabilityIcon {...colorScheme} />
+            <PhoneIcon {...colorScheme} />
           </div>
           <div className="flex flex-col gap-1">
-            <h4 className="text-sm">Dyspozycyjność</h4>
-            <h3 className="font-semibold text-sm">{availability}</h3>
+            <h4 className="text-sm">Numer telefonu</h4>
+            <h3 className="font-semibold text-sm">+48 {phone}</h3>
           </div>
         </div>
         <div className="flex items-center gap-6">

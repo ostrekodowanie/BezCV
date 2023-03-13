@@ -16,7 +16,6 @@ import SoftCandidateSkills from "../components/home/employer/SoftCandidateSkills
 import DesktopSurvey from "../components/home/employer/DesktopSurvey";
 import IsEnough from "../components/home/employer/IsEnough";
 import HowToFindJob from "../components/home/candidate/HowToFindJob";
-import Popup from "../components/popups/Popup";
 
 export default function Home() {
   const { account } = useContext(AccountContext);
@@ -31,7 +30,6 @@ export default function Home() {
         <IsEnough />
         <EmployerBanner />
         <Points />
-        <Popup />
       </>
     );
   if (account === "worker")
@@ -45,7 +43,6 @@ export default function Home() {
         <WhatNext />
         <TutorialMenu />
         <PersonalDataSecurity />
-        <Popup />
       </>
     );
   return (

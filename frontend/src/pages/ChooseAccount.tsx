@@ -63,7 +63,7 @@ export default function ChooseAccount({
                   />
                 </div>{" "}
                 <span className="font-semibold">rekrutować</span> za pomocą{" "}
-                <span className="font-semibold">BezCV?</span>
+                <span className="font-semibold">bezCV?</span>
               </h3>
               <ul className="flex flex-col gap-6 text-[.95rem] text-[#3C4663] font-medium list-accEmp">
                 {pros.employer.map((pro) => (
@@ -106,7 +106,7 @@ export default function ChooseAccount({
                   />
                 </div>{" "}
                 <span className="font-semibold">znaleźć pracę</span> za pomocą{" "}
-                <span className="font-semibold">BezCV?</span>
+                <span className="font-semibold">bezCV?</span>
               </h3>
               <ul className="flex flex-col gap-6 text-[.95rem] text-[#3C4663] font-medium list-accCand">
                 {pros.candidate.map((pro) => (

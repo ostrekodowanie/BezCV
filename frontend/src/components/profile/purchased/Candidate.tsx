@@ -82,6 +82,7 @@ const ReportForm = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    setIsOk(undefined);
     setLoading(true);
     axios
       .post(
@@ -135,7 +136,7 @@ const ReportForm = ({
               id="report-message"
             ></textarea>
           </div>
-          <div className="flex flex-wrap xl:flex-nowrap items-center gap-8 mt-4">
+          <div className="flex flex-wrap xl:flex-nowrap items-center gap-8 mt-4 self-stretch">
             <FilledButton>Wyślij wiadomość</FilledButton>
             <button
               className="font-semibold text-[.8rem] min-w-max"

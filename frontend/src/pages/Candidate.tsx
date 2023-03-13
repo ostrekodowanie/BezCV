@@ -202,16 +202,6 @@ export default function Candidate() {
               </div>
             )
           )}
-          <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-span-2 flex flex-col">
-            <h2 className="mb-6 font-bold mx-[8vw] sm:mx-0">
-              Opis kandydata na podstawie AI
-            </h2>
-            <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB] flex-1">
-              <p className="font-medium text-[.8rem] leading-loose">
-                {candidateDetails.desc}
-              </p>
-            </div>
-          </div>
           <div
             className={`flex flex-col gap-8 ${
               candidateDetails.is_purchased ? "row-[1/4]" : "row-[2/4]"
@@ -338,6 +328,16 @@ export default function Candidate() {
                   </>
                 )}
               </div>
+            </div>
+          </div>
+          <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-[1/3] flex flex-col">
+            <h2 className="mb-6 font-bold mx-[8vw] sm:mx-0">
+              Opis kandydata na podstawie AI
+            </h2>
+            <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB] flex-1">
+              <p className="font-medium text-[.8rem] leading-loose">
+                {candidateDetails.desc}
+              </p>
             </div>
           </div>
         </div>
