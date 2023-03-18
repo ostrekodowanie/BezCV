@@ -9,7 +9,7 @@ import {
 export default function Banner() {
   return (
     <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] pt-[2.2in] sm:pt-[1.4in] xl:pt-[calc(2.2in+3vw)] items-center relative">
-      <div className="font-bold bg-secondary rounded-t-3xl px-10 relative xl:px-16 py-8 xl:py-12 pt-12 text-white">
+      <div className="font-bold bg-secondary sm:rounded-t-3xl px-10 relative xl:px-16 py-8 xl:py-12 pt-12 text-white">
         <h2 className="text-2xl xl:text-3xl xl:leading-normal relative">
           W{" "}
           <div className="inline-block relative">

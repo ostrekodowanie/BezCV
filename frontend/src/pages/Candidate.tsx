@@ -3,7 +3,6 @@ import { createContext, useEffect, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
 import { pdf } from "../assets/candidate/candidate";
 import { bcvToken } from "../assets/general";
 import AbilityRange from "../components/candidate/AbilityRange";
@@ -34,6 +33,7 @@ import {
 } from "../assets/candidate/icons/icons";
 import CandidateRef from "../components/offers/CandidateRef";
 import HasJob from "../components/offers/HasJob";
+import OffersLoader from "../components/offers/OffersLoader";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -347,15 +347,21 @@ export default function Candidate() {
         <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto py-10 sm:px-6 shadow-primaryBig gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
           <CircleChart
             profession="sales"
-            percentage={candidateDetails.ability_charts.sales}
+            percentage={parseInt(
+              candidateDetails.ability_charts.sales.toString()
+            )}
           />
           <CircleChart
             profession="office_administration"
-            percentage={candidateDetails.ability_charts.office_administration}
+            percentage={parseInt(
+              candidateDetails.ability_charts.office_administration.toString()
+            )}
           />
           <CircleChart
             profession="customer_service"
-            percentage={candidateDetails.ability_charts.customer_service}
+            percentage={parseInt(
+              candidateDetails.ability_charts.customer_service.toString()
+            )}
           />
         </div>
         <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
@@ -480,23 +486,18 @@ export default function Candidate() {
             </button>
           </div>
         )}
-        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 flex flex-wrap shadow-primaryBig gap-8">
+        <div className="bg-white sm:rounded-3xl flex flex-wrap py-10 shadow-primaryBig min-h-max gap-4 overflow-hidden">
           <div className="flex flex-col w-full">
-            <h2 className="font-bold text-lg mb-6">
+            <h2 className="font-bold text-lg ml-[8vw] sm:ml-10">
               Ci kandydaci mogą Cię zainteresować
             </h2>
-            <div className="flex flex-col gap-6 w-full">
+            <div className="flex flex-col w-full">
               {!loading.page ? (
                 candidateDetails.similar_candidates?.map((cand) => (
                   <CandidateRef {...cand} key={cand.id} />
                 ))
               ) : (
-                <>
-                  <SuggestedCandidateLoader />
-                  <SuggestedCandidateLoader />
-                  <SuggestedCandidateLoader />
-                  <SuggestedCandidateLoader />
-                </>
+                <OffersLoader />
               )}
             </div>
           </div>
@@ -505,21 +506,3 @@ export default function Candidate() {
     </ColorSchemeContext.Provider>
   );
 }
-
-const SuggestedCandidateLoader = () => {
-  return (
-    <div className="flex items-center justify-between flex-wrap gap-4">
-      <div className="flex flex-wrap items-center gap-4">
-        <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center" />
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-4">
-            <div className="w-[.8in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-            <div className="w-[1.2in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-          </div>
-          <div className="w-[.6in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-        </div>
-      </div>
-      <div className="w-[1in] h-[2em] rounded-full bg-[#f8f8f8]" />
-    </div>
-  );
-};

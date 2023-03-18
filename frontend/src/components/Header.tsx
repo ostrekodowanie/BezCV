@@ -59,8 +59,10 @@ const Nav = () => {
   return (
     <>
       <div
-        className={`bg-[#000000] absolute inset-0 w-screen h-screen z-10 md:hidden transition-opacity ${
-          active ? "opacity-40" : "opacity-0"
+        className={`bg-[#000000] absolute inset-0 w-screen h-screen md:hidden transition-opacity ${
+          active
+            ? "opacity-40 z-10 md:-z-50 md:pointer-events-none"
+            : "opacity-0 -z-50 pointer-events-none"
         }`}
       />
       <div

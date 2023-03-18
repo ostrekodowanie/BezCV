@@ -6,7 +6,7 @@ import { desktopSurvey } from "../../../assets/home/home";
 export default function HowToFindJob() {
   return (
     <section
-      className="padding py-[1in] md:py-[1.4in] flex flex-col gap-16 xl:grid grid-cols-[3fr_4fr] xl:items-center"
+      className="padding py-[1in] md:py-[1.4in] flex flex-col gap-16 xl:grid grid-cols-[3fr_4fr] items-center"
       id="jzp"
     >
       <Control
@@ -14,14 +14,12 @@ export default function HowToFindJob() {
         x={-20}
         opacity={1}
         element={
-          <div className="flex flex-col items-center xl:items-auto gap-4 md:max-w-[50vw]">
-            <h3 className="text-secondary text-center xl:text-left">
-              WYPEŁNIENIE ANKIETY ONLINE
-            </h3>
-            <h2 className="font-semibold text-center xl:text-left text-4xl xl:text-5xl leading-tight xl:leading-tight">
+          <div className="flex flex-col items-center xl:items-start gap-4 md:max-w-[50vw]">
+            <h3 className="text-secondary">WYPEŁNIENIE ANKIETY ONLINE</h3>
+            <h2 className="font-semibold text-center xl:text-left text-4xl md:text-5xl md:self-stretch md:max-w-[90%] xl:min-w-[5.1in] xl:self-start leading-tight md:leading-tight">
               W jaki sposób mogę znaleźć pracę?
             </h2>
-            <p className="text-sm text-center xl:text-left my-2 font-medium text-[#444444] leading-relaxed">
+            <p className="text-[.8rem] md:text-sm my-2 text-center xl:text-left font-medium text-[#444444] leading-relaxed md:leading-relaxed">
               Wypełniasz specjalnie przygotowany formularz, który pozwala
               określić Twoje predyspozycje do pracy na jednym z dostępnych
               stanowisk. Im więcej nam o sobie opowiesz tym większa szansa, że
@@ -29,7 +27,7 @@ export default function HowToFindJob() {
             </p>
             <Link
               to="/praca"
-              className="rounded-full mx-auto xl:mx-0 max-w-max text-white text-[.8rem] font-semibold flex items-center py-[14px] px-10 mt-4 bg-primary"
+              className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-[14px] px-10 mt-4 bg-primary"
             >
               Opowiedz nam o sobie{" "}
               <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
@@ -38,7 +36,6 @@ export default function HowToFindJob() {
         }
       />
       <Control
-        className="mx-auto xl:mx-0"
         opacity={1}
         delay={200}
         onScroll

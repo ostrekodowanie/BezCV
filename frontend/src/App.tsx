@@ -19,6 +19,7 @@ import Points from "./pages/Points";
 import getUserInfo from "./utils/getUserInfo";
 import AccountProvider from "./reducers/AccountProvider";
 import FindWork from "./pages/SurveyRoute";
+import CookieConsent from "react-cookie-consent";
 
 const loginString: string | null = localStorage.getItem("user");
 const loginFromLocalStorage = loginString && JSON.parse(loginString);
@@ -149,6 +150,26 @@ export default function App() {
           </ScrollTop>
         </main>
         <Footer />
+        <CookieConsent
+          enableDeclineButton
+          location="bottom"
+          style={{
+            paddingRight: "8vw",
+            paddingLeft: "8vw",
+          }}
+          buttonText="Akceptuję"
+          declineButtonText="Odmawiam"
+          buttonStyle={{
+            color: "white",
+            backgroundImage:
+              "linear-gradient(90.04deg, #2F66F4 24.53%, #0D9AE9 82.58%)",
+          }}
+        >
+          Serwis bezCV korzysta z plików cookies w celu realizacji usług
+          statystycznych i funkcjonalnych. Warunki przechowywania lub dostępu do
+          plików cookies można określić w ustawieniach przeglądarki
+          internetowej.
+        </CookieConsent>
       </>
     </AccountProvider>
   );

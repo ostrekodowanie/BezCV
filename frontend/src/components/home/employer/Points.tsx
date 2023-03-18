@@ -1,34 +1,24 @@
-import {
-  bestseller,
-  package1,
-  package2,
-  package3,
-  priceUnderline,
-  titleUnderline,
-} from "../../../assets/points/points";
+import { bestseller, priceUnderline } from "../../../assets/points/points";
 import Control, { Controller } from "react-control-js";
 import { underline } from "../../../assets/home/candidate/candidate";
 import { pointsMan } from "../../../assets/home/employer/employer";
+import { bcvToken } from "../../../assets/general";
 
 interface PackageProps {
-  image: string;
   points: number;
   price: number;
 }
 
 const packages: PackageProps[] = [
   {
-    image: package1,
     points: 10,
     price: 499,
   },
   {
-    image: package2,
     points: 15,
     price: 699,
   },
   {
-    image: package3,
     points: 20,
     price: 899,
   },
@@ -67,7 +57,7 @@ export default function Points() {
         ease="ease-out"
         delay={500}
         onScroll
-        className="flex flex-wrap justify-center gap-8 xl:grid grid-cols-3"
+        className="flex flex-col sm:flex-row sm:justify-center sm:flex-wrap self-stretch gap-8 xl:grid grid-cols-3 mt-8"
       >
         {packages.map((pack) => (
           <Control
@@ -80,33 +70,31 @@ export default function Points() {
   );
 }
 
-const Package = ({ points, price, image }: PackageProps) => {
+const Package = ({ points, price }: PackageProps) => {
   return (
-    <div className="flex flex-col relative self-stretch h-full justify-end gap-4 rounded-3xl items-center p-12 bg-white shadow-primaryBig flex-1">
-      {points === 15 && (
-        <div className="absolute -top-6 rounded-t-full text-sm rounded-br-full -right-6 h-12 pl-8 pr-16 font-medium flex items-center bg-white">
-          Bestseller
-          <div className="absolute h-12 w-12 right-0 p-2 flex items-center justify-center bg-secondary rounded-full">
-            <img src={bestseller} alt="" />
-          </div>
-        </div>
-      )}
-      <img className="mb-4 max-w-[1.8in] max-h-[1.3in]" src={image} alt="" />
-      <h3 className="font-medium relative flex flex-col items-center">
-        <span className="relative z-10">{price} zł</span>
-        <img
-          className="absolute bottom-[2px] min-w-[120%]"
-          src={priceUnderline}
-          alt=""
-        />
+    <div className="flex flex-col self-stretch h-full justify-end gap-8 rounded-3xl relative items-center p-12 bg-white shadow-primaryBig flex-1">
+      <h2 className="font-semibold text-4xl md:text-5xl w-max flex flex-col gap-4 items-center">
+        {points}
+        <span className="font-medium text-xl flex items-center">
+          tokenów{" "}
+          <img
+            className="ml-2 max-h-[1.2em] inline-block"
+            src={bcvToken}
+            alt="bCV"
+          />
+        </span>
+      </h2>
+      <div className="h-[1px] self-stretch bg-[#ECF0F2]" />
+      <h3 className="font-medium text-2xl">
+        {price} zł{" "}
+        <sup className="bg-clip-text text-transparent bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] font-medium">
+          /netto
+        </sup>
       </h3>
-      <h2 className="font-semibold text-3xl w-max">{points} kontaktów</h2>
-      <ul className="list-outside list-disc marker:text-[#F9AE3D] sm:w-full mt-4 text-sm flex flex-col gap-3">
-        <li>Lorem ipsum dolor sit amet consectetur.</li>
-        <li>Lorem ipsum dolor sit amet consectetur.</li>
-        <li>Lorem ipsum dolor sit amet consectetur.</li>
-        <li>Lorem ipsum dolor sit amet consectetur.</li>
-      </ul>
+      <h3 className="font-medium text-[#5D7EAD] text-2xl">
+        {(price / points).toFixed(2).toString()} zł{" "}
+        <sup className="text-[#5D7EAD] font-medium">/1 token bCV</sup>
+      </h3>
       {points === 20 && (
         <img
           className="hidden xl:block absolute bottom-full left-[50%] -translate-x-[50%] max-w-[80%]"

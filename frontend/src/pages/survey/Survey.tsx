@@ -67,20 +67,9 @@ export default function Survey() {
           {step === "candidate" && <CandidateController />}
         </SurveyContext.Provider>
       </div>
-      <div className="hidden xl:flex self-center justify-self-end items-center relative xl:absolute xl:w-[30vw] right-0 top-0 bottom-0 bg-secondary">
-        <img className="max-w-full" src={surveyMan} alt="" />
-        <div className="absolute top-[15%] right-[85%]">
-          <div className="bg-white flex items-center justify-center rounded-full gap-2 w-[1.4in] h-[1in] shadow-[0px_41px_120px_rgba(47,102,244,0.22)] z-10">
-            <div className="bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] rounded-full h-5 w-5" />
-            <div className="bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] rounded-full h-5 w-5" />
-            <div className="bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] rounded-full h-5 w-5" />
-          </div>
-          <img
-            className="absolute top-[70%] left-[70%]"
-            src={triangle}
-            alt=""
-          />
-        </div>
+      <div className="hidden xl:flex flex-col self-center justify-self-end justify-center items-center relative xl:absolute xl:w-[30vw] right-0 top-0 bottom-0 bg-secondary">
+        <img className="max-w-[90%]" src={surveyMan} alt="" />
+        <q></q>
       </div>
     </section>
   );

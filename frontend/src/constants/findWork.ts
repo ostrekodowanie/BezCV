@@ -1,5 +1,5 @@
 import { HTMLInputTypeAttribute } from "react"
-import { CandidateAnswerType } from "./workForm"
+import { CandidateAnswerType, RoleType } from "./workForm"
 
 type CustomInput = {
     name: keyof CandidateAnswerType,
@@ -153,3 +153,26 @@ export const defaultQuestions: QuestionProps[] = [
 ]
 
 export const defaultQuestionsLength = defaultQuestions.length
+
+type SurveyQuotes = {
+    [t in RoleType]: string[]
+}
+
+export const surveyQuotes: SurveyQuotes = {
+    sales: [
+        'Idziesz jak burza!',
+        'Great! Only few questions left',
+        'Twoim pracodawcom na pewno się to spodoba!',
+        'Ponad połowa za nami! Świetnie Ci idzie.'
+    ],
+    office_administration: [
+        'Idziesz jak burza!',
+        'Twój profil jest już gotowy w 79%'
+    ],
+    customer_service: [
+        'Tak trzymaj! Podoba mi się ta motywacja',
+        'Idziesz jak burza!',
+        'Twoim pracodawcom na pewno się to spodoba!',
+        'Twój profil jest gotowy w 98%'
+    ]
+}

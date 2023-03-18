@@ -9,6 +9,8 @@ import { useAppSelector } from "../main";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CandidateRef from "../components/offers/CandidateRef";
 import { RoleType } from "../constants/workForm";
+import CandidateLoader from "../components/offers/CandidateLoader";
+import OffersLoader from "../components/offers/OffersLoader";
 
 export default function Offers() {
   return (
@@ -132,10 +134,10 @@ const CandidateList = () => {
       <div className="flex flex-col lg:grid grid-cols-[1fr_4fr] mt-8 xl:my-12">
         <CandidateFilter setFilter={setFilter} />
         <InfiniteScroll
-          className={`flex flex-col bg-white shadow-primaryBig sm:rounded-3xl relative flex-1 min-h-[80vh] lg:ml-8 px-[8vw] py-4 sm:p-4`}
+          className={`flex flex-col bg-white shadow-primaryBig sm:rounded-3xl relative flex-1 min-h-[80vh] lg:ml-8`}
           next={() => setPage((prev) => prev + 1)}
           hasMore={hasMore}
-          loader={<OffersLoader />}
+          loader={<CandidateLoader />}
           dataLength={candidates.length}
         >
           {loading ? (
@@ -157,12 +159,3 @@ const CandidateList = () => {
     </section>
   );
 };
-
-const OffersLoader = () => (
-  <div className="m-6 flex flex-col gap-6">
-    <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
-    <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
-    <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[1in]" />
-    <div className="bg-[#f8f8f8] rounded-full min-h-[1in]" />
-  </div>
-);

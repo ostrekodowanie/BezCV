@@ -67,7 +67,7 @@ export default function SoftCandidateSkills() {
           />
         </div>
         <Control
-          className="absolute right-0 h-full bottom-0 hidden md:block -z-10 flex items-end"
+          className="absolute right-0 h-full bottom-0 hidden -z-10 md:flex items-end"
           opacity={1}
           x={20}
           ease="ease-out"

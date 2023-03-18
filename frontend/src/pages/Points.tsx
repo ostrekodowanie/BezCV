@@ -1,39 +1,27 @@
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
-import {
-  bestseller,
-  package1,
-  package2,
-  package3,
-  priceUnderline,
-  titleUnderline,
-} from "../assets/points/points";
-import { arrowRight } from "../assets/general";
 import Loader from "../components/Loader";
 import { useAppDispatch, useAppSelector } from "../main";
 import { addPoints } from "../reducers/login";
 import Control, { Controller } from "react-control-js";
+import { arrowRight, bcvToken } from "../assets/general";
+import MorePointsForm from "../components/points/MorePointsForm";
 
 interface PackageProps {
-  image: string;
   points: number;
   price: number;
 }
 
 const packages: PackageProps[] = [
   {
-    image: package1,
     points: 10,
     price: 499,
   },
   {
-    image: package2,
     points: 15,
     price: 699,
   },
   {
-    image: package3,
     points: 20,
     price: 899,
   },
@@ -41,94 +29,127 @@ const packages: PackageProps[] = [
 
 export default function Points() {
   const [chosen, setChosen] = useState<PackageProps | null>(null);
+  const [days, setDays] = useState<30 | 90>(30);
 
   return (
-    <section className="padding py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen">
-      <h1 className="flex flex-col gap-3 mb-12">
-        <span className="text-[0.95rem]">Doładuj swoje konto w punkty</span>
-        <span className="text-3xl md:text-4xl font-medium">
-          i zdobądź{" "}
-          <span className="relative">
-            <span className="relative z-10">pracowników!</span>
-            <img
-              className="absolute -bottom-1 -right-3 -left-3 min-w-[115%]"
-              src={titleUnderline}
-              alt=""
-            />
-          </span>
-        </span>
-      </h1>
-      {!chosen ? (
-        <Controller
-          stagger={50}
-          opacity={1}
-          ease="ease-out"
-          delay={500}
-          className="flex flex-wrap justify-center gap-8 xl:grid grid-cols-3"
-        >
-          {packages.map((pack) => (
-            <Control
-              className="control-package"
-              element={
-                <Package {...pack} setChosen={setChosen} key={pack.points} />
-              }
-            />
-          ))}
-        </Controller>
-      ) : (
-        <PayPalScriptProvider
-          options={{
-            "client-id":
-              "AdORToXVjx2A9wjRlvRmuu93SboFo1PgQWSYQhZ3bCDm8x_KhHMDkYHDML4kYWXjFYdHAsmm08KS6XSV",
-            currency: "PLN",
-          }}
-        >
-          <ChosenPackage {...chosen} setChosen={setChosen} />
-        </PayPalScriptProvider>
-      )}
-    </section>
+    <>
+      <section className="padding pt-[1.4in] pb-[.7in] 2xl:pb-[.9in] flex flex-col items-center gap-16 2xl:pt-[1.8in] bg-white min-h-screen">
+        <h2 className="font-semibold text-3xl md:text-4xl text-center leading-tight md:leading-tight max-w-[6.8in]">
+          Doładuj swoje konto w tokeny{" "}
+          <img className="inline-block max-h-[1.2em]" src={bcvToken} alt="" /> i{" "}
+          <span className="font-bold">zdobądź pracowników!</span>
+        </h2>
+        <div className="flex flex-col gap-8 items-center self-stretch w-full">
+          <div className="flex items-center gap-2 bg-[#F7FAFC] py-2 px-4 w-max rounded-full">
+            <button
+              className={`py-[14px] px-8 font-semibold flex items-center text-[.8rem] rounded-full ${
+                days === 30 ? "text-white bg-primary" : "text-[5D7EAD]"
+              }`}
+              onClick={() => setDays(30)}
+            >
+              Plan 30 dniowy
+            </button>
+            <button
+              className={`py-[14px] px-8 font-semibold flex items-center text-[.8rem] rounded-full ${
+                days === 90 ? "text-white bg-primary" : "text-[5D7EAD]"
+              }`}
+              onClick={() => setDays(90)}
+            >
+              Plan 90 dniowy
+            </button>
+          </div>
+          <p className="font-medium w-full text-center">
+            1 token{" "}
+            <img className="max-h-[1.2em] inline-block" src={bcvToken} alt="" />{" "}
+            umożliwia dostęp do danych kontaktowych jednego kandydata
+          </p>
+          <Controller
+            stagger={50}
+            opacity={1}
+            ease="ease-out"
+            delay={500}
+            className="flex flex-col sm:flex-row sm:justify-center sm:flex-wrap self-stretch gap-8 xl:grid grid-cols-3 mt-8"
+          >
+            {packages.map((pack) => (
+              <Control
+                className="control-package"
+                element={
+                  <Package
+                    {...pack}
+                    days={days}
+                    setChosen={setChosen}
+                    key={pack.points}
+                  />
+                }
+              />
+            ))}
+          </Controller>
+        </div>
+      </section>
+      <section className="padding bg-[#FAFCFE] py-[.7in] flex flex-col items-center gap-16 2xl:py-[.9in] xl:items-start xl:grid grid-cols-2 bg-white">
+        <div className="max-w-[min(6.8in,90%)] flex flex-col gap-8">
+          <h2 className="font-semibold text-3xl md:text-4xl text-center xl:text-left leading-tight md:leading-tight">
+            Chcesz kupić większą ilość tokenów?
+          </h2>
+          <p className="text-sm md:text-base text-[#3C4663] leading-relaxed md:leading-relaxed max-w-[90%]">
+            Lorem ipsum dolor sit amet consectetur. Nunc posuere eu a sem eget.
+            Vel non nunc sit nibh consectetur blandit amet faucibus velit.
+            Venenatis aliquam habitasse tempor magna vitae malesuada. Vel id
+            pulvinar eget platea.
+          </p>
+        </div>
+        <MorePointsForm />
+      </section>
+    </>
   );
 }
 
 const Package = ({
   setChosen,
+  days,
   ...rest
 }: PackageProps & {
   setChosen: Dispatch<SetStateAction<PackageProps | null>>;
+  days: number;
 }) => {
-  const { points, price, image } = rest;
+  const { points, price } = rest;
   return (
-    <div className="flex flex-col self-stretch h-full justify-end gap-4 rounded-3xl relative items-center p-12 bg-white shadow-primaryBig flex-1">
-      {points === 15 && (
-        <div className="absolute -top-6 rounded-t-full text-sm rounded-br-full -right-6 h-12 pl-8 pr-16 font-medium flex items-center bg-white">
-          Bestseller
-          <div className="absolute h-12 w-12 right-0 p-2 flex items-center justify-center bg-secondary rounded-full">
-            <img src={bestseller} alt="" />
-          </div>
-        </div>
-      )}
-      <img className="mb-4 max-w-[1.8in] max-h-[1.3in]" src={image} alt="" />
-      <h3 className="font-medium relative flex flex-col items-center">
-        <span className="relative z-10">{price} zł</span>
+    <div className="flex flex-col self-stretch h-full justify-end gap-8 rounded-3xl relative items-center p-12 bg-white shadow-primaryBig flex-1">
+      <h2 className="font-semibold text-4xl md:text-5xl w-max flex flex-col gap-4 items-center">
+        {points}
+        <span className="font-medium text-xl flex items-center">
+          tokenów{" "}
+          <img
+            className="ml-2 max-h-[1.2em] inline-block"
+            src={bcvToken}
+            alt="bCV"
+          />
+        </span>
+      </h2>
+      <div className="h-[1px] self-stretch bg-[#ECF0F2]" />
+      <h3 className="font-medium text-2xl">
+        {price} zł{" "}
+        <sup className="bg-clip-text text-transparent bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] font-medium">
+          /netto
+        </sup>
+      </h3>
+      <h3 className="font-medium text-[#5D7EAD] text-2xl">
+        {(price / points).toFixed(2).toString()} zł{" "}
+        <sup className="text-[#5D7EAD] font-medium">/1 token bCV</sup>
+      </h3>
+      <h4 className="text-[#5D7EAD] text-center">
+        Okres ważności 3 tokenów - {days} dni
+      </h4>
+      <button
+        className="bg-primary w-full font-medium border-primary mt-8 justify-center text-white rounded-full w-full flex items-center text-[.75rem] py-[14px] px-8"
+        onClick={() => setChosen(rest)}
+      >
+        Kup teraz!{" "}
         <img
-          className="absolute bottom-[2px] min-w-[120%]"
-          src={priceUnderline}
+          className="ml-2 max-h-[1em] inline-block"
+          src={arrowRight}
           alt=""
         />
-      </h3>
-      <h2 className="font-semibold text-3xl w-max">{points} kontaktów</h2>
-      <ul className="list-outside list-disc marker:text-[#F9AE3D] sm:w-max mt-4 text-sm flex flex-col gap-3">
-        <li>Lorem ipsum dolor sit amet consectetur.</li>
-        <li>Lorem ipsum dolor sit amet consectetur.</li>
-        <li>Lorem ipsum dolor sit amet consectetur.</li>
-        <li>Lorem ipsum dolor sit amet consectetur.</li>
-      </ul>
-      <button
-        onClick={() => setChosen(rest)}
-        className="bg-primary font-medium transition-colors text-[.75rem] max-w-max hover:bg-darkPrimary text-white rounded-full flex items-center py-4 px-8 mt-8"
-      >
-        Wybierz pakiet{" "}
-        <img className="max-h-[1em] ml-2" src={arrowRight} alt="" />
       </button>
     </div>
   );
@@ -185,23 +206,6 @@ const ChosenPackage = ({
       <h2>{points} kontaktów</h2>
       <h3 className="font-bold text-3xl">{price} zł</h3>
       <button onClick={() => setChosen(null)}>Cofnij</button>
-      <PayPalButtons
-        createOrder={(data, actions) => {
-          return actions.order.create({
-            purchase_units: [
-              {
-                amount: {
-                  value: price.toString(),
-                },
-              },
-            ],
-          });
-        }}
-        onApprove={(data, actions) => {
-          //@ts-ignore
-          return actions.order.capture().then(() => handleSuccess(points));
-        }}
-      />
     </div>
   );
 };

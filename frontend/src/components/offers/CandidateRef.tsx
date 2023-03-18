@@ -16,6 +16,7 @@ import {
 import { useAppSelector } from "../../main";
 import CategoryPercantageBox from "./CategoryPercentageBox";
 import HasJob from "./HasJob";
+import { liked, notLiked } from "../../assets/offers/offers";
 
 const CandidateRef = ({
   id,
@@ -54,11 +55,17 @@ const CandidateRef = ({
   return (
     <Link
       to={"/oferty/" + id}
-      className="sm:hover:bg-[#FAFAFA] transition-colors sm:px-6 py-8 flex flex-col gap-8 border-b-[1px] border-[#E6E7EA] relative"
+      className={`transition-colors px-[8vw] py-10 sm:px-8 flex flex-col gap-8 border-b-[1px] border-[#E6E7EA] relative ${
+        has_job ? "bg-[#FBF8F4]" : "bg-white"
+      }`}
     >
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-6">
-          <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
+          <div
+            className={`h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center ${
+              has_job ? "bg-white" : "bg-[#F6F6F6]"
+            }`}
+          >
             <h4
               style={{
                 backgroundImage: profession
@@ -78,7 +85,11 @@ const CandidateRef = ({
           </div>
         </div>
         <div className="flex items-center gap-6">
-          <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
+          <div
+            className={`h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center ${
+              has_job ? "bg-white" : "bg-[#F6F6F6]"
+            }`}
+          >
             <ProfessionIcon {...colorScheme} />
           </div>
           <div className="flex flex-col gap-1">
@@ -96,7 +107,11 @@ const CandidateRef = ({
           </div>
         </div>
         <div className="flex items-center gap-6">
-          <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
+          <div
+            className={`h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center ${
+              has_job ? "bg-white" : "bg-[#F6F6F6]"
+            }`}
+          >
             <PhoneIcon {...colorScheme} />
           </div>
           <div className="flex flex-col gap-1">
@@ -105,7 +120,11 @@ const CandidateRef = ({
           </div>
         </div>
         <div className="flex items-center gap-6">
-          <div className="h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center bg-[#F6F6F6]">
+          <div
+            className={`h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center ${
+              has_job ? "bg-white" : "bg-[#F6F6F6]"
+            }`}
+          >
             <CashIcon {...colorScheme} />
           </div>
           <div className="flex flex-col gap-1">
@@ -114,54 +133,71 @@ const CandidateRef = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap gap-x-20 gap-y-4">
-        <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Dyspozycyjność</h4>
-          <h3 className="text-sm font-semibold">{availability}</h3>
-        </div>
-        <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Rejon</h4>
-          <h3 className="text-sm font-semibold">{province}</h3>
-        </div>
-        <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Wykształcenie</h4>
-          <h3 className="text-sm font-semibold">{education?.split("(")[0]}</h3>
-        </div>
-        <div className="flex flex-col gap-1">
-          <h4 className="text-[.8rem]">Prawo jazdy kat. B</h4>
-          <h3 className="text-sm font-semibold">
-            {drivers_license ? "Tak" : "Nie"}
-          </h3>
-        </div>
-      </div>
-      <div className="flex items-center gap-4 justify-between flex-wrap sm:flex-nowrap">
-        <div className="flex gap-3 flex-wrap items-center">
-          <h3 className="font-semibold text-[.75rem]">Umiejętności:</h3>
-          <div className="flex flex-wrap gap-3 xl:flex-nowrap">
-            <CategoryPercantageBox
-              {...roleToTextMap["sales"]}
-              role={profession}
-              percentage={percentage_by_category["sales"]}
-            />
-            <CategoryPercantageBox
-              {...roleToTextMap["office_administration"]}
-              role={profession}
-              percentage={percentage_by_category["office_administration"]}
-            />
-            <CategoryPercantageBox
-              {...roleToTextMap["customer_service"]}
-              role={profession}
-              percentage={percentage_by_category["customer_service"]}
-            />
+      <div className="flex flex-col gap-4 xl:grid grid-cols-[1fr_max-content]">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-wrap gap-x-20 gap-y-4">
+            <div className="flex flex-col gap-1">
+              <h4 className="text-[.8rem]">Dyspozycyjność</h4>
+              <h3 className="text-sm font-semibold">{availability}</h3>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h4 className="text-[.8rem]">Rejon</h4>
+              <h3 className="text-sm font-semibold">{province}</h3>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h4 className="text-[.8rem]">Wykształcenie</h4>
+              <h3 className="text-sm font-semibold">
+                {education?.split("(")[0]}
+              </h3>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h4 className="text-[.8rem]">Prawo jazdy kat. B</h4>
+              <h3 className="text-sm font-semibold">
+                {drivers_license ? "Tak" : "Nie"}
+              </h3>
+            </div>
+          </div>
+          <div className="flex gap-3 flex-wrap items-center">
+            <h3 className="font-semibold text-[.75rem]">Umiejętności:</h3>
+            <div className="flex flex-wrap gap-3 xl:flex-nowrap">
+              <CategoryPercantageBox
+                {...roleToTextMap["sales"]}
+                role={profession}
+                percentage={percentage_by_category["sales"]}
+              />
+              <CategoryPercantageBox
+                {...roleToTextMap["office_administration"]}
+                role={profession}
+                percentage={percentage_by_category["office_administration"]}
+              />
+              <CategoryPercantageBox
+                {...roleToTextMap["customer_service"]}
+                role={profession}
+                percentage={percentage_by_category["customer_service"]}
+              />
+            </div>
           </div>
         </div>
-        <button
-          className="rounded-full w-max min-w-max text-white text-[.75rem] font-semibold flex items-center py-3 px-10 bg-primary mt-8 sm:mt-0"
-          type="button"
-        >
-          Zobacz profil
-          <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
-        </button>
+        <div className="flex flex-col items-start xl:self-end xl:items-end gap-6 mt-8 xl:mt-0">
+          <button
+            className="flex items-center text-[.75rem] font-semibold"
+            onClick={handleLike}
+          >
+            {isFollowed ? "Dodano do ulubionych" : "Dodaj do ulubionych"}
+            <img
+              className="max-h-[1.2em] ml-2"
+              src={isFollowed ? liked : notLiked}
+              alt=""
+            />
+          </button>
+          <button
+            className="rounded-full w-max min-w-max text-white text-[.75rem] font-semibold flex items-center py-3 px-10 bg-primary"
+            type="button"
+          >
+            Zobacz profil
+            <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
+          </button>
+        </div>
       </div>
       {has_job && <HasJob />}
     </Link>
