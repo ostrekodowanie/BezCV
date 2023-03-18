@@ -17,13 +17,18 @@ interface RoleQuestion {
 }
 
 export default function RoleController() {
-  const { candidateAnswers, roleAnswers, setRoleAnswers } =
-    useContext(SurveyContext);
+  const {
+    role,
+    setRole,
+    candidateAnswers,
+    roleAnswers,
+    setRoleAnswers,
+    activeQuestionIndex,
+    setActiveQuestionIndex,
+  } = useContext(SurveyContext);
   const { first_name, email } = candidateAnswers;
   const [numericalAnswer, setNumericalAnswer] = useState<number>(1);
-  const [role, setRole] = useState<RoleType | null>(null);
   const [questions, setQuestions] = useState<RoleQuestion[]>([]);
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const timer = useRef<any>(null);
   const [secondsLeft, setSecondsLeft] = useState(15);

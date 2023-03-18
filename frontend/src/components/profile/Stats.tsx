@@ -8,7 +8,7 @@ const Stats = ({
 }: StatsProps & { loading: boolean }) => {
   const { points } = useAppSelector((state) => state.login.data);
   return (
-    <div className="p-10 shadow-primaryBig flex flex-col gap-8 md:gap-12 rounded-3xl col-[2/3] row-[1/2]">
+    <div className="px-[8vw] py-10 sm:p-10 shadow-primaryBig flex flex-col gap-8 md:gap-12 rounded-3xl col-[2/3] row-[1/2]">
       <div className="flex gap-2 justify-between">
         <h3 className="font-semibold w-min">Dostępne tokeny</h3>
         <h4

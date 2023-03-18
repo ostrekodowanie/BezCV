@@ -10,8 +10,12 @@ import ProgressBar from "./ProgressBar";
 import { SurveyContext } from "./Survey";
 
 export default function CandidateController() {
-  const { candidateAnswers, setStep } = useContext(SurveyContext);
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
+  const {
+    candidateAnswers,
+    setStep,
+    activeQuestionIndex,
+    setActiveQuestionIndex,
+  } = useContext(SurveyContext);
   const { question, type } = defaultQuestions[activeQuestionIndex];
   const [loading, setLoading] = useState(false);
   const [credentialsLoading, setCredentialsLoading] = useState(false);
@@ -53,7 +57,10 @@ export default function CandidateController() {
         .post("/api/survey/candidate", JSON.stringify(candidateAnswers), {
           headers: { "Content-Type": "application/json" },
         })
-        .then(() => setStep("role"))
+        .then(() => {
+          setActiveQuestionIndex(0);
+          setStep("role");
+        })
         .catch((err) =>
           setError(
             typeof err.response.data.detail === "string"
@@ -101,7 +108,7 @@ export default function CandidateController() {
           {!credentialsLoading && credentialsError && (
             <p className="text-red-400 max-w-full">{credentialsError}</p>
           )}
-          <div className="flex items-center flex-wrap gap-4 flex-1">
+          <div className="flex flex-col self-end sm:flex-row sm:self-center gap-6 flex-1">
             {activeQuestionIndex > 0 && (
               <button
                 type="button"
@@ -112,7 +119,10 @@ export default function CandidateController() {
                 Poprzednie pytanie
               </button>
             )}
-            <button className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center">
+            <button
+              type="submit"
+              className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center"
+            >
               Następne pytanie{" "}
               <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
             </button>

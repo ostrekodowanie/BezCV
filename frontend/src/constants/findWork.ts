@@ -156,23 +156,30 @@ export const defaultQuestionsLength = defaultQuestions.length
 
 type SurveyQuotes = {
     [t in RoleType]: string[]
-}
+} & { chooseRole: string, candidateStep: string[] }
 
-export const surveyQuotes: SurveyQuotes = {
+export const surveyManQuotes: SurveyQuotes = {
     sales: [
         'Idziesz jak burza!',
+        'Ponad połowa za nami! Świetnie Ci idzie.',
         'Great! Only few questions left',
         'Twoim pracodawcom na pewno się to spodoba!',
-        'Ponad połowa za nami! Świetnie Ci idzie.'
     ],
     office_administration: [
         'Idziesz jak burza!',
-        'Twój profil jest już gotowy w 79%'
+        'Ponad połowa za nami! Świetnie Ci idzie.',
+        'Twoim pracodawcom na pewno się to spodoba!',
+        'Twój profil jest już gotowy w 79%',
     ],
     customer_service: [
         'Tak trzymaj! Podoba mi się ta motywacja',
         'Idziesz jak burza!',
         'Twoim pracodawcom na pewno się to spodoba!',
-        'Twój profil jest gotowy w 98%'
-    ]
+        'Twój profil jest gotowy w 98%',
+    ],
+    candidateStep: [
+        'Już prawie wiem jaka jest Twoja wymarzona praca. Kontynuujmy :)',
+        ''
+    ],
+    chooseRole: 'Świetnie wiem już jakie oferty spełniają Twoje oczekiwania. Teraz sprawdźmy Twoje kompetencje miękkie.'
 }

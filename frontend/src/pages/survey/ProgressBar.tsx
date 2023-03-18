@@ -3,7 +3,7 @@ import { progressFlag } from "../../assets/candidate/candidate";
 export default function ProgressBar({ progress }: { progress: number }) {
   return (
     <div
-      className={`items-center gap-1 mb-8 ml-8 flex ${
+      className={`items-center self-stretch sm:self-center gap-1 mb-8 ml-8 flex ${
         progress === -1 && "opacity-0"
       }`}
     >

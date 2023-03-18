@@ -8,13 +8,17 @@ import {
   initialFilledState,
   IsFilled,
   RoleAnswerType,
+  RoleType,
   SurveyContextType,
 } from "../../constants/workForm";
 import { defaultQuestions } from "../../constants/findWork";
+import SurveyManQuote from "../../components/survey/SurveyManQuote";
 
 export const SurveyContext = createContext<SurveyContextType>(null!);
 
 export default function Survey() {
+  const [role, setRole] = useState<RoleType | null>(null);
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [step, setStep] = useState<"role" | "candidate">("candidate");
   const [isSurveyFilled, setIsSurveyFilled] =
     useState<IsFilled>(initialFilledState);
@@ -37,20 +41,28 @@ export default function Survey() {
     () => ({
       step,
       setStep,
+      role,
+      setRole,
       roleAnswers,
       setRoleAnswers,
       candidateAnswers,
       setCandidateAnswers,
+      activeQuestionIndex,
+      setActiveQuestionIndex,
       isSurveyFilled,
       setIsSurveyFilled,
     }),
     [
       step,
       setStep,
+      role,
+      setRole,
       roleAnswers,
       setRoleAnswers,
       candidateAnswers,
       setCandidateAnswers,
+      activeQuestionIndex,
+      setActiveQuestionIndex,
       isSurveyFilled,
       setIsSurveyFilled,
     ]
@@ -61,16 +73,16 @@ export default function Survey() {
       <Link className="absolute left-[8vw] sm:left-16 top-8" to="/praca">
         Powrót
       </Link>
-      <div className="flex flex-col items-center gap-6 w-full mt-16 sm:mt-0">
-        <SurveyContext.Provider value={contextValue}>
+      <SurveyContext.Provider value={contextValue}>
+        <div className="flex flex-col items-center gap-6 w-full mt-16 sm:mt-0">
           {step === "role" && <RoleController />}
           {step === "candidate" && <CandidateController />}
-        </SurveyContext.Provider>
-      </div>
-      <div className="hidden xl:flex flex-col self-center justify-self-end justify-center items-center relative xl:absolute xl:w-[30vw] right-0 top-0 bottom-0 bg-secondary">
-        <img className="max-w-[90%]" src={surveyMan} alt="" />
-        <q></q>
-      </div>
+        </div>
+        <div className="hidden xl:flex flex-col self-center gap-16 justify-self-end justify-center items-center relative xl:absolute xl:w-[30vw] right-0 top-0 bottom-0 bg-secondary">
+          <img className="max-w-[90%]" src={surveyMan} alt="" />
+          <SurveyManQuote />
+        </div>
+      </SurveyContext.Provider>
     </section>
   );
 }

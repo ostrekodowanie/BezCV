@@ -69,12 +69,16 @@ export type RoleAnswerType = [number, number]
 export type SurveyContextType = {
     step: 'role' | 'candidate',
     setStep: Dispatch<SetStateAction<'role' | 'candidate'>>,
+    role: RoleType | null,
+    setRole: Dispatch<SetStateAction<RoleType | null>>,
     candidateAnswers: CandidateAnswerType,
     setCandidateAnswers: Dispatch<SetStateAction<CandidateAnswerType>>,
     roleAnswers: RoleAnswerType[],
     setRoleAnswers: Dispatch<SetStateAction<RoleAnswerType[]>>,
     isSurveyFilled: IsFilled,
-    setIsSurveyFilled: Dispatch<SetStateAction<IsFilled>>
+    setIsSurveyFilled: Dispatch<SetStateAction<IsFilled>>,
+    activeQuestionIndex: number,
+    setActiveQuestionIndex: Dispatch<SetStateAction<number>>
 }
 
 export type ControllerContextType = {
