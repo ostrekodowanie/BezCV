@@ -91,7 +91,7 @@ export default function ReportForm({
               <div className="flex flex-col items-end sm:flex-row sm:items-center gap-8 mt-4 col-span-2 sm:justify-end">
                 {loading && <Loader />}
                 <button
-                  className="font-semibold text-[.8rem] min-w-max"
+                  className="font-semibold hover:text-[#2F66F4] transition-colors text-[.8rem] min-w-max"
                   onClick={() => setReportForm(false)}
                 >
                   Nie, wszystko w porządku
