@@ -43,7 +43,7 @@ export default function Profile() {
 
   return (
     <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in] flex flex-col gap-8 xl:grid grid-cols-[6fr_5fr_5fr] overflow-x-hidden grid-rows-[4in_max-content_max-content]">
-      <EmployerInfo />
+      <EmployerInfo {...profileData.employer} />
       <Link
         to="/punkty"
         className="rounded-full bg-primary ml-[8vw] sm:ml-0 row-[2/3] col-[2/3] max-w-max justify-center xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10"

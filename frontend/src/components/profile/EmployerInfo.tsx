@@ -1,12 +1,13 @@
 import axios from "axios";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { descIcon, profilePictureUpload } from "../../assets/profile/profile";
+import { EmployerInfoType } from "../../constants/profile";
 import { useAppSelector } from "../../main";
 import InfoForm from "./InfoForm";
 
-export default function EmployerInfo() {
+export default function EmployerInfo({ nip, image }: EmployerInfoType) {
   const auth = useAppSelector((state) => state.login);
-  const { id, first_name, last_name, image, desc, nip } = auth.data;
+  const { id, first_name, last_name } = auth.data;
   const [profilePicture, setProfilePicture] = useState<any>(image);
   const { access } = auth.tokens;
 
@@ -25,6 +26,10 @@ export default function EmployerInfo() {
         setProfilePicture(URL.createObjectURL(e.target.files[0]));
     }
   };
+
+  useEffect(() => {
+    setProfilePicture(image);
+  }, [image]);
 
   return (
     <div className="flex flex-col justify-between gap-6 px-[8vw] py-10 sm:p-10 shadow-primaryBig rounded-3xl row-span-2">
@@ -67,7 +72,7 @@ export default function EmployerInfo() {
       <div className="rounded-3xl bg-[#F8F9FB] flex flex-col p-6 gap-4">
         <h3 className="text-[#3C4663] text-sm">
           <span className="font-medium">NIP: </span>
-          {nip ?? ""}
+          {nip}
         </h3>
         <h3 className="text-[#3C4663] text-sm font-medium">
           Nazwa Firmy: Przykładowa Nazwa Firmy
