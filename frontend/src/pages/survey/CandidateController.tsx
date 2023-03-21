@@ -28,14 +28,16 @@ export default function CandidateController() {
     if (type === "email") {
       setCredentialsLoading(true);
       return axios
-        .post("/api/survey/email", candidateAnswers.email, {
-          headers: { "Content-Type": "application/json" },
-        })
+        .post(
+          "/api/survey/email",
+          JSON.stringify({ email: candidateAnswers.email }),
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        )
         .then(() => setActiveQuestionIndex((prev) => prev + 1))
         .catch(() =>
-          setCredentialsError(
-            "Numer telefonu jest już używany przez inny profil"
-          )
+          setCredentialsError("Email jest już używany przez inny profil")
         )
         .finally(() => setCredentialsLoading(false));
     }
