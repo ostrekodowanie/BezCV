@@ -17,4 +17,4 @@ class PaymentDetails(models.Model):
         verbose_name_plural = 'Payment Details'
 
     def __str__(self):
-        return f'{self.employer.email}, {self.employer.phone} | {self.amount} | {self.price} {self.currency}'
+        return f'{self.employer.email} | {self.amount} | {self.price} {self.currency}'
