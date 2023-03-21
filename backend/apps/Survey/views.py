@@ -1,4 +1,4 @@
-from django.db.models import Avg
+from django.db.models import Avg, F
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -28,9 +28,9 @@ class CandidateAnswersView(APIView):
         candidate_email = request.data['candidate']
         answers = request.data['answers']
         candidate = Candidates.objects.get(email=candidate_email)
-        print(answers)
+        
         candidate_answers = [
-            CandidateAnswers(question=Questions.objects.get(pk=question), answer=answer, candidate=candidate)
+            candidate(question=Questions.objects.get(pk=question), answer=answer, candidate=candidate)
             for question, answer in answers
         ]
         CandidateAnswers.objects.bulk_create(candidate_answers)
@@ -41,26 +41,32 @@ class CandidateAnswersView(APIView):
         if not candidate.is_visible:
             candidate.is_visible = True
         
-        sorted_abilities = sorted(
-            [{'name': ability.ability.name, 'percentage': ability.percentage}
-            for ability in candidate.candidateabilities_candidate.all()],
-            key=lambda x: x['percentage'], reverse=True)
-        best_abilities = [ability['name'] for ability in sorted_abilities[:3]]
-        worst_abilities = [ability['name'] for ability in sorted_abilities[-3:][::-1]]
+        abilities = candidate.candidateabilities_candidate.annotate(
+            name=F('ability__name')
+        ).values('name', 'percentage').order_by('-percentage').distinct()[:3]
+        
+        total_experience_months = candidate.experience_customer_service + candidate.experience_office_administration + candidate.experience_sales
+
+        if total_experience_months > 0:
+            positions = {
+                'obsługi klienta': candidate.experience_customer_service,
+                'administracji biurowej': candidate.experience_office_administration,
+                'sprzedaży': candidate.experience_sales
+            }
+            best_position = max(positions, key=positions.get)
+            years_of_experience = positions[best_position] // 12
+            months_of_experience = positions[best_position] % 12
+
+            experience_text = f"z {str(years_of_experience) + ' letnim' if years_of_experience > 0 else str(months_of_experience) + ' miesięcznym'} doświadczeniem na stanowisku {best_position}"
+        else:
+            experience_text = "bez doświadczenia"
+
         input_text = f'''
-        Oto rozbudowany opis kandydata oraz jego możliwości (w trzeciej osobie, bez określania płci, rodzaj męski) zachęcający pracodawców na podstawie jego:
-        1.Najlepszych umiejętności: {best_abilities}
-        2.Najgorszych umiejętności: {worst_abilities}
-        2.Stanowiska: {candidate.preferred_profession}
-        3.Wybranej stawki: {candidate.salary_expectation}
-        4.Dostępności: {candidate.availability}
-        5.Wcześniejszej lub obecnej pozycji w pracy: {candidate.job_position}
-        6.Doświadczenia na stanowiskach:
-        - sprzedaży: {candidate.experience_sales} miesięcy
-        - obsługi klienta: {candidate.experience_customer_service} miesięcy
-        - administracji biurowej: {candidate.experience_office_administration} miesięcy
-        7.Edukacji: {candidate.education}
-        8.Posiadania prawo jazdy: {candidate.driving_license}
+        Napisz korzyści (długi opis kandydata), jakie może przynieść zatrudnienie pracownika {experience_text}.
+        Tego pracownika wyróżniają trzy najważniejsze kompetencje miękkie, takie jak {abilities[0]['name']}, {abilities[1]['name']} oraz {abilities[2]['name']}. 
+        Skoreluj je ze sobą. 
+        Bez pisania wprost o umiejętnościach. 
+        Nie powtarzaj słów kluczowych.
         '''
         
         response = openai.Completion.create(
@@ -109,16 +115,16 @@ class PhoneCheckView(APIView):
 class SendCodeView(APIView):
     def post(self, request):
         phone = request.data.get('phone')
-        candidate = Candidates.objects.get(phone=phone)
+        gen_code = GeneratedCodes.objects.get(phone=phone)
 
         code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
         
-        if candidate.access_code:
-            candidate.access_code.all().delete()
+        if gen_code:
+            gen_code.all().delete()
         
-        GeneratedCodes.objects.create(candidate=candidate, code=code)
+        GeneratedCodes.objects.create(phone=phone, code=code)
 
-        client.sms.send(to=phone, message=f'Twój kod dostępu to: {code}', from_="Test")
+        client.sms.send(to=phone, message=f'Twoj kod dostepu to: {code}', from_="Test")
 
         return Response({'Access code sent successfully'}, status=200)
     
@@ -130,11 +136,11 @@ class CheckCodeView(APIView):
         candidate = Candidates.objects.get(phone=phone)
 
         try:
-            generated_code = candidate.access_code.objects.get(code=code)
+            gen_code = GeneratedCodes.objects.get(phone=phone, code=code)
         except GeneratedCodes.DoesNotExist:
             return Response({'Access code is not valid'}, status=400)
 
-        if (datetime.datetime.now(datetime.timezone.utc) - generated_code.created_at).total_seconds() <= 600:
+        if (datetime.datetime.now(datetime.timezone.utc) - gen_code.created_at).total_seconds() <= 600:
             completed_categories = set()
             answered_questions = candidate.candidateanswers_candidate.objects.all().select_related('question')
 
