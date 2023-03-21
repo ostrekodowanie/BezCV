@@ -45,14 +45,25 @@ export default function CandidateController() {
         return setError("Nieprawidłowy numer telefonu!");
       setCredentialsLoading(true);
       return axios
-        .get(
-          "/api/survey/phone/" +
-            (typeof candidateAnswers.phone === "string"
-              ? candidateAnswers.phone.split(" ").join("")
-              : candidateAnswers.phone)
+        .post(
+          "/api/survey/phone",
+          JSON.stringify({
+            phone:
+              typeof candidateAnswers.phone === "string"
+                ? candidateAnswers.phone.split(" ").join("")
+                : candidateAnswers.phone,
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         )
         .then(() => setPhoneCodePopupActive(true))
-        .catch(() => setPhoneCodePopupActive(true))
+        .catch(() => {
+          setPhoneCodePopupActive(true);
+          setError("Nieprawidłowy numer telefonu!");
+        })
         .finally(() => setCredentialsLoading(false));
     }
 
