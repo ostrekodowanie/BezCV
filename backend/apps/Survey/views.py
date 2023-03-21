@@ -102,7 +102,7 @@ class EmailCheckView(APIView):
     def get(self, request, email):
         if Candidates.objects.filter(email=email).exists():
             return Response({'Email already exists.'}, status=status.HTTP_200_OK)
-        return Response({'Email is available.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=204)
     
 
 class SendCodeView(APIView):
