@@ -99,7 +99,8 @@ class CandidateCreateView(generics.CreateAPIView):
 
 
 class EmailCheckView(APIView):
-    def get(self, request, email):
+    def post(self, request):
+        email = request.data.get('email')
         if Candidates.objects.filter(email=email).exists():
             return Response({'Email already exists.'}, status=status.HTTP_200_OK)
         return Response(status=204)
