@@ -79,7 +79,7 @@ class AbilityQuestions(models.Model):
 
 class GeneratedCodes(models.Model):
     code = models.CharField(max_length=6)
-    candidate = models.OneToOneField(Candidates, on_delete=models.CASCADE, related_name="access_code")
+    phone = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

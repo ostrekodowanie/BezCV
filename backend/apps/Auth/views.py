@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import authenticate
+from django.template.loader import render_to_string, get_template
 
 from rest_framework import views, status, generics
 from rest_framework.response import Response
@@ -23,7 +24,7 @@ import jwt
 from nip24 import *
 
 
-nip24 = NIP24Client()
+nip24 = NIP24Client(os.environ.get('NIP24_ID'), os.environ.get('NIP24_KEY'))
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -68,29 +69,21 @@ class SignUpView(views.APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            nip = serializer.validated_data.pop('nip')
-            active = nip24.isActiveExt(Number.NIP, nip)
-
-            if active:
                 serializer.save()
                 user = serializer.data
-
+                
                 token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
                 
+                #message = get_template('../../templates/index.html')
                 email_message = EmailMessage(
                     subject='Potwierdź swoją rejestrację',
                     body='Aby potwierdzić swoją rejestrację, kliknij w link: https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token),
                     to=[user['email']]
                 )
+                #email_message.content_subtype ="html"
                 email_message.send()
                 
                 return Response({'User created'}, 201)
-            
-            else:
-                if not nip24.getLastError():
-                    return Response('Firma zawiesiła lub zakończyła działalność', 400)
-                else:
-                    return Response(nip24.getLastError(), 400)
             
         return Response(serializer.errors, 400)
 
@@ -103,6 +96,8 @@ class VerifyView(views.APIView):
             user = User.objects.get(email=payload['email'])
             if not user.is_verified:
                 user.is_verified = True
+                all = nip24.getAllDataExt(Number.NIP, user.nip)
+                user.name = all.name  
                 user.save()
             return Response({'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:

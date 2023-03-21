@@ -1,13 +1,19 @@
-from django.db.models import F, OuterRef, Subquery, Avg, Sum, ExpressionWrapper, IntegerField
+from django.db.models import F, Avg, Sum
 from django.utils import timezone
 
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
+from rest_framework.response import Response
 
 from datetime import timedelta
 
 from .models import User
 from apps.Candidates.models import CandidateAbilities
+
+from nip24 import *
+
+
+nip24 = NIP24Client(os.environ.get('NIP24_ID'), os.environ.get('NIP24_KEY'))
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -35,7 +41,13 @@ class SignUpSerializer(serializers.ModelSerializer):
         nip = validated_data.get('nip')
         if User.objects.filter(nip=nip).exists():
             raise ValidationError('NIP jest już przypisany do istniejącego konta')
-        
+        active = nip24.isActiveExt(Number.NIP, nip)
+        if not active:
+            if not nip24.getLastError():
+                raise ValidationError('Firma zawiesiła lub zakończyła działalność')
+            else:
+                raise ValidationError(nip24.getLastError())
+            
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
 
