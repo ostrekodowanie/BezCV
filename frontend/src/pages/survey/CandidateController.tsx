@@ -43,9 +43,11 @@ export default function CandidateController() {
     }
 
     if (type === "tel") {
-      if (candidateAnswers.phone.length < 11)
-        return setError("Nieprawidłowy numer telefonu!");
       setCredentialsLoading(true);
+      if (candidateAnswers.phone.length < 11) {
+        setCredentialsLoading(false);
+        return setError("Nieprawidłowy numer telefonu!");
+      }
       return axios
         .post(
           "/api/survey/phone",
@@ -80,7 +82,7 @@ export default function CandidateController() {
           setStep("role");
         })
         .catch((err) =>
-          setError(
+          setCredentialsError(
             typeof err.response.data.detail === "string"
               ? err.response.data.detail
               : "Wystąpił błąd!"
