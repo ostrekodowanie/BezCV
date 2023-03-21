@@ -71,7 +71,7 @@ export default function PhoneCodePopup({
           onChange={(e) => setCode(e.target.value)}
           required
           autoComplete="off"
-          type="text"
+          type="number"
           name="phone_code"
           id="phone_code"
           placeholder="Tutaj wpisz swój kod"
