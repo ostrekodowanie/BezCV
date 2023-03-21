@@ -105,22 +105,15 @@ class EmailCheckView(APIView):
         return Response({'Email is available.'}, status=status.HTTP_204_NO_CONTENT)
     
 
-class PhoneCheckView(APIView):
-    def get(self, request, phone):
-        if Candidates.objects.filter(phone=phone).exists():
-            return Response({'Phone number already exists.'}, status=200)
-        return Response({'Phone number is available.'}, status=204)
-    
-
 class SendCodeView(APIView):
     def post(self, request):
         phone = request.data.get('phone')
-        gen_code = GeneratedCodes.objects.get(phone=phone)
+        gen_code = GeneratedCodes.objects.filter(phone=phone)
 
-        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        code = ''.join(random.choices(string.digits, k=6))
         
         if gen_code:
-            gen_code.all().delete()
+            gen_code.delete()
         
         GeneratedCodes.objects.create(phone=phone, code=code)
 
@@ -133,30 +126,33 @@ class CheckCodeView(APIView):
     def post(self, request):
         phone = request.data.get('phone')
         code = request.data.get('code')
-        candidate = Candidates.objects.get(phone=phone)
-
         try:
-            gen_code = GeneratedCodes.objects.get(phone=phone, code=code)
-        except GeneratedCodes.DoesNotExist:
-            return Response({'Access code is not valid'}, status=400)
+            try:
+                gen_code = GeneratedCodes.objects.get(phone=phone, code=code)
+            except GeneratedCodes.DoesNotExist:
+                return Response({'Access code is not valid'}, status=400)
+            
+            candidate = Candidates.objects.get(phone=phone)
 
-        if (datetime.datetime.now(datetime.timezone.utc) - gen_code.created_at).total_seconds() <= 600:
-            completed_categories = set()
-            answered_questions = candidate.candidateanswers_candidate.objects.all().select_related('question')
+            if (datetime.datetime.now(datetime.timezone.utc) - gen_code.created_at).total_seconds() <= 600:
+                completed_categories = set()
+                answered_questions = candidate.candidateanswers_candidate.objects.all().select_related('question')
 
-            for answer in answered_questions:
-                categories = set(answer.question.category.all())
-                if categories:
-                    completed_categories.update(categories)
+                for answer in answered_questions:
+                    categories = set(answer.question.category.all())
+                    if categories:
+                        completed_categories.update(categories)
 
-            category_dict = {}
-            for category in Categories.objects.all():
-                category_questions = category.questions_category.objects.all()
-                user_questions = answered_questions.filter(question__in=category_questions)
-                if len(user_questions) == len(category_questions):
-                    category_dict[category.name] = True
-                else:
-                    category_dict[category.name] = False
-            return Response(category_dict, status=200)
-        else:
-            return Response({'Access code expired'}, status=400)
+                category_dict = {}
+                for category in Categories.objects.all():
+                    category_questions = category.questions_category.objects.all()
+                    user_questions = answered_questions.filter(question__in=category_questions)
+                    if len(user_questions) == len(category_questions):
+                        category_dict[category.name] = True
+                    else:
+                        category_dict[category.name] = False
+                return Response(category_dict, status=200)
+            else:
+                return Response({'Access code expired'}, status=400)
+        except:
+            return Response({'Phone number is available.'}, status=204)

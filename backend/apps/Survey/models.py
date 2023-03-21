@@ -87,4 +87,4 @@ class GeneratedCodes(models.Model):
         verbose_name_plural = 'Generated codes'
 
     def __str__(self):
-        return self.created_at
+        return self.code
