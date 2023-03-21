@@ -164,16 +164,19 @@ const CandidateRef = ({
                 {...roleToTextMap["sales"]}
                 role={profession}
                 percentage={percentage_by_category["sales"]}
+                hasJob={has_job}
               />
               <CategoryPercantageBox
                 {...roleToTextMap["office_administration"]}
                 role={profession}
                 percentage={percentage_by_category["office_administration"]}
+                hasJob={has_job}
               />
               <CategoryPercantageBox
                 {...roleToTextMap["customer_service"]}
                 role={profession}
                 percentage={percentage_by_category["customer_service"]}
+                hasJob={has_job}
               />
             </div>
           </div>
