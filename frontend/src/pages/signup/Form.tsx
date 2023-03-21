@@ -1,9 +1,10 @@
 import axios from "axios";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, MouseEvent } from "react";
 import { Link } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import { inputStyles } from "../Contact";
 import Loader from "../../components/Loader";
+import { reportSuccessMan } from "../../assets/profile/profile";
 
 export default function Form() {
   const [confPassword, setConfPassword] = useState("");
@@ -20,8 +21,8 @@ export default function Form() {
     password: "",
   });
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: FormEvent) => {
+    e && e.preventDefault();
     setStatus("loading");
     if (employerDetails.nip.length !== 10)
       return setStatus("NIP powinien posiadać 10 cyfr!");
@@ -45,17 +46,30 @@ export default function Form() {
       );
   };
 
-  if (status === true)
-    return (
-      <section className="padding">
-        <h2 className="text-2xl font-medium mx-auto pt-[1in]">
-          Email weryfikacyjny{" "}
-          <span className="text-primary">został wysłany!</span>
-        </h2>
-      </section>
-    );
-
-  return (
+  return status === true ? (
+    <div className="flex flex-col text-center items-center gap-4">
+      <img
+        className="max-w-[1.4in] w-full mb-6"
+        src={reportSuccessMan}
+        alt=""
+      />
+      <h2 className="font-semibold text-xl sm:text-2xl">
+        Sprawdź pocztę i aktywuj konto!
+      </h2>
+      <p className="text-[#3C4663] flex flex-col items-center gap-2 text-[.8rem]">
+        Link aktywacyjny wysłaliśmy na adres:
+        <span className="text-sm font-medium">{employerDetails.email}</span>
+      </p>
+      <div className="flex flex-col items-end sm:flex-row sm:items-center gap-8 mt-6 sm:justify-end">
+        <span className="font-semibold hover:text-[#2F66F4] transition-colors text-[.8rem] min-w-max">
+          Wiadomość nie dotarła?
+        </span>
+        <FilledButton onClick={handleSubmit}>
+          Prześlij ponownie link aktywacyjny
+        </FilledButton>
+      </div>
+    </div>
+  ) : (
     <div className="flex flex-col text-center md:shadow-boxPrimary items-center xl:flex-1 xl:max-w-[10in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start">
       <h2 className="font-semibold text-[2.4rem] mb-8 xl:mb-10 w-full">
         Zarejestruj się

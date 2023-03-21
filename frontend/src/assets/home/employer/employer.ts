@@ -9,7 +9,6 @@ import scs1 from './scs1.svg'
 import scs2 from './scs2.svg'
 import isEnoughWoman from './is_enough_woman.svg'
 import isEnoughMan from './is_enough_man.svg'
-import pointsMan from './points_man.svg'
 
 export {
     htf1,
@@ -23,5 +22,4 @@ export {
     scs2,
     isEnoughWoman,
     isEnoughMan,
-    pointsMan
 }

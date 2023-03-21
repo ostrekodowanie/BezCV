@@ -1,8 +1,6 @@
-import { bestseller, priceUnderline } from "../../../assets/points/points";
 import Control, { Controller } from "react-control-js";
-import { underline } from "../../../assets/home/candidate/candidate";
-import { pointsMan } from "../../../assets/home/employer/employer";
 import { bcvToken } from "../../../assets/general";
+import { useState } from "react";
 
 interface PackageProps {
   points: number;
@@ -25,52 +23,67 @@ const packages: PackageProps[] = [
 ];
 
 export default function Points() {
+  const [days, setDays] = useState<30 | 90>(30);
   return (
-    <section className="padding py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen">
-      <div className="flex flex-col gap-4 mb-20">
-        <h2 className="text-3xl leading-snug md:text-4xl md:leading-snug font-semibold max-w-[5in] mb-4">
-          Rejestracja w bezCV jest{" "}
-          <div className="inline-block relative font-bold">
-            <span className="relative z-10">zupełnie darmowa!</span>
-            <Control
-              onScroll
-              x={-30}
-              duration={100}
-              opacity={1}
-              className="absolute -bottom-1 left-0 w-full"
-              element={<img className="w-full" src={underline} alt="" />}
-            />
-          </div>
+    <section className="padding pt-[1.4in] pb-[.7in] 2xl:pb-[.9in] flex flex-col items-center gap-16 2xl:pt-[1.8in] bg-white min-h-screen">
+      <div className="flex flex-col gap-8 xl:gap-16 items-center xl:flex-row xl:justify-center self-stretch 2xl:px-[4vw]">
+        <h2 className="font-semibold text-center xl:text-left text-3xl md:text-4xl leading-tight md:leading-tight xl:min-w-[4.6in] max-w-[4.6in]">
+          Rejestracja w BezCV jest{" "}
+          <span className="font-bold">zupełnie darmowa!</span>
         </h2>
-        <p className="text-sm leading-loose font-medium text-[#3C4663] max-w-[7in]">
-          Dzięki temu możesz zobaczyć naszą bazę i sprawdzić, czy posiadamy
-          kandydatów odpowiednich do pracy w Twoim przedsiębiorstwie.
-        </p>
-        <p className="text-sm leading-loose font-medium text-[#3C4663]">
+        <p className="text-[#3C4663] text-sm text-center xl:text-left jakarta leading-relaxed max-w-[6in]">
+          <span className="font-medium">
+            Dzięki temu możesz zobaczyć naszą bazę i sprawdzić, czy posiadamy
+            kandydatów odpowiednich do pracy dla Twojego przedsiębiorstwa.
+          </span>{" "}
           Natomiast, jeżeli chcesz wykupić dostęp do danych kontaktowych
-          kandydatów masz 3 opcje:
+          kandydatów <span className="font-medium">masz 3 opcje:</span>
         </p>
       </div>
-      <Controller
-        stagger={50}
-        opacity={1}
-        ease="ease-out"
-        delay={500}
-        onScroll
-        className="flex flex-col sm:flex-row sm:justify-center sm:flex-wrap self-stretch gap-8 xl:grid grid-cols-3 mt-8"
-      >
-        {packages.map((pack) => (
-          <Control
-            className="control-package"
-            element={<Package {...pack} key={pack.points} />}
-          />
-        ))}
-      </Controller>
+      <div className="flex flex-col gap-8 items-center self-stretch w-full">
+        <div className="flex items-center gap-2 bg-[#F7FAFC] py-2 px-4 w-max rounded-full">
+          <button
+            className={`py-[14px] px-8 font-semibold flex items-center text-[.8rem] rounded-full ${
+              days === 30 ? "text-white bg-primary" : "text-[5D7EAD]"
+            }`}
+            onClick={() => setDays(30)}
+          >
+            Plan 30 dniowy
+          </button>
+          <button
+            className={`py-[14px] px-8 font-semibold flex items-center text-[.8rem] rounded-full ${
+              days === 90 ? "text-white bg-primary" : "text-[5D7EAD]"
+            }`}
+            onClick={() => setDays(90)}
+          >
+            Plan 90 dniowy
+          </button>
+        </div>
+        <p className="font-medium w-full text-center">
+          1 token{" "}
+          <img className="max-h-[1.2em] inline-block" src={bcvToken} alt="" />{" "}
+          umożliwia dostęp do danych kontaktowych jednego kandydata
+        </p>
+        <Controller
+          stagger={50}
+          opacity={1}
+          ease="ease-out"
+          delay={500}
+          className="flex flex-col sm:flex-row sm:justify-center sm:flex-wrap self-stretch gap-8 xl:grid grid-cols-3 mt-8"
+        >
+          {packages.map((pack) => (
+            <Control
+              className="control-package"
+              element={<Package {...pack} days={days} key={pack.points} />}
+            />
+          ))}
+        </Controller>
+      </div>
     </section>
   );
 }
 
-const Package = ({ points, price }: PackageProps) => {
+const Package = ({ points, price, days }: PackageProps & { days: 30 | 90 }) => {
   return (
     <div className="flex flex-col self-stretch h-full justify-end gap-8 rounded-3xl relative items-center p-12 bg-white shadow-primaryBig flex-1">
       <h2 className="font-semibold text-4xl md:text-5xl w-max flex flex-col gap-4 items-center">
@@ -95,13 +108,9 @@ const Package = ({ points, price }: PackageProps) => {
         {(price / points).toFixed(2).toString()} zł{" "}
         <sup className="text-[#5D7EAD] font-medium">/1 token bCV</sup>
       </h3>
-      {points === 20 && (
-        <img
-          className="hidden xl:block absolute bottom-full left-[50%] -translate-x-[50%] max-w-[80%]"
-          src={pointsMan}
-          alt=""
-        />
-      )}
+      <h4 className="text-[#5D7EAD] text-center">
+        Okres ważności 3 tokenów - {days} dni
+      </h4>
     </div>
   );
 };

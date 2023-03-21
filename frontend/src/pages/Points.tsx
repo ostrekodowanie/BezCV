@@ -86,7 +86,7 @@ export default function Points() {
           </Controller>
         </div>
       </section>
-      <section className="padding bg-[#FAFCFE] py-[.7in] flex flex-col items-center gap-16 2xl:py-[.9in] xl:items-start xl:grid grid-cols-2 bg-white">
+      <section className="padding bg-[#FAFCFE] py-[.7in] flex flex-col items-center gap-16 2xl:py-[.9in] xl:items-start xl:grid grid-cols-2">
         <div className="max-w-[min(6.8in,90%)] flex flex-col gap-8">
           <h2 className="font-semibold text-3xl md:text-4xl text-center xl:text-left leading-tight md:leading-tight">
             Chcesz kupić większą ilość tokenów?
@@ -141,7 +141,7 @@ const Package = ({
         Okres ważności 3 tokenów - {days} dni
       </h4>
       <button
-        className="bg-primary w-full font-medium border-primary mt-8 justify-center text-white rounded-full w-full flex items-center text-[.75rem] py-[14px] px-8"
+        className="bg-primary font-medium border-primary mt-8 justify-center text-white rounded-full w-full flex items-center text-[.75rem] py-[14px] px-8"
         onClick={() => setChosen(rest)}
       >
         Kup teraz!{" "}

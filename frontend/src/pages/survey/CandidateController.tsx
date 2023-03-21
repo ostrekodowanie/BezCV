@@ -45,7 +45,12 @@ export default function CandidateController() {
         return setError("Nieprawidłowy numer telefonu!");
       setCredentialsLoading(true);
       return axios
-        .get("/api/survey/phone/" + candidateAnswers.phone)
+        .get(
+          "/api/survey/phone/" +
+            (typeof candidateAnswers.phone === "string"
+              ? candidateAnswers.phone.split(" ").join("")
+              : candidateAnswers.phone)
+        )
         .then(() => setPhoneCodePopupActive(true))
         .catch(() => setPhoneCodePopupActive(true))
         .finally(() => setCredentialsLoading(false));

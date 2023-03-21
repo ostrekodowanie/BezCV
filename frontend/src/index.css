@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,7 +8,7 @@
 *::after,
 *::before {
   box-sizing: border-box;
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Lexend', 'Plus Jakarta Sans', sans-serif;
 }
 
 html, body {
@@ -18,6 +18,10 @@ html, body {
 
 body {
   color: #141B30;
+}
+
+.jakarta {
+  font-family: 'Plus Jakarta Sans', 'Lexend', sans-serif;
 }
 
 .text-primary {
