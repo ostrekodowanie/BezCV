@@ -6,26 +6,7 @@ import { addPoints } from "../reducers/login";
 import Control, { Controller } from "react-control-js";
 import { arrowRight, bcvToken } from "../assets/general";
 import MorePointsForm from "../components/points/MorePointsForm";
-
-interface PackageProps {
-  points: number;
-  price: number;
-}
-
-const packages: PackageProps[] = [
-  {
-    points: 10,
-    price: 499,
-  },
-  {
-    points: 15,
-    price: 699,
-  },
-  {
-    points: 20,
-    price: 899,
-  },
-];
+import { PackageProps, packages } from "../constants/points";
 
 export default function Points() {
   const [chosen, setChosen] = useState<PackageProps | null>(null);
@@ -70,19 +51,21 @@ export default function Points() {
             delay={500}
             className="flex flex-col sm:flex-row sm:justify-center sm:flex-wrap self-stretch gap-8 xl:grid grid-cols-3 mt-8"
           >
-            {packages.map((pack) => (
-              <Control
-                className="control-package"
-                element={
-                  <Package
-                    {...pack}
-                    days={days}
-                    setChosen={setChosen}
-                    key={pack.points}
-                  />
-                }
-              />
-            ))}
+            {packages
+              .filter((pack) => pack.days === days)
+              .map((pack) => (
+                <Control
+                  className="control-package"
+                  element={
+                    <Package
+                      {...pack}
+                      days={days}
+                      setChosen={setChosen}
+                      key={pack.points}
+                    />
+                  }
+                />
+              ))}
           </Controller>
         </div>
       </section>
@@ -106,13 +89,11 @@ export default function Points() {
 
 const Package = ({
   setChosen,
-  days,
   ...rest
 }: PackageProps & {
   setChosen: Dispatch<SetStateAction<PackageProps | null>>;
-  days: number;
 }) => {
-  const { points, price } = rest;
+  const { points, price, days } = rest;
   return (
     <div className="flex flex-col self-stretch h-full justify-end gap-8 rounded-3xl relative items-center p-12 bg-white shadow-primaryBig flex-1">
       <h2 className="font-semibold text-4xl md:text-5xl w-max flex flex-col gap-4 items-center">
@@ -138,7 +119,9 @@ const Package = ({
         <sup className="text-[#5D7EAD] font-medium">/1 token bCV</sup>
       </h3>
       <h4 className="text-[#5D7EAD] text-center">
-        Okres ważności 3 tokenów - {days} dni
+        {days === 30
+          ? "Okres ważności 3 tokenów - 30 dni"
+          : `Co miesiąc masz do wykorzystania ${points / 3} tokenów`}
       </h4>
       <button
         className="bg-primary font-medium border-primary mt-8 justify-center text-white rounded-full w-full flex items-center text-[.75rem] py-[14px] px-8"

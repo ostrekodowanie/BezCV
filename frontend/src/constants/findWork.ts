@@ -50,12 +50,6 @@ export const defaultQuestions: QuestionProps[] = [
         placeholder: 'Tutaj wpisz swój email'
     },
     {
-        name: 'preferred_professions',
-        question: 'W którym zawodzie najbardziej chciałbyś pracować?',
-        type: 'checkbox',
-        answers: ['Sprzedaż', 'Obsługa klienta', 'Administracja biurowa'],
-    },
-    {
         name: 'salary_expectation',
         question: 'Jakiego wynagrodzenia oczekujesz?',
         type: 'radio',

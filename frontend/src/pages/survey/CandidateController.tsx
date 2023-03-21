@@ -97,6 +97,10 @@ export default function CandidateController() {
     setError("");
   }, [activeQuestionIndex]);
 
+  useEffect(() => {
+    console.log({ credentialsLoading });
+  }, [credentialsLoading]);
+
   if (loading) return <Loader />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;
 
