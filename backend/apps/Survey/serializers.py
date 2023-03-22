@@ -30,8 +30,9 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
         message += 'Nazwisko: ' + candidate.last_name + '\n'
         message += 'E-mail: ' + candidate.email + '\n'
         message += 'Telefon: ' + candidate.phone + '\n'
-        message += 'Data urodzenia: ' + candidate.birth_date.isoformat + '\n'
-        message += 'Województwo: ' + candidate.province
+        print(candidate.birth_date)
+        message += 'Data urodzenia: ' + str(candidate.birth_date) + '\n'
+        message += 'Województwo: ' + candidate.province + '\n'
         message += 'Oczekiwania finansowe: ' + str(candidate.salary_expectation) + '\n'
         message += 'Dostępność: ' + str(candidate.availability) + '\n'
         message += 'Pozycja zawodowa: ' + candidate.job_position + '\n'
@@ -44,6 +45,7 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
         
         to_email = candidate.email
         email = EmailMessage(subject, message, to=[to_email])
+        print(message)
         email.send()
 
         return candidate
