@@ -35,10 +35,16 @@ export default function CandidateController() {
             headers: { "Content-Type": "application/json" },
           }
         )
-        .then(() => setActiveQuestionIndex((prev) => prev + 1))
-        .catch(() =>
-          setCredentialsError("Email jest już używany przez inny profil")
-        )
+        .then((res) => {
+          switch (res.status) {
+            case 204:
+              setActiveQuestionIndex((prev) => prev + 1);
+              break;
+            case 200:
+              setCredentialsError("Email jest już używany przez inny profil!");
+          }
+        })
+        .catch(() => setCredentialsError("Wystąpił błąd!"))
         .finally(() => setCredentialsLoading(false));
     }
 
@@ -318,17 +324,26 @@ const CandidateInput = ({
 
 const PhoneInput = () => {
   const { candidateAnswers, setCandidateAnswers } = useContext(SurveyContext);
+  const defaultInput = String(candidateAnswers.phone);
+  defaultInput.replace(/\D/g, "");
+  defaultInput.replace(/(\d{3})(?=\d)/g, "$1 ");
+  defaultInput.slice(0, 11);
+  const [input, setInput] = useState(defaultInput);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     value = value.replace(/\D/g, "");
     value = value.replace(/(\d{3})(?=\d)/g, "$1 ");
     value = value.slice(0, 11);
+    setInput(value);
+  };
+
+  useEffect(() => {
     setCandidateAnswers((prev) => ({
       ...prev,
-      phone: value,
+      phone: input.split(" ").join(""),
     }));
-  };
+  }, [input]);
 
   return (
     <input
