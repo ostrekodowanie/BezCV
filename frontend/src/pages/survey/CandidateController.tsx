@@ -324,7 +324,7 @@ const CandidateInput = ({
 
 const PhoneInput = () => {
   const { candidateAnswers, setCandidateAnswers } = useContext(SurveyContext);
-  const defaultInput = String(candidateAnswers.phone);
+  let defaultInput = String(candidateAnswers.phone);
   defaultInput.replace(/\D/g, "");
   defaultInput.replace(/(\d{3})(?=\d)/g, "$1 ");
   defaultInput.slice(0, 11);
@@ -350,7 +350,7 @@ const PhoneInput = () => {
       className={textInputStyles}
       autoComplete="off"
       required={true}
-      value={candidateAnswers["phone"]}
+      value={input}
       onChange={handleChange}
       id={"Pod jakim numerem pracodawca będzie mógł się z Tobą skontaktować?"}
       placeholder={"Tutaj wpisz swój numer telefonu"}
