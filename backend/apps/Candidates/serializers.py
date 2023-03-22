@@ -118,18 +118,26 @@ class CandidateSerializer(serializers.ModelSerializer):
     
     def get_worst_abilities(self, obj):
         abilities = obj.candidateabilities_candidate.annotate(
-            name=F('ability__name')
-        ).values('name', 'percentage').order_by('percentage').distinct()
+            name=F('ability__name'),
+            category=F('ability__abilityquestions_ability__question__category__name')
+        ).values('name', 'percentage', 'category').distinct()
 
-        abilities_array = []
+        abilities_dict = {}
         for ability in abilities:
+            category = ability['category']
+            if category not in abilities_dict:
+                abilities_dict[category] = []
             if ability['percentage'] < 20:
-                abilities_array.append({
+                abilities_dict[category].append({
                     'name': ability['name'],
                     'percentage': ability['percentage']
                 })
+                
+        for category, abilities_list in abilities_dict.items():
+            abilities_list.sort(key=lambda x: x['percentage'], reverse=True)
+            abilities_dict[category] = abilities_list
 
-        return abilities_array
+        return abilities_dict
     
     def get_is_purchased(self, obj):
         user = self.context['request'].user
