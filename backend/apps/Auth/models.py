@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    name = models.CharField(max_length=255, blank=True, null=True)
+    company_name = models.CharField(max_length=255, blank=True, null=True)
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
     email = models.EmailField(max_length=255, unique=True)
@@ -24,6 +24,6 @@ class User(AbstractUser):
     def __str__(self):
         return '{} - {} - {}'.format(
             self.pk,
-            self.name,
+            self.company_name,
             self.email,
         )

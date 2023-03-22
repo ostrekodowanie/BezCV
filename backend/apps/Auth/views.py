@@ -97,7 +97,7 @@ class VerifyView(views.APIView):
             if not user.is_verified:
                 user.is_verified = True
                 all = nip24.getAllDataExt(Number.NIP, user.nip)
-                user.name = all.name  
+                user.company_name = all.name  
                 user.save()
             return Response({'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:

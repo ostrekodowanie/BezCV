@@ -19,7 +19,7 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
         model = Candidates
         fields = ['first_name', 'last_name', 'email', 'phone', 'province', 'birth_date', 'salary_expectation', 'availability', 'job_position',
                   'experience_sales', 'experience_customer_service', 'experience_office_administration', 'education',
-                  'driving_license', 'preferred_profession']
+                  'driving_license']
 
     def create(self, validated_data):
         candidate = Candidates.objects.create(**validated_data)
@@ -41,7 +41,6 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
         message += 'Wykształcenie: ' + candidate.education + '\n'
         driving_license = 'Tak' if candidate.driving_license else 'Nie'
         message += 'Prawo jazdy: ' + driving_license + '\n'
-        message += 'Preferowane stanowisko: ' + candidate.preferred_profession + '\n'
         
         to_email = candidate.email
         email = EmailMessage(subject, message, to=[to_email])
