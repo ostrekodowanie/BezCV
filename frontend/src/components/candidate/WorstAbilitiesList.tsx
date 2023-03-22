@@ -7,11 +7,11 @@ export default function WorstAbilitiesList({
   office_administration,
 }: AbilitiesListType) {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex-col w-full hidden sm:flex">
       <h2 className="font-bold text-lg mb-6">
         Na co zwrócić uwagę przy kontakcie z kandydatem
       </h2>
-      <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+      <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
         {sales.length > 0 &&
           sales.map((ab) => (
             <AbilityRange

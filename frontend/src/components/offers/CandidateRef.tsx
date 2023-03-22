@@ -1,5 +1,3 @@
-import axios from "axios";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   CashIcon,
@@ -13,10 +11,9 @@ import {
   professionColorMap,
   ProfessionColorScheme,
 } from "../../constants/professionColorMap";
-import { useAppSelector } from "../../main";
 import CategoryPercantageBox from "./CategoryPercentageBox";
 import HasJob from "./HasJob";
-import { liked, notLiked } from "../../assets/offers/offers";
+import FollowButton from "../candidate/FollowButton";
 
 const CandidateRef = ({
   id,
@@ -33,24 +30,7 @@ const CandidateRef = ({
   drivers_license,
   has_job,
 }: CandidateProps) => {
-  const user_id = useAppSelector((state) => state.login.data.id);
-  const [isFollowed, setIsFollowed] = useState(is_followed);
   const colorScheme: ProfessionColorScheme = initialColorScheme;
-
-  const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsFollowed((prev) => !prev);
-    if (isFollowed)
-      return axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`);
-    return axios.post(
-      "/api/profile/favourites/add",
-      JSON.stringify({ employer: user_id, candidate: id }),
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  };
 
   return (
     <Link
@@ -182,17 +162,7 @@ const CandidateRef = ({
           </div>
         </div>
         <div className="flex flex-col items-start xl:self-end xl:items-end gap-6 mt-8 xl:mt-0">
-          <button
-            className="flex items-center text-[.75rem] font-semibold"
-            onClick={handleLike}
-          >
-            {isFollowed ? "Dodano do ulubionych" : "Dodaj do ulubionych"}
-            <img
-              className="max-h-[1.2em] ml-2"
-              src={isFollowed ? liked : notLiked}
-              alt=""
-            />
-          </button>
+          <FollowButton id={id} is_followed={is_followed} />
           <button
             className="rounded-full w-max min-w-max text-white text-[.75rem] font-semibold flex items-center py-3 px-10 bg-primary"
             type="button"

@@ -38,6 +38,7 @@ import WorstAbilitiesList, {
   WorstAbilitiesLoader,
 } from "../components/candidate/WorstAbilitiesList";
 import AbilitiesLoader from "../components/candidate/AbilitiesLoader";
+import FollowButton from "../components/candidate/FollowButton";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -211,6 +212,12 @@ export default function Candidate() {
             </div>
           )}
           <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
+            <div className="md:hidden">
+              <FollowButton
+                id={id ? parseInt(id) : -1}
+                is_followed={candidateDetails.is_followed}
+              />
+            </div>
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
                 <AgeIcon {...colorScheme} />
@@ -335,9 +342,17 @@ export default function Candidate() {
             </div>
           </div>
           <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-[1/3] flex flex-col">
-            <h2 className="mb-6 font-bold mx-[8vw] sm:mx-0">
-              Opis kandydata na podstawie AI
-            </h2>
+            <div className="mb-6 flex items-center gap-4 justify-between">
+              <h2 className="font-bold mx-[8vw] sm:mx-0">
+                Opis kandydata na podstawie AI
+              </h2>
+              <div className="hidden md:block">
+                <FollowButton
+                  id={id ? parseInt(id) : -1}
+                  is_followed={candidateDetails.is_followed}
+                />
+              </div>
+            </div>
             <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB] flex-1">
               <p className="font-medium text-[.8rem] leading-loose">
                 {candidateDetails.desc}
@@ -373,7 +388,7 @@ export default function Candidate() {
             <h2 className="font-bold text-lg mb-8">
               Umiejętności kandydata do pracy na każdym stanowisku
             </h2>
-            <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+            <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
               <div className="flex flex-col gap-6">
                 <h3 className="font-bold text-lg">Sprzedaż</h3>
                 {!loading.page ? (
@@ -389,7 +404,7 @@ export default function Candidate() {
                       {candidateDetails.worst_abilities.sales.map((ab) => (
                         <AbilityRange
                           {...ab}
-                          color={professionColorMap.sales.gradient}
+                          color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
                           key={ab.name}
                         />
                       ))}
@@ -419,7 +434,7 @@ export default function Candidate() {
                         (ab) => (
                           <AbilityRange
                             {...ab}
-                            color={professionColorMap.sales.gradient}
+                            color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
                             key={ab.name}
                           />
                         )
@@ -442,11 +457,11 @@ export default function Candidate() {
                       />
                     ))}
                     <div className="flex flex-col sm:hidden gap-6">
-                      {candidateDetails.worst_abilities.office_administration.map(
+                      {candidateDetails.worst_abilities.customer_service.map(
                         (ab) => (
                           <AbilityRange
                             {...ab}
-                            color={professionColorMap.sales.gradient}
+                            color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
                             key={ab.name}
                           />
                         )
