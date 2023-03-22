@@ -50,9 +50,9 @@ export default function CandidateController() {
 
     if (type === "tel") {
       setCredentialsLoading(true);
-      if (candidateAnswers.phone.length < 11) {
+      if (candidateAnswers.phone.length < 9) {
         setCredentialsLoading(false);
-        return setError("Nieprawidłowy numer telefonu!");
+        return setCredentialsError("Nieprawidłowy numer telefonu!");
       }
       return axios
         .post(
