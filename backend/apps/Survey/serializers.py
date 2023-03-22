@@ -32,7 +32,7 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
         message += 'Telefon: ' + candidate.phone + '\n'
         print(candidate.birth_date)
         message += 'Data urodzenia: ' + str(candidate.birth_date) + '\n'
-        message += 'Województwo: ' + candidate.province
+        message += 'Województwo: ' + candidate.province + '\n'
         message += 'Oczekiwania finansowe: ' + str(candidate.salary_expectation) + '\n'
         message += 'Dostępność: ' + str(candidate.availability) + '\n'
         message += 'Pozycja zawodowa: ' + candidate.job_position + '\n'
