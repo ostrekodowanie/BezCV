@@ -19,7 +19,7 @@ const CategoryPercantageBox = ({
     <div
       className={`${
         isActive ? "order-first" : "order-last"
-      } flex items-center gap-2 w-max rounded-full py-2 px-4 ${
+      } flex items-center justify-center gap-2 w-full sm:w-max rounded-full py-2 px-4 ${
         hasJob ? "bg-white" : "bg-[#F5F5F5]"
       }`}
     >

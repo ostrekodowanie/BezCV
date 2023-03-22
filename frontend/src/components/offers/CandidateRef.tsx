@@ -59,7 +59,7 @@ const CandidateRef = ({
         has_job ? "bg-[#FBF8F4]" : "bg-white"
       }`}
     >
-      <div className="flex items-center justify-between gap-4 flex-wrap">
+      <div className="flex flex-col sm:items-center sm:flex-row sm:justify-between gap-4 sm:flex-wrap">
         <div className="flex items-center gap-6">
           <div
             className={`h-14 w-14 rounded-full border-[1px] border-[#F9FAFC] flex justify-center items-center ${
@@ -135,7 +135,7 @@ const CandidateRef = ({
       </div>
       <div className="flex flex-col gap-4 xl:grid grid-cols-[1fr_max-content]">
         <div className="flex flex-col gap-8">
-          <div className="flex flex-wrap gap-x-20 gap-y-4">
+          <div className="grid grid-cols-2 sm:flex flex-wrap gap-x-8 2xl:gap-x-20 gap-y-4">
             <div className="flex flex-col gap-1">
               <h4 className="text-[.8rem]">Dyspozycyjność</h4>
               <h3 className="text-sm font-semibold">{availability}</h3>
@@ -157,9 +157,9 @@ const CandidateRef = ({
               </h3>
             </div>
           </div>
-          <div className="flex gap-3 flex-wrap items-center">
+          <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
             <h3 className="font-semibold text-[.75rem]">Umiejętności:</h3>
-            <div className="flex flex-wrap gap-3 xl:flex-nowrap">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 xl:flex-nowrap">
               <CategoryPercantageBox
                 {...roleToTextMap["sales"]}
                 role={profession}

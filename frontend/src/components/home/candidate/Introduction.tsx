@@ -38,22 +38,28 @@ export default function Introduction() {
       <div className="absolute -left-[2in] -right-[2in] -z-10 top-0">
         <img className="object-cover h-[62vh]" src={introductionBg} alt="" />
       </div>
-      <div className="flex flex-wrap gap-8 justify-between items-center text-white py-[1in]">
+      <div className="flex flex-wrap gap-8 justify-between items-center text-white pt-[.6in] pb-[1in] md:py-[1in]">
         <h2 className="text-3xl md:text-4xl font-semibold leading-snug md:leading-snug relative">
           W bezCV jest ponad{" "}
           <span className="text-4xl md:text-5xl">
             <CountUp end={40} enableScrollSpy useEasing />
           </span>
           <br />
-          zarejestrowanych pracodawców
+          zarejestrowanych pracodawców,
           <Control
-            className="absolute left-full top-4 hidden 2xl:block"
+            className="absolute left-[calc(100%-10vw)] sm:left-[calc(100%-6vw)] 2xl:left-full lg:hidden xl:block lg:top-4 top-[1.4in]"
             onScroll
             opacity={1}
             x={-30}
             duration={250}
             ease="ease-in-out"
-            element={<img className="max-w-[15vw]" src={bannerArrow} alt="" />}
+            element={
+              <img
+                className="max-w-[15vw] xl:max-w-[10vw] 2xl:max-w-[15vw] xl:rotate-0 rotate-90 sm:rotate-180"
+                src={bannerArrow}
+                alt=""
+              />
+            }
           />
         </h2>
         <h2 className="text-xl font-medium xl:text-right">
@@ -83,7 +89,7 @@ export default function Introduction() {
 
 const RoleBox = ({ title, desc, image }: RoleBox) => {
   return (
-    <div className="rounded-xl flex flex-col gap-4 px-8 py-12 bg-white shadow-[0px_24px_61px_rgba(250,172,62,0.15)]">
+    <div className="rounded-xl flex flex-col gap-4 px-8 md:py-12 py-8 bg-white shadow-[0px_24px_61px_rgba(250,172,62,0.15)]">
       <div className="h-14 w-14 flex items-center justify-center rounded bg-[#FFFAF5]">
         <img className="max-w-[60%] max-h-[60%]" src={image} alt="" />
       </div>

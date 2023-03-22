@@ -1,18 +1,38 @@
-import { FormEvent, useState } from "react";
+import axios from "axios";
+import { FormEvent, useEffect, useState } from "react";
 import { infoFormButton } from "../../assets/profile/profile";
 import { infoFormQuestions } from "../../constants/profile";
+import { useAppSelector } from "../../main";
 
 export default function InfoForm() {
+  const [hasBeenFilled, setHasBeenFilled] = useState(false);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState(["", "", ""]);
   const { question } = infoFormQuestions[activeQuestionIndex];
+  const { access } = useAppSelector((state) => state.login.tokens);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setActiveQuestionIndex((prev) => (prev === 2 ? 0 : prev + 1));
   };
 
-  return (
+  useEffect(() => {
+    if (answers.filter((ans) => ans).length === 3) setHasBeenFilled(true);
+    axios.post("/api/profile/form", JSON.stringify(answers), {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + access,
+      },
+    });
+  }, [answers]);
+
+  return hasBeenFilled ? (
+    <div className="flex flex-wrap items-center gap-4 justify-between">
+      <p className="text-[#3C4663] font-medium text-sm">
+        Wypełniłeś/aś formularz, gratulacje!
+      </p>
+    </div>
+  ) : (
     <form className="relative" onSubmit={handleSubmit}>
       <input
         type="text"

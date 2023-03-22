@@ -5,13 +5,15 @@ type PercentageByProfession = {
     [p in RoleType]: number
 }
 
+export type AbilitiesListType = {
+    [t in RoleType]: AbilityProps[]
+}
+
 export interface CandidateProps {
     id: number,
     first_name: string,
     last_name: string,
-    abilities?: {
-        [t in RoleType]: AbilityProps[]
-    },
+    abilities?: AbilitiesListType,
     profession?: RoleType,
     percentage_by_category: PercentageByProfession,
     drivers_license?: boolean,
@@ -29,13 +31,19 @@ export interface CandidateProps {
 
 export type Details = Omit<CandidateProps, | 'id' | 'percentage_by_category'> & { 
     is_purchased: boolean,
-    worst_abilities: AbilityProps[],
+    worst_abilities: AbilitiesListType,
     desc: string,
     ability_charts: PercentageByProfession
 }
 
 export type NonPercentageAbilitiesCandidateProps = Omit<CandidateProps, 'abilities'> & {
     abilities: string[]
+}
+
+const initialAbilities = {
+    'sales': [],
+    'customer_service': [],
+    'office_administration': []
 }
 
 export const initialDetailsState: Details = {
@@ -45,11 +53,7 @@ export const initialDetailsState: Details = {
     last_name: '',
     email: '',
     phone: '',
-    abilities: {
-        'sales': [],
-        'customer_service': [],
-        'office_administration': []
-    },
+    abilities: initialAbilities,
     desc: '',
     education: '',
     ability_charts: {
@@ -59,7 +63,7 @@ export const initialDetailsState: Details = {
     },
     salary_expectation: '',
     similar_candidates: [],
-    worst_abilities: []
+    worst_abilities: initialAbilities
 }
 
 export type RoleTextsType = {

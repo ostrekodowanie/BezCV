@@ -65,6 +65,15 @@ const Nav = () => {
             : "opacity-0 -z-50 pointer-events-none"
         }`}
       />
+      {account === "worker" && (
+        <Link
+          className="rounded-full max-w-max md:hidden text-white text-[.8rem] font-semibold flex items-center py-3 px-8 bg-secondary"
+          to="/praca"
+        >
+          Wypełnij formularz{" "}
+          <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
+        </Link>
+      )}
       <div
         className={`flex flex-col md:flex-row items-end bg-white gap-4 pt-[1.4in] md:pt-0 text-sm font-medium z-50 absolute px-[8vw] md:px-0 top-0 md:relative left-full transition-transform ${
           active && "-translate-x-full md:translate-x-0"
@@ -118,7 +127,7 @@ const Nav = () => {
           ))}
         {account === "worker" && (
           <Link
-            className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-3 px-8 bg-secondary mt-4 md:mt-0 md:ml-4"
+            className="rounded-full hidden md:flex max-w-max text-white text-[.8rem] font-semibold flex items-center py-3 px-8 bg-secondary mt-4 md:mt-0 md:ml-4"
             to="/praca"
           >
             Wypełnij formularz{" "}

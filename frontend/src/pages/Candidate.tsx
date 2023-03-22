@@ -34,6 +34,10 @@ import CandidateRef from "../components/offers/CandidateRef";
 import HasJob from "../components/offers/HasJob";
 import OffersLoader from "../components/offers/OffersLoader";
 import PDFButton from "../components/candidate/PDFButton";
+import WorstAbilitiesList, {
+  WorstAbilitiesLoader,
+} from "../components/candidate/WorstAbilitiesList";
+import AbilitiesLoader from "../components/candidate/AbilitiesLoader";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -88,7 +92,7 @@ export default function Candidate() {
       >
         <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] py-10 sm:p-10 overflow-hidden">
           {candidateDetails.has_job && <HasJob />}
-          <div className="flex flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:flex xl:justify-between">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:flex xl:justify-between">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold">
                 <span
@@ -187,29 +191,26 @@ export default function Candidate() {
               <Loader />
             </div>
           ) : (
-            !candidateDetails.is_purchased && (
-              <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
-                <button
-                  onClick={handlePurchase}
-                  style={{ backgroundImage: gradient }}
-                  className="rounded-full max-w-max justify-center hover:scale-[1.02] transition-transform xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10"
-                >
-                  Wykup kontakt za 1 token{" "}
-                  <img
-                    className="max-h-[1.4em] ml-2"
-                    src={bcvToken}
-                    alt="bCV"
-                  />
-                </button>
-                {loading.purchase && <Loader />}
-              </div>
-            )
+            <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
+              <button
+                onClick={handlePurchase}
+                disabled={candidateDetails.is_purchased}
+                style={{ backgroundImage: gradient }}
+                className={`rounded-full max-w-max justify-center ${
+                  candidateDetails.is_purchased
+                    ? "hover:scale-[1.02] transition-transform"
+                    : ""
+                } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10`}
+              >
+                {candidateDetails.is_purchased
+                  ? "Wykupiono za 1 token "
+                  : "Wykup za 1 token "}
+                <img className="max-h-[1.4em] ml-2" src={bcvToken} alt="bCV" />
+              </button>
+              {loading.purchase && <Loader />}
+            </div>
           )}
-          <div
-            className={`flex flex-col gap-8 ${
-              candidateDetails.is_purchased ? "row-[1/4]" : "row-[2/4]"
-            } col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10`}
-          >
+          <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
                 <AgeIcon {...colorScheme} />
@@ -291,7 +292,7 @@ export default function Candidate() {
               </div>
             </div>
           </div>
-          <div className="bg-white sm:rounded-3xl shadow-primaryBig py-10 sm:p-10 flex justify-evenly flex-wrap col-[2/3] xl:flex-nowrap gap-6">
+          <div className="bg-white sm:rounded-3xl shadow-primaryBig py-10 sm:p-10 flex flex-col sm:flex-row sm:justify-evenly col-[2/3] gap-6">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
                 <EmailIcon {...colorScheme} />
@@ -376,97 +377,93 @@ export default function Candidate() {
               <div className="flex flex-col gap-6">
                 <h3 className="font-bold text-lg">Sprzedaż</h3>
                 {!loading.page ? (
-                  candidateDetails.abilities?.sales.map((ab) => (
-                    <AbilityRange
-                      {...ab}
-                      color={professionColorMap.sales.gradient}
-                      key={ab.name}
-                    />
-                  ))
-                ) : (
                   <>
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                    {candidateDetails.abilities?.sales.map((ab) => (
+                      <AbilityRange
+                        {...ab}
+                        color={professionColorMap.sales.gradient}
+                        key={ab.name}
+                      />
+                    ))}
+                    <div className="flex flex-col sm:hidden gap-6">
+                      {candidateDetails.worst_abilities.sales.map((ab) => (
+                        <AbilityRange
+                          {...ab}
+                          color={professionColorMap.sales.gradient}
+                          key={ab.name}
+                        />
+                      ))}
+                    </div>
                   </>
+                ) : (
+                  <AbilitiesLoader />
                 )}
               </div>
               <div className="flex flex-col gap-6">
                 <h3 className="font-bold text-lg">Administracja</h3>
                 {!loading.page ? (
-                  candidateDetails.abilities?.office_administration.map(
-                    (ab) => (
-                      <AbilityRange
-                        {...ab}
-                        color={
-                          professionColorMap.office_administration.gradient
-                        }
-                        key={ab.name}
-                      />
-                    )
-                  )
-                ) : (
                   <>
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                    {candidateDetails.abilities?.office_administration.map(
+                      (ab) => (
+                        <AbilityRange
+                          {...ab}
+                          color={
+                            professionColorMap.office_administration.gradient
+                          }
+                          key={ab.name}
+                        />
+                      )
+                    )}
+                    <div className="flex flex-col sm:hidden gap-6">
+                      {candidateDetails.worst_abilities.office_administration.map(
+                        (ab) => (
+                          <AbilityRange
+                            {...ab}
+                            color={professionColorMap.sales.gradient}
+                            key={ab.name}
+                          />
+                        )
+                      )}
+                    </div>
                   </>
+                ) : (
+                  <AbilitiesLoader />
                 )}
               </div>
               <div className="flex flex-col gap-6">
                 <h3 className="font-bold text-lg">Obsługa klienta</h3>
                 {!loading.page ? (
-                  candidateDetails.abilities?.customer_service.map((ab) => (
-                    <AbilityRange
-                      {...ab}
-                      color={professionColorMap.customer_service.gradient}
-                      key={ab.name}
-                    />
-                  ))
-                ) : (
                   <>
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.6em] rounded-full bg-[#f8f8f8]" />
+                    {candidateDetails.abilities?.customer_service.map((ab) => (
+                      <AbilityRange
+                        {...ab}
+                        color={professionColorMap.customer_service.gradient}
+                        key={ab.name}
+                      />
+                    ))}
+                    <div className="flex flex-col sm:hidden gap-6">
+                      {candidateDetails.worst_abilities.office_administration.map(
+                        (ab) => (
+                          <AbilityRange
+                            {...ab}
+                            color={professionColorMap.sales.gradient}
+                            key={ab.name}
+                          />
+                        )
+                      )}
+                    </div>
                   </>
+                ) : (
+                  <AbilitiesLoader />
                 )}
               </div>
             </div>
           </div>
-          <div className="flex flex-col w-full">
-            <h2 className="font-bold text-lg mb-6">
-              Na co zwrócić uwagę przy kontakcie z kandydatem
-            </h2>
-            <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
-              {!loading.page ? (
-                candidateDetails.worst_abilities.map((ab) => (
-                  <AbilityRange
-                    {...ab}
-                    color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-                    key={ab.name}
-                  />
-                ))
-              ) : (
-                <>
-                  <div className="h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                  <div className="h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                  <div className="h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                  <div className="h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                  <div className="h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                  <div className="h-[1.6em] rounded-full bg-[#f8f8f8]" />
-                </>
-              )}
-            </div>
-          </div>
+          {loading.page ? (
+            <WorstAbilitiesList {...candidateDetails.worst_abilities} />
+          ) : (
+            <WorstAbilitiesLoader />
+          )}
         </div>
         {loading.page ? (
           <div className="ml-[8vw] sm:ml-0">

@@ -51,7 +51,7 @@ export default function PersonalDataSecurity() {
 
 const TopicSelect = ({ title, desc }: PersonalDataTopicProps) => {
   return (
-    <div className="rounded-full bg-white sm:py-4 sm:px-8 text-center sm:text-left sm:shadow-[0px_4px_64px_rgba(56,95,194,0.1)]">
+    <div className="rounded-3xl bg-white py-4 px-8 text-center sm:text-left shadow-[0px_4px_64px_rgba(56,95,194,0.1)]">
       <h3 className="font-medium">{title}</h3>
     </div>
   );

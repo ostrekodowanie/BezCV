@@ -2,6 +2,7 @@ import Control, { Controller } from "react-control-js";
 import { bcvToken } from "../../../assets/general";
 import { useState } from "react";
 import { PackageProps, packages } from "../../../constants/points";
+import Package from "../../points/Package";
 
 export default function Points() {
   const [days, setDays] = useState<30 | 90>(30);
@@ -65,37 +66,3 @@ export default function Points() {
     </section>
   );
 }
-
-const Package = ({ points, price, days }: PackageProps & { days: 30 | 90 }) => {
-  return (
-    <div className="flex flex-col self-stretch h-full justify-end gap-8 rounded-3xl relative items-center p-12 bg-white shadow-primaryBig flex-1">
-      <h2 className="font-semibold text-4xl md:text-5xl w-max flex flex-col gap-4 items-center">
-        {points}
-        <span className="font-medium text-xl flex items-center">
-          tokenów{" "}
-          <img
-            className="ml-2 max-h-[1.2em] inline-block"
-            src={bcvToken}
-            alt="bCV"
-          />
-        </span>
-      </h2>
-      <div className="h-[1px] self-stretch bg-[#ECF0F2]" />
-      <h3 className="font-medium text-2xl">
-        {price} zł{" "}
-        <sup className="bg-clip-text text-transparent bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)] font-medium">
-          /netto
-        </sup>
-      </h3>
-      <h3 className="font-medium text-[#5D7EAD] text-2xl">
-        {(price / points).toFixed(2).toString()} zł{" "}
-        <sup className="text-[#5D7EAD] font-medium">/1 token bCV</sup>
-      </h3>
-      <h4 className="text-[#5D7EAD] text-center">
-        {days === 30
-          ? "Okres ważności 3 tokenów - 30 dni"
-          : `Co miesiąc masz do wykorzystania ${points / 3} tokenów`}
-      </h4>
-    </div>
-  );
-};

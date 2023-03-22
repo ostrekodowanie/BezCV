@@ -53,7 +53,7 @@ const questionLists = [
 export default function Questions() {
   return (
     <section className="padding flex flex-col relative">
-      <div className="flex flex-col items-center gap-16 xl:grid grid-cols-2 my-16">
+      <div className="flex flex-col items-center gap-16 xl:grid grid-cols-2 my-8 xl:my-16">
         <img
           className="w-full max-w-[70%] mx-auto sm:mx-0 sm:max-w-[4in] xl:max-w-[5in]"
           src={q1}
