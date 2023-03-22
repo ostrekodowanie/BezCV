@@ -28,22 +28,26 @@ export default function CandidateController() {
     if (type === "email") {
       setCredentialsLoading(true);
       return axios
-        .post("/api/survey/email", candidateAnswers.email, {
-          headers: { "Content-Type": "application/json" },
-        })
+        .post(
+          "/api/survey/email",
+          JSON.stringify({ email: candidateAnswers.email }),
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        )
         .then(() => setActiveQuestionIndex((prev) => prev + 1))
         .catch(() =>
-          setCredentialsError(
-            "Numer telefonu jest już używany przez inny profil"
-          )
+          setCredentialsError("Email jest już używany przez inny profil")
         )
         .finally(() => setCredentialsLoading(false));
     }
 
     if (type === "tel") {
-      if (candidateAnswers.phone.length < 11)
-        return setError("Nieprawidłowy numer telefonu!");
       setCredentialsLoading(true);
+      if (candidateAnswers.phone.length < 11) {
+        setCredentialsLoading(false);
+        return setError("Nieprawidłowy numer telefonu!");
+      }
       return axios
         .post(
           "/api/survey/phone",
@@ -78,7 +82,7 @@ export default function CandidateController() {
           setStep("role");
         })
         .catch((err) =>
-          setError(
+          setCredentialsError(
             typeof err.response.data.detail === "string"
               ? err.response.data.detail
               : "Wystąpił błąd!"
@@ -92,6 +96,10 @@ export default function CandidateController() {
   useEffect(() => {
     setError("");
   }, [activeQuestionIndex]);
+
+  useEffect(() => {
+    console.log({ credentialsLoading });
+  }, [credentialsLoading]);
 
   if (loading) return <Loader />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;

@@ -59,10 +59,10 @@ export default function PhoneCodePopup({
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
       <form
-        className="max-w-[4in] w-full bg-white shadow-secondaryBig rounded-3xl px-6 sm:px-12 py-16 flex flex-col gap-8 animate-opacity"
+        className="max-w-[4in] w-full bg-white shadow-secondaryBig rounded-3xl px-6 sm:px-12 py-12 flex flex-col gap-8 animate-opacity"
         onSubmit={handleSubmit}
       >
-        <p className="font-medium text-center">
+        <p className="font-semibold text-center">
           Przesłaliśmy SMS z kodem weryfikacyjnym na podany przez Ciebie numer
           telefonu.
         </p>
@@ -71,12 +71,12 @@ export default function PhoneCodePopup({
           onChange={(e) => setCode(e.target.value)}
           required
           autoComplete="off"
-          type="number"
+          type="text"
           name="phone_code"
           id="phone_code"
           placeholder="Tutaj wpisz swój kod"
         />
-        <div className="flex items-center justify-end gap-4">
+        <div className="flex items-center justify-end gap-4 mt-4">
           {loading && <Loader />}
           {error && <p className="text-red-400">{error}</p>}
           <button className="bg-secondary transition-colors font-medium border-primary text-white rounded-full flex items-center text-[.8rem] py-3 px-8 max-w-max">

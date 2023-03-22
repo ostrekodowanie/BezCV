@@ -138,7 +138,7 @@ export default function App() {
                 }
               />
               <Route
-                path="/punkty"
+                path="/punkty/*"
                 element={
                   <PrivateRoute>
                     <Points />

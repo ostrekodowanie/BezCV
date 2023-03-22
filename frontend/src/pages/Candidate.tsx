@@ -3,7 +3,6 @@ import { createContext, useEffect, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import { pdf } from "../assets/candidate/candidate";
 import { bcvToken } from "../assets/general";
 import AbilityRange from "../components/candidate/AbilityRange";
 import Loader from "../components/Loader";
@@ -34,6 +33,7 @@ import {
 import CandidateRef from "../components/offers/CandidateRef";
 import HasJob from "../components/offers/HasJob";
 import OffersLoader from "../components/offers/OffersLoader";
+import PDFButton from "../components/candidate/PDFButton";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -82,7 +82,10 @@ export default function Candidate() {
 
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
-      <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8">
+      <section
+        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
+        id="candidate-profile"
+      >
         <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] py-10 sm:p-10 overflow-hidden">
           {candidateDetails.has_job && <HasJob />}
           <div className="flex flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:flex xl:justify-between">
@@ -470,21 +473,11 @@ export default function Candidate() {
             <Loader />
           </div>
         ) : (
-          <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
-            <button
-              type="button"
-              style={{
-                backgroundImage: candidateDetails.is_purchased
-                  ? gradient
-                  : "linear-gradient(180deg, #7C9D8E 0%, #91B49F 100%)",
-              }}
-              disabled={!candidateDetails.is_purchased}
-              className="rounded-full w-max hover:scale-[1.02] transition-transform justify-center text-white text-[.8rem] font-semibold flex items-center py-4 px-10"
-            >
-              Pobierz profil w formacie PDF{" "}
-              <img className="max-h-[1.4em] ml-2" src={pdf} alt="" />
-            </button>
-          </div>
+          <PDFButton
+            gradient={gradient}
+            disabled={!candidateDetails.is_purchased}
+            fileName={`${candidateDetails.first_name}-${candidateDetails.last_name}`}
+          />
         )}
         <div className="bg-white sm:rounded-3xl flex flex-wrap py-10 shadow-primaryBig min-h-max gap-4 overflow-hidden">
           <div className="flex flex-col w-full">

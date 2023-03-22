@@ -1,26 +1,7 @@
 import Control, { Controller } from "react-control-js";
 import { bcvToken } from "../../../assets/general";
 import { useState } from "react";
-
-interface PackageProps {
-  points: number;
-  price: number;
-}
-
-const packages: PackageProps[] = [
-  {
-    points: 10,
-    price: 499,
-  },
-  {
-    points: 15,
-    price: 699,
-  },
-  {
-    points: 20,
-    price: 899,
-  },
-];
+import { PackageProps, packages } from "../../../constants/points";
 
 export default function Points() {
   const [days, setDays] = useState<30 | 90>(30);
@@ -71,12 +52,14 @@ export default function Points() {
           delay={500}
           className="flex flex-col sm:flex-row sm:justify-center sm:flex-wrap self-stretch gap-8 xl:grid grid-cols-3 mt-8"
         >
-          {packages.map((pack) => (
-            <Control
-              className="control-package"
-              element={<Package {...pack} days={days} key={pack.points} />}
-            />
-          ))}
+          {packages
+            .filter((pack) => pack.days === days)
+            .map((pack) => (
+              <Control
+                className="control-package"
+                element={<Package {...pack} days={days} key={pack.points} />}
+              />
+            ))}
         </Controller>
       </div>
     </section>
@@ -109,7 +92,9 @@ const Package = ({ points, price, days }: PackageProps & { days: 30 | 90 }) => {
         <sup className="text-[#5D7EAD] font-medium">/1 token bCV</sup>
       </h3>
       <h4 className="text-[#5D7EAD] text-center">
-        Okres ważności 3 tokenów - {days} dni
+        {days === 30
+          ? "Okres ważności 3 tokenów - 30 dni"
+          : `Co miesiąc masz do wykorzystania ${points / 3} tokenów`}
       </h4>
     </div>
   );
