@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { percentageTriangle } from "../../assets/candidate/candidate";
 
 export interface AbilityProps {
-  name: string;
-  percentage: number;
+  name?: string;
+  percentage?: number;
 }
 
 const AbilityRange = ({
@@ -24,25 +24,31 @@ const AbilityRange = ({
     observer.observe(rangeRef.current);
   }, []);
 
-  if (!percentage || percentage < 1) return <></>;
   return (
     <div className="flex flex-col gap-3">
-      <h4 className="max-w-full w-max font-medium text-[.8rem] flex items-center">
-        {name}{" "}
-        <span
-          style={{ backgroundImage: color }}
-          className="ml-2 bg-clip-text text-transparent"
-        >
-          {percentage}%
-        </span>
+      <h4
+        className={`max-w-full w-max font-medium text-[.8rem] flex items-center ${
+          !percentage ? "opacity-[.1]" : "opacity-1"
+        }`}
+      >
+        {percentage ? name : "Kandydat nie wypełnił jeszcze tej ankiety."}{" "}
+        {percentage && (
+          <span
+            style={{ backgroundImage: color }}
+            className="ml-2 bg-clip-text text-transparent"
+          >
+            {percentage}%
+          </span>
+        )}
       </h4>
       <div className="bg-[#F8F9FB] rounded-full h-[1.4rem]">
         <div
           ref={rangeRef}
           style={{
-            width: percentage + "%",
+            width: percentage ? percentage + "%" : "60%",
             backgroundImage: color,
             transform: `scaleX(${scaleValue}%)`,
+            opacity: percentage ? "1" : "0.1",
           }}
           className="relative origin-left duration-500 ease-out transition-transform rounded-full h-full"
         >

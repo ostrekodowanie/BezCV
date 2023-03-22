@@ -197,7 +197,7 @@ export default function Candidate() {
                 disabled={candidateDetails.is_purchased}
                 style={{ backgroundImage: gradient }}
                 className={`rounded-full max-w-max justify-center ${
-                  candidateDetails.is_purchased
+                  !candidateDetails.is_purchased
                     ? "hover:scale-[1.02] transition-transform"
                     : ""
                 } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10`}
@@ -292,7 +292,7 @@ export default function Candidate() {
               </div>
             </div>
           </div>
-          <div className="bg-white sm:rounded-3xl shadow-primaryBig py-10 sm:p-10 flex flex-col sm:flex-row sm:justify-evenly col-[2/3] gap-6">
+          <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10 flex flex-col sm:flex-row sm:justify-evenly col-[2/3] gap-6">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
                 <EmailIcon {...colorScheme} />
@@ -459,7 +459,7 @@ export default function Candidate() {
               </div>
             </div>
           </div>
-          {loading.page ? (
+          {!loading.page ? (
             <WorstAbilitiesList {...candidateDetails.worst_abilities} />
           ) : (
             <WorstAbilitiesLoader />

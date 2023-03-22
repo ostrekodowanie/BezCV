@@ -8,10 +8,6 @@ import {
   roleToTextMap,
 } from "../../../constants/candidate";
 import { professionColorMap } from "../../../constants/professionColorMap";
-import { useAppSelector } from "../../../main";
-import { inputStyles } from "../../../pages/Contact";
-import FilledButton from "../../FilledButton";
-import Loader from "../../Loader";
 import ReportForm from "./ReportForm";
 
 const CandidatePurchased = (props: NonPercentageAbilitiesCandidateProps) => {
