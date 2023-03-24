@@ -69,7 +69,7 @@ export default function Survey() {
   );
 
   return (
-    <section className="padding flex flex-col gap-12 justify-center pt-[.6in] pb-[1.4in] min-h-screen relative xl:grid grid-cols-[2fr_1fr]">
+    <section className="padding flex flex-col gap-12 justify-center pt-[.3in] sm:pt-[.6in] pb-[1.4in] min-h-screen relative xl:grid grid-cols-[2fr_1fr]">
       <Link className="absolute left-[8vw] sm:left-16 top-8" to="/praca">
         Powrót
       </Link>

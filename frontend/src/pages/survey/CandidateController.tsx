@@ -100,12 +100,9 @@ export default function CandidateController() {
   };
 
   useEffect(() => {
+    setCredentialsError("");
     setError("");
   }, [activeQuestionIndex]);
-
-  useEffect(() => {
-    console.log({ credentialsLoading });
-  }, [credentialsLoading]);
 
   if (loading) return <Loader />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;

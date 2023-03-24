@@ -106,7 +106,7 @@ export default function RoleController() {
           {activeQuestionIndex + 1} /{" "}
           <span className="text-[#D3C5BB]">{questions.length}</span>
         </small>
-        <h2 className="text-3xl font-bold text-center w-full max-w-[8in]">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center w-full max-w-[8in]">
           {text}
         </h2>
       </div>
@@ -141,7 +141,7 @@ export default function RoleController() {
         </div>
         <div className="flex justify-between items-center self-stretch gap-4 flex-wrap mt-8 xl:mt-0">
           <div className="flex flex-col gap-2">
-            <h4 className="font-semibold flex items-center">
+            <h4 className="font-semibold flex text-sm sm:text-base items-center">
               <img
                 className="max-h-[1.1em] mr-2 animate-spin"
                 src={timeLeft}
@@ -149,7 +149,7 @@ export default function RoleController() {
               />{" "}
               Pozostały czas
             </h4>
-            <h3 className="text-secondary text-xl font-bold">
+            <h3 className="text-secondary text-base sm:text-xl font-bold">
               {secondsLeft} sekund
             </h3>
           </div>
