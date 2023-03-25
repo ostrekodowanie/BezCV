@@ -70,9 +70,13 @@ export default function CandidateController() {
           }
         )
         .then(() => setPhoneCodePopupActive(true))
-        .catch(() => {
+        .catch((err) => {
           setPhoneCodePopupActive(true);
-          setError("Nieprawidłowy numer telefonu!");
+          setCredentialsError(
+            typeof err.response.data.detail === "string"
+              ? err.response.data.detail
+              : "Wystąpił błąd!"
+          );
         })
         .finally(() => setCredentialsLoading(false));
     }
