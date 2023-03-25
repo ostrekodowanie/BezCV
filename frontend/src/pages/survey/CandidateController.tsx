@@ -71,7 +71,6 @@ export default function CandidateController() {
         )
         .then(() => setPhoneCodePopupActive(true))
         .catch((err) => {
-          setPhoneCodePopupActive(true);
           setCredentialsError(
             typeof err.response.data.detail === "string"
               ? err.response.data.detail
