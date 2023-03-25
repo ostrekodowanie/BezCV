@@ -4,7 +4,7 @@ import { QuestionProps } from "./findWork"
 
 export const radioInputStyles = 'min-w-0 px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold flex items-center gap-4 cursor-pointer'
 
-export const textInputStyles = 'px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold placeholder:font-medium placeholder:text-[#D3C5BB] min-w-0'
+export const textInputStyles = 'px-8 py-4 text-[.8rem] sm:text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold placeholder:font-medium placeholder:text-[#D3C5BB] min-w-0'
 
 export type RangeNumberKey = {
     number: number,

@@ -119,7 +119,7 @@ export default function CandidateController() {
           {activeQuestionIndex + 1} /{" "}
           <span className="text-[#D3C5BB]">{defaultQuestions.length}</span>
         </small>
-        <h2 className="text-3xl font-bold text-center w-full max-w-[8in]">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center w-full max-w-[8in]">
           {question}
         </h2>
       </div>

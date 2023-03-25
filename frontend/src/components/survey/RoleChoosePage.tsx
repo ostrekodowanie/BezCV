@@ -25,7 +25,7 @@ export default function RoleChoosePage({
               .filter((role) => !isSurveyFilled[role.name])
               .map((role) => (
                 <label
-                  className={`p-12 w-full text-center flex flex-col cursor-pointer font-semibold gap-8 max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
+                  className={`p-12 w-full text-center flex flex-col cursor-pointer font-semibold gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
                     chosen === role.name &&
                     "outline-[2px] outline-[#F98D3D] text-secondary"
                   }`}
@@ -33,7 +33,7 @@ export default function RoleChoosePage({
                   key={"label:" + role.name}
                 >
                   <input
-                    className="absolute left-8 top-8"
+                    className="-z-50 absolute opacity-0"
                     value={role.name}
                     type="radio"
                     key={role.name}
@@ -42,7 +42,7 @@ export default function RoleChoosePage({
                     name="role"
                   />
                   <img
-                    className="max-w-[1.6in] max-h-[1.2in]"
+                    className="hidden sm:block max-w-[1.6in] max-h-[1.2in]"
                     src={role.image}
                     alt=""
                   />

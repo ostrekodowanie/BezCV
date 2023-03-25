@@ -7,6 +7,7 @@ export default function SurveyManQuote() {
   const [quote, setQuote] = useState("");
 
   useEffect(() => {
+    console.log(activeQuestionIndex);
     if (step === "role" && !role) return setQuote(surveyManQuotes.chooseRole);
     if (activeQuestionIndex % 5 === 0)
       return setQuote(
