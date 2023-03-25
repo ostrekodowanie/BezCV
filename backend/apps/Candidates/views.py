@@ -14,7 +14,7 @@ from apps.Survey.models import Categories
 
 
 class CandidateView(generics.RetrieveAPIView):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = serializers.CandidateSerializer
     queryset = Candidates.objects.all()
 

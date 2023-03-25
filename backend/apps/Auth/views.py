@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import authenticate
-from django.template.loader import render_to_string, get_template
+from django.template.loader import render_to_string
 
 from rest_framework import views, status, generics
 from rest_framework.response import Response
@@ -72,19 +72,27 @@ class SignUpView(views.APIView):
                 serializer.save()
                 user = serializer.data
                 
-                token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
+                all = nip24.getAllDataExt(Number.NIP, user.nip)
+                user.company_name = all.name 
                 
-                #message = get_template('../../templates/index.html')
+                token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
+                link = 'https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token)
+                
+                context = {
+                    'user': user,
+                    'link': link
+                }
+                
+                message = render_to_string('verify.html', context)
                 email_message = EmailMessage(
                     subject='Potwierdź swoją rejestrację',
-                    body='Aby potwierdzić swoją rejestrację, kliknij w link: https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token),
+                    body=message,
                     to=[user['email']]
                 )
-                #email_message.content_subtype ="html"
+                email_message.content_subtype ="html"
                 email_message.send()
-                
-                return Response({'User created'}, 201)
-            
+                        
+                return Response({'User created'}, 201)     
         return Response(serializer.errors, 400)
 
 
@@ -95,9 +103,7 @@ class VerifyView(views.APIView):
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             user = User.objects.get(email=payload['email'])
             if not user.is_verified:
-                user.is_verified = True
-                all = nip24.getAllDataExt(Number.NIP, user.nip)
-                user.company_name = all.name  
+                user.is_verified = True 
                 user.save()
             return Response({'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
