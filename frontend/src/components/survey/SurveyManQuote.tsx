@@ -9,11 +9,11 @@ export default function SurveyManQuote() {
   useEffect(() => {
     console.log(activeQuestionIndex);
     if (step === "role" && !role) return setQuote(surveyManQuotes.chooseRole);
-    if (activeQuestionIndex % 5 === 0)
+    if ((activeQuestionIndex + 1) % 5 === 0)
       return setQuote(
-        role ? surveyManQuotes[role][activeQuestionIndex / 5] || "" : ""
+        role ? surveyManQuotes[role][activeQuestionIndex / 5 - 1] || "" : ""
       );
-    setQuote("");
+    else setQuote("");
   }, [activeQuestionIndex]);
 
   return quote ? (

@@ -9,7 +9,7 @@ type FollowButtonProps = {
 };
 
 export default function FollowButton({ id, is_followed }: FollowButtonProps) {
-  const user_id = useAppSelector((state) => state.login.data.id);
+  const { access } = useAppSelector((state) => state.login.tokens);
   const [isFollowed, setIsFollowed] = useState(is_followed);
 
   const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -17,12 +17,19 @@ export default function FollowButton({ id, is_followed }: FollowButtonProps) {
     e.stopPropagation();
     setIsFollowed((prev) => !prev);
     if (isFollowed)
-      return axios.delete(`/api/profile/favourites/remove/${user_id}/${id}`);
+      return axios.delete(`/api/profile/favourites/remove/${id}`, {
+        headers: {
+          Authorization: "Bearer " + access,
+        },
+      });
     return axios.post(
       "/api/profile/favourites/add",
-      JSON.stringify({ employer: user_id, candidate: id }),
+      JSON.stringify({ candidate: id }),
       {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + access,
+        },
       }
     );
   };

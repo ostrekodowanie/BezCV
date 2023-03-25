@@ -18,7 +18,7 @@ export const SurveyContext = createContext<SurveyContextType>(null!);
 
 export default function Survey() {
   const [role, setRole] = useState<RoleType | null>(null);
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState(6);
   const [step, setStep] = useState<"role" | "candidate">("candidate");
   const [isSurveyFilled, setIsSurveyFilled] =
     useState<IsFilled>(initialFilledState);

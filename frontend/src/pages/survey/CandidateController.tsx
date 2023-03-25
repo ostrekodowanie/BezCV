@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
+import Select from "react-select";
 import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import Loader from "../../components/Loader";
@@ -54,30 +55,30 @@ export default function CandidateController() {
         setCredentialsLoading(false);
         return setCredentialsError("Nieprawidłowy numer telefonu!");
       }
-      return axios
-        .post(
-          "/api/survey/phone",
-          JSON.stringify({
-            phone:
-              typeof candidateAnswers.phone === "string"
-                ? candidateAnswers.phone.split(" ").join("")
-                : candidateAnswers.phone,
-          }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then(() => setPhoneCodePopupActive(true))
-        .catch((err) => {
-          setCredentialsError(
-            typeof err.response.data.detail === "string"
-              ? err.response.data.detail
-              : "Wystąpił błąd!"
-          );
-        })
-        .finally(() => setCredentialsLoading(false));
+      // return axios
+      //   .post(
+      //     "/api/survey/phone",
+      //     JSON.stringify({
+      //       phone:
+      //         typeof candidateAnswers.phone === "string"
+      //           ? candidateAnswers.phone.split(" ").join("")
+      //           : candidateAnswers.phone,
+      //     }),
+      //     {
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //     }
+      //   )
+      //   .then(() => setPhoneCodePopupActive(true))
+      //   .catch((err) => {
+      //     setCredentialsError(
+      //       typeof err.response.data.detail === "string"
+      //         ? err.response.data.detail
+      //         : "Wystąpił błąd!"
+      //     );
+      //   })
+      //   .finally(() => setCredentialsLoading(false));
     }
 
     if (activeQuestionIndex >= defaultQuestions.length - 1) {
@@ -214,6 +215,8 @@ const CandidateInput = ({
                 key={ans}
                 id={ans}
                 name={question}
+                required
+                checked={candidateAnswers[name] === ans}
                 onChange={(e) =>
                   setCandidateAnswers((prev) => ({
                     ...prev,
@@ -318,6 +321,24 @@ const CandidateInput = ({
             );
           })}
         </>
+      );
+    case "select":
+      return (
+        <Select
+          className="self-stretch bg-white text-sm shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] font-semibold"
+          placeholder="Wybierz województwo"
+          value={{
+            label: candidateAnswers[name],
+            value: candidateAnswers[name],
+          }}
+          options={questionAnswers?.map((ans) => ({ label: ans, value: ans }))}
+          onChange={(e) =>
+            setCandidateAnswers((prev) => ({
+              ...prev,
+              [name]: e?.value,
+            }))
+          }
+        />
       );
   }
 };
