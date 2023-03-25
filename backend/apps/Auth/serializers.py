@@ -63,7 +63,7 @@ class UserSerializer(serializers.ModelSerializer):
     points = serializers.SerializerMethodField()
     class Meta:
         model =  User
-        fields = ('first_name', 'last_name', 'points', 'is_staff')
+        fields = ('first_name', 'last_name', 'points', 'is_staff', 'nip', 'company_name')
         
     def get_points(self, obj):
         last_month = timezone.now() - timedelta(days=30)
@@ -102,11 +102,6 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'first_name', 
-            'last_name', 
-            'image', 
-            'nip', 
-            'desc',
             'stats',
             'purchased_contacts',
             'followed_contacts',
@@ -115,7 +110,6 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         employer_data = super().to_representation(instance)
         employer = {
-            'employer': employer_data,
             'stats': employer_data.pop('stats'),
             'purchased_contacts': employer_data.pop('purchased_contacts'),
             'followed_contacts': employer_data.pop('followed_contacts')
