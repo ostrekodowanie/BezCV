@@ -9,7 +9,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
     desc = models.CharField(max_length=255, blank=True, null=True)
     image = models.CharField(max_length=255, blank=True, null=True)
-    nip = models.CharField(max_length=255, unique=True)
+    nip = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     is_verified = models.BooleanField(default=False)
 

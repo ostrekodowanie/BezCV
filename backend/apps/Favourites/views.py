@@ -10,6 +10,7 @@ from .models import FavouriteCandidates
 
 class AddToFavouritesView(generics.CreateAPIView):
     serializer_class = serializers.FavouriteOffersSerializer
+    permission_classes = [IsAuthenticated]        
 
 
 class RemoveFromFavouritesView(generics.DestroyAPIView):

@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
+    #'payments',
+    #'django_q',
 
     'apps.Auth',
     'apps.Contact',
@@ -73,7 +75,10 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, '../frontend')],
+        'DIRS': [
+            os.path.join(BASE_DIR, '../frontend'),
+            os.path.join(BASE_DIR, '../backend/templates')
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -218,3 +223,5 @@ openai.api_key = os.environ.get('OPENAI_KEY')
 
 token = os.environ.get('SMSAPI_TOKEN') 
 client = SmsApiPlClient(access_token=token)
+
+
