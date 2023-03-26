@@ -88,7 +88,9 @@ export default function RoleController() {
   }, [role]);
 
   if (isFinished && typeof first_name === "string")
-    return <Finished firstName={first_name} />;
+    return (
+      <Finished firstName={first_name} questionsLength={questions.length} />
+    );
 
   if (isFinishing) return <FinishLoader />;
 
@@ -129,7 +131,7 @@ export default function RoleController() {
               {numericalAnswer}
             </p>
           </div>
-          <div className="flex justify-center gap-8 flex-wrap max-w-max">
+          <div className="flex justify-center gap-4 sm:gap-8 flex-wrap max-w-max">
             {rangeNumberKeys.map((k) => (
               <RangeKey
                 {...k}

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
+import Select from "react-select";
 import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import Loader from "../../components/Loader";
@@ -214,6 +215,8 @@ const CandidateInput = ({
                 key={ans}
                 id={ans}
                 name={question}
+                required
+                checked={candidateAnswers[name] === ans}
                 onChange={(e) =>
                   setCandidateAnswers((prev) => ({
                     ...prev,
@@ -319,16 +322,36 @@ const CandidateInput = ({
           })}
         </>
       );
+    case "select":
+      return (
+        <Select
+          className="self-stretch bg-white text-sm shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] font-semibold placeholder:font-medium"
+          placeholder="Wybierz województwo"
+          value={
+            candidateAnswers[name]
+              ? {
+                  label: candidateAnswers[name],
+                  value: candidateAnswers[name],
+                }
+              : ""
+          }
+          options={questionAnswers?.map((ans) => ({ label: ans, value: ans }))}
+          onChange={(e) =>
+            setCandidateAnswers((prev) => ({
+              ...prev,
+              [name]: typeof e === "string" ? e : e?.value,
+            }))
+          }
+        />
+      );
   }
 };
 
 const PhoneInput = () => {
   const { candidateAnswers, setCandidateAnswers } = useContext(SurveyContext);
-  let defaultInput = String(candidateAnswers.phone);
-  defaultInput.replace(/\D/g, "");
-  defaultInput.replace(/(\d{3})(?=\d)/g, "$1 ");
-  defaultInput.slice(0, 11);
-  const [input, setInput] = useState(defaultInput);
+  const [input, setInput] = useState(
+    String(candidateAnswers.phone).replace(/(\d{3})(?=\d)/g, "$1 ")
+  );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
