@@ -55,30 +55,30 @@ export default function CandidateController() {
         setCredentialsLoading(false);
         return setCredentialsError("Nieprawidłowy numer telefonu!");
       }
-      // return axios
-      //   .post(
-      //     "/api/survey/phone",
-      //     JSON.stringify({
-      //       phone:
-      //         typeof candidateAnswers.phone === "string"
-      //           ? candidateAnswers.phone.split(" ").join("")
-      //           : candidateAnswers.phone,
-      //     }),
-      //     {
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //     }
-      //   )
-      //   .then(() => setPhoneCodePopupActive(true))
-      //   .catch((err) => {
-      //     setCredentialsError(
-      //       typeof err.response.data.detail === "string"
-      //         ? err.response.data.detail
-      //         : "Wystąpił błąd!"
-      //     );
-      //   })
-      //   .finally(() => setCredentialsLoading(false));
+      return axios
+        .post(
+          "/api/survey/phone",
+          JSON.stringify({
+            phone:
+              typeof candidateAnswers.phone === "string"
+                ? candidateAnswers.phone.split(" ").join("")
+                : candidateAnswers.phone,
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(() => setPhoneCodePopupActive(true))
+        .catch((err) => {
+          setCredentialsError(
+            typeof err.response.data.detail === "string"
+              ? err.response.data.detail
+              : "Wystąpił błąd!"
+          );
+        })
+        .finally(() => setCredentialsLoading(false));
     }
 
     if (activeQuestionIndex >= defaultQuestions.length - 1) {
@@ -325,17 +325,21 @@ const CandidateInput = ({
     case "select":
       return (
         <Select
-          className="self-stretch bg-white text-sm shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] font-semibold"
+          className="self-stretch bg-white text-sm shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] font-semibold placeholder:font-medium"
           placeholder="Wybierz województwo"
-          value={{
-            label: candidateAnswers[name],
-            value: candidateAnswers[name],
-          }}
+          value={
+            candidateAnswers[name]
+              ? {
+                  label: candidateAnswers[name],
+                  value: candidateAnswers[name],
+                }
+              : ""
+          }
           options={questionAnswers?.map((ans) => ({ label: ans, value: ans }))}
           onChange={(e) =>
             setCandidateAnswers((prev) => ({
               ...prev,
-              [name]: e?.value,
+              [name]: typeof e === "string" ? e : e?.value,
             }))
           }
         />
@@ -345,11 +349,9 @@ const CandidateInput = ({
 
 const PhoneInput = () => {
   const { candidateAnswers, setCandidateAnswers } = useContext(SurveyContext);
-  let defaultInput = String(candidateAnswers.phone);
-  defaultInput.replace(/\D/g, "");
-  defaultInput.replace(/(\d{3})(?=\d)/g, "$1 ");
-  defaultInput.slice(0, 11);
-  const [input, setInput] = useState(defaultInput);
+  const [input, setInput] = useState(
+    String(candidateAnswers.phone).replace(/(\d{3})(?=\d)/g, "$1 ")
+  );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;

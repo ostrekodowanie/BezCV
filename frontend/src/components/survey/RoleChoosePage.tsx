@@ -13,19 +13,19 @@ export default function RoleChoosePage({
   return (
     <>
       <form
-        className="flex flex-wrap items-center flex-1 max-h-[80%] my-auto justify-between gap-8 w-full"
+        className="flex flex-col flex-1 max-h-[80%] my-auto xl:justify-between gap-8 w-full"
         onSubmit={() => setRole(chosen)}
       >
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 self-stretch w-full">
           <h2 className="text-3xl font-bold text-center w-full max-w-[8in] mx-auto">
             Wybierz zawód
           </h2>
-          <div className="flex flex-col w-full gap-4 sm:grid grid-cols-3">
+          <div className="flex flex-col w-full gap-4 xl:gap-8 sm:grid grid-cols-3">
             {roles
               .filter((role) => !isSurveyFilled[role.name])
               .map((role) => (
                 <label
-                  className={`p-12 w-full text-center flex flex-col cursor-pointer font-semibold gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
+                  className={`py-6 px-12 sm:p-12 w-full text-center flex flex-col cursor-pointer font-semibold gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
                     chosen === role.name &&
                     "outline-[2px] outline-[#F98D3D] text-secondary"
                   }`}
