@@ -30,7 +30,7 @@ class CandidateAnswersView(APIView):
         candidate = Candidates.objects.get(email=candidate_email)
         
         candidate_answers = [
-            candidate(question=Questions.objects.get(pk=question), answer=answer, candidate=candidate)
+            CandidateAnswers(question=Questions.objects.get(pk=question), answer=answer, candidate=candidate)
             for question, answer in answers
         ]
         CandidateAnswers.objects.bulk_create(candidate_answers)
