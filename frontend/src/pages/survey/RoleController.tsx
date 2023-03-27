@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import FinishLoader from "../../components/survey/FinishLoader";
 import RangeKey from "../../components/survey/RangeKey";
 import RoleChoosePage from "../../components/survey/RoleChoosePage";
-import { rangeNumberKeys, roles, RoleType } from "../../constants/workForm";
+import { rangeNumberKeys } from "../../constants/workForm";
 import Finished from "./Finished";
 import ProgressBar from "./ProgressBar";
 import { SurveyContext } from "./Survey";
@@ -26,7 +26,7 @@ export default function RoleController() {
     activeQuestionIndex,
     setActiveQuestionIndex,
   } = useContext(SurveyContext);
-  const { first_name, email } = candidateAnswers;
+  const { first_name, email, phone } = candidateAnswers;
   const [numericalAnswer, setNumericalAnswer] = useState<number>(1);
   const [questions, setQuestions] = useState<RoleQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,7 +62,7 @@ export default function RoleController() {
     axios
       .post(
         "/api/survey/answers",
-        JSON.stringify({ candidate: email, answers: roleAnswers }),
+        JSON.stringify({ candidate: phone, answers: roleAnswers }),
         {
           headers: { "Content-Type": "application/json" },
         }
