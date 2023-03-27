@@ -1,4 +1,10 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { roles, RoleType } from "../../constants/workForm";
 import { SurveyContext } from "../../pages/survey/Survey";
@@ -8,13 +14,20 @@ export default function RoleChoosePage({
 }: {
   setRole: Dispatch<SetStateAction<RoleType | null>>;
 }) {
-  const { isSurveyFilled } = useContext(SurveyContext);
+  const { isSurveyFilled, setActiveQuestionIndex } = useContext(SurveyContext);
   const [chosen, setChosen] = useState<RoleType | null>(null);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setActiveQuestionIndex(0);
+    setRole(chosen);
+  };
+
   return (
     <>
       <form
         className="flex flex-col flex-1 max-h-[80%] my-auto xl:justify-between gap-8 w-full"
-        onSubmit={() => setRole(chosen)}
+        onSubmit={handleSubmit}
       >
         <div className="flex flex-col gap-8 self-stretch w-full">
           <h2 className="text-3xl font-bold text-center w-full max-w-[8in] mx-auto">

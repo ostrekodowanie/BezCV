@@ -26,7 +26,7 @@ export default function RoleController() {
     activeQuestionIndex,
     setActiveQuestionIndex,
   } = useContext(SurveyContext);
-  const { first_name, email, phone } = candidateAnswers;
+  const { first_name, phone } = candidateAnswers;
   const [numericalAnswer, setNumericalAnswer] = useState<number>(1);
   const [questions, setQuestions] = useState<RoleQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,32 +56,32 @@ export default function RoleController() {
   };
 
   useEffect(() => {
-    if (activeQuestionIndex < questions.length || questions.length === 0)
-      return;
-    setIsFinishing(true);
-    axios
-      .post(
-        "/api/survey/answers",
-        JSON.stringify({ candidate: phone, answers: roleAnswers }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
-      .then(() => setIsFinished(true))
-      .catch((err) =>
-        setError(
-          typeof err.response.data.detail === "string"
-            ? err.response.data.detail
-            : "Wystąpił błąd!"
+    if (activeQuestionIndex >= questions.length && questions.length !== 0) {
+      setIsFinishing(true);
+      axios
+        .post(
+          "/api/survey/answers",
+          JSON.stringify({ candidate: phone, answers: roleAnswers }),
+          {
+            headers: { "Content-Type": "application/json" },
+          }
         )
-      )
-      .finally(() => setIsFinishing(false));
+        .then(() => setIsFinished(true))
+        .catch((err) =>
+          setError(
+            typeof err.response.data.detail === "string"
+              ? err.response.data.detail
+              : "Wystąpił błąd!"
+          )
+        )
+        .finally(() => setIsFinishing(false));
+    }
   }, [roleAnswers]);
 
   useEffect(() => {
     if (!role) return;
     axios
-      .get(`/api/survey?c=${role}&e=${email}`)
+      .get(`/api/survey?c=${role}&phone=${phone}`)
       .then((res) => res.data)
       .then((data) => setQuestions(data))
       .finally(() => setLoading(false));
