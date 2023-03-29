@@ -14,6 +14,7 @@ import {
 import CategoryPercantageBox from "./CategoryPercentageBox";
 import HasJob from "./HasJob";
 import FollowButton from "../candidate/FollowButton";
+import { FollowedCandidateBonusProps } from "../../constants/profile";
 
 const CandidateRef = ({
   id,
@@ -29,7 +30,9 @@ const CandidateRef = ({
   phone,
   drivers_license,
   has_job,
-}: CandidateProps) => {
+  isFromFollowed = false,
+  setFollowed,
+}: CandidateProps & FollowedCandidateBonusProps) => {
   const colorScheme: ProfessionColorScheme = initialColorScheme;
 
   return (
@@ -162,7 +165,12 @@ const CandidateRef = ({
           </div>
         </div>
         <div className="flex flex-col items-start xl:self-end xl:items-end gap-6 mt-8 xl:mt-0">
-          <FollowButton id={id} is_followed={is_followed} />
+          <FollowButton
+            setFollowed={setFollowed}
+            isFromFollowed={isFromFollowed}
+            id={id}
+            is_followed={is_followed}
+          />
           <button
             className="rounded-full w-max min-w-max text-white text-[.75rem] font-semibold flex items-center py-3 px-10 bg-primary"
             type="button"

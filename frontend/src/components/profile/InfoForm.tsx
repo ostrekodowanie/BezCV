@@ -9,7 +9,9 @@ export default function InfoForm() {
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState(["", "", ""]);
   const { question } = infoFormQuestions[activeQuestionIndex];
-  const { access } = useAppSelector((state) => state.login.tokens);
+  const auth = useAppSelector((state) => state.login);
+  const { id } = auth.data;
+  const { access } = auth.tokens;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -17,20 +19,21 @@ export default function InfoForm() {
   };
 
   useEffect(() => {
-    if (answers.filter((ans) => ans).length === 3) setHasBeenFilled(true);
-    axios.post("/api/profile/form", JSON.stringify(answers), {
+    if (activeQuestionIndex === 3) setHasBeenFilled(true);
+    const formData = new FormData();
+    formData.append("form", JSON.stringify(answers));
+    axios.patchForm("/api/user/update/" + id, formData, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer " + access,
       },
     });
-  }, [answers]);
+  }, [activeQuestionIndex]);
 
   return hasBeenFilled ? (
-    <div className="flex flex-wrap items-center gap-4 justify-between">
-      <p className="text-[#3C4663] font-medium text-sm">
-        Wypełniłeś/aś formularz, gratulacje!
-      </p>
+    <div className="flex flex-col gap-4">
+      {answers.map((ans) => (
+        <AnswerRef answer={ans} question={question} key={question} />
+      ))}
     </div>
   ) : (
     <form className="relative" onSubmit={handleSubmit}>
@@ -53,3 +56,17 @@ export default function InfoForm() {
     </form>
   );
 }
+
+type AnswerRefProps = {
+  question: string;
+  answer: string;
+};
+
+const AnswerRef = ({ question, answer }: AnswerRefProps) => {
+  return (
+    <div className="flex flex-col gap-1">
+      <p className="text-[#3C4663] font-medium text-[.75rem]">{question}</p>
+      <p className="text-[#3C4663] font-medium text-sm">{answer}</p>
+    </div>
+  );
+};

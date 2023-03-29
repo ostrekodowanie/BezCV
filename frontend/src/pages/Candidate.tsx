@@ -61,6 +61,10 @@ export default function Candidate() {
     ? professionColorMap[candidateDetails.profession]
     : initialColorScheme;
   const { gradient } = colorScheme;
+  const hasBadAbilities =
+    candidateDetails.worst_abilities.customer_service.length > 0 &&
+    candidateDetails.worst_abilities.office_administration.length > 0 &&
+    candidateDetails.worst_abilities.sales.length > 0;
 
   const handlePurchase = async () => {
     if (points < 1) return navigate("/punkty");
@@ -91,7 +95,7 @@ export default function Candidate() {
         className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
         id="candidate-profile"
       >
-        <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] py-10 sm:p-10 overflow-hidden">
+        <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] py-10 sm:p-10">
           {candidateDetails.has_job && <HasJob />}
           <div className="flex flex-col sm:flex-row sm:flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:flex xl:justify-between">
             <div className="flex items-center gap-4">
@@ -474,10 +478,14 @@ export default function Candidate() {
               </div>
             </div>
           </div>
-          {!loading.page ? (
-            <WorstAbilitiesList {...candidateDetails.worst_abilities} />
-          ) : (
-            <WorstAbilitiesLoader />
+          {hasBadAbilities && (
+            <>
+              {!loading.page ? (
+                <WorstAbilitiesList {...candidateDetails.worst_abilities} />
+              ) : (
+                <WorstAbilitiesLoader />
+              )}
+            </>
           )}
         </div>
         {loading.page ? (
