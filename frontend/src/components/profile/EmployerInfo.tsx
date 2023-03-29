@@ -18,13 +18,10 @@ export default function EmployerInfo({ nip, image }: EmployerInfoType) {
       // @ts-ignore
       e.target.files[0]
     );
-    const resp = await axios.patchForm("/api/user/update/" + id, formData, {
+    e.target.files && setProfilePicture(URL.createObjectURL(e.target.files[0]));
+    axios.patchForm("/api/user/update/" + id, formData, {
       headers: { Authorization: "Bearer " + access },
     });
-    if (resp.status === 200) {
-      e.target.files &&
-        setProfilePicture(URL.createObjectURL(e.target.files[0]));
-    }
   };
 
   useEffect(() => {

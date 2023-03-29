@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 import { CandidateProps, NonPercentageAbilitiesCandidateProps } from "./candidate";
 
 export type StatsProps = {
@@ -75,3 +75,8 @@ export const reportFormInfo = [
         title: 'Opisz krótko przyczynę zwrotu'
     },
 ]
+
+export type FollowedCandidateBonusProps = { 
+    isFromFollowed?: boolean, 
+    setFollowed?: Dispatch<SetStateAction<CandidateProps[]>>
+}

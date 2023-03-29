@@ -18,7 +18,9 @@ const Favourites = ({
         {loading ? (
           <OffersLoader />
         ) : followed.length > 0 ? (
-          followed.map((cand) => <CandidateRef {...cand} is_followed={true} />)
+          followed.map((cand) => (
+            <CandidateRef isFromFollowed={true} {...cand} is_followed={true} />
+          ))
         ) : (
           <h2 className="mx-auto mt-8">Brak ulubionych!</h2>
         )}

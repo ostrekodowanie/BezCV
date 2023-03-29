@@ -1,12 +1,17 @@
 import { useState } from "react";
+import { useLocation } from "react-router";
 
 export default function HasJob() {
+  const { pathname } = useLocation();
   const [hovered, setHovered] = useState(false);
+  const isFromOffers = pathname === "/oferty";
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="rounded-bl-full bg-[#FDEEC9] absolute right-0 top-0 z-10 py-2 px-8 flex justify-center items-center"
+      className={`rounded-bl-full bg-[#FDEEC9] absolute right-0 top-0 z-10 py-2 px-8 flex justify-center items-center ${
+        isFromOffers ? "rounded-tl-3xl" : "rounded-tl-none"
+      }`}
     >
       <span className="text-[#EAAD06] font-semibold text-[.75rem]">
         Kontakt ma już pracę
