@@ -1,4 +1,4 @@
-from django.core.mail import EmailMessage
+'''from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.db.models import Count
 
@@ -26,4 +26,4 @@ def companies():
         to=[candidate.email for candidate in candidates],
     )
     
-    async_task(email_message.send)
+    async_task(email_message.send)'''
