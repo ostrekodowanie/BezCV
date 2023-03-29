@@ -224,4 +224,21 @@ openai.api_key = os.environ.get('OPENAI_KEY')
 token = os.environ.get('SMSAPI_TOKEN') 
 client = SmsApiPlClient(access_token=token)
 
+'''PAYMENT_VARIANTS = {
+    'payu': ('payments_payu.provider.PayuProvider', {
+        'pos_id': '4176518',
+        'second_key': 'e23bb1d97200f085bf4f9f8dd01be98b',
+        'client_secret': '72dab8a214ca3060b5a297f10ab9ef73',
+        'sandbox': True,
+        'capture': False,
+    }),
+}
+
+Q_CLUSTER = {
+    'retry': 360,
+    'timeout': 300,
+    "orm": "default",
+}
+'''
+
 
