@@ -62,7 +62,7 @@ class CandidateSerializer(serializers.ModelSerializer):
 
         worse_candidate_counts = {}
         for main in main_candidate_abilities:
-            worse_candidate_count = Candidates.objects.exclude(id=obj.id).filter(
+            worse_candidate_count = Candidates.objects.exclude(id=obj.id).filter(is_visible=True).filter(
                 candidateabilities_candidate__ability__abilityquestions_ability__question__category__name=main['category']
             ).annotate(
                 average_percentage=Avg('candidateabilities_candidate__percentage')
