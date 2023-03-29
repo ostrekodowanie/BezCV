@@ -1,5 +1,6 @@
 from django.db.models import Avg, F
-
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -18,16 +19,16 @@ class QuestionsByCategoryView(generics.ListAPIView):
 
     def get_queryset(self):
         category = self.request.GET.get('c')
-        email = self.request.GET.get('e')
-        answered_questions = Questions.objects.filter(candidateanswers_question__candidate__email=email).values_list('id', flat=True)
+        phone = self.request.GET.get('phone')
+        answered_questions = Questions.objects.filter(candidateanswers_question__candidate__phone=phone).values_list('id', flat=True)
         return Questions.objects.exclude(id__in=answered_questions).filter(category__name=category).order_by('?')
     
 
 class CandidateAnswersView(APIView):
     def post(self, request, format=None):
-        candidate_email = request.data['candidate']
-        answers = request.data['answers']
-        candidate = Candidates.objects.get(email=candidate_email)
+        candidate_phone = request.data.get('candidate')
+        answers = request.data.get('answers')
+        candidate = Candidates.objects.get(phone=candidate_phone)
         
         candidate_answers = [
             CandidateAnswers(question=Questions.objects.get(pk=question), answer=answer, candidate=candidate)
@@ -89,6 +90,29 @@ class CandidateAnswersView(APIView):
         candidate.desc = description
 
         candidate.save()
+        
+        answered_questions = candidate.candidateanswers_candidate.all().select_related('question')
+     
+        count = 0
+        for category in Categories.objects.all():
+            category_questions = category.questions_category.all()
+            user_questions = answered_questions.filter(question__in=category_questions)
+            if len(user_questions) == len(category_questions):
+                count += 1
+                
+        if count == 3:            
+            context = {
+                'candidate': candidate
+            }
+                    
+            message = render_to_string('candidate_survey.html', context)
+            email_message = EmailMessage(
+                subject='Zobacz swoje kompetencje miękkie - bezCV',
+                body=message,
+                to=[candidate['email']]
+            )
+            email_message.content_subtype ="html"
+            email_message.send()
 
         return Response({'success'})
 
@@ -118,7 +142,7 @@ class SendCodeView(APIView):
         
         GeneratedCodes.objects.create(phone=phone, code=code)
 
-        client.sms.send(to=phone, message=f'Twoj kod dostepu to: {code}', from_="Test")
+        #client.sms.send(to=phone, message=f'Twoj kod dostepu to: {code}', from_="Test")
 
         return Response({'Access code sent successfully'}, status=200)
     

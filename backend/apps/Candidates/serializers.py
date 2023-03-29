@@ -1,9 +1,9 @@
-from django.db.models import F, Avg, Prefetch
+from django.db.models import F, Avg, Q, Prefetch
 
 from rest_framework import serializers
 
 from .models import Candidates, PurchasedOffers, CandidateAbilities, Reports
-from apps.Survey.models import Abilities
+from apps.Survey.models import Abilities, Categories
 
 
 class CandidateSerializer(serializers.ModelSerializer):
@@ -39,6 +39,7 @@ class CandidateSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         is_purchased = self.get_is_purchased(instance)
+        
         if not is_purchased:
             hidden_first_name = instance.first_name[0] + '*' * (len(instance.first_name) - 1)
             hidden_last_name = instance.last_name[0] + '*' * (len(instance.last_name) - 1)
@@ -52,93 +53,80 @@ class CandidateSerializer(serializers.ModelSerializer):
             
         return representation
     
-    def get_ability_charts(self, obj):                  
+    def get_ability_charts(self, obj):                
         main_candidate_abilities = obj.candidateabilities_candidate.annotate(
             category=F('ability__abilityquestions_ability__question__category__name')
         ).values('category').annotate(average_percentage=Avg('percentage'))
-        
-        total_candidate = Candidates.objects.exclude(id=obj.id).filter(is_visible=True)
+
+        total_candidates = Candidates.objects.exclude(id=obj.id).filter(is_visible=True).count()
+
         worse_candidate_counts = {}
-        
         for main in main_candidate_abilities:
-            worse_candidate_count = 0
-            for candidate in total_candidate:
-                candidate_average_percentage = candidate.candidateabilities_candidate.annotate(
-                    category=F('ability__abilityquestions_ability__question__category__name')
-                ).values('category').filter(category=main['category']).aggregate(
-                    average_percentage=Avg('percentage')
-                )['average_percentage']
-                
-                if candidate_average_percentage is not None and candidate_average_percentage <= main['average_percentage']:
-                    worse_candidate_count += 1
-             
-            worse_candidate_counts[main['category']] = (worse_candidate_count / total_candidate.count()) * 100
-        
+            worse_candidate_count = Candidates.objects.exclude(id=obj.id).filter(
+                candidateabilities_candidate__ability__abilityquestions_ability__question__category__name=main['category']
+            ).annotate(
+                average_percentage=Avg('candidateabilities_candidate__percentage')
+            ).filter(
+                average_percentage__lte=main['average_percentage']
+            ).count()
+
+            worse_candidate_counts[main['category']] = (worse_candidate_count / total_candidates) * 100
+
         return worse_candidate_counts
 
-    def get_abilities(self, obj):
+    def get_abilities_helper(self, obj, filter_condition):
+        all_categories = Abilities.objects.values_list(
+            'abilityquestions_ability__question__category__name', flat=True
+        ).distinct()
+
+        abilities_dict = {category: [] for category in all_categories}
+
         abilities = obj.candidateabilities_candidate.annotate(
             name=F('ability__name'),
             category=F('ability__abilityquestions_ability__question__category__name')
-        ).values('name', 'percentage', 'category').distinct()
+        ).values('name', 'percentage', 'category').filter(filter_condition).distinct()
 
-        abilities_dict = {}
         for ability in abilities:
             category = ability['category']
-            if category not in abilities_dict:
-                abilities_dict[category] = []
-            if not ability['percentage'] < 20:
-                abilities_dict[category].append({
-                    'name': ability['name'],
-                    'percentage': ability['percentage']
-                })
-                
+            abilities_dict[category].append({
+                'name': ability['name'],
+                'percentage': ability['percentage']
+            })
+
+        for category, abilities_list in abilities_dict.items():
+            abilities_list.sort(key=lambda x: x['percentage'], reverse=True)
+            abilities_dict[category] = abilities_list
+
+        return abilities_dict
+
+    def get_abilities(self, obj):
+        worst_abilities = self.get_worst_abilities(obj)
+        worst_abilities_names = [ability['name'] for category in worst_abilities.values() for ability in category]
+        
+        abilities = self.get_abilities_helper(obj, Q(percentage__gte=20))
+        
         all_abilities = Abilities.objects.annotate(
             category=F('abilityquestions_ability__question__category__name')
         ).values('name', 'category').distinct()
-
-        new_abilities = all_abilities.exclude(
-            name__in=[ability['name'] for category in abilities_dict.values() for ability in category]
-        )
         
-        for category, abilities_list in abilities_dict.items():
-            abilities_list.sort(key=lambda x: x['percentage'], reverse=True)
-            abilities_dict[category] = abilities_list
-            
+        new_abilities = all_abilities.exclude(
+            name__in=[ability['name'] for category in abilities.values() for ability in category] + worst_abilities_names
+        )
+
         for ability in new_abilities:
             category = ability['category']
-            if category not in abilities_dict:
-                abilities_dict[category] = []
-            abilities_dict[category].append({
+            if category not in abilities:
+                abilities[category] = []
+            abilities[category].append({
                 'name': ability['name'],
                 'percentage': None
             })
+            
+        return abilities
 
-        return abilities_dict
-    
     def get_worst_abilities(self, obj):
-        abilities = obj.candidateabilities_candidate.annotate(
-            name=F('ability__name'),
-            category=F('ability__abilityquestions_ability__question__category__name')
-        ).values('name', 'percentage', 'category').distinct()
-
-        abilities_dict = {}
-        for ability in abilities:
-            category = ability['category']
-            if category not in abilities_dict:
-                abilities_dict[category] = []
-            if ability['percentage'] < 20:
-                abilities_dict[category].append({
-                    'name': ability['name'],
-                    'percentage': ability['percentage']
-                })
-                
-        for category, abilities_list in abilities_dict.items():
-            abilities_list.sort(key=lambda x: x['percentage'], reverse=True)
-            abilities_dict[category] = abilities_list
-
-        return abilities_dict
-    
+        return self.get_abilities_helper(obj, Q(percentage__lt=20))
+        
     def get_is_purchased(self, obj):
         user = self.context['request'].user
         if user.is_authenticated:

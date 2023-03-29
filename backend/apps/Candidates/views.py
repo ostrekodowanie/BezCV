@@ -39,20 +39,30 @@ class CandidatesView(generics.ListAPIView):
     filterset_class = CandidatesFilter
 
     def get_queryset(self):
-        queryset = (Candidates.objects.annotate(is_purchased=Exists(PurchasedOffers.objects.filter(employer=self.request.user, candidate_id=OuterRef('pk'))))
-            .filter(Q(is_visible=True) & Q(is_purchased=False)))
+        queryset = (
+            Candidates.objects.annotate(
+                is_purchased=Exists(
+                    PurchasedOffers.objects.filter(
+                        employer=self.request.user, candidate_id=OuterRef("pk")
+                    )
+                ),
+            )
+            .filter(Q(is_visible=True) & Q(is_purchased=False))
+        )
 
-        ordering = self.request.query_params.get('order', None)
+        ordering = self.request.query_params.get("order", None)
 
         if ordering:
-            if ordering == 'oldest':
-                return queryset.order_by('created_at')
-            elif ordering == 'salary_asc':
-                return queryset.order_by('salary_expectation')
-            elif ordering == 'salay_desc':
-                return queryset.order_by('-salary_expectation')
+            order_dict = {
+                "oldest": "created_at",
+                "salary_asc": "salary_expectation",
+                "salary_desc": "-salary_expectation",
+            }
+            queryset = queryset.order_by(order_dict.get(ordering, "-created_at"))
+        else:
+            queryset = queryset.order_by("-created_at")
 
-        return queryset.order_by('-created_at')
+        return queryset
 
 
 class FiltersView(APIView):
