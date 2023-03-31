@@ -8,7 +8,7 @@ export default function EmployerLanding() {
   return (
     <>
       <section className="padding pt-[1.4in] md:pt-[2in] pb-16 items-center flex flex-col gap-12 relative overflow-hidden">
-        <h1 className="font-semibold text-3xl leading-snug md:text-4xl md:leading-snug xl:text-[2.75rem] xl:leading-snug text-center relative z-10">
+        <h1 className="font-semibold text-3xl leading-snug md:text-4xl md:leading-snug xl:text-[2.75rem] xl:leading-snug text-center relative z-10 mb-32 md:mb-0">
           Znajdź{" "}
           <div className="relative inline-block">
             <span className="relative z-10">dopasowanego</span>
@@ -21,17 +21,34 @@ export default function EmployerLanding() {
           pracownika,
           <br /> bez tworzenia oferty o pracę!
         </h1>
-        <div className="flex flex-col md:grid grid-cols-2 gap-8">
+        <div className="flex flex-col md:grid grid-cols-2 gap-8 relative">
+          <Control
+            className="absolute md:-bottom-[130%] md:-left-[19vw] -z-10 md:top-auto -left-[4vw] bottom-auto -top-[1.4in]"
+            ease="ease-out"
+            opacity={1}
+            x={-20}
+            element={
+              <img
+                className="md:max-w-[calc(5in+2vw)] max-w-[1.8in]"
+                src={bgBoy}
+                alt=""
+              />
+            }
+          />
+          <Control
+            className="absolute md:-bottom-full md:-right-[19vw] md:top-auto -z-10 bottom-0 -top-[1.4in] -right-[4vw]"
+            opacity={1}
+            x={20}
+            ease="ease-out"
+            element={
+              <img
+                className="md:max-w-[calc(6.5in+2vw)] max-w-[2.2in]"
+                src={bgGirl}
+                alt=""
+              />
+            }
+          />
           <div className="bg-white p-10 flex flex-col gap-4 shadow-[0px_4px_79px_-2px_rgba(56,95,194,0.19)] rounded-3xl relative">
-            <Control
-              className="absolute -z-10 -bottom-[130%] -left-[19vw] hidden md:block"
-              ease="ease-out"
-              opacity={1}
-              x={-20}
-              element={
-                <img className="max-w-[calc(5in+2vw)]" src={bgBoy} alt="" />
-              }
-            />
             <h2 className="md:text-xl font-bold text-left">
               bezCV to portal, który...
             </h2>
@@ -45,15 +62,6 @@ export default function EmployerLanding() {
             </p>
           </div>
           <div className="bg-white p-10 flex flex-col gap-4 shadow-[0px_4px_79px_-2px_rgba(56,95,194,0.19)] rounded-3xl relative">
-            <Control
-              className="absolute -bottom-full -right-[19vw] -z-10 hidden md:block"
-              opacity={1}
-              x={20}
-              ease="ease-out"
-              element={
-                <img className="max-w-[calc(6.5in+2vw)]" src={bgGirl} alt="" />
-              }
-            />
             <h2 className="md:text-xl font-bold text-left">
               Oszczędzaj czas i pieniądze...
             </h2>

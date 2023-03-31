@@ -108,6 +108,10 @@ export default function CandidateController() {
     setError("");
   }, [activeQuestionIndex]);
 
+  useEffect(() => {
+    console.log(candidateAnswers["birth_date"]);
+  }, [candidateAnswers["birth_date"]]);
+
   if (loading) return <Loader />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;
 
@@ -198,6 +202,21 @@ const CandidateInput = ({
           id={question}
           placeholder={placeholder}
           type={type}
+        />
+      );
+    case "date":
+      return (
+        <input
+          className={textInputStyles}
+          autoComplete="off"
+          required={true}
+          type="date"
+          value={candidateAnswers[name]}
+          onChange={(e) =>
+            setCandidateAnswers((prev) => ({ ...prev, [name]: e.target.value }))
+          }
+          id={question}
+          placeholder={placeholder}
         />
       );
     case "radio":

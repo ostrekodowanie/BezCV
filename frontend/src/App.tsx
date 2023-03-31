@@ -20,6 +20,7 @@ import getUserInfo from "./utils/getUserInfo";
 import AccountProvider from "./reducers/AccountProvider";
 import FindWork from "./pages/SurveyRoute";
 import CookieConsent from "react-cookie-consent";
+import FixedButton from "./components/FixedButton";
 
 const loginString: string | null = localStorage.getItem("user");
 const loginFromLocalStorage = loginString && JSON.parse(loginString);
@@ -148,6 +149,9 @@ export default function App() {
               <Route path="/praca/*" element={<FindWork />} />
             </Routes>
           </ScrollTop>
+          <Routes>
+            <Route path="/" element={<FixedButton />} />
+          </Routes>
         </main>
         <Footer />
         <CookieConsent

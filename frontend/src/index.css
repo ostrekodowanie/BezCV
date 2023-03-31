@@ -60,6 +60,17 @@ a.bg-secondary,
   transition: transform 250ms ease-out;
 }
 
+a.bg-primary.no-anim,
+a.bg-secondary.no-anim {
+  transition: none;
+
+}
+
+a.bg-primary.no-anim:hover,
+a.bg-secondary.no-anim:hover {
+  transform: none;
+}
+
 button.bg-primary:hover,
 button.bg-secondary:hover,
 a.bg-primary:hover,
