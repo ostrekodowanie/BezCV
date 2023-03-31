@@ -52,9 +52,11 @@ class CandidateAnswers(models.Model):
         unique_together = [['question', 'candidate']]
 
     def __str__(self):
-        return '{} | {}'.format(
+        return '{} | {} | {} | {}'.format(
             self.pk,
-            self.answer
+            self.question.text,
+            self.answer,
+            self.candidate.email
         )
     
 

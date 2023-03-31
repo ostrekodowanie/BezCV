@@ -78,9 +78,10 @@ class CandidateAbilities(models.Model):
         unique_together = [['candidate', 'ability']]
 
     def __str__(self):
-        return '{} | {}'.format(
+        return '{} | {}% | {}'.format(
             self.pk,
             self.percentage,
+            self.candidate.email
         )
 
 
