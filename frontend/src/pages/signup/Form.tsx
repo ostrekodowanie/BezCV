@@ -5,10 +5,12 @@ import FilledButton from "../../components/FilledButton";
 import { inputStyles } from "../Contact";
 import Loader from "../../components/Loader";
 import { reportSuccessMan } from "../../assets/profile/profile";
+import { passwordNotVisible, passwordVisible } from "../../assets/general";
 
 export default function Form() {
   const [confPassword, setConfPassword] = useState("");
   const [status, setStatus] = useState<boolean | undefined | string>(undefined);
+  const [passwordShown, setPasswordShown] = useState(false);
   const [accepts, setAccepts] = useState({
     statute: false,
     policy: false,
@@ -157,19 +159,33 @@ export default function Form() {
                 <label className="text-sm" htmlFor="password">
                   Hasło
                 </label>
-                <input
-                  className={inputStyles.input}
-                  required
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={employerDetails.password}
-                  onChange={(e) =>
-                    setEmployerDetails((prev) => {
-                      return { ...prev, password: e.target.value };
-                    })
-                  }
-                />
+                <div className="relative self-stretch">
+                  <input
+                    className={inputStyles.input}
+                    required
+                    type={passwordShown ? "text" : "password"}
+                    name="password"
+                    id="password"
+                    value={employerDetails.password}
+                    onChange={(e) =>
+                      setEmployerDetails((prev) => {
+                        return { ...prev, password: e.target.value };
+                      })
+                    }
+                  />
+                  <button
+                    onMouseDown={() => setPasswordShown(true)}
+                    onMouseUp={() => setPasswordShown(false)}
+                    onBlur={() => setPasswordShown(false)}
+                    className="absolute top-[50%] translate-y-[-50%] right-6"
+                  >
+                    {passwordShown ? (
+                      <img src={passwordVisible} alt="Show" />
+                    ) : (
+                      <img src={passwordNotVisible} alt="Show" />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className="relative flex flex-col gap-2 items-start">
                 <label className="text-sm" htmlFor="confPassword">

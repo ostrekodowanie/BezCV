@@ -36,3 +36,13 @@ export const packages: PackageProps[] = [
     price: 2427,
 },
 ];
+
+export type PaymentDataType = {
+    full_name: string,
+    email: string,
+    phone: string,
+    nip: string,
+    address: string,
+    postal_code: string,
+    city: string
+}

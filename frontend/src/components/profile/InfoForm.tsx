@@ -8,18 +8,21 @@ export default function InfoForm() {
   const [hasBeenFilled, setHasBeenFilled] = useState(false);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState(["", "", ""]);
-  const { question } = infoFormQuestions[activeQuestionIndex];
+  const { question } =
+    activeQuestionIndex <= 2
+      ? infoFormQuestions[activeQuestionIndex]
+      : { question: "" };
   const auth = useAppSelector((state) => state.login);
   const { id } = auth.data;
   const { access } = auth.tokens;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setActiveQuestionIndex((prev) => (prev === 2 ? 0 : prev + 1));
+    setActiveQuestionIndex((prev) => prev + 1);
   };
 
   useEffect(() => {
-    if (activeQuestionIndex === 3) setHasBeenFilled(true);
+    if (activeQuestionIndex > 2) setHasBeenFilled(true);
     const formData = new FormData();
     formData.append("form", JSON.stringify(answers));
     axios.patchForm("/api/user/update/" + id, formData, {
@@ -30,9 +33,13 @@ export default function InfoForm() {
   }, [activeQuestionIndex]);
 
   return hasBeenFilled ? (
-    <div className="flex flex-col gap-4">
-      {answers.map((ans) => (
-        <AnswerRef answer={ans} question={question} key={question} />
+    <div className="flex justify-between flex-col sm:flex-row gap-4">
+      {answers.map((ans, i) => (
+        <AnswerRef
+          answer={ans}
+          question={infoFormQuestions[i].question}
+          key={question}
+        />
       ))}
     </div>
   ) : (

@@ -29,7 +29,7 @@ const Package = ({ points, price, days }: PackageProps) => {
       </h3>
       <h4 className="text-[#5D7EAD] text-center">
         {days === 30
-          ? "Okres ważności 3 tokenów - 30 dni"
+          ? "Okres ważności tokenów - 30 dni"
           : `Co miesiąc masz do wykorzystania ${points / 3} tokenów`}
       </h4>
       <Link

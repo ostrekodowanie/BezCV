@@ -5,9 +5,9 @@ import { EmployerInfoType } from "../../constants/profile";
 import { useAppSelector } from "../../main";
 import InfoForm from "./InfoForm";
 
-export default function EmployerInfo({ nip, image }: EmployerInfoType) {
+export default function EmployerInfo({ image }: EmployerInfoType) {
   const auth = useAppSelector((state) => state.login);
-  const { id, first_name, last_name } = auth.data;
+  const { id, first_name, last_name, company_name, nip } = auth.data;
   const [profilePicture, setProfilePicture] = useState<any>(image);
   const { access } = auth.tokens;
 
@@ -67,12 +67,9 @@ export default function EmployerInfo({ nip, image }: EmployerInfoType) {
         </div>
       </div>
       <div className="rounded-3xl bg-[#F8F9FB] flex flex-col p-6 gap-4">
-        <h3 className="text-[#3C4663] text-sm">
-          <span className="font-medium">NIP: </span>
-          {nip}
-        </h3>
+        <h3 className="text-[#3C4663] font-medium  text-sm">NIP: {nip}</h3>
         <h3 className="text-[#3C4663] text-sm font-medium">
-          Nazwa Firmy: Przykładowa Nazwa Firmy
+          Nazwa Firmy: {company_name}
         </h3>
       </div>
       <div className="flex flex-col gap-4">

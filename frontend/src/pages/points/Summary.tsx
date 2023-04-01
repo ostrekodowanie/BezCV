@@ -2,10 +2,16 @@ import { Link, useSearchParams } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import InvoiceInfo from "../../components/points/InvoiceInfo";
 import BuyerInfo from "../../components/points/BuyerInfo";
-import { packages } from "../../constants/points";
+import { PaymentDataType, packages } from "../../constants/points";
 import OrderInfo from "../../components/points/OrderInfo";
+import { useMemo, useState } from "react";
+import {
+  PaymentContext,
+  PaymentContextType,
+} from "../../context/PaymentContext";
 
 export default function Summary() {
+  const [paymentData, setPaymentData] = useState<PaymentDataType>(null!);
   const [searchParams] = useSearchParams();
   const searchParamPoints = searchParams.get("points") || "";
   const foundPackage = packages.find(
@@ -14,15 +20,23 @@ export default function Summary() {
 
   if (!foundPackage) return <NotFound />;
 
-  const { days, points, price } = foundPackage;
+  const contextValue = useMemo<PaymentContextType>(
+    () => ({
+      paymentData,
+      setPaymentData,
+    }),
+    [paymentData, setPaymentData]
+  );
 
   return (
     <section className="padding pt-[1.4in] pb-[.7in] 2xl:pb-[.9in] flex flex-col xl:grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center xl:items-start gap-16 2xl:pt-[1.8in] bg-white min-h-screen">
-      <BuyerInfo />
-      <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
-      <InvoiceInfo />
-      <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
-      <OrderInfo {...foundPackage} />
+      <PaymentContext.Provider value={contextValue}>
+        <BuyerInfo />
+        <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
+        <InvoiceInfo />
+        <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
+        <OrderInfo {...foundPackage} />
+      </PaymentContext.Provider>
     </section>
   );
 }
