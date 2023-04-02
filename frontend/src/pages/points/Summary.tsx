@@ -2,16 +2,30 @@ import { Link, useSearchParams } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import InvoiceInfo from "../../components/points/InvoiceInfo";
 import BuyerInfo from "../../components/points/BuyerInfo";
-import { PaymentDataType, packages } from "../../constants/points";
+import {
+  PaymentDataType,
+  initialPaymentData,
+  packages,
+} from "../../constants/points";
 import OrderInfo from "../../components/points/OrderInfo";
 import { useMemo, useState } from "react";
 import {
   PaymentContext,
   PaymentContextType,
 } from "../../context/PaymentContext";
+import { useAppSelector } from "../../main";
 
 export default function Summary() {
-  const [paymentData, setPaymentData] = useState<PaymentDataType>(null!);
+  const { first_name, last_name, email, phone, nip } = useAppSelector(
+    (state) => state.login.data
+  );
+  const [paymentData, setPaymentData] = useState<PaymentDataType>({
+    ...initialPaymentData,
+    full_name: `${first_name} ${last_name}`,
+    email,
+    phone,
+    nip,
+  });
   const [searchParams] = useSearchParams();
   const searchParamPoints = searchParams.get("points") || "";
   const foundPackage = packages.find(

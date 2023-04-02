@@ -37,12 +37,23 @@ export const packages: PackageProps[] = [
 },
 ];
 
-export type PaymentDataType = {
+type BuyerInfoType = {
     full_name: string,
     email: string,
     phone: string,
     nip: string,
+}
+
+type InvoiceInfoType = {
     address: string,
     postal_code: string,
     city: string
+}
+
+export type PaymentDataType = BuyerInfoType & InvoiceInfoType
+
+export const initialPaymentData: InvoiceInfoType = {
+    postal_code: '',
+    address: '',
+    city: ''
 }

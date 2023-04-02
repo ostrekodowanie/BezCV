@@ -66,7 +66,7 @@ export default function Packages() {
           <h2 className="font-semibold text-3xl md:text-4xl text-center xl:text-left leading-tight md:leading-tight">
             Chcesz kupić większą ilość tokenów?
           </h2>
-          <p className="text-sm md:text-base text-[#3C4663] leading-relaxed md:leading-relaxed max-w-[90%]">
+          <p className="text-sm md:text-base text-[#3C4663] leading-relaxed text-center xl:text-left md:leading-relaxed max-w-[90%]">
             Lorem ipsum dolor sit amet consectetur. Nunc posuere eu a sem eget.
             Vel non nunc sit nibh consectetur blandit amet faucibus velit.
             Venenatis aliquam habitasse tempor magna vitae malesuada. Vel id
