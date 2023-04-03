@@ -77,15 +77,6 @@ export default function Introduction() {
                   dopasowane do Twoich preferencji.
                 </span>
               </p>
-              <p>
-                <span className="font-bold">Ankieta</span> zajmie Ci{" "}
-                <span className="font-bold">około 9 minut</span> - masz
-                możliwość nie udzielania odpowiedzi. Im więcej nam o sobie
-                opowiesz tym większa szansa, że{" "}
-                <span className="font-bold">
-                  znajdziemy Ci wymarzoną pracę.
-                </span>
-              </p>
             </div>
           }
         />

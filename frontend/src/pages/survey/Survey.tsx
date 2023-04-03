@@ -33,6 +33,9 @@ export default function Survey() {
         );
         return { ...acc, ...newObj };
       }
+      if (type === "date") {
+        return { ...acc, [name]: new Date().toISOString().substring(0, 10) };
+      }
       return { ...acc, [name]: "" };
     }, {} as CandidateAnswerType)
   );
