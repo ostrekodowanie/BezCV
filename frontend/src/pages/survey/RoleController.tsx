@@ -155,7 +155,7 @@ export default function RoleController() {
               {secondsLeft} sekund
             </h3>
           </div>
-          <button className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center">
+          <button className="rounded-full text-[.8rem] text-white fixed sm:static right-[8vw] left-[8vw] bottom-8 font-bold py-4 px-8 bg-secondary self-end flex items-center">
             Następne pytanie{" "}
             <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
           </button>

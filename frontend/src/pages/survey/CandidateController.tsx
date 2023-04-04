@@ -22,6 +22,7 @@ export default function CandidateController() {
   const [credentialsLoading, setCredentialsLoading] = useState(false);
   const [phoneCodePopupActive, setPhoneCodePopupActive] = useState(false);
   const [credentialsError, setCredentialsError] = useState("");
+  const [hasReturned, setHasReturned] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
@@ -100,6 +101,7 @@ export default function CandidateController() {
         )
         .finally(() => setLoading(false));
     }
+    setHasReturned(false);
     setActiveQuestionIndex((prev) => prev + 1);
   };
 
@@ -108,9 +110,10 @@ export default function CandidateController() {
     setError("");
   }, [activeQuestionIndex]);
 
-  useEffect(() => {
-    console.log(candidateAnswers["birth_date"]);
-  }, [candidateAnswers["birth_date"]]);
+  const handleReturn = () => {
+    setHasReturned(true);
+    setActiveQuestionIndex((prev) => prev - 1);
+  };
 
   if (loading) return <Loader />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;
@@ -143,12 +146,12 @@ export default function CandidateController() {
           {!credentialsLoading && credentialsError && (
             <p className="text-red-400 max-w-full">{credentialsError}</p>
           )}
-          <div className="flex flex-col sm:self-center sm:flex-row gap-6 flex-1 fixed sm:static right-[8vw] left-[8vw] self-stretch max-w-full bottom-8">
-            {activeQuestionIndex > 0 && (
+          <div className="flex flex-col sm:self-center sm:flex-row gap-6 flex-1 fixed sm:relative right-[8vw] left-[8vw] sm:inset-auto self-stretch max-w-full bottom-8">
+            {activeQuestionIndex > 0 && !hasReturned && (
               <button
                 type="button"
-                onClick={() => setActiveQuestionIndex((prev) => prev - 1)}
-                className="rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-secondary text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-[#FEF4E4] self-end flex items-center"
+                onClick={handleReturn}
+                className="rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-[#F98D3D] text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
               >
                 <img className="mr-2 max-h-[.9em]" src={prevArrow} alt="<-" />{" "}
                 Poprzednie pytanie
