@@ -8,7 +8,7 @@ export default function FixedButton() {
   return (
     <Link
       to={account === "employer" ? "/rejestracja" : "/praca"}
-      className={`md:mx-0 fixed md:hidden bottom-8 right-[8vw] left-[8vw] ${
+      className={`sm:mx-0 fixed sm:hidden bottom-8 right-[8vw] left-[8vw] ${
         account === "employer" ? "bg-primary" : "bg-secondary"
       } font-semibold text-white rounded-full flex items-center hover:scale-100 justify-center no-anim text-[.8rem] py-[14px] z-20`}
     >

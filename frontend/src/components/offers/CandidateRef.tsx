@@ -142,7 +142,7 @@ const CandidateRef = ({
           </div>
           <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
             <h3 className="font-semibold text-[.75rem]">Umiejętności:</h3>
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 xl:flex-nowrap">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
               <CategoryPercantageBox
                 {...roleToTextMap["sales"]}
                 role={profession}

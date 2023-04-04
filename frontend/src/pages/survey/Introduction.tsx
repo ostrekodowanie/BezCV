@@ -5,22 +5,23 @@ import { surveyIntroductionMan, triangle } from "../../assets/survey/survey";
 
 export default function Introduction() {
   return (
-    <section className="padding pt-[1.4in] md:pt-[2in] bg-white lg:grid grid-cols-[1fr_2fr] gap-8 overflow-hidden">
-      <Control
-        className="w-full lg:h-[8in] h-[6in] hidden lg:block relative"
-        ease="ease-out"
-        x={-20}
-        opacity={1}
-        element={
-          <img
-            className="object-top object-cover"
-            src={surveyIntroductionMan}
-            alt=""
-          />
-        }
-      />
+    <section className="padding pt-[1.4in] md:pt-[1.8in] bg-white lg:grid grid-cols-[1fr_2fr] gap-8 overflow-hidden">
+      <div className="overflow-hidden lg:max-h-[85vh]">
+        <Control
+          ease="ease-out"
+          x={-20}
+          opacity={1}
+          element={
+            <img
+              className="absolute lg:static sm:right-0 object-top object-cover w-[45%] lg:w-full max-h-[12in] lg:max-h-full sm:-scale-x-100 lg:scale-x-100 top-[1in] sm:top-auto"
+              src={surveyIntroductionMan}
+              alt=""
+            />
+          }
+        />
+      </div>
       <Controller
-        className="flex flex-col gap-8 lg:gap-12 text-[#3C4663] font-medium mb-[1in]"
+        className="flex flex-col gap-8 text-[#3C4663] font-medium mb-[1in] mt-32 sm:mt-0 relative z-10 sm:max-w-[55%] lg:max-w-full"
         ease="ease-out"
         delay={200}
         stagger={100}
@@ -86,7 +87,7 @@ export default function Introduction() {
           element={
             <Link
               to="/praca/ankieta"
-              className="bg-secondary transition-colors font-semibold border-primary text-white rounded-full flex items-center text-[.8rem] py-[14px] px-8 mt-4 self-start max-w-max"
+              className="fixed sm:static justify-center bottom-8 right-[8vw] left-[8vw] bg-secondary transition-colors font-semibold border-primary text-white rounded-full flex items-center text-[.8rem] py-[14px] px-8 mt-4 self-start sm:max-w-max"
             >
               Przenieś mnie do ankiety!{" "}
               <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />

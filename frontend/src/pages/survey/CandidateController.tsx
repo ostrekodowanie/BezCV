@@ -128,7 +128,7 @@ export default function CandidateController() {
         </h2>
       </div>
       <form
-        className="flex flex-col flex-1 items-center justify-between gap-8 w-full relative"
+        className="flex flex-col flex-1 items-center justify-between gap-8 w-full sm:relative"
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col items-center w-full gap-6 mt-8">
@@ -143,12 +143,12 @@ export default function CandidateController() {
           {!credentialsLoading && credentialsError && (
             <p className="text-red-400 max-w-full">{credentialsError}</p>
           )}
-          <div className="flex flex-col self-end sm:flex-row sm:self-center gap-6 flex-1">
+          <div className="flex flex-col sm:self-center sm:flex-row gap-6 flex-1 fixed sm:static right-[8vw] left-[8vw] self-stretch max-w-full bottom-8">
             {activeQuestionIndex > 0 && (
               <button
                 type="button"
                 onClick={() => setActiveQuestionIndex((prev) => prev - 1)}
-                className="rounded-full text-[.8rem] text-secondary scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-bold py-4 px-8 bg-[#FEF4E4] self-end flex items-center"
+                className="rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-secondary text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-[#FEF4E4] self-end flex items-center"
               >
                 <img className="mr-2 max-h-[.9em]" src={prevArrow} alt="<-" />{" "}
                 Poprzednie pytanie
@@ -156,7 +156,7 @@ export default function CandidateController() {
             )}
             <button
               type="submit"
-              className="rounded-full text-[.8rem] text-white font-bold py-4 px-8 bg-secondary self-end flex items-center"
+              className="justify-center text-[.75rem] w-full sm:w-max rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary sm:self-end flex items-center"
             >
               Następne pytanie{" "}
               <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />

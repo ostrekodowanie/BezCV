@@ -78,5 +78,5 @@ export const reportFormInfo = [
 
 export type FollowedCandidateBonusProps = { 
     isFromFollowed?: boolean, 
-    setFollowed?: Dispatch<SetStateAction<CandidateProps[]>>
+    setFollowed?: (userId: number) => void
 }

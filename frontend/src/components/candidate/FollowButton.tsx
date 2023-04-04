@@ -20,8 +20,7 @@ export default function FollowButton({
   const timer = useRef<number | undefined>();
 
   const deleteLike = () => {
-    setFollowed &&
-      setFollowed((prev) => [...prev].filter((item) => item.id !== id));
+    setFollowed && setFollowed(id);
     return axios.delete(`/api/profile/favourites/remove/${id}`, {
       headers: {
         Authorization: "Bearer " + access,

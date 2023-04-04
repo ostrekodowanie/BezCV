@@ -30,6 +30,13 @@ export default function Profile() {
     if (resp.status === 200) dispatch(logout());
   };
 
+  const setFollowed = (userId: number) => {
+    setProfileData((prev) => ({
+      ...prev,
+      followed_contacts: prev.followed_contacts.filter((u) => u.id !== userId),
+    }));
+  };
+
   useEffect(() => {
     axios
       .get("/api/profile/" + id, {
@@ -40,6 +47,10 @@ export default function Profile() {
       .then((res) => setProfileData(res.data))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    console.log(profileData.followed_contacts);
+  }, [profileData.followed_contacts]);
 
   return (
     <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in] flex flex-col gap-8 xl:grid grid-cols-[6fr_5fr_5fr] overflow-x-hidden grid-rows-[4in_max-content_max-content]">
@@ -57,7 +68,11 @@ export default function Profile() {
           purchased={profileData.purchased_contacts}
           loading={loading}
         />
-        <Followed followed={profileData.followed_contacts} loading={loading} />
+        <Followed
+          followed={profileData.followed_contacts}
+          setFollowed={setFollowed}
+          loading={loading}
+        />
       </ProfileDataContext.Provider>
       <button
         className="font-medium w-max ml-[8vw] sm:ml-0 transition-colors text-negative hover:text-darkNegative"
