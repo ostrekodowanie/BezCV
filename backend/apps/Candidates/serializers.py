@@ -141,17 +141,26 @@ class CandidateSerializer(serializers.ModelSerializer):
             "id",
             "first_name",
             "last_name",
+            "phone",
             "profession",
             "job_position",
             "salary_expectation",
             "availability",
             "province",
             "education", 
-            "driving_license"
+            "driving_license",
+            "has_job"
         ).order_by('-created_at').distinct()[:5]
         
         
         for candidate in similar_candidates:
+            user = self.context['request'].user
+            
+            if not user.purchasedoffers_employer.filter(candidate=candidate['id']).first():
+                candidate['first_name'] = candidate['first_name'][0] + '*' * (len(candidate['first_name']) - 1)
+                candidate['last_name'] = candidate['last_name'][0] + '*' * (len(candidate['last_name']) - 1)
+                candidate['phone'] = '*********'
+            
             abilities = CandidateAbilities.objects.filter(candidate_id=candidate['id']).annotate(
                 category=F('ability__abilityquestions_ability__question__category__name')
             ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')

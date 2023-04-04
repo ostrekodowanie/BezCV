@@ -184,7 +184,7 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
             if not obj.purchasedoffers_employer.filter(candidate=contact['id']).first():
                 contact['first_name'] = contact['first_name'][0] + '*' * (len(contact['first_name']) - 1)
                 contact['last_name'] = contact['last_name'][0] + '*' * (len(contact['last_name']) - 1)
-                contact['phone'] = contact['phone'][0] + '*' * (len(contact['phone']) - 1)
+                contact['phone'] = '*********'
                 
             followed_contact = {
                 'id': contact['id'],
@@ -198,6 +198,7 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
                 'province': contact['province'],
                 'education': contact['education'],
                 'driving_license': contact['driving_license'],
+                'has_job': contact['has_job'],
                 'percentage_by_category': abilities_dict,
             }
             followed_contacts_array.append(followed_contact)
