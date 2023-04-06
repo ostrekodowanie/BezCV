@@ -5,11 +5,15 @@ import {
   useLocation,
   useNavigate,
 } from "react-router";
-import { useContext, useEffect, useState } from "react";
+import { MouseEvent, useContext, useEffect, useState } from "react";
 import { useAppSelector } from "../main";
 import { AccountContext } from "../reducers/AccountProvider";
 import { arrowRight } from "../assets/general";
 import { profileIcon } from "../assets/profile/profile";
+import SurveyLink from "./header/SurveyLink";
+import PointsHashLink from "./header/PointsHashLink";
+import HomeHashLink from "./header/HomeHashLink";
+import CustomLink from "./header/CustomLink";
 
 export default function Header() {
   const [down, setDown] = useState(false);
@@ -75,7 +79,7 @@ const Nav = () => {
             onClick={() => setAccount("worker")}
             className="text-[#F98D3D] hover:text-darkSecondary font-medium md:mr-2"
           >
-            Przełącz na widok kandydata
+            Widok kandydata
           </button>
         )}
         {account === "worker" && (
@@ -83,10 +87,10 @@ const Nav = () => {
             onClick={() => setAccount("employer")}
             className="text-[#2F66F4] hover:text-darkPrimary font-medium md:mr-2"
           >
-            Przełącz na widok pracodawcy
+            Widok pracodawcy
           </button>
         )}
-        <HashLink />
+        <HomeHashLink />
         {account === "employer" &&
           (logged ? (
             <>
@@ -101,6 +105,7 @@ const Nav = () => {
             </>
           ) : (
             <>
+              <PointsHashLink />
               <Link
                 className="mt-4 md:mt-0 md:ml-4 font-medium transition-colors flex items-center p-2 text-[#2F66F4] hover:text-darkPrimary"
                 to="/logowanie"
@@ -111,20 +116,12 @@ const Nav = () => {
                 className="bg-primary transition-colors font-medium border-primary text-white rounded-full flex items-center text-[.8rem] py-3 px-8"
                 to="/rejestracja"
               >
-                Zarejestruj się za darmo!
+                Zarejestruj się
                 <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
               </Link>
             </>
           ))}
-        {account === "worker" && (
-          <Link
-            className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-3 px-8 bg-secondary mt-4 md:mt-0 md:ml-4"
-            to="/praca"
-          >
-            Wypełnij formularz{" "}
-            <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
-          </Link>
-        )}
+        {account === "worker" && <SurveyLink />}
       </div>
       <div
         onClick={() => setActive((prev) => !prev)}
@@ -168,56 +165,5 @@ const Nav = () => {
         ></div>
       </div>
     </>
-  );
-};
-
-const HashLink = () => {
-  const { account } = useContext(AccountContext);
-  const navigate = useNavigate();
-  const handleScroll = () => {
-    navigate("/");
-    const section = document.querySelector("#jzp");
-    section?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  return (
-    <button
-      type="button"
-      className={`relative flex items-center after:transition-all font-medium after:bg-primary hover:after:max-w-[50%] after:max-w-[0%] after:absolute after:h-[2px] after:-bottom-1 after:rounded-full after:w-full after:block after:right-0 ${
-        account === "employer" ? "after:bg-primary" : "after:bg-secondary"
-      }`}
-      onClick={handleScroll}
-    >
-      {account === "worker"
-        ? "Co muszę zrobić, aby dostać pracę?"
-        : "Jak wygląda nasza baza?"}
-    </button>
-  );
-};
-
-type CustomLink = {
-  children: JSX.Element | string | (JSX.Element | string)[];
-  to: string;
-  className?: string;
-  icon?: JSX.Element;
-};
-
-const CustomLink = ({ children, to, className }: CustomLink) => {
-  const { account } = useContext(AccountContext);
-  const activePath = useResolvedPath(to);
-  const isActive = useMatch({ path: `${activePath.pathname}/*`, end: true });
-  return (
-    <Link
-      to={to}
-      className={`relative flex items-center after:transition-all font-medium ${
-        account === "employer" ? "after:bg-primary" : "after:bg-secondary"
-      } after:absolute after:h-[2px] after:-bottom-1 after:rounded-full after:w-full after:block after:right-0 ${
-        isActive
-          ? "after:max-w-[50%]"
-          : "hover:after:max-w-[50%] after:max-w-[0%]"
-      } ${className && className}`}
-    >
-      {children}
-    </Link>
   );
 };

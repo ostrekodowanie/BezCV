@@ -174,9 +174,10 @@ export default function Form() {
                     }
                   />
                   <button
+                    type="button"
                     onMouseDown={() => setPasswordShown(true)}
                     onMouseUp={() => setPasswordShown(false)}
-                    onBlur={() => setPasswordShown(false)}
+                    onMouseLeave={() => setPasswordShown(false)}
                     className="absolute top-[50%] translate-y-[-50%] right-6"
                   >
                     {passwordShown ? (

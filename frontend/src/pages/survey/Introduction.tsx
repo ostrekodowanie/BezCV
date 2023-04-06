@@ -87,6 +87,7 @@ export default function Introduction() {
           element={
             <Link
               to="/praca/ankieta"
+              id="survey-button"
               className="fixed sm:static justify-center bottom-8 right-[8vw] left-[8vw] bg-secondary transition-colors font-semibold border-primary text-white rounded-full flex items-center text-[.8rem] py-[14px] px-8 mt-4 self-start sm:max-w-max"
             >
               Przenieś mnie do ankiety!{" "}

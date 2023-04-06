@@ -370,18 +370,21 @@ export default function Candidate() {
         <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto py-10 sm:px-6 shadow-primaryBig gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
           <CircleChart
             profession="sales"
+            isFirst={candidateDetails.profession === "sales"}
             percentage={parseInt(
               candidateDetails.ability_charts.sales.toString()
             )}
           />
           <CircleChart
             profession="office_administration"
+            isFirst={candidateDetails.profession === "office_administration"}
             percentage={parseInt(
               candidateDetails.ability_charts.office_administration.toString()
             )}
           />
           <CircleChart
             profession="customer_service"
+            isFirst={candidateDetails.profession === "customer_service"}
             percentage={parseInt(
               candidateDetails.ability_charts.customer_service.toString()
             )}
@@ -393,7 +396,13 @@ export default function Candidate() {
               Umiejętności kandydata do pracy na każdym stanowisku
             </h2>
             <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-              <div className="flex flex-col gap-6">
+              <div
+                className={`flex flex-col gap-6 ${
+                  candidateDetails.profession === "sales"
+                    ? "order-first"
+                    : "order-last"
+                }`}
+              >
                 <h3 className="font-bold text-lg">Sprzedaż</h3>
                 {!loading.page ? (
                   <>
@@ -418,7 +427,13 @@ export default function Candidate() {
                   <AbilitiesLoader />
                 )}
               </div>
-              <div className="flex flex-col gap-6">
+              <div
+                className={`flex flex-col gap-6 ${
+                  candidateDetails.profession === "office_administration"
+                    ? "order-first"
+                    : "order-last"
+                }`}
+              >
                 <h3 className="font-bold text-lg">Administracja</h3>
                 {!loading.page ? (
                   <>
@@ -449,7 +464,13 @@ export default function Candidate() {
                   <AbilitiesLoader />
                 )}
               </div>
-              <div className="flex flex-col gap-6">
+              <div
+                className={`flex flex-col gap-6 ${
+                  candidateDetails.profession === "customer_service"
+                    ? "order-first"
+                    : "order-last"
+                }`}
+              >
                 <h3 className="font-bold text-lg">Obsługa klienta</h3>
                 {!loading.page ? (
                   <>

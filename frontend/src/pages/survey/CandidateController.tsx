@@ -372,7 +372,9 @@ const CandidateInput = ({
 const PhoneInput = () => {
   const { candidateAnswers, setCandidateAnswers } = useContext(SurveyContext);
   const [input, setInput] = useState(
-    String(candidateAnswers.phone).replace(/(\d{3})(?=\d)/g, "$1 ")
+    candidateAnswers.phone
+      ? "+48 " + String(candidateAnswers.phone).replace(/(\d{3})(?=\d)/g, "$1 ")
+      : ""
   );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -386,20 +388,23 @@ const PhoneInput = () => {
   useEffect(() => {
     setCandidateAnswers((prev) => ({
       ...prev,
-      phone: input.split(" ").join(""),
+      phone: input.split("+48 ")[0].split(" ").join(""),
     }));
   }, [input]);
 
   return (
-    <input
-      className={textInputStyles}
-      autoComplete="off"
-      required={true}
-      value={input}
-      onChange={handleChange}
-      id={"Pod jakim numerem pracodawca będzie mógł się z Tobą skontaktować?"}
-      placeholder={"Tutaj wpisz swój numer telefonu"}
-      type={"tel"}
-    />
+    <div className="grid grid-cols-[max-content_1fr] gap-4 self-stretch items-center">
+      <span className="font-semibold text-sm">+48</span>
+      <input
+        className={textInputStyles}
+        autoComplete="off"
+        required={true}
+        value={input}
+        onChange={handleChange}
+        id={"Pod jakim numerem pracodawca będzie mógł się z Tobą skontaktować?"}
+        placeholder={"Tutaj wpisz swój numer telefonu"}
+        type={"tel"}
+      />
+    </div>
   );
 };

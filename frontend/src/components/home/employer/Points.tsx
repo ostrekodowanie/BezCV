@@ -1,14 +1,17 @@
 import Control, { Controller } from "react-control-js";
 import { bcvToken } from "../../../assets/general";
 import { useState } from "react";
-import { PackageProps, packages } from "../../../constants/points";
+import { packages } from "../../../constants/points";
 import Package from "../../points/Package";
 
 export default function Points() {
   const [days, setDays] = useState<30 | 90>(30);
   return (
     <section className="padding pt-[1.4in] pb-[.7in] 2xl:pb-[.9in] flex flex-col items-center gap-16 2xl:pt-[1.8in] bg-white min-h-screen">
-      <div className="flex flex-col gap-8 xl:gap-16 items-center xl:flex-row xl:justify-center self-stretch 2xl:px-[4vw]">
+      <div
+        className="flex flex-col gap-8 xl:gap-16 items-center xl:flex-row xl:justify-center self-stretch 2xl:px-[4vw]"
+        id="punkty"
+      >
         <h2 className="font-semibold text-center xl:text-left text-3xl md:text-4xl leading-tight md:leading-tight xl:min-w-[4.6in] max-w-[4.6in]">
           Rejestracja w BezCV jest{" "}
           <span className="font-bold">zupełnie darmowa!</span>

@@ -6,6 +6,7 @@ import { RoleType } from "../../constants/workForm";
 type CircleChartProps = {
   profession: RoleType;
   percentage: number;
+  isFirst: boolean;
 };
 
 const professionTitle = (profession: RoleType): string => {
@@ -22,6 +23,7 @@ const professionTitle = (profession: RoleType): string => {
 export default function CircleChart({
   profession,
   percentage,
+  isFirst,
 }: CircleChartProps) {
   const circleRef = useRef<SVGCircleElement>(null);
   const color = professionColorMap[profession].color;
@@ -44,7 +46,11 @@ export default function CircleChart({
   }, [percentage]);
 
   return (
-    <div className="flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px]">
+    <div
+      className={`${
+        isFirst ? "order-first" : "order-last"
+      } flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px]`}
+    >
       <div className="rounded-full h-[280px] w-[280px] bg-white" />
       <div className="absolute top-[22%] bottom-[18%] right-16 left-16 flex flex-col items-center gap-4">
         <h3 className="flex flex-col items-center relative z-10">
