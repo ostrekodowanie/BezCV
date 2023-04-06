@@ -5,16 +5,18 @@ import { infoFormQuestions } from "../../constants/profile";
 import { useAppSelector } from "../../main";
 
 export default function InfoForm() {
-  const [hasBeenFilled, setHasBeenFilled] = useState(false);
+  const auth = useAppSelector((state) => state.login);
+  const { id, form_answers } = auth.data;
+  const { access } = auth.tokens;
+  const [hasBeenFilled, setHasBeenFilled] = useState(
+    form_answers && form_answers.filter((answer) => answer).length === 3
+  );
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState(["", "", ""]);
+  const [answers, setAnswers] = useState(form_answers || ["", "", ""]);
   const { question } =
     activeQuestionIndex <= 2
       ? infoFormQuestions[activeQuestionIndex]
       : { question: "" };
-  const auth = useAppSelector((state) => state.login);
-  const { id } = auth.data;
-  const { access } = auth.tokens;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

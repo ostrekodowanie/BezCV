@@ -24,7 +24,7 @@ const SuccessView = ({
         token bCV.
       </p>
       <button
-        className="font-semibold hover:text-[#2F66F4] transition-colors text-[.8rem] min-w-max mt-8"
+        className="font-semibold hover:text-[#2F66F4] transition-colors text-sm min-w-max mt-4"
         onClick={() => setReportForm(false)}
       >
         Zamknij to okno

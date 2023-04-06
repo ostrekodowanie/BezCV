@@ -1,17 +1,17 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { descIcon, profilePictureUpload } from "../../assets/profile/profile";
-import { EmployerInfoType } from "../../constants/profile";
 import { useAppSelector } from "../../main";
 import InfoForm from "./InfoForm";
 
-export default function EmployerInfo({ image }: EmployerInfoType) {
+export default function EmployerInfo() {
   const auth = useAppSelector((state) => state.login);
-  const { id, first_name, last_name, company_name, nip } = auth.data;
+  const { id, first_name, last_name, company_name, nip, image } = auth.data;
   const [profilePicture, setProfilePicture] = useState<any>(image);
   const { access } = auth.tokens;
 
   const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("aeffaefe");
     const formData = new FormData();
     formData.append(
       "image",

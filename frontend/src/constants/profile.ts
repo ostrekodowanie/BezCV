@@ -7,14 +7,8 @@ export type StatsProps = {
     purchased_count: number
 }
 
-export type EmployerInfoType = {
-    nip: string,
-    image: string
-}
-
 export type ProfileDataType = {
     stats: StatsProps,
-    employer: EmployerInfoType,
     purchased_contacts: NonPercentageAbilitiesCandidateProps[],
     followed_contacts: CandidateProps[]
 }
@@ -24,10 +18,6 @@ export const initialProfileData: ProfileDataType = {
         token_count: 0,
         followed_count: 0,
         purchased_count: 0
-    },
-    employer: {
-        nip: '',
-        image: ''
     },
     purchased_contacts: [],
     followed_contacts: []
