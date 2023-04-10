@@ -1,23 +1,31 @@
 from django.urls import reverse
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.db.models import Sum
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from datetime import timedelta
 
 from . import serializers
 from .models import PaymentDetails
-from apps.Auth.models import User
 
 import requests
 
 
 class PurchasePointsView(generics.CreateAPIView):
     serializer_class = serializers.PurchasePointsSerializer
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        
+        employer = self.request.user
 
         payment_details = PaymentDetails.objects.create(
-            employer=User.objects.get(id=1),
+            employer=employer,
             amount=serializer.validated_data['amount'],
             price=serializer.validated_data['price'],
             currency=serializer.validated_data.get('currency', 'PLN'),
@@ -81,5 +89,37 @@ class PurchasePointsView(generics.CreateAPIView):
         payment_details.payu_order_id = response_data['orderId']
         payment_details.payu_status = response_data['status']
         payment_details.save()
+        
+        last_month = timezone.now() - timedelta(days=30)
+        purchased_tokens = employer.purchasedpoints_employer.filter(
+            created_at__gte=last_month
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        oldest_token_date = employer.purchasedpoints_employer.filter(
+            created_at__gte=last_month
+        ).order_by('created_at').values_list('created_at', flat=True).first()
+        
+        if oldest_token_date:
+            purchased_contacts = employer.purchasedoffers_employer.filter(
+                created_at__gte=oldest_token_date
+            ).count()
+        else:
+            purchased_contacts = 0
+
+        remaining_tokens = purchased_tokens - purchased_contacts
+        
+        context = {
+                'employer': employer,
+                'token_count': remaining_tokens
+            }
+                    
+        message = render_to_string('payment.html', context)
+        email_message = EmailMessage(
+            subject='Zobacz swoje kompetencje miękkie - bezCV',
+            body=message,
+            to=[employer['email']]
+        )
+        email_message.content_subtype ="html"
+        email_message.send()
 
         return Response({"redirect_url": response_data['redirectUri']})

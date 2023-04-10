@@ -102,7 +102,8 @@ class CandidateAnswersView(APIView):
                 
         if count == 3:            
             context = {
-                'candidate': candidate
+                'candidate': candidate,
+                'ability_count': candidate.candidateabilities_candidate
             }
                     
             message = render_to_string('candidate_survey.html', context)
@@ -142,7 +143,7 @@ class SendCodeView(APIView):
         
         GeneratedCodes.objects.create(phone=phone, code=code)
 
-        #client.sms.send(to=phone, message=f'Twoj kod dostepu to: {code}', from_="Test")
+        client.sms.send(to=phone, message=f'Twoj kod dostepu to: {code}', from_="Test")
 
         return Response({'Access code sent successfully'}, status=200)
     
