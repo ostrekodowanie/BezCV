@@ -89,6 +89,7 @@ export default function Introduction() {
           element={
             <div className="flex flex-col items-start xl:flex-row sm:gap-6 xl:items-center fixed sm:static bottom-0 right-0 left-0 sm:mt-4">
               <button
+                onClick={() => setPhonePopupActive(true)}
                 type="button"
                 className="sm:rounded-full text-[.8rem] w-full xl:w-max justify-center text-[#F98D3D] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
               >

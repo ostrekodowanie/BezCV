@@ -25,6 +25,7 @@ export default function RoleController() {
     setRoleAnswers,
     activeQuestionIndex,
     setActiveQuestionIndex,
+    setIsSurveyFilled,
   } = useContext(SurveyContext);
   const { first_name, phone } = candidateAnswers;
   const [numericalAnswer, setNumericalAnswer] = useState<number>(1);
@@ -66,7 +67,14 @@ export default function RoleController() {
             headers: { "Content-Type": "application/json" },
           }
         )
-        .then(() => setIsFinished(true))
+        .then(() => {
+          setIsFinished(true);
+          role &&
+            setIsSurveyFilled((prev) => ({
+              ...prev,
+              [role]: true,
+            }));
+        })
         .catch((err) =>
           setError(
             typeof err.response.data.detail === "string"
