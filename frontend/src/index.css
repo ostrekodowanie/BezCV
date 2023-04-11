@@ -13,7 +13,7 @@
 
 html, body {
   scroll-behavior: smooth;
-  scroll-padding-top: 1in;
+  scroll-padding-top: .5in;
 }
 
 body {

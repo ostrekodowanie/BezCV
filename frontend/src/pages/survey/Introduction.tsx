@@ -15,7 +15,7 @@ export default function Introduction() {
           opacity={1}
           element={
             <img
-              className="absolute lg:static sm:right-0 object-top object-cover w-[45%] lg:w-full max-h-[12in] lg:max-h-full sm:-scale-x-100 lg:scale-x-100 top-[1in] sm:top-auto"
+              className="absolute lg:static sm:right-0 object-top object-cover w-[45%] lg:w-full max-h-[12in] lg:max-h-full sm:-scale-x-100 lg:scale-x-100 top-[calc(3.4in+2vw)] sm:top-auto"
               src={surveyIntroductionMan}
               alt=""
             />
@@ -23,14 +23,14 @@ export default function Introduction() {
         />
       </div>
       <Controller
-        className="flex flex-col gap-8 text-[#3C4663] font-medium mb-[1in] mt-32 sm:mt-0 relative z-10 sm:max-w-[55%] lg:max-w-full"
+        className="flex flex-col gap-8 text-[#3C4663] font-medium mb-[1in] relative z-10 sm:max-w-[55%] lg:max-w-full"
         ease="ease-out"
         delay={200}
         stagger={100}
         opacity={1}
       >
         <Control
-          className="w-full lg:w-[5in]"
+          className="w-full lg:w-[5in] mb-[2in] sm:mb-0"
           delay={200}
           opacity={1}
           ease="ease-out"
@@ -87,18 +87,17 @@ export default function Introduction() {
           opacity={1}
           delay={200}
           element={
-            <div className="flex flex-col sm:gap-6 sm:items-center fixed sm:static bottom-0 right-0 left-0">
+            <div className="flex flex-col items-start xl:flex-row sm:gap-6 xl:items-center fixed sm:static bottom-0 right-0 left-0 sm:mt-4">
               <button
                 type="button"
-                className="sm:rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-[#F98D3D] text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
+                className="sm:rounded-full text-[.8rem] w-full xl:w-max justify-center text-[#F98D3D] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
               >
-                <img className="mr-2 max-h-[.9em]" src={arrowRight} />{" "}
-                Poprzednie pytanie
+                Kontynuuj wypełnianie
               </button>
               <Link
                 to="/praca/ankieta"
                 id="survey-button"
-                className="justify-center bg-secondary transition-colors font-semibold border-primary text-white sm:rounded-full flex items-center text-[.8rem] py-[14px] px-8 mt-4 self-start sm:max-w-max"
+                className="justify-center bg-secondary w-full transition-colors font-semibold border-primary text-white sm:rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start xl:max-w-max"
               >
                 Przenieś mnie do ankiety!{" "}
                 <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
