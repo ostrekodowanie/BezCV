@@ -33,7 +33,7 @@ import {
 import CandidateRef from "../components/offers/CandidateRef";
 import HasJob from "../components/offers/HasJob";
 import OffersLoader from "../components/offers/OffersLoader";
-import PDFButton from "../components/candidate/PDFButton";
+import PrintButton from "../components/candidate/PrintButton";
 import WorstAbilitiesList, {
   WorstAbilitiesLoader,
 } from "../components/candidate/WorstAbilitiesList";
@@ -514,10 +514,9 @@ export default function Candidate() {
             <Loader />
           </div>
         ) : (
-          <PDFButton
+          <PrintButton
             gradient={gradient}
             disabled={!candidateDetails.is_purchased}
-            fileName={`${candidateDetails.first_name}-${candidateDetails.last_name}`}
           />
         )}
         <div className="bg-white sm:rounded-3xl flex flex-wrap py-10 shadow-primaryBig min-h-max gap-4 overflow-hidden">

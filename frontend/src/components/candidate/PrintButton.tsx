@@ -1,28 +1,15 @@
 import { MouseEvent } from "react";
 import { pdf } from "../../assets/candidate/candidate";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 type PDFButtonProps = {
   disabled: boolean;
   gradient: string;
-  fileName: string;
 };
 
-const PDFButton = ({ disabled, gradient, fileName }: PDFButtonProps) => {
+const PDFButton = ({ disabled, gradient }: PDFButtonProps) => {
   const handlePDF = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const input = document.getElementById("candidate-profile");
-    if (!input) return;
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${fileName}.pdf`);
-    });
+    window.print();
   };
 
   return (

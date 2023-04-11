@@ -25,7 +25,7 @@ export default function CircleChart({
   percentage,
   isFirst,
 }: CircleChartProps) {
-  const circleRef = useRef<SVGCircleElement>(null);
+  const circleRef = useRef<SVGCircleElement>(null!);
   const color = professionColorMap[profession].color;
   const title = professionTitle(profession);
   const radius = 155;
@@ -43,7 +43,10 @@ export default function CircleChart({
       }
     });
     observer.observe(circleRef.current);
-  }, [percentage]);
+    return () => {
+      circleRef.current && observer.unobserve(circleRef.current);
+    };
+  }, [percentage, circleRef.current]);
 
   return (
     <div
