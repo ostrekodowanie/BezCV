@@ -58,9 +58,9 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
           mobileActive ? "flex" : "hidden lg:flex"
         }`}
       >
-        <div>
+        <div className="flex flex-col gap-6">
           {allFilters.professions.length > 0 ? (
-            <h4 className="font-semibold mb-6">Stanowiska</h4>
+            <h4 className="font-semibold">Stanowiska</h4>
           ) : (
             <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />
           )}
@@ -80,8 +80,8 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
           </div>
         </div>
         <HorizontalLine />
-        <div>
-          {allFilters.professions.length > 0 ? (
+        <div className="flex flex-col gap-6">
+          {allFilters.availability.length > 0 ? (
             <button
               onClick={() =>
                 setIsActive((prev) => ({
@@ -89,7 +89,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                   availability: !prev.availability,
                 }))
               }
-              className="flex items-center mb-6"
+              className="flex items-center"
             >
               <img
                 className={`${
@@ -103,33 +103,30 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
           ) : (
             <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />
           )}
-          <div className="flex flex-col gap-4">
-            {allFilters.availability.length > 0 ? (
-              <div className="flex flex-col gap-4">
-                {isActive.availability &&
-                  allFilters.availability.map((availability) => (
-                    <AvailabilityCheckBox
-                      availability={availability}
-                      setFilter={setFilter}
-                      key={availability}
-                    />
-                  ))}
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-              </div>
-            )}
-          </div>
+          {isActive.availability && (
+            <div className="flex flex-col gap-4">
+              {allFilters.availability.length > 0 ? (
+                allFilters.availability.map((availability) => (
+                  <AvailabilityCheckBox
+                    availability={availability}
+                    setFilter={setFilter}
+                    key={availability}
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col gap-4">
+                  <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                  <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                  <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                  <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <HorizontalLine />
-        <div>
-          {allFilters.salary.length > 0 && (
+        <div className="flex flex-col gap-6">
+          {allFilters.salary.length > 0 ? (
             <button
               onClick={() =>
                 setIsActive((prev) => ({
@@ -137,7 +134,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                   salary: !prev.salary,
                 }))
               }
-              className="flex items-center mb-6"
+              className="flex items-center"
             >
               <img
                 className={`${
@@ -150,18 +147,52 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                 Oczekiwania finansowe
               </h4>
             </button>
+          ) : (
+            <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />
           )}
-          <div className="flex flex-col gap-4">
-            {allFilters.salary.length > 0 &&
-              isActive.salary &&
-              allFilters.salary.map((salary) => (
+          {allFilters.salary.length > 0 && isActive.salary && (
+            <div className="flex flex-col gap-4">
+              {allFilters.salary.map((salary) => (
                 <SalaryCheckBox
                   salary={salary}
                   setFilter={setFilter}
                   key={salary}
                 />
               ))}
-          </div>
+            </div>
+          )}
+        </div>
+        <HorizontalLine />
+        <div className="flex flex-col gap-6">
+          <button
+            onClick={() =>
+              setIsActive((prev) => ({
+                ...prev,
+                province: !prev.province,
+              }))
+            }
+            className="flex items-center"
+          >
+            <img
+              className={`${
+                isActive.province ? "rotate-0" : "-rotate-90"
+              } transition-transform max-h-[.9em] mr-2`}
+              src={filtersMenuArrow}
+              alt=""
+            />
+            <h4 className="font-medium text-left text-[14px]">Województwo</h4>
+          </button>
+          {isActive.province && (
+            <div className="flex flex-col gap-4">
+              {allFilters.province.map((province) => (
+                <ProvinceCheckBox
+                  province={province}
+                  setFilter={setFilter}
+                  key={province}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>

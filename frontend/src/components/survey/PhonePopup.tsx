@@ -9,7 +9,6 @@ import { arrowRight, xMark } from "../../assets/general";
 import { useAppSelector } from "../../main";
 import axios from "axios";
 import Loader from "../Loader";
-import FilledButton from "../FilledButton";
 import { textInputStyles } from "../../constants/workForm";
 
 export default function PhonePopup({
@@ -21,7 +20,6 @@ export default function PhonePopup({
   const [code, setCode] = useState("");
   const [phone, setPhone] = useState("");
   const [isOk, setIsOk] = useState<boolean | undefined>();
-  const { access } = useAppSelector((state) => state.login.tokens);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -37,7 +35,6 @@ export default function PhonePopup({
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + access,
             },
           }
         )
@@ -54,7 +51,6 @@ export default function PhonePopup({
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + access,
             },
           }
         )

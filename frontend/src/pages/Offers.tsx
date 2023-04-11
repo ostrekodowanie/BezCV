@@ -54,12 +54,18 @@ const CandidateList = () => {
     setHasMore(true);
     let url = "/oferty";
     let searchArr = [];
-    if (filter.availability.length > 0 || filter.professions.length > 0) {
+    if (
+      filter.availability.length > 0 ||
+      filter.professions.length > 0 ||
+      filter.province.length > 0
+    ) {
       searchArr.push(
         filter.availability.length > 0 &&
           "availability=" + filter.availability.map((av) => av).join(","),
         filter.professions.length > 0 &&
-          "professions=" + filter.professions.map((role) => role).join(",")
+          "professions=" + filter.professions.map((role) => role).join(","),
+        filter.province.length > 0 &&
+          "province=" + filter.province.map((province) => province).join(",")
       );
     }
     if (sort) searchArr.push("order=" + sort);
