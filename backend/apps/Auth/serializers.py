@@ -3,7 +3,6 @@ from django.utils import timezone
 
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
-from rest_framework.response import Response
 
 from datetime import timedelta
 
@@ -63,7 +62,7 @@ class UserSerializer(serializers.ModelSerializer):
     points = serializers.SerializerMethodField()
     class Meta:
         model =  User
-        fields = ('first_name', 'last_name', 'points', 'is_staff', 'nip', 'company_name')
+        fields = ('first_name', 'last_name', 'points', 'is_staff', 'nip', 'company_name', 'image', 'desc')
         
     def get_points(self, obj):
         last_month = timezone.now() - timedelta(days=30)
