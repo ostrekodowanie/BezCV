@@ -5,7 +5,7 @@ import {
   SetStateAction,
   useState,
 } from "react";
-import { xMark } from "../../assets/general";
+import { arrowRight, xMark } from "../../assets/general";
 import { useAppSelector } from "../../main";
 import axios from "axios";
 import Loader from "../Loader";
@@ -77,30 +77,30 @@ export default function PhonePopup({
   };
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center z-40">
       <div
         onClick={() => setPhonePopupActive(false)}
         className="absolute inset-0 bg-black/40"
       />
-      <div className="bg-white relative z-10 shadow-primaryBig sm:rounded-3xl xl:rounded-[2rem] overflow-y-scroll sm:overflow-y-auto overflow-x-auto flex flex-col xl:w-[8in] gap-8 md:gap-10 relative px-[8vw] sm:px-[.8in] py-[1in] sm:py-16">
-        <div className="flex justify-between items-center gap-4">
+      <div className="bg-white z-10 shadow-primaryBig sm:rounded-3xl xl:rounded-[2rem] overflow-y-scroll sm:overflow-y-auto overflow-x-auto flex flex-col xl:w-[8in] gap-8 md:gap-10 relative px-[8vw] sm:px-[.8in] py-[1in] sm:py-16">
+        <div className="flex flex-col items-center gap-4">
           <h2 className="font-semibold text-xl sm:text-2xl text-center">
             {isOk ? "Zweryfikuj numer telefonu" : "Witaj z powrotem!"}
           </h2>
-          <p className="text-[#3C4663] font-medium text-sm text-center w-full jakarta leading-relaxed max-w-[6in]">
+          <p className="text-[#3C4663] font-semibold text-sm text-center w-full jakarta leading-relaxed max-w-[6in]">
             {isOk
               ? "Podaj kod weryfikacyjny, który wysłaliśmy na twój numer telefonu za pośrednictwem SMS"
               : "Podaj numer telefonu, którym rejestrowałeś się wcześniej do naszego portalu."}
           </p>
           <button
-            className="text-[#F9F9F9]"
+            className="text-[#F9F9F9] absolute right-12 top-8"
             onClick={() => setPhonePopupActive(false)}
           >
             <img className="max-w-[3rem]" src={xMark} alt="X" />
           </button>
         </div>
         <form
-          className="flex flex-col gap-8 sm:grid grid-cols-2 self-stretch"
+          className="flex flex-col gap-8 self-stretch"
           onSubmit={handleSubmit}
         >
           {isOk ? (
@@ -133,8 +133,13 @@ export default function PhonePopup({
           )}
           <div className="flex flex-col items-end sm:flex-row sm:items-center gap-8 mt-4 col-span-2 sm:justify-end">
             {loading && <Loader />}
-
-            <FilledButton type="submit">Prześlij</FilledButton>
+            <button
+              className='className="justify-center bg-secondary w-max transition-colors font-semibold border-primary text-white sm:rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start max-w-max"'
+              type="submit"
+            >
+              Prześlij
+              <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
+            </button>
           </div>
         </form>
       </div>
