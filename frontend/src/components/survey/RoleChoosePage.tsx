@@ -56,7 +56,7 @@ export default function RoleChoosePage({
                     name="role"
                   />
                   <img
-                    className="hidden sm:block max-w-[1.6in] max-h-[1.2in]"
+                    className="max-w-[50%] sm:max-w-[1.6in] max-h-[1.2in]"
                     src={role.image}
                     alt=""
                   />
