@@ -28,9 +28,9 @@ export default function SurveyManQuote() {
   }, [activeQuestionIndex]);
 
   return quote ? (
-    <q className="text-white text-center text-xl font-semibold px-4 mx-auto">
+    <p className="text-white text-center text-xl font-semibold px-4 mx-auto">
       {quote}
-    </q>
+    </p>
   ) : (
     <></>
   );

@@ -88,9 +88,7 @@ export default function RoleController() {
   }, [role]);
 
   if (isFinished && typeof first_name === "string")
-    return (
-      <Finished firstName={first_name} questionsLength={questions.length} />
-    );
+    return <Finished firstName={first_name} />;
 
   if (isFinishing) return <FinishLoader />;
 
@@ -136,6 +134,7 @@ export default function RoleController() {
               <RangeKey
                 {...k}
                 numericalAnswer={numericalAnswer}
+                setNumericalAnswer={setNumericalAnswer}
                 key={k.number}
               />
             ))}
@@ -155,7 +154,7 @@ export default function RoleController() {
               {secondsLeft} sekund
             </h3>
           </div>
-          <button className="rounded-full text-[.8rem] text-white fixed sm:static right-[8vw] left-[8vw] bottom-8 font-bold py-4 px-8 bg-secondary self-end flex items-center">
+          <button className="sm:rounded-full text-[.8rem] text-white fixed sm:static right-0 left-0 bottom-0 font-bold py-4 px-8 bg-secondary self-end flex items-center">
             Następne pytanie{" "}
             <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
           </button>

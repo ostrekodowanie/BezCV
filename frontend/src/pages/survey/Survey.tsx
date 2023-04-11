@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import RoleController from "./RoleController";
 import CandidateController from "./CandidateController";
 import { createContext, useMemo, useState } from "react";
-import { surveyMan, triangle } from "../../assets/survey/survey";
+import { surveyMan } from "../../assets/survey/survey";
 import {
   CandidateAnswerType,
   initialFilledState,

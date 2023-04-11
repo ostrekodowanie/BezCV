@@ -144,14 +144,16 @@ export default function CandidateController() {
         <div className="flex justify-between items-center gap-4 flex-wrap self-end mt-8 xl:mt-0">
           {credentialsLoading && <Loader />}
           {!credentialsLoading && credentialsError && (
-            <p className="text-red-400 max-w-full">{credentialsError}</p>
+            <p className="text-red-400 max-w-full text-sm sm:text-base">
+              {credentialsError}
+            </p>
           )}
-          <div className="flex flex-col sm:self-center sm:flex-row gap-6 flex-1 fixed sm:relative right-[8vw] left-[8vw] sm:inset-auto self-stretch max-w-full bottom-8">
+          <div className="flex sm:self-center sm:gap-6 flex-1 fixed sm:relative right-0 left-0 sm:inset-auto self-stretch max-w-full bottom-0">
             {activeQuestionIndex > 0 && !hasReturned && (
               <button
                 type="button"
                 onClick={handleReturn}
-                className="rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-[#F98D3D] text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
+                className="sm:rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-[#F98D3D] text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
               >
                 <img className="mr-2 max-h-[.9em]" src={prevArrow} alt="<-" />{" "}
                 Poprzednie pytanie
@@ -159,7 +161,7 @@ export default function CandidateController() {
             )}
             <button
               type="submit"
-              className="justify-center text-[.75rem] w-full sm:w-max rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary sm:self-end flex items-center"
+              className="justify-center text-[.75rem] w-full sm:w-max sm:rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary sm:self-end flex items-center"
             >
               Następne pytanie{" "}
               <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />

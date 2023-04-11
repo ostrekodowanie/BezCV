@@ -72,13 +72,7 @@ export default function EmployerInfo() {
           Nazwa Firmy: {company_name}
         </h3>
       </div>
-      <div className="flex flex-col gap-4">
-        <h3 className="font-medium flex items-center">
-          <img className="max-h-[1.4em] mr-3" src={descIcon} alt="" />
-          Informacje
-        </h3>
-        <InfoForm />
-      </div>
+      <InfoForm />
     </div>
   );
 }

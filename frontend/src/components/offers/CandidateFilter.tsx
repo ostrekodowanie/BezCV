@@ -146,7 +146,9 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                 src={filtersMenuArrow}
                 alt=""
               />
-              <h4 className="font-medium text-[14px]">Oczekiwania finansowe</h4>
+              <h4 className="font-medium text-left text-[14px]">
+                Oczekiwania finansowe
+              </h4>
             </button>
           )}
           <div className="flex flex-col gap-4">
@@ -165,28 +167,6 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
     </>
   );
 }
-
-// const AbilityCheckBox = ({ ability, setFilter }: { ability: string, setFilter: Dispatch<SetStateAction<FilterStateProps>> }) => {
-//     const location = useLocation()
-//     const [checked, setChecked] = useState(false)
-
-//     useLayoutEffect(() => {
-//         const decodedSearch = decodeURIComponent(location.search);
-//         setChecked(decodedSearch.includes(ability))
-//     }, [])
-
-//     const handleChange = () => {
-//         setFilter(prev => ({ ...prev, abilities: checked ? prev.abilities.filter(ab => ab !== ability) : [...prev.abilities, ability] }))
-//         setChecked(prev => !prev)
-//     }
-
-//     return (
-//         <div className='flex items-center text-[.75rem] font-medium'>
-//             <input type='checkbox' onChange={handleChange} checked={checked} name="abilities" id={ability}/>
-//             <label className="ml-4" htmlFor={ability}>{ability}</label>
-//         </div>
-//     )
-// }
 
 const AvailabilityCheckBox = ({
   availability,
@@ -306,6 +286,47 @@ const RoleCheckBox = ({
       />
       <label className="ml-4" htmlFor={role}>
         {roleToTextMap[role].profession}
+      </label>
+    </div>
+  );
+};
+
+const ProvinceCheckBox = ({
+  province,
+  setFilter,
+}: {
+  province: string;
+  setFilter: Dispatch<SetStateAction<FilterStateProps>>;
+}) => {
+  const location = useLocation();
+  const [checked, setChecked] = useState(false);
+
+  useLayoutEffect(() => {
+    const decodedSearch = decodeURIComponent(location.search);
+    setChecked(decodedSearch.includes(province));
+  }, []);
+
+  const handleChange = () => {
+    setFilter((prev) => ({
+      ...prev,
+      province: checked
+        ? prev.province.filter((r) => r !== province)
+        : [...prev.province, province],
+    }));
+    setChecked((prev) => !prev);
+  };
+
+  return (
+    <div className="flex items-center text-[14px] font-medium">
+      <input
+        type="checkbox"
+        onChange={handleChange}
+        checked={checked}
+        name="profession-filter"
+        id={province}
+      />
+      <label className="ml-4" htmlFor={province}>
+        {province}
       </label>
     </div>
   );

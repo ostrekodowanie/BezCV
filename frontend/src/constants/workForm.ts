@@ -8,7 +8,7 @@ export const textInputStyles = 'px-8 py-4 text-[.8rem] sm:text-sm bg-white shado
 
 export type RangeNumberKey = {
     number: number,
-    text: string
+    text: string,
 }
 
 export const rangeNumberKeys: RangeNumberKey[] = [

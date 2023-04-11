@@ -2,8 +2,10 @@ import Control, { Controller } from "react-control-js";
 import { Link } from "react-router-dom";
 import { arrowRight } from "../../assets/general";
 import { surveyIntroductionMan, triangle } from "../../assets/survey/survey";
+import { useState } from "react";
 
 export default function Introduction() {
+  const [phonePopupActive, setPhonePopupActive] = useState(false);
   return (
     <section className="padding pt-[1.4in] md:pt-[1.8in] bg-white lg:grid grid-cols-[1fr_2fr] gap-8 overflow-hidden">
       <div className="overflow-hidden lg:max-h-[85vh]">
@@ -85,14 +87,23 @@ export default function Introduction() {
           opacity={1}
           delay={200}
           element={
-            <Link
-              to="/praca/ankieta"
-              id="survey-button"
-              className="fixed sm:static justify-center bottom-8 right-[8vw] left-[8vw] bg-secondary transition-colors font-semibold border-primary text-white rounded-full flex items-center text-[.8rem] py-[14px] px-8 mt-4 self-start sm:max-w-max"
-            >
-              Przenieś mnie do ankiety!{" "}
-              <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
-            </Link>
+            <div className="flex flex-col sm:gap-6 sm:items-center fixed sm:static bottom-0 right-0 left-0">
+              <button
+                type="button"
+                className="sm:rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-[#F98D3D] text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
+              >
+                <img className="mr-2 max-h-[.9em]" src={arrowRight} />{" "}
+                Poprzednie pytanie
+              </button>
+              <Link
+                to="/praca/ankieta"
+                id="survey-button"
+                className="justify-center bg-secondary transition-colors font-semibold border-primary text-white sm:rounded-full flex items-center text-[.8rem] py-[14px] px-8 mt-4 self-start sm:max-w-max"
+              >
+                Przenieś mnie do ankiety!{" "}
+                <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
+              </Link>
+            </div>
           }
         />
       </Controller>

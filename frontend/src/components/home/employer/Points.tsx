@@ -16,13 +16,11 @@ export default function Points() {
           Rejestracja w BezCV jest{" "}
           <span className="font-bold">zupełnie darmowa!</span>
         </h2>
-        <p className="text-[#3C4663] text-sm text-center xl:text-left jakarta leading-relaxed max-w-[6in]">
-          <span className="font-medium">
-            Dzięki temu możesz zobaczyć naszą bazę i sprawdzić, czy posiadamy
-            kandydatów odpowiednich do pracy dla Twojego przedsiębiorstwa.
-          </span>{" "}
+        <p className="text-[#3C4663] font-medium text-sm text-center xl:text-left jakarta leading-relaxed max-w-[6in]">
+          Dzięki temu możesz zobaczyć naszą bazę i sprawdzić, czy posiadamy
+          kandydatów odpowiednich do pracy dla Twojego przedsiębiorstwa.
           Natomiast, jeżeli chcesz wykupić dostęp do danych kontaktowych
-          kandydatów <span className="font-medium">masz 3 opcje:</span>
+          kandydatów masz 3 opcje:
         </p>
       </div>
       <div className="flex flex-col gap-8 items-center self-stretch w-full">
