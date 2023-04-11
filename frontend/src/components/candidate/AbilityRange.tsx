@@ -25,7 +25,7 @@ const AbilityRange = ({
   }, []);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 text-font">
       <h4
         className={`max-w-full w-max font-medium text-[.8rem] flex items-center ${
           percentage === null ? "opacity-[.1]" : "opacity-1"
