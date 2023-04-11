@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import { customerService, officeAdministration, selling } from "../assets/survey/survey"
 import { QuestionProps } from "./findWork"
-import { tutorialSales } from "../assets/home/home"
 
 export const radioInputStyles = 'min-w-0 px-8 py-4 text-sm bg-white shadow-[0px_2px_43px_-2px_rgba(215,105,23,0.08)] rounded-xl w-full font-semibold flex items-center gap-4 cursor-pointer'
 

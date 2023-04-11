@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useLocation } from "react-router";
 import { filtersMenuArrow } from "../../assets/offers/offers";
-import { roleToTextMap } from "../../constants/candidate";
+import { provinces, roleToTextMap } from "../../constants/candidate";
 import { RoleType } from "../../constants/workForm";
 import { FilterProps as FilterStateProps } from "../../pages/Offers";
 
@@ -21,11 +21,13 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
   const [isActive, setIsActive] = useState({
     availability: false,
     salary: false,
+    province: false,
   });
   const [allFilters, setAllFilters] = useState<FilterStateProps>({
     professions: [],
     availability: [],
     salary: [],
+    province: provinces,
   });
 
   useEffect(() => {
@@ -33,11 +35,12 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
       .get("/api/candidate/filters")
       .then((res) => res.data)
       .then((data) =>
-        setAllFilters({
+        setAllFilters((prev) => ({
           professions: data.professions,
           availability: ["cały etat", "pół etatu", "¼ etatu"],
           salary: data.salary,
-        })
+          province: prev.province,
+        }))
       );
   }, []);
 
@@ -77,20 +80,6 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
           </div>
         </div>
         <HorizontalLine />
-        {/* <div>
-                    {allFilters.abilities.length > 0 ? <h4 className="font-semibold mb-6">Umiejętności</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
-                    <div className="flex flex-col gap-4">
-                        {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <AbilityCheckBox ability={ability} setFilter={setFilter} key={ability} />) :
-                        <>
-                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                        </>}
-                    </div>
-                </div> */}
         <div>
           {allFilters.professions.length > 0 ? (
             <button

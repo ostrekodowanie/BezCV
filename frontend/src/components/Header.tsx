@@ -1,11 +1,6 @@
 import { Link } from "react-router-dom";
-import {
-  useResolvedPath,
-  useMatch,
-  useLocation,
-  useNavigate,
-} from "react-router";
-import { MouseEvent, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import { useAppSelector } from "../main";
 import { AccountContext } from "../reducers/AccountProvider";
 import { arrowRight } from "../assets/general";

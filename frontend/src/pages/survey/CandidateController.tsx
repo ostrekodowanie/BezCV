@@ -335,7 +335,10 @@ const CandidateInput = ({
                   onChange={(e) =>
                     setCandidateAnswers((prev) => ({
                       ...prev,
-                      [input.name]: e.target.value,
+                      [input.name]:
+                        input.type === "number"
+                          ? e.target.value.replace(/\D/g, "")
+                          : e.target.value,
                     }))
                   }
                 />
@@ -372,9 +375,7 @@ const CandidateInput = ({
 const PhoneInput = () => {
   const { candidateAnswers, setCandidateAnswers } = useContext(SurveyContext);
   const [input, setInput] = useState(
-    candidateAnswers.phone
-      ? "+48 " + String(candidateAnswers.phone).replace(/(\d{3})(?=\d)/g, "$1 ")
-      : ""
+    String(candidateAnswers.phone).replace(/(\d{3})(?=\d)/g, "$1 ")
   );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -388,7 +389,7 @@ const PhoneInput = () => {
   useEffect(() => {
     setCandidateAnswers((prev) => ({
       ...prev,
-      phone: input.split("+48 ")[0].split(" ").join(""),
+      phone: input.split(" ").join(""),
     }));
   }, [input]);
 
