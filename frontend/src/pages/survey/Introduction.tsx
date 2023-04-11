@@ -3,11 +3,16 @@ import { Link } from "react-router-dom";
 import { arrowRight } from "../../assets/general";
 import { surveyIntroductionMan, triangle } from "../../assets/survey/survey";
 import { useState } from "react";
+import { prevArrow } from "../../assets/candidate/candidate";
+import PhonePopup from "../../components/survey/PhonePopup";
 
 export default function Introduction() {
   const [phonePopupActive, setPhonePopupActive] = useState(false);
   return (
     <section className="padding pt-[1.4in] md:pt-[1.8in] bg-white lg:grid grid-cols-[1fr_2fr] gap-8 overflow-hidden">
+      {phonePopupActive && (
+        <PhonePopup setPhonePopupActive={setPhonePopupActive} />
+      )}
       <div className="overflow-hidden lg:max-h-[85vh]">
         <Control
           ease="ease-out"
@@ -93,7 +98,12 @@ export default function Introduction() {
                 type="button"
                 className="sm:rounded-full text-[.8rem] w-full xl:w-max justify-center text-[#F98D3D] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
               >
-                Kontynuuj wypełnianie
+                Kontynuuj wypełnianie{" "}
+                <img
+                  className="ml-2 max-h-[.9em] rotate-180"
+                  src={prevArrow}
+                  alt=""
+                />
               </button>
               <Link
                 to="/praca/ankieta"
