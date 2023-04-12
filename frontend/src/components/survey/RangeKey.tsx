@@ -7,11 +7,12 @@ export default function RangeKey({
   numericalAnswer,
   setNumericalAnswer,
 }: RangeNumberKey & {
-  numericalAnswer: number;
-  setNumericalAnswer: Dispatch<SetStateAction<number>>;
+  numericalAnswer: number | null;
+  setNumericalAnswer: Dispatch<SetStateAction<number | null>>;
 }) {
   return (
     <button
+      type="button"
       onClick={() => setNumericalAnswer(number)}
       className="flex flex-col items-center gap-4"
     >

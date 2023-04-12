@@ -17,9 +17,9 @@ import SurveyManQuote from "../../components/survey/SurveyManQuote";
 export const SurveyContext = createContext<SurveyContextType>(null!);
 
 export default function Survey() {
-  const [role, setRole] = useState<RoleType | null>(null);
+  const [role, setRole] = useState<RoleType | null>("sales");
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-  const [step, setStep] = useState<"role" | "candidate">("candidate");
+  const [step, setStep] = useState<"role" | "candidate">("role");
   const [isSurveyFilled, setIsSurveyFilled] =
     useState<IsFilled>(initialFilledState);
   const [roleAnswers, setRoleAnswers] = useState<RoleAnswerType[]>([]);

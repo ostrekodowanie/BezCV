@@ -56,7 +56,7 @@ export default function RoleChoosePage({
                     name="role"
                   />
                   <img
-                    className="max-w-[50%] sm:max-w-[1.6in] max-h-[1.2in]"
+                    className="max-w-[40%] sm:max-w-[1.6in] max-h-[1.2in]"
                     src={role.image}
                     alt=""
                   />
@@ -67,7 +67,7 @@ export default function RoleChoosePage({
         </div>
         <button
           type="submit"
-          className="fixed sm:static sm:rounded-full right-0 left-0 bottom-0 text-[.8rem] text-white ml-auto self-end font-bold py-4 px-8 bg-secondary flex items-center mt-8 xl:mt-0"
+          className="fixed sm:static sm:rounded-full right-0 left-0 bottom-0 text-[.8rem] text-white sm:ml-auto self-end font-bold py-4 px-8 bg-secondary flex items-center mt-8 xl:mt-0"
         >
           Rozpocznij ankietę{" "}
           <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="" />

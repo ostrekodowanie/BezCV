@@ -27,60 +27,60 @@ export default function CandidateController() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (type === "email") {
-      setCredentialsLoading(true);
-      return axios
-        .post(
-          "/api/survey/email",
-          JSON.stringify({ email: candidateAnswers.email }),
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          switch (res.status) {
-            case 204:
-              setActiveQuestionIndex((prev) => prev + 1);
-              break;
-            case 200:
-              setCredentialsError("Email jest już używany przez inny profil!");
-          }
-        })
-        .catch(() => setCredentialsError("Wystąpił błąd!"))
-        .finally(() => setCredentialsLoading(false));
-    }
+    // if (type === "email") {
+    //   setCredentialsLoading(true);
+    //   return axios
+    //     .post(
+    //       "/api/survey/email",
+    //       JSON.stringify({ email: candidateAnswers.email }),
+    //       {
+    //         headers: { "Content-Type": "application/json" },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       switch (res.status) {
+    //         case 204:
+    //           setActiveQuestionIndex((prev) => prev + 1);
+    //           break;
+    //         case 200:
+    //           setCredentialsError("Email jest już używany przez inny profil!");
+    //       }
+    //     })
+    //     .catch(() => setCredentialsError("Wystąpił błąd!"))
+    //     .finally(() => setCredentialsLoading(false));
+    // }
 
-    if (type === "tel") {
-      setCredentialsLoading(true);
-      if (candidateAnswers.phone.length < 9) {
-        setCredentialsLoading(false);
-        return setCredentialsError("Nieprawidłowy numer telefonu!");
-      }
-      return axios
-        .post(
-          "/api/survey/phone",
-          JSON.stringify({
-            phone:
-              typeof candidateAnswers.phone === "string"
-                ? candidateAnswers.phone.split(" ").join("")
-                : candidateAnswers.phone,
-          }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then(() => setPhoneCodePopupActive(true))
-        .catch((err) => {
-          setCredentialsError(
-            typeof err.response.data.detail === "string"
-              ? err.response.data.detail
-              : "Wystąpił błąd!"
-          );
-        })
-        .finally(() => setCredentialsLoading(false));
-    }
+    // if (type === "tel") {
+    //   setCredentialsLoading(true);
+    //   if (candidateAnswers.phone.length < 9) {
+    //     setCredentialsLoading(false);
+    //     return setCredentialsError("Nieprawidłowy numer telefonu!");
+    //   }
+    //   return axios
+    //     .post(
+    //       "/api/survey/phone",
+    //       JSON.stringify({
+    //         phone:
+    //           typeof candidateAnswers.phone === "string"
+    //             ? candidateAnswers.phone.split(" ").join("")
+    //             : candidateAnswers.phone,
+    //       }),
+    //       {
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     )
+    //     .then(() => setPhoneCodePopupActive(true))
+    //     .catch((err) => {
+    //       setCredentialsError(
+    //         typeof err.response.data.detail === "string"
+    //           ? err.response.data.detail
+    //           : "Wystąpił błąd!"
+    //       );
+    //     })
+    //     .finally(() => setCredentialsLoading(false));
+    // }
 
     if (activeQuestionIndex >= defaultQuestions.length - 1) {
       setLoading(true);
@@ -334,15 +334,12 @@ const CandidateInput = ({
                   value={candidateAnswers[input.name]}
                   placeholder={input.placeholder}
                   id={input.name}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setCandidateAnswers((prev) => ({
                       ...prev,
-                      [input.name]:
-                        input.type === "number"
-                          ? e.target.value.replace(/\D/g, "")
-                          : e.target.value,
-                    }))
-                  }
+                      [input.name]: e.target.value,
+                    }));
+                  }}
                 />
               </div>
             );
