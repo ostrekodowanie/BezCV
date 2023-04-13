@@ -22,10 +22,10 @@ export default function Offers() {
 }
 
 export interface FilterProps {
-  // abilities: string[],
   professions: RoleType[];
   availability: string[];
   salary: string[];
+  province: string[];
 }
 
 const CandidateList = () => {
@@ -41,11 +41,11 @@ const CandidateList = () => {
   const [count, setCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [filter, setFilter] = useState<FilterProps>({
-    // abilities: searchParams.get('a')?.split(',') || [],
     professions:
       (searchParams.get("professions")?.split(",") as RoleType[]) || [],
     availability: searchParams.get("availability")?.split(",") || [],
     salary: searchParams.get("salary")?.split(",") || [],
+    province: searchParams.get("province")?.split(",") || [],
   });
   const [sort, setSort] = useState("");
 
@@ -54,12 +54,18 @@ const CandidateList = () => {
     setHasMore(true);
     let url = "/oferty";
     let searchArr = [];
-    if (filter.availability.length > 0 || filter.professions.length > 0) {
+    if (
+      filter.availability.length > 0 ||
+      filter.professions.length > 0 ||
+      filter.province.length > 0
+    ) {
       searchArr.push(
         filter.availability.length > 0 &&
           "availability=" + filter.availability.map((av) => av).join(","),
         filter.professions.length > 0 &&
-          "professions=" + filter.professions.map((role) => role).join(",")
+          "professions=" + filter.professions.map((role) => role).join(","),
+        filter.province.length > 0 &&
+          "province=" + filter.province.map((province) => province).join(",")
       );
     }
     if (sort) searchArr.push("order=" + sort);

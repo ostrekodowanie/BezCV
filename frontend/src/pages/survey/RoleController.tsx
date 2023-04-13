@@ -25,9 +25,10 @@ export default function RoleController() {
     setRoleAnswers,
     activeQuestionIndex,
     setActiveQuestionIndex,
+    setIsSurveyFilled,
   } = useContext(SurveyContext);
   const { first_name, phone } = candidateAnswers;
-  const [numericalAnswer, setNumericalAnswer] = useState<number>(1);
+  const [numericalAnswer, setNumericalAnswer] = useState<number | null>(null);
   const [questions, setQuestions] = useState<RoleQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const timer = useRef<any>(null);
@@ -38,10 +39,21 @@ export default function RoleController() {
 
   useEffect(() => {
     if (!questions[activeQuestionIndex]) return;
-    if (secondsLeft === 0) return setActiveQuestionIndex((prev) => prev + 1);
+    if (secondsLeft === 0) {
+      setRoleAnswers((prev) => [
+        ...prev,
+        [questions[activeQuestionIndex].id, numericalAnswer || 3],
+      ]);
+      return setActiveQuestionIndex((prev) => prev + 1);
+    }
     timer.current = setTimeout(() => setSecondsLeft((prev) => prev - 1), 1000);
     return () => clearTimeout(timer.current);
   }, [secondsLeft, questions]);
+
+  useEffect(() => {
+    setSecondsLeft(15);
+    setNumericalAnswer(null);
+  }, [activeQuestionIndex]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -51,8 +63,6 @@ export default function RoleController() {
       [questions[activeQuestionIndex].id, numericalAnswer],
     ]);
     setActiveQuestionIndex((prev) => prev + 1);
-    setNumericalAnswer(1);
-    setSecondsLeft(15);
   };
 
   useEffect(() => {
@@ -66,7 +76,14 @@ export default function RoleController() {
             headers: { "Content-Type": "application/json" },
           }
         )
-        .then(() => setIsFinished(true))
+        .then(() => {
+          setIsFinished(true);
+          role &&
+            setIsSurveyFilled((prev) => ({
+              ...prev,
+              [role]: true,
+            }));
+        })
         .catch((err) =>
           setError(
             typeof err.response.data.detail === "string"
@@ -88,9 +105,7 @@ export default function RoleController() {
   }, [role]);
 
   if (isFinished && typeof first_name === "string")
-    return (
-      <Finished firstName={first_name} questionsLength={questions.length} />
-    );
+    return <Finished firstName={first_name} />;
 
   if (isFinishing) return <FinishLoader />;
 
@@ -121,8 +136,9 @@ export default function RoleController() {
             <input
               className="bg-secondary"
               type="range"
+              required
               defaultValue={1}
-              value={numericalAnswer}
+              value={numericalAnswer || ""}
               min={1}
               max={5}
               onChange={(e) => setNumericalAnswer(parseInt(e.target.value))}
@@ -136,13 +152,14 @@ export default function RoleController() {
               <RangeKey
                 {...k}
                 numericalAnswer={numericalAnswer}
+                setNumericalAnswer={setNumericalAnswer}
                 key={k.number}
               />
             ))}
           </div>
         </div>
-        <div className="flex justify-between items-center self-stretch gap-4 flex-wrap mt-8 xl:mt-0">
-          <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-2 sm:flex sm:justify-between sm:items-center fixed sm:static right-0 left-0 bottom-0 self-stretch sm:gap-4">
+          <div className="flex flex-col sm:gap-2 justify-self-center sm:justify-self-auto">
             <h4 className="font-semibold flex text-sm sm:text-base items-center">
               <img
                 className="max-h-[1.1em] mr-2 animate-spin"
@@ -155,7 +172,7 @@ export default function RoleController() {
               {secondsLeft} sekund
             </h3>
           </div>
-          <button className="rounded-full text-[.8rem] text-white fixed sm:static right-[8vw] left-[8vw] bottom-8 font-bold py-4 px-8 bg-secondary self-end flex items-center">
+          <button className="sm:rounded-full text-[.75rem] justify-center sm:w-max sm:text-[.8rem] text-white font-semibold py-4 px-8 bg-secondary sm:self-end flex items-center">
             Następne pytanie{" "}
             <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
           </button>

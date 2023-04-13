@@ -1,12 +1,21 @@
+import { Dispatch, SetStateAction } from "react";
 import { RangeNumberKey } from "../../constants/workForm";
 
 export default function RangeKey({
   number,
   text,
   numericalAnswer,
-}: RangeNumberKey & { numericalAnswer: number }) {
+  setNumericalAnswer,
+}: RangeNumberKey & {
+  numericalAnswer: number | null;
+  setNumericalAnswer: Dispatch<SetStateAction<number | null>>;
+}) {
   return (
-    <div className="flex flex-col items-center gap-4">
+    <button
+      type="button"
+      onClick={() => setNumericalAnswer(number)}
+      className="flex flex-col items-center gap-4"
+    >
       <div
         className={`rounded-full h-12 w-12 sm:h-16 sm:w-16 transition-colors flex items-center justify-center shadow-[0px_7px_37px_-2px_rgba(215,105,23,0.13)] ${
           number === numericalAnswer
@@ -22,6 +31,6 @@ export default function RangeKey({
         </h5>
         <h4 className="font-bold text-[.75rem] sm:text-sm">“{text}”</h4>
       </div>
-    </div>
+    </button>
   );
 }

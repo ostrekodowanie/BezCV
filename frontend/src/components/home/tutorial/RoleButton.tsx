@@ -8,15 +8,13 @@ export default function RoleButton(props: RoleProps) {
   const { account } = useContext(AccountContext);
   return (
     <button
-      className={`py-3 px-6 font-semibold text-sm rounded-full ${
+      className={`py-3 px-6 font-medium text-sm rounded-full transition-colors ${
         role.name === props.name
-          ? (account === "worker"
-              ? "bg-[linear-gradient(90.04deg,#2F66F4_24.53%,#0D9AE9_82.58%)]"
-              : "bg-[linear-gradient(289.36deg,#F98D3D_9.9%,#F9AE3D_62.28%)]") +
+          ? (account === "worker" ? "bg-[#2F66F4]" : "bg-[#F98D3D]") +
             " text-white"
           : account === "worker"
-          ? "text-[#FEE9CB]"
-          : "text-[#D2E4FD]"
+          ? "text-[#FEE9CB] hover:bg-[#2F66F4]/20"
+          : "text-[#D2E4FD] hover:bg-[#F98D3D]/20"
       }`}
       onClick={() => setRole(props)}
     >

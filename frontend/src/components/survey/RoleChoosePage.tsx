@@ -31,16 +31,17 @@ export default function RoleChoosePage({
       >
         <div className="flex flex-col gap-8 self-stretch w-full">
           <h2 className="text-3xl font-bold text-center w-full max-w-[8in] mx-auto">
-            Wybierz zawód
+            W której branży chciałbyś pracować?
           </h2>
-          <div className="flex flex-col w-full gap-4 xl:gap-8 sm:grid grid-cols-3">
+          <div className="flex flex-col w-full gap-4 sm:grid grid-cols-3">
             {roles
               .filter((role) => !isSurveyFilled[role.name])
               .map((role) => (
                 <label
-                  className={`py-6 px-12 sm:p-12 w-full text-center flex flex-col cursor-pointer font-semibold gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
-                    chosen === role.name &&
-                    "outline-[2px] outline-[#F98D3D] text-secondary"
+                  className={`py-6 px-12 sm:p-12 w-full text-center transition-all flex flex-col cursor-pointer font-semibold gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
+                    chosen === role.name
+                      ? "text-secondary shadow-[0px_56px_114px_rgba(250,175,62,0.25)]"
+                      : "shadow-secondaryBig"
                   }`}
                   htmlFor={role.name}
                   key={"label:" + role.name}
@@ -55,7 +56,7 @@ export default function RoleChoosePage({
                     name="role"
                   />
                   <img
-                    className="hidden sm:block max-w-[1.6in] max-h-[1.2in]"
+                    className="max-w-[40%] sm:max-w-[1.6in] max-h-[1.2in]"
                     src={role.image}
                     alt=""
                   />
@@ -66,7 +67,7 @@ export default function RoleChoosePage({
         </div>
         <button
           type="submit"
-          className="rounded-full text-[.8rem] text-white ml-auto self-end font-bold py-4 px-8 bg-secondary flex items-center mt-8 xl:mt-0"
+          className="fixed sm:static sm:rounded-full right-0 left-0 bottom-0 text-[.8rem] text-white sm:ml-auto self-end font-bold py-4 px-8 bg-secondary flex items-center mt-8 xl:mt-0"
         >
           Rozpocznij ankietę{" "}
           <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="" />

@@ -36,7 +36,7 @@ export default function ChooseAccount({
   return (
     <section className="px-[8vw] md:px-[16vw] 2xl:px-[20vw] py-[8vw] xl:py-0 min-h-screen xl:flex items-center relative">
       <Controller
-        className="md:items-center flex flex-col xl:items-stretch xl:grid gap-8 grid-cols-2 mt-[15vh]"
+        className="md:items-center flex flex-col-reverse xl:items-stretch xl:grid gap-8 grid-cols-2 mt-[15vh]"
         opacity={1}
         stagger={100}
         ease="ease-out"

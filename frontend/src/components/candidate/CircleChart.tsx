@@ -25,7 +25,7 @@ export default function CircleChart({
   percentage,
   isFirst,
 }: CircleChartProps) {
-  const circleRef = useRef<SVGCircleElement>(null);
+  const circleRef = useRef<SVGCircleElement>(null!);
   const color = professionColorMap[profession].color;
   const title = professionTitle(profession);
   const radius = 155;
@@ -43,7 +43,10 @@ export default function CircleChart({
       }
     });
     observer.observe(circleRef.current);
-  }, [percentage]);
+    return () => {
+      observer.disconnect();
+    };
+  }, [percentage, circleRef.current]);
 
   return (
     <div
@@ -53,7 +56,7 @@ export default function CircleChart({
     >
       <div className="rounded-full h-[280px] w-[280px] bg-white" />
       <div className="absolute top-[22%] bottom-[18%] right-16 left-16 flex flex-col items-center gap-4">
-        <h3 className="flex flex-col items-center relative z-10">
+        <h3 className="flex flex-col items-center text-font relative z-10">
           <small className="font-medium text-[.75rem]">Umiejętności</small>
           <span className="text-lg font-bold">{title}</span>
         </h3>
@@ -72,7 +75,7 @@ export default function CircleChart({
         </strong>
         <div className="absolute inset-0 bg-[#F8F9FB] rounded-full flex flex-col items-center text-center justify-end py-7">
           <div className="bg-white absolute top-0 left-0 right-0 bottom-[40%]" />
-          <p className="font-medium w-full max-w-[2in] text-[.8rem]">
+          <p className="font-medium w-full max-w-[2in] text-[.8rem] text-font">
             większe niż <strong>{percentage}% ankietowanych</strong>
           </p>
         </div>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
-import { infoFormButton } from "../../assets/profile/profile";
+import { descIcon, infoFormButton } from "../../assets/profile/profile";
 import { infoFormQuestions } from "../../constants/profile";
 import { useAppSelector } from "../../main";
 
@@ -45,24 +45,38 @@ export default function InfoForm() {
       ))}
     </div>
   ) : (
-    <form className="relative" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder={question}
-        value={answers[activeQuestionIndex]}
-        onChange={(e) =>
-          setAnswers((prev) => {
-            let newArr = [...prev];
-            newArr[activeQuestionIndex] = e.target.value;
-            return newArr;
-          })
-        }
-        className="rounded-3xl bg-[#F8F9FB] text-[#3C4663] text-sm w-full font-medium placeholder:font-medium min-w-0 placeholder:text-[#3C4663] flex flex-col p-6"
-      />
-      <button className="rounded-full absolute right-4 h-8 w-8 bottom-[50%] translate-y-[50%] bg-[#DADFEB] flex items-center justify-center">
-        <img className="max-h-[60%]" src={infoFormButton} alt="Dalej" />
-      </button>
-    </form>
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-1 flex-wrap">
+        <h3 className="font-medium flex items-center">
+          <img className="max-h-[1.4em] mr-3" src={descIcon} alt="" />
+          Informacje
+        </h3>
+        <button
+          onClick={() => setHasBeenFilled(false)}
+          className="sm:text-sm text-[.8rem] text-[#F5F5F5]"
+        >
+          Edytuj
+        </button>
+      </div>
+      <form className="relative" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder={question}
+          value={answers[activeQuestionIndex]}
+          onChange={(e) =>
+            setAnswers((prev) => {
+              let newArr = [...prev];
+              newArr[activeQuestionIndex] = e.target.value;
+              return newArr;
+            })
+          }
+          className="rounded-3xl bg-[#F8F9FB] text-[#3C4663] text-sm w-full font-medium placeholder:font-medium min-w-0 placeholder:text-[#3C4663] flex flex-col p-6"
+        />
+        <button className="rounded-full absolute right-4 h-8 w-8 bottom-[50%] translate-y-[50%] bg-[#DADFEB] flex items-center justify-center">
+          <img className="max-h-[60%]" src={infoFormButton} alt="Dalej" />
+        </button>
+      </form>
+    </div>
   );
 }
 

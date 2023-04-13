@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useLocation } from "react-router";
 import { filtersMenuArrow } from "../../assets/offers/offers";
-import { roleToTextMap } from "../../constants/candidate";
+import { provinces, roleToTextMap } from "../../constants/candidate";
 import { RoleType } from "../../constants/workForm";
 import { FilterProps as FilterStateProps } from "../../pages/Offers";
 
@@ -21,11 +21,13 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
   const [isActive, setIsActive] = useState({
     availability: false,
     salary: false,
+    province: false,
   });
   const [allFilters, setAllFilters] = useState<FilterStateProps>({
     professions: [],
     availability: [],
     salary: [],
+    province: provinces,
   });
 
   useEffect(() => {
@@ -33,11 +35,12 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
       .get("/api/candidate/filters")
       .then((res) => res.data)
       .then((data) =>
-        setAllFilters({
+        setAllFilters((prev) => ({
           professions: data.professions,
           availability: ["cały etat", "pół etatu", "¼ etatu"],
           salary: data.salary,
-        })
+          province: prev.province,
+        }))
       );
   }, []);
 
@@ -55,9 +58,9 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
           mobileActive ? "flex" : "hidden lg:flex"
         }`}
       >
-        <div>
+        <div className="flex flex-col gap-6">
           {allFilters.professions.length > 0 ? (
-            <h4 className="font-semibold mb-6">Stanowiska</h4>
+            <h4 className="font-semibold">Stanowiska</h4>
           ) : (
             <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />
           )}
@@ -77,22 +80,8 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
           </div>
         </div>
         <HorizontalLine />
-        {/* <div>
-                    {allFilters.abilities.length > 0 ? <h4 className="font-semibold mb-6">Umiejętności</h4> : <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />}
-                    <div className="flex flex-col gap-4">
-                        {allFilters.abilities.length > 0 ? allFilters.abilities.map(ability => <AbilityCheckBox ability={ability} setFilter={setFilter} key={ability} />) :
-                        <>
-                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                            <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                        </>}
-                    </div>
-                </div> */}
-        <div>
-          {allFilters.professions.length > 0 ? (
+        <div className="flex flex-col gap-6">
+          {allFilters.availability.length > 0 ? (
             <button
               onClick={() =>
                 setIsActive((prev) => ({
@@ -100,7 +89,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                   availability: !prev.availability,
                 }))
               }
-              className="flex items-center mb-6"
+              className="flex items-center"
             >
               <img
                 className={`${
@@ -114,33 +103,30 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
           ) : (
             <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />
           )}
-          <div className="flex flex-col gap-4">
-            {allFilters.availability.length > 0 ? (
-              <div className="flex flex-col gap-4">
-                {isActive.availability &&
-                  allFilters.availability.map((availability) => (
-                    <AvailabilityCheckBox
-                      availability={availability}
-                      setFilter={setFilter}
-                      key={availability}
-                    />
-                  ))}
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-                <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
-              </div>
-            )}
-          </div>
+          {isActive.availability && (
+            <div className="flex flex-col gap-4">
+              {allFilters.availability.length > 0 ? (
+                allFilters.availability.map((availability) => (
+                  <AvailabilityCheckBox
+                    availability={availability}
+                    setFilter={setFilter}
+                    key={availability}
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col gap-4">
+                  <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                  <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                  <div className="w-[90%] bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                  <div className="bg-[#f8f8f8] rounded-full min-h-[2rem]" />
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <HorizontalLine />
-        <div>
-          {allFilters.salary.length > 0 && (
+        <div className="flex flex-col gap-6">
+          {allFilters.salary.length > 0 ? (
             <button
               onClick={() =>
                 setIsActive((prev) => ({
@@ -148,7 +134,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                   salary: !prev.salary,
                 }))
               }
-              className="flex items-center mb-6"
+              className="flex items-center"
             >
               <img
                 className={`${
@@ -157,47 +143,61 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                 src={filtersMenuArrow}
                 alt=""
               />
-              <h4 className="font-medium text-[14px]">Oczekiwania finansowe</h4>
+              <h4 className="font-medium text-left text-[14px]">
+                Oczekiwania finansowe
+              </h4>
             </button>
+          ) : (
+            <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />
           )}
-          <div className="flex flex-col gap-4">
-            {allFilters.salary.length > 0 &&
-              isActive.salary &&
-              allFilters.salary.map((salary) => (
+          {allFilters.salary.length > 0 && isActive.salary && (
+            <div className="flex flex-col gap-4">
+              {allFilters.salary.map((salary) => (
                 <SalaryCheckBox
                   salary={salary}
                   setFilter={setFilter}
                   key={salary}
                 />
               ))}
-          </div>
+            </div>
+          )}
+        </div>
+        <HorizontalLine />
+        <div className="flex flex-col gap-6">
+          <button
+            onClick={() =>
+              setIsActive((prev) => ({
+                ...prev,
+                province: !prev.province,
+              }))
+            }
+            className="flex items-center"
+          >
+            <img
+              className={`${
+                isActive.province ? "rotate-0" : "-rotate-90"
+              } transition-transform max-h-[.9em] mr-2`}
+              src={filtersMenuArrow}
+              alt=""
+            />
+            <h4 className="font-medium text-left text-[14px]">Województwo</h4>
+          </button>
+          {isActive.province && (
+            <div className="flex flex-col gap-4">
+              {allFilters.province.map((province) => (
+                <ProvinceCheckBox
+                  province={province}
+                  setFilter={setFilter}
+                  key={province}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>
   );
 }
-
-// const AbilityCheckBox = ({ ability, setFilter }: { ability: string, setFilter: Dispatch<SetStateAction<FilterStateProps>> }) => {
-//     const location = useLocation()
-//     const [checked, setChecked] = useState(false)
-
-//     useLayoutEffect(() => {
-//         const decodedSearch = decodeURIComponent(location.search);
-//         setChecked(decodedSearch.includes(ability))
-//     }, [])
-
-//     const handleChange = () => {
-//         setFilter(prev => ({ ...prev, abilities: checked ? prev.abilities.filter(ab => ab !== ability) : [...prev.abilities, ability] }))
-//         setChecked(prev => !prev)
-//     }
-
-//     return (
-//         <div className='flex items-center text-[.75rem] font-medium'>
-//             <input type='checkbox' onChange={handleChange} checked={checked} name="abilities" id={ability}/>
-//             <label className="ml-4" htmlFor={ability}>{ability}</label>
-//         </div>
-//     )
-// }
 
 const AvailabilityCheckBox = ({
   availability,
@@ -317,6 +317,47 @@ const RoleCheckBox = ({
       />
       <label className="ml-4" htmlFor={role}>
         {roleToTextMap[role].profession}
+      </label>
+    </div>
+  );
+};
+
+const ProvinceCheckBox = ({
+  province,
+  setFilter,
+}: {
+  province: string;
+  setFilter: Dispatch<SetStateAction<FilterStateProps>>;
+}) => {
+  const location = useLocation();
+  const [checked, setChecked] = useState(false);
+
+  useLayoutEffect(() => {
+    const decodedSearch = decodeURIComponent(location.search);
+    setChecked(decodedSearch.includes(province));
+  }, []);
+
+  const handleChange = () => {
+    setFilter((prev) => ({
+      ...prev,
+      province: checked
+        ? prev.province.filter((r) => r !== province)
+        : [...prev.province, province],
+    }));
+    setChecked((prev) => !prev);
+  };
+
+  return (
+    <div className="flex items-center text-[14px] font-medium">
+      <input
+        type="checkbox"
+        onChange={handleChange}
+        checked={checked}
+        name="profession-filter"
+        id={province}
+      />
+      <label className="ml-4" htmlFor={province}>
+        {province}
       </label>
     </div>
   );

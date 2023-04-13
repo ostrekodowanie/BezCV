@@ -1,14 +1,9 @@
 import { Link } from "react-router-dom";
-import {
-  useResolvedPath,
-  useMatch,
-  useLocation,
-  useNavigate,
-} from "react-router";
-import { MouseEvent, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import { useAppSelector } from "../main";
 import { AccountContext } from "../reducers/AccountProvider";
-import { arrowRight } from "../assets/general";
+import { arrowRight, logo, logoHorizontal } from "../assets/general";
 import { profileIcon } from "../assets/profile/profile";
 import SurveyLink from "./header/SurveyLink";
 import PointsHashLink from "./header/PointsHashLink";
@@ -41,8 +36,9 @@ export default function Header() {
 }
 
 const Logo = () => (
-  <Link className="font-medium text-xl" to="/">
-    bez<span className="text-primary">CV</span>
+  <Link to="/">
+    <img className="h-[1.5rem] md:block hidden" src={logoHorizontal} alt="" />
+    <img className="h-[1.5rem] md:hidden" src={logo} alt="" />
   </Link>
 );
 

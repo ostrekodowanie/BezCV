@@ -8,9 +8,9 @@ export default function FixedButton() {
   return (
     <Link
       to={account === "employer" ? "/rejestracja" : "/praca"}
-      className={`sm:mx-0 fixed sm:hidden bottom-8 right-[8vw] left-[8vw] ${
+      className={`sm:mx-0 fixed sm:hidden bottom-0 right-0 left-0 ${
         account === "employer" ? "bg-primary" : "bg-secondary"
-      } font-semibold text-white rounded-full flex items-center hover:scale-100 justify-center no-anim text-[.8rem] py-[14px] z-20`}
+      } font-semibold text-white flex items-center hover:scale-100 justify-center no-anim text-[.8rem] py-[14px] z-20`}
     >
       {account === "employer"
         ? "Zarejestruj się za darmo!"

@@ -1,26 +1,14 @@
 import { Link } from "react-router-dom";
 import ProgressBar from "./ProgressBar";
 
-export default function Finished({
-  firstName,
-  questionsLength,
-}: {
-  firstName: string;
-  questionsLength: number;
-}) {
+export default function Finished({ firstName }: { firstName: string }) {
   return (
     <>
       <ProgressBar progress={1} />
-      <div className="flex flex-col items-center text-center gap-2">
-        <small className="text-base font-semibold">
-          {questionsLength} /{" "}
-          <span className="text-[#D3C5BB]">{questionsLength}</span>
-        </small>
-        <h2 className="text-2xl sm:text-3xl font-bold text-center w-full max-w-[8in]">
-          Z naszej strony to wszystko!
-        </h2>
-      </div>
-      <div className="flex flex-col items-center justify-between gap-4 w-full">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center w-full max-w-[8in]">
+        Z naszej strony to wszystko!
+      </h2>
+      <div className="flex flex-col items-center justify-between gap-6 w-full">
         <p className="text-2xl md:text-3xl font-medium">
           Dziękuje Ci{" "}
           <span className="font-medium bg-clip-text text-transparent bg-secondary">

@@ -41,7 +41,7 @@ export default function Packages() {
               src={bcvToken}
               alt=""
             />{" "}
-            umożliwia dostęp do danych kontaktowych jednego kandydata
+            umożliwia dostęp do danych kontaktowych 1 kandydata
           </p>
           <Controller
             stagger={50}
@@ -62,7 +62,7 @@ export default function Packages() {
         </div>
       </section>
       <section className="padding bg-[#FAFCFE] py-[.7in] flex flex-col items-center gap-16 2xl:py-[.9in] xl:items-start xl:grid grid-cols-2">
-        <div className="max-w-[min(6.8in,90%)] flex flex-col gap-8">
+        <div className="max-w-[min(6.8in,90%)] flex flex-col xl:items-center gap-8">
           <h2 className="font-semibold text-3xl md:text-4xl text-center xl:text-left leading-tight md:leading-tight">
             Chcesz kupić większą ilość tokenów?
           </h2>

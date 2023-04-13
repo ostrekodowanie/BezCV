@@ -27,60 +27,60 @@ export default function CandidateController() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (type === "email") {
-      setCredentialsLoading(true);
-      return axios
-        .post(
-          "/api/survey/email",
-          JSON.stringify({ email: candidateAnswers.email }),
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          switch (res.status) {
-            case 204:
-              setActiveQuestionIndex((prev) => prev + 1);
-              break;
-            case 200:
-              setCredentialsError("Email jest już używany przez inny profil!");
-          }
-        })
-        .catch(() => setCredentialsError("Wystąpił błąd!"))
-        .finally(() => setCredentialsLoading(false));
-    }
+    // if (type === "email") {
+    //   setCredentialsLoading(true);
+    //   return axios
+    //     .post(
+    //       "/api/survey/email",
+    //       JSON.stringify({ email: candidateAnswers.email }),
+    //       {
+    //         headers: { "Content-Type": "application/json" },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       switch (res.status) {
+    //         case 204:
+    //           setActiveQuestionIndex((prev) => prev + 1);
+    //           break;
+    //         case 200:
+    //           setCredentialsError("Email jest już używany przez inny profil!");
+    //       }
+    //     })
+    //     .catch(() => setCredentialsError("Wystąpił błąd!"))
+    //     .finally(() => setCredentialsLoading(false));
+    // }
 
-    if (type === "tel") {
-      setCredentialsLoading(true);
-      if (candidateAnswers.phone.length < 9) {
-        setCredentialsLoading(false);
-        return setCredentialsError("Nieprawidłowy numer telefonu!");
-      }
-      return axios
-        .post(
-          "/api/survey/phone",
-          JSON.stringify({
-            phone:
-              typeof candidateAnswers.phone === "string"
-                ? candidateAnswers.phone.split(" ").join("")
-                : candidateAnswers.phone,
-          }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then(() => setPhoneCodePopupActive(true))
-        .catch((err) => {
-          setCredentialsError(
-            typeof err.response.data.detail === "string"
-              ? err.response.data.detail
-              : "Wystąpił błąd!"
-          );
-        })
-        .finally(() => setCredentialsLoading(false));
-    }
+    // if (type === "tel") {
+    //   setCredentialsLoading(true);
+    //   if (candidateAnswers.phone.length < 9) {
+    //     setCredentialsLoading(false);
+    //     return setCredentialsError("Nieprawidłowy numer telefonu!");
+    //   }
+    //   return axios
+    //     .post(
+    //       "/api/survey/phone",
+    //       JSON.stringify({
+    //         phone:
+    //           typeof candidateAnswers.phone === "string"
+    //             ? candidateAnswers.phone.split(" ").join("")
+    //             : candidateAnswers.phone,
+    //       }),
+    //       {
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     )
+    //     .then(() => setPhoneCodePopupActive(true))
+    //     .catch((err) => {
+    //       setCredentialsError(
+    //         typeof err.response.data.detail === "string"
+    //           ? err.response.data.detail
+    //           : "Wystąpił błąd!"
+    //       );
+    //     })
+    //     .finally(() => setCredentialsLoading(false));
+    // }
 
     if (activeQuestionIndex >= defaultQuestions.length - 1) {
       setLoading(true);
@@ -144,14 +144,16 @@ export default function CandidateController() {
         <div className="flex justify-between items-center gap-4 flex-wrap self-end mt-8 xl:mt-0">
           {credentialsLoading && <Loader />}
           {!credentialsLoading && credentialsError && (
-            <p className="text-red-400 max-w-full">{credentialsError}</p>
+            <p className="text-red-400 max-w-full text-sm sm:text-base">
+              {credentialsError}
+            </p>
           )}
-          <div className="flex flex-col sm:self-center sm:flex-row gap-6 flex-1 fixed sm:relative right-[8vw] left-[8vw] sm:inset-auto self-stretch max-w-full bottom-8">
+          <div className="flex sm:self-center sm:gap-6 flex-1 fixed sm:relative right-0 left-0 sm:inset-auto self-stretch max-w-full bottom-0">
             {activeQuestionIndex > 0 && !hasReturned && (
               <button
                 type="button"
                 onClick={handleReturn}
-                className="rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-[#F98D3D] text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
+                className="sm:rounded-full sm:text-[.8rem] w-full sm:w-max justify-center text-[#F98D3D] text-[.75rem] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
               >
                 <img className="mr-2 max-h-[.9em]" src={prevArrow} alt="<-" />{" "}
                 Poprzednie pytanie
@@ -159,7 +161,7 @@ export default function CandidateController() {
             )}
             <button
               type="submit"
-              className="justify-center text-[.75rem] w-full sm:w-max rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary sm:self-end flex items-center"
+              className="justify-center text-[.75rem] w-full sm:w-max sm:rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary sm:self-end flex items-center"
             >
               Następne pytanie{" "}
               <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
@@ -332,12 +334,12 @@ const CandidateInput = ({
                   value={candidateAnswers[input.name]}
                   placeholder={input.placeholder}
                   id={input.name}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setCandidateAnswers((prev) => ({
                       ...prev,
                       [input.name]: e.target.value,
-                    }))
-                  }
+                    }));
+                  }}
                 />
               </div>
             );
@@ -372,9 +374,7 @@ const CandidateInput = ({
 const PhoneInput = () => {
   const { candidateAnswers, setCandidateAnswers } = useContext(SurveyContext);
   const [input, setInput] = useState(
-    candidateAnswers.phone
-      ? "+48 " + String(candidateAnswers.phone).replace(/(\d{3})(?=\d)/g, "$1 ")
-      : ""
+    String(candidateAnswers.phone).replace(/(\d{3})(?=\d)/g, "$1 ")
   );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -388,7 +388,7 @@ const PhoneInput = () => {
   useEffect(() => {
     setCandidateAnswers((prev) => ({
       ...prev,
-      phone: input.split("+48 ")[0].split(" ").join(""),
+      phone: input.split(" ").join(""),
     }));
   }, [input]);
 

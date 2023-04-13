@@ -8,7 +8,6 @@ import {
 } from "react";
 import Control from "react-control-js";
 import {
-  minutesUnderline,
   tutorialUnderline,
   underline,
 } from "../../assets/home/candidate/candidate";
@@ -28,7 +27,7 @@ const Title = ({ account }: { account: AccountType }) => {
   switch (account) {
     case "employer":
       return (
-        <h2 className="text-3xl md:text-4xl font-semibold leading-snug md:leading-snug relative max-w-[6.2in]">
+        <h2 className="px-10 sm:p-0 text-3xl md:text-4xl font-semibold leading-snug md:leading-snug relative max-w-[6.2in]">
           Jak wygląda{" "}
           <div className="relative inline-block">
             <span className="relative z-10">profil kandydata</span>
@@ -45,7 +44,7 @@ const Title = ({ account }: { account: AccountType }) => {
       );
     case "worker":
       return (
-        <h2 className="text-3xl md:text-4xl font-semibold leading-snug md:leading-snug relative max-w-[6.2in]">
+        <h2 className="px-10 sm:p-0 text-3xl md:text-4xl font-semibold leading-snug md:leading-snug relative max-w-[6.2in]">
           Jak będzie wyglądał{" "}
           <div className="relative inline-block">
             <span className="relative z-10">Twój profil</span>
@@ -85,15 +84,15 @@ export default function TutorialMenu() {
         <div
           className={`${
             account === "worker" ? "bg-secondary" : "bg-primary"
-          } sm:rounded-3xl p-10 md:p-16 flex flex-col xl:max-w-[90%] sm:mx-auto gap-4`}
+          } sm:rounded-3xl py-10 sm:p-10 md:p-16 flex flex-col xl:max-w-[90%] sm:mx-auto gap-4`}
         >
           <Title account={account} />
           <div
-            className={`flex flex-col lg:flex-row lg:items-center gap-2 py-2 px-4 ${
+            className={`flex flex-col lg:flex-row lg:items-center gap-2 py-2 min-w-0 px-4 mx-10 sm:mx-0 ${
               account === "worker"
                 ? "bg-[rgba(249,191,123,0.61)]"
                 : "bg-[rgba(255,255,255,0.3)]"
-            } my-8 w-full sm:w-max rounded-3xl lg:rounded-full`}
+            } my-8 sm:w-max rounded-3xl lg:rounded-full`}
           >
             {roles.map((role) => (
               <RoleButton {...role} />

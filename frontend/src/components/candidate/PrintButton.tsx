@@ -1,28 +1,15 @@
 import { MouseEvent } from "react";
 import { pdf } from "../../assets/candidate/candidate";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 type PDFButtonProps = {
   disabled: boolean;
   gradient: string;
-  fileName: string;
 };
 
-const PDFButton = ({ disabled, gradient, fileName }: PDFButtonProps) => {
+const PDFButton = ({ disabled, gradient }: PDFButtonProps) => {
   const handlePDF = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const input = document.getElementById("candidate-profile");
-    if (!input) return;
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${fileName}.pdf`);
-    });
+    window.print();
   };
 
   return (
@@ -41,14 +28,14 @@ const PDFButton = ({ disabled, gradient, fileName }: PDFButtonProps) => {
             : "hover:scale-[1.02] transition-transform"
         }`}
       >
-        Pobierz profil w formacie PDF{" "}
+        Drukuj profil kandydata{" "}
         <img className="max-h-[1.4em] ml-2" src={pdf} alt="" />
       </button>
       {disabled && (
         <div className="shadow-[0px_6px_52px_-2px_rgba(211,161,25,0.22)] p-6 bg-[#FEFAEF] rounded-3xl">
           <p className="text-[.8rem] font-medium text-center text-[#3C4663]">
-            Możliwość pobrania i wydrukowania profilu po wykupieniu dostępu do
-            tego kontaktu.
+            Możliwość wydrukowania profilu po wykupieniu dostępu do tego
+            kontaktu.
           </p>
         </div>
       )}

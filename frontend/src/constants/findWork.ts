@@ -1,5 +1,6 @@
 import { HTMLInputTypeAttribute } from "react"
 import { CandidateAnswerType, RoleType } from "./workForm"
+import { provinces } from "./candidate"
 
 type CustomInput = {
     name: keyof CandidateAnswerType,
@@ -84,24 +85,7 @@ export const defaultQuestions: QuestionProps[] = [
         question: 'W jakim województwie chciałbyś pracować?',
         type: 'select',
         placeholder: 'Wybierz województwo',
-        answers: [
-            "Dolnośląskie",
-            "Kujawsko-pomorskie",
-            "Lubelskie",
-            "Lubuskie",
-            "Łódzkie",
-            "Małopolskie",
-            "Mazowieckie",
-            "Opolskie",
-            "Podkarpackie",
-            "Podlaskie",
-            "Pomorskie",
-            "Śląskie",
-            "Świętokrzyskie",
-            "Warmińsko-mazurskie",
-            "Wielkopolskie",
-            "Zachodniopomorskie"
-        ]
+        answers: provinces
     },
     {
         name: 'job_position',
@@ -130,19 +114,19 @@ export const defaultQuestions: QuestionProps[] = [
             {
                 name: 'experience_sales',
                 placeholder: 'Tutaj wpisz swoje doświadczenie',
-                type: 'text',
+                type: 'number',
                 label: 'Sprzedaż'
             },
             {
                 name: 'experience_customer_service',
                 placeholder: 'Tutaj wpisz swoje doświadczenie',
-                type: 'text',
+                type: 'number',
                 label: 'Obsługa klienta'
             },
             {
                 name: 'experience_office_administration',
                 placeholder: 'Tutaj wpisz swoje doświadczenie',
-                type: 'text',
+                type: 'number',
                 label: 'Administracja biurowa'
             },
         ]

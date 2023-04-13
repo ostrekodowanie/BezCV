@@ -5,6 +5,8 @@ import bcvToken from './bcv_token.svg'
 import xMark from './x_mark.svg'
 import passwordVisible from './password_visible.svg'
 import passwordNotVisible from './password_not_visible.svg'
+import logoHorizontal from './logo_horizontal.svg'
+import logo from './logo.svg'
 
 export {
     arrowRight,
@@ -13,5 +15,7 @@ export {
     bcvToken,
     xMark,
     passwordNotVisible,
-    passwordVisible
+    passwordVisible,
+    logoHorizontal,
+    logo
 }

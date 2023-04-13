@@ -7,22 +7,20 @@ import Package from "../../points/Package";
 export default function Points() {
   const [days, setDays] = useState<30 | 90>(30);
   return (
-    <section className="padding pt-[1.4in] pb-[.7in] 2xl:pb-[.9in] flex flex-col items-center gap-16 2xl:pt-[1.8in] bg-white min-h-screen">
-      <div
-        className="flex flex-col gap-8 xl:gap-16 items-center xl:flex-row xl:justify-center self-stretch 2xl:px-[4vw]"
-        id="punkty"
-      >
+    <section
+      className="padding pt-[1.4in] pb-[.7in] 2xl:pb-[.9in] flex flex-col items-center gap-16 2xl:pt-[1.8in] bg-white min-h-screen"
+      id="punkty"
+    >
+      <div className="flex flex-col gap-8 xl:gap-16 items-center xl:flex-row xl:justify-center self-stretch 2xl:px-[4vw]">
         <h2 className="font-semibold text-center xl:text-left text-3xl md:text-4xl leading-tight md:leading-tight xl:min-w-[4.6in] max-w-[4.6in]">
           Rejestracja w BezCV jest{" "}
           <span className="font-bold">zupełnie darmowa!</span>
         </h2>
-        <p className="text-[#3C4663] text-sm text-center xl:text-left jakarta leading-relaxed max-w-[6in]">
-          <span className="font-medium">
-            Dzięki temu możesz zobaczyć naszą bazę i sprawdzić, czy posiadamy
-            kandydatów odpowiednich do pracy dla Twojego przedsiębiorstwa.
-          </span>{" "}
+        <p className="text-[#3C4663] font-medium text-sm text-center xl:text-left jakarta leading-relaxed max-w-[6in]">
+          Dzięki temu możesz zobaczyć naszą bazę i sprawdzić, czy posiadamy
+          kandydatów odpowiednich do pracy dla Twojego przedsiębiorstwa.
           Natomiast, jeżeli chcesz wykupić dostęp do danych kontaktowych
-          kandydatów <span className="font-medium">masz 3 opcje:</span>
+          kandydatów masz 3 opcje:
         </p>
       </div>
       <div className="flex flex-col gap-8 items-center self-stretch w-full">
