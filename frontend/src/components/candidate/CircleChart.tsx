@@ -26,7 +26,7 @@ export default function CircleChart({
   percentage,
   isFirst,
 }: CircleChartProps) {
-  const circleRef = useRef<SVGCircleElement>(null!);
+  const circleRef = useRef<HTMLDivElement>(null!);
   const color = professionColorMap[profession].color;
   const title = professionTitle(profession);
   const radius = 155;
@@ -60,6 +60,7 @@ export default function CircleChart({
 
   return (
     <div
+      ref={circleRef}
       className={`${
         isFirst ? "order-first" : "order-last"
       } flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px]`}
@@ -111,7 +112,6 @@ export default function CircleChart({
           style={{
             transition: "stroke-dashoffset 2s ease-in-out",
           }}
-          ref={circleRef}
         />
       </svg>
     </div>

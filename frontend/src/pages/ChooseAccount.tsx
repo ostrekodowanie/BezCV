@@ -43,7 +43,7 @@ export default function ChooseAccount({
       >
         <Control
           element={
-            <div className="relative flex flex-col items-stretch justify-end h-full gap-8 bg-white shadow-primaryBig rounded-t-3xl rounded-b after:bg-primary after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[4px] after:rounded-full px-8 py-10 md:p-12">
+            <div className="relative mt-[2in] xl:mt-0 flex flex-col items-stretch justify-end h-full gap-8 bg-white shadow-primaryBig rounded-t-3xl rounded-b after:bg-primary after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[4px] after:rounded-full px-8 py-10 md:p-12">
               <img
                 className="absolute max-w-[90%] -translate-y-[80%] top-0 sm:max-w-[70%] left-[50%] -translate-x-[50%] -z-10"
                 src={accountEmp}
@@ -86,7 +86,7 @@ export default function ChooseAccount({
         />
         <Control
           element={
-            <div className="relative mt-[2in] xl:mt-0 flex flex-col items-stretch justify-end gap-8 bg-white shadow-secondaryBig rounded-t-3xl rounded-b after:bg-secondary after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[4px] after:rounded-full px-8 py-10 md:p-12">
+            <div className="relative flex flex-col items-stretch justify-end gap-8 bg-white shadow-secondaryBig rounded-t-3xl rounded-b after:bg-secondary after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[4px] after:rounded-full px-8 py-10 md:p-12">
               <img
                 className="absolute max-w-[80%] sm:max-w-[58%] left-[50%] -translate-x-[60%] -translate-y-[85%] top-0 -z-10"
                 src={accountCand}
