@@ -147,7 +147,7 @@ export default function RoleController() {
               {numericalAnswer}
             </p>
           </div>
-          <div className="flex justify-center gap-4 sm:gap-8 flex-wrap max-w-max">
+          <div className="flex justify-center gap-2 sm:gap-8 flex-wrap max-w-max">
             {rangeNumberKeys.map((k) => (
               <RangeKey
                 {...k}
@@ -159,7 +159,7 @@ export default function RoleController() {
           </div>
         </div>
         <div className="grid grid-cols-2 sm:flex sm:justify-between sm:items-center fixed sm:static right-0 left-0 bottom-0 self-stretch sm:gap-4">
-          <div className="flex flex-col sm:gap-2 justify-self-center sm:justify-self-auto">
+          <div className="flex flex-col sm:gap-2 justify-self-center sm:justify-self-auto bg-white sm:bg-transparent">
             <h4 className="font-semibold flex text-sm sm:text-base items-center">
               <img
                 className="max-h-[1.1em] mr-2 animate-spin"
