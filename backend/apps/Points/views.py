@@ -109,13 +109,13 @@ class PurchasePointsView(generics.CreateAPIView):
         remaining_tokens = purchased_tokens - purchased_contacts
         
         context = {
-                'employer': employer,
+                'employer': employer['first_name'],
                 'token_count': remaining_tokens
             }
                     
-        message = render_to_string('payment.html', context)
+        message = render_to_string('employers/after_payment.html', context)
         email_message = EmailMessage(
-            subject='Zobacz swoje kompetencje miękkie - bezCV',
+            subject='Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?',
             body=message,
             to=[employer['email']]
         )

@@ -62,7 +62,7 @@ class UserSerializer(serializers.ModelSerializer):
     points = serializers.SerializerMethodField()
     class Meta:
         model =  User
-        fields = ('first_name', 'last_name', 'points', 'is_staff', 'nip', 'company_name', 'image', 'desc')
+        fields = ('first_name', 'last_name', 'points', 'is_staff', 'nip', 'company_name', 'image', 'desc', 'email', 'form')
         
     def get_points(self, obj):
         last_month = timezone.now() - timedelta(days=30)
@@ -90,7 +90,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model =  User
-        fields = ('first_name', 'last_name', 'email', 'desc', 'image')
+        fields = ('first_name', 'last_name', 'email', 'desc', 'image', 'form')
 
 
 class EmployerProfileSerializer(serializers.ModelSerializer):

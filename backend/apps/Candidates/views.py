@@ -9,8 +9,9 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 
 from . import serializers
-from .models import Candidates, Abilities, PurchasedOffers
+from .models import Candidates, PurchasedOffers
 from apps.Survey.models import Categories
+from config.settings import client
 
 
 class CandidateView(generics.RetrieveAPIView):
@@ -30,7 +31,7 @@ class CandidatesFilter(filters.FilterSet):
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 20
-
+    
 class CandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CandidatesSerializer
@@ -67,12 +68,10 @@ class CandidatesView(generics.ListAPIView):
 
 class FiltersView(APIView):
     def get(self, request):
-        abilities = Abilities.objects.values_list('name', flat=True).order_by('name')
         professions = Categories.objects.values_list('name', flat=True).order_by('name')
-        salary = Candidates.objects.values_list('salary_expectation', flat=True).order_by('salary_expectation')
+        salary = Candidates.objects.values_list('salary_expectation', flat=True).order_by('salary_expectation').distinct()
         
         data = {
-            'abilities': abilities,
             'professions': professions,
             'salary': salary
         }
@@ -82,6 +81,19 @@ class FiltersView(APIView):
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
+    
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        purchased_offer_id = response.data.get('id')
+
+        purchased_offer = PurchasedOffers.objects.get(id=purchased_offer_id)
+        
+        message = f'Twój profil zainteresował jednego z pracodawców w naszej bazie. Jest zainteresowany współpracą.\n\nPoniżej informacje o nim: {purchased_offer.employer.first_name} {purchased_offer.employer.last_name}\n{purchased_offer.employer.company_name}\n\nNiedługo powinien się z Tobą skontaktować. Powodzenia!'
+        
+        client.sms.send(to=purchased_offer.candidate.phone, message=message, from_="Test", encoding="utf-8")
+
+        return response
 
 
 class PurchasedOffersListView(generics.ListAPIView):
@@ -89,7 +101,7 @@ class PurchasedOffersListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Candidates.objects.filter(purchasedoffers_candidate__employer_id=self.request.user)
+        return Candidates.objects.filter(purchasedoffers_candidate__employer=self.request.user)
     
     
 class AddReportView(generics.CreateAPIView):

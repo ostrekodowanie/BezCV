@@ -100,22 +100,65 @@ class CandidateAnswersView(APIView):
             if len(user_questions) == len(category_questions):
                 count += 1
                 
-        if count == 3:            
+        if count == 1:            
             context = {
-                'candidate': candidate,
-                'ability_count': candidate.candidateabilities_candidate
+                'candidate': candidate
             }
                     
-            message = render_to_string('candidate_survey.html', context)
+            message = render_to_string('candidates/survey.html', context)
+            email_message = EmailMessage(
+                subject='Zwiększ swoją szansę na wymarzoną pracę - bezCV',
+                body=message,
+                to=[candidate.email]
+            )
+            email_message.content_subtype ="html"
+            email_message.send()
+            
+        if count == 3:
+            sales = []
+            office_administration = []
+            customer_service = []
+            
+            abilities = candidate.candidateabilities_candidate.annotate(
+                name=F('ability__name'),
+                category=F('ability__abilityquestions_ability__question__category__name')
+            ).values('name', 'percentage', 'category').order_by('-percentage').distinct()
+
+            for ability in abilities:
+                category = ability['category']
+                if category == 'sales':
+                    sales.append({
+                        'name': ability['name'],
+                        'percentage': ability['percentage']
+                    })
+                elif category == 'office_administration':
+                    office_administration.append({
+                        'name': ability['name'],
+                        'percentage': ability['percentage']
+                    })
+                elif category == 'customer_service':
+                    customer_service.append({
+                        'name': ability['name'],
+                        'percentage': ability['percentage']
+                    })
+                 
+            context = {
+                'candidate': candidate,
+                'sales': sales,
+                'office_administration': office_administration,
+                'customer_service': customer_service
+            }
+                    
+            message = render_to_string('candidates/all_surveys.html', context)
             email_message = EmailMessage(
                 subject='Zobacz swoje kompetencje miękkie - bezCV',
                 body=message,
-                to=[candidate['email']]
+                to=[candidate.email]
             )
             email_message.content_subtype ="html"
             email_message.send()
 
-        return Response({'success'})
+        return Response({'first_name': candidate.first_name})
 
 
 class CandidateCreateView(generics.CreateAPIView):
@@ -143,7 +186,7 @@ class SendCodeView(APIView):
         
         GeneratedCodes.objects.create(phone=phone, code=code)
 
-        client.sms.send(to=phone, message=f'Twoj kod dostepu to: {code}', from_="Test")
+        client.sms.send(to=phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="Test")
 
         return Response({'Access code sent successfully'}, status=200)
     

@@ -30,6 +30,7 @@ SECRET_KEY = os.environ['BEZCV_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', default=True)
+SECURE_SSL_REDIRECT = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'bezcv.com', 'bezcv.herokuapp.com']
 
@@ -102,8 +103,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': os.environ.get('BEZCV_DB_PASSWORD'),
-        'HOST': os.environ.get('BEZCV_DB_HOST'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
     }
 }
@@ -233,12 +234,12 @@ client = SmsApiPlClient(access_token=token)
         'capture': False,
     }),
 }
-
+'''
+'''
 Q_CLUSTER = {
     'retry': 360,
     'timeout': 300,
     "orm": "default",
 }
 '''
-
 
