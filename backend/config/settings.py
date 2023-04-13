@@ -102,8 +102,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': os.environ.get('BEZCV_DB_PASSWORD'),
-        'HOST': os.environ.get('BEZCV_DB_HOST'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
     }
 }
@@ -233,12 +233,12 @@ client = SmsApiPlClient(access_token=token)
         'capture': False,
     }),
 }
-
+'''
+'''
 Q_CLUSTER = {
     'retry': 360,
     'timeout': 300,
     "orm": "default",
 }
 '''
-
 
