@@ -12,7 +12,7 @@ const Favourites = ({
   setFollowed: (userId: number) => void;
 }) => {
   return (
-    <div className="flex flex-col py-10 shadow-primaryBig rounded-3xl col-[1/3] row-[3/4]">
+    <div className="flex flex-col py-10 shadow-primaryBig sm:rounded-3xl col-[1/3] row-[3/4]">
       <h2 className="font-medium text-xl ml-[calc(24px+8vw)] sm:ml-12 mb-4">
         Dodane do obserwowanych
       </h2>

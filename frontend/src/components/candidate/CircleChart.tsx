@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import CountUp from "react-countup";
 import { professionColorMap } from "../../constants/professionColorMap";
 import { RoleType } from "../../constants/workForm";
-import Control from "react-control-js";
 
 type CircleChartProps = {
   profession: RoleType;
@@ -49,15 +48,6 @@ export default function CircleChart({
     };
   }, [percentage, circleRef.current]);
 
-  useEffect(() => {
-    console.log({ offset });
-  }, [offset]);
-
-  const animationCallback = () => {
-    const offsetValue = circumference - (percentage * circumference) / 100;
-    console.log(offsetValue);
-  };
-
   return (
     <div
       ref={circleRef}
@@ -91,7 +81,6 @@ export default function CircleChart({
           </p>
         </div>
       </div>
-      <Control onScroll callback={animationCallback} element={<></>} />
       <svg
         className="absolute left-0 top-0 rotate-90"
         xmlns="https://www.w3.org/2000/svg"

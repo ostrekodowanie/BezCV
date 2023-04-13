@@ -9,7 +9,7 @@ const Purchased = ({
   loading: boolean;
 }) => {
   return (
-    <div className="px-[8vw] sm:px-6 py-10 shadow-primaryBig flex flex-col rounded-3xl col-[3/4] row-[1/4]">
+    <div className="px-[8vw] sm:px-6 py-10 shadow-primaryBig flex flex-col sm:rounded-3xl col-[3/4] row-[1/4]">
       <h2 className="font-medium text-xl ml-6 mb-4">Zakupione kontakty</h2>
       <div className="flex flex-col">
         {loading ? (
