@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import ArrayField
 
 
 class User(AbstractUser):
@@ -8,6 +9,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=40)
     email = models.EmailField(max_length=255, unique=True)
     desc = models.CharField(max_length=255, blank=True, null=True)
+    form = ArrayField(models.CharField(max_length=255), blank=True, null=True)
     image = models.CharField(max_length=255, blank=True, null=True)
     nip = models.CharField(max_length=255)
     password = models.CharField(max_length=255)

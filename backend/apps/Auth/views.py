@@ -73,17 +73,17 @@ class SignUpView(views.APIView):
                 user = serializer.data
                 
                 all = nip24.getAllDataExt(Number.NIP, user.nip)
-                user.company_name = all.name 
+                user['company_name'] = all.name 
                 
                 token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
                 link = 'https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token)
                 
                 context = {
-                    'user': user,
+                    'user': user['first_name'],
                     'link': link
                 }
                 
-                message = render_to_string('verify.html', context)
+                message = render_to_string('employers/verify.html', context)
                 email_message = EmailMessage(
                     subject='Potwierdź swoją rejestrację',
                     body=message,
@@ -105,6 +105,20 @@ class VerifyView(views.APIView):
             if not user.is_verified:
                 user.is_verified = True 
                 user.save()
+                
+                context = {
+                    'user': user
+                }
+                
+                message = render_to_string('employers/after_verify.html', context)
+                email_message = EmailMessage(
+                    subject='Od teraz masz dostęp do wszystkich kandydatów! - bezCV',
+                    body=message,
+                    to=[user.email]
+                )
+                email_message.content_subtype ="html"
+                email_message.send()
+                
             return Response({'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
             payload = jwt.decode(token, settings.SECRET_KEY,  algorithms=['HS256'], options={"verify_signature": False})

@@ -1,9 +1,9 @@
-from django.db.models import F, Avg, Q, Prefetch
+from django.db.models import F, Avg, Q
 
 from rest_framework import serializers
 
 from .models import Candidates, PurchasedOffers, CandidateAbilities, Reports
-from apps.Survey.models import Abilities, Categories
+from apps.Survey.models import Abilities
 
 
 class CandidateSerializer(serializers.ModelSerializer):
@@ -237,7 +237,7 @@ class PurchaseOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchasedOffers
         fields = '__all__'
-
+        
 
 class PurchasedOffersSerializer(serializers.ModelSerializer):
     abilities = serializers.SerializerMethodField()
