@@ -26,6 +26,7 @@ export default function CircleChart({
   percentage,
   isFirst,
 }: CircleChartProps) {
+  const circleRef = useRef<SVGCircleElement>(null!);
   const color = professionColorMap[profession].color;
   const title = professionTitle(profession);
   const radius = 155;
@@ -34,9 +35,27 @@ export default function CircleChart({
   const strokeWidth = 30;
   const strokeDasharray = `${circumference} ${circumference}`;
 
+  useEffect(() => {
+    const offsetValue = circumference - (percentage * circumference) / 100;
+    if (!circleRef.current || !percentage) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setOffset(offsetValue);
+      }
+    });
+    observer.observe(circleRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [percentage, circleRef.current]);
+
+  useEffect(() => {
+    console.log({ offset });
+  }, [offset]);
+
   const animationCallback = () => {
     const offsetValue = circumference - (percentage * circumference) / 100;
-    setOffset(offsetValue);
+    console.log(offsetValue);
   };
 
   return (
@@ -71,34 +90,30 @@ export default function CircleChart({
           </p>
         </div>
       </div>
-      <Control
-        callback={animationCallback}
-        onScroll
-        element={
-          <svg
-            className="absolute left-0 top-0 rotate-90"
-            xmlns="https://www.w3.org/2000/svg"
-            version="1.1"
-            width={340}
-            height={340}
-          >
-            <circle
-              className="circle-chart"
-              cx={170}
-              cy={170}
-              r={155}
-              strokeWidth={strokeWidth}
-              stroke={color}
-              strokeDasharray={strokeDasharray}
-              strokeDashoffset={offset}
-              fill="none"
-              style={{
-                transition: "stroke-dashoffset 2s ease-in-out",
-              }}
-            />
-          </svg>
-        }
-      />
+      <Control onScroll callback={animationCallback} element={<></>} />
+      <svg
+        className="absolute left-0 top-0 rotate-90"
+        xmlns="https://www.w3.org/2000/svg"
+        version="1.1"
+        width={340}
+        height={340}
+      >
+        <circle
+          className="circle-chart"
+          cx={170}
+          cy={170}
+          r={155}
+          strokeWidth={strokeWidth}
+          stroke={color}
+          strokeDasharray={strokeDasharray}
+          strokeDashoffset={offset}
+          fill="none"
+          style={{
+            transition: "stroke-dashoffset 2s ease-in-out",
+          }}
+          ref={circleRef}
+        />
+      </svg>
     </div>
   );
 }
