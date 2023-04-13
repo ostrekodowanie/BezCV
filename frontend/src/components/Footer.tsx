@@ -8,7 +8,7 @@ export default function Footer() {
 
   return (
     <Routes>
-      <Route path="/praca/*" element={<></>} />
+      <Route path="/ankieta" element={<></>} />
       <Route
         path="*"
         element={

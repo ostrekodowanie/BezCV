@@ -48,7 +48,7 @@ const EmployerInterfaceComponent = () => {
   }, [role.name]);
 
   return (
-    <div className="bg-white py-10 px-[8vw] sm:rounded-3xl flex flex-col items-center gap-8 text-font">
+    <div className="bg-white py-10 px-[8vw] rounded-3xl flex flex-col items-center gap-8 text-font overflow-hidden">
       <div className="flex sm:justify-center self-stretch flex-wrap gap-8">
         <div className="flex items-center gap-4">
           <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold">

@@ -18,14 +18,16 @@ import axios from "axios";
 import Points from "./pages/Points";
 import getUserInfo from "./utils/getUserInfo";
 import AccountProvider from "./reducers/AccountProvider";
-import FindWork from "./pages/SurveyRoute";
 import CookieConsent from "react-cookie-consent";
 import FixedButton from "./components/FixedButton";
+import { logoHorizontal } from "./assets/general";
+import Survey from "./pages/Survey";
 
 const loginString: string | null = localStorage.getItem("user");
 const loginFromLocalStorage = loginString && JSON.parse(loginString);
 
 export default function App() {
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
   const timer = useRef<any>(null);
@@ -83,16 +85,18 @@ export default function App() {
   if (loading)
     return (
       <div className="w-screen h-screen flex items-center justify-center">
-        <span className="animate-pulse font-medium text-3xl">
-          bez<span className="text-primary">CV</span>
-        </span>
+        <img
+          className="h-[1.8rem] md:h-[2.5rem] animate-pulse"
+          src={logoHorizontal}
+          alt=""
+        />
       </div>
     );
 
   return (
     <AccountProvider>
       <>
-        <Header />
+        {isHeaderVisible && <Header />}
         <main style={{ minHeight: "100vh" }}>
           <ScrollTop>
             <Routes>
@@ -146,7 +150,10 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              <Route path="/praca/*" element={<FindWork />} />
+              <Route
+                path="/ankieta"
+                element={<Survey setIsHeaderVisible={setIsHeaderVisible} />}
+              />
             </Routes>
           </ScrollTop>
           <Routes>

@@ -7,7 +7,7 @@ const SurveyLink = () => {
   const navigate = useNavigate();
   const handleNavigate = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    navigate("/praca");
+    navigate("/ankieta");
     setShouldScroll(true);
   };
 
@@ -21,7 +21,7 @@ const SurveyLink = () => {
   return (
     <Link
       className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-3 px-8 bg-secondary mt-4 md:mt-0 md:ml-4"
-      to="/praca"
+      to="/ankieta"
       onClick={handleNavigate}
     >
       Wypełnij formularz{" "}

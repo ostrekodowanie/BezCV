@@ -8,7 +8,7 @@ import {
 } from "react";
 import { arrowRight } from "../../assets/general";
 import { textInputStyles } from "../../constants/workForm";
-import { SurveyContext } from "../../pages/survey/Survey";
+import { SurveyContext } from "../../pages/Survey";
 import Loader from "../Loader";
 
 type PhoneCodePopupProps = {

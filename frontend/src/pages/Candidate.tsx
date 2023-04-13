@@ -395,7 +395,7 @@ export default function Candidate() {
             <h2 className="font-bold text-lg mb-8">
               Umiejętności kandydata do pracy na każdym stanowisku
             </h2>
-            <div className="flex flex-col gap-8 sm:grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
+            <div className="flex flex-col gap-8 md:grid grid-cols-3">
               <div
                 className={`flex flex-col gap-6 ${
                   candidateDetails.profession === "sales"
@@ -499,15 +499,12 @@ export default function Candidate() {
               </div>
             </div>
           </div>
-          {hasBadAbilities && (
-            <>
-              {!loading.page ? (
-                <WorstAbilitiesList {...candidateDetails.worst_abilities} />
-              ) : (
-                <WorstAbilitiesLoader />
-              )}
-            </>
-          )}
+          {hasBadAbilities &&
+            (!loading.page ? (
+              <WorstAbilitiesList {...candidateDetails.worst_abilities} />
+            ) : (
+              <WorstAbilitiesLoader />
+            ))}
         </div>
         {loading.page ? (
           <div className="ml-[8vw] sm:ml-0">

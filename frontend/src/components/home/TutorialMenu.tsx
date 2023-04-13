@@ -13,8 +13,9 @@ import {
 } from "../../assets/home/candidate/candidate";
 import { RoleProps, roles } from "../../constants/workForm";
 import { AccountContext, AccountType } from "../../reducers/AccountProvider";
-import TutorialInterface from "./tutorial/Interface";
 import RoleButton from "./tutorial/RoleButton";
+import EmployerInterfaceComponent from "./tutorial/EmployerInterfaceComponent";
+import CandidateInterfaceComponent from "./tutorial/CandidateInterfaceComponent";
 
 type RoleStateContextType = {
   setRole: Dispatch<SetStateAction<RoleProps>>;
@@ -84,7 +85,7 @@ export default function TutorialMenu() {
         <div
           className={`${
             account === "worker" ? "bg-secondary" : "bg-primary"
-          } sm:rounded-3xl py-10 sm:p-10 md:p-16 flex flex-col xl:max-w-[90%] sm:mx-auto gap-4`}
+          } sm:rounded-3xl px-2 py-10 sm:p-10 md:p-16 flex flex-col xl:max-w-[90%] sm:mx-auto gap-4`}
         >
           <Title account={account} />
           <div
@@ -98,7 +99,13 @@ export default function TutorialMenu() {
               <RoleButton {...role} />
             ))}
           </div>
-          <TutorialInterface />
+          <div className="relative">
+            {account === "employer" ? (
+              <EmployerInterfaceComponent />
+            ) : (
+              <CandidateInterfaceComponent />
+            )}
+          </div>
         </div>
       </RoleStateContext.Provider>
     </section>

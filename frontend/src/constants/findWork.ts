@@ -179,3 +179,18 @@ export const surveyManQuotes: SurveyQuotes = {
     ],
     chooseRole: 'Świetnie wiem już jakie oferty spełniają Twoje oczekiwania. Teraz sprawdźmy Twoje kompetencje miękkie.'
 }
+
+export const initialCandidateAnswers = defaultQuestions.reduce((acc, { name, type, customInputs }) => {
+    if (name === "preferred_professions") return { ...acc, [name]: [] };
+    if (type === "custom") {
+      let newObj = customInputs?.reduce(
+        (acc, { name }) => ({ ...acc, [name]: "" }),
+        {}
+      );
+      return { ...acc, ...newObj };
+    }
+    if (type === "date") {
+      return { ...acc, [name]: new Date().toISOString().substring(0, 10) };
+    }
+    return { ...acc, [name]: "" };
+  }, {} as CandidateAnswerType)

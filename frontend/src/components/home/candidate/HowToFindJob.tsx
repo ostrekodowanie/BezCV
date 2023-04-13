@@ -26,7 +26,7 @@ export default function HowToFindJob() {
               znajdziesz swoją wymarzoną pracę.
             </p>
             <Link
-              to="/praca"
+              to="/ankieta"
               className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-[14px] px-10 mt-4 bg-primary"
             >
               Opowiedz nam o sobie{" "}

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { surveyManQuotes } from "../../constants/findWork";
-import { SurveyContext } from "../../pages/survey/Survey";
+import { SurveyContext } from "../../pages/Survey";
 
 export default function SurveyManQuote() {
   const { activeQuestionIndex, step, role } = useContext(SurveyContext);

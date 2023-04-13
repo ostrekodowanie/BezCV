@@ -15,13 +15,10 @@ export default function Header() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname.includes("ankieta")) return;
     const cb = () => setDown(window.scrollY > 100);
     window.addEventListener("scroll", cb);
     return () => window.removeEventListener("scroll", cb);
   }, []);
-
-  if (location.pathname.includes("ankieta")) return <></>;
 
   return (
     <header

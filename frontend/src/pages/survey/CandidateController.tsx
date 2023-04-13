@@ -8,7 +8,7 @@ import EmailCodePopup from "../../components/survey/PhoneCodePopup";
 import { defaultQuestions, QuestionProps } from "../../constants/findWork";
 import { radioInputStyles, textInputStyles } from "../../constants/workForm";
 import ProgressBar from "./ProgressBar";
-import { SurveyContext } from "./Survey";
+import { SurveyContext } from "../Survey";
 
 export default function CandidateController() {
   const {

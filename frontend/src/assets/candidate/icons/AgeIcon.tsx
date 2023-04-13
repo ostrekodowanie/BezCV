@@ -25,8 +25,8 @@ export default function AgeIcon({
           y2="18"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color={startColor.value} offset={startColor.position} />
-          <stop stop-color={stopColor.value} offset={stopColor.position} />
+          <stop stopColor={startColor.value} offset={startColor.position} />
+          <stop stopColor={stopColor.value} offset={stopColor.position} />
         </linearGradient>
       </defs>
     </svg>

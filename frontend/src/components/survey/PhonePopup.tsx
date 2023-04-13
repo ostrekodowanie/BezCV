@@ -3,13 +3,14 @@ import {
   Dispatch,
   FormEvent,
   SetStateAction,
+  useContext,
   useState,
 } from "react";
 import { arrowRight, xMark } from "../../assets/general";
-import { useAppSelector } from "../../main";
 import axios from "axios";
 import Loader from "../Loader";
 import { textInputStyles } from "../../constants/workForm";
+import { SurveyContext } from "../../pages/Survey";
 
 export default function PhonePopup({
   setPhonePopupActive,
@@ -17,9 +18,12 @@ export default function PhonePopup({
   setPhonePopupActive: Dispatch<SetStateAction<boolean>>;
 }) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [code, setCode] = useState("");
   const [phone, setPhone] = useState("");
   const [isOk, setIsOk] = useState<boolean | undefined>();
+  const { setStep, setCandidateAnswers, setIsIntroduced } =
+    useContext(SurveyContext);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -38,8 +42,15 @@ export default function PhonePopup({
             },
           }
         )
-        .then(() => setIsOk(true))
-        .catch(() => setIsOk(false))
+        .then(() => {
+          setStep("role");
+          setCandidateAnswers((prev) => ({
+            ...prev,
+            phone: phone.split(" ").join(""),
+          }));
+          setIsIntroduced(true);
+        })
+        .catch(() => setError("Nieprawidłowy kod!"))
         .finally(() => setLoading(false));
     } else {
       axios
@@ -54,8 +65,15 @@ export default function PhonePopup({
             },
           }
         )
-        .then(() => setIsOk(true))
-        .catch(() => setIsOk(false))
+        .then((res) => {
+          switch (res.status) {
+            case 204:
+              setError("Nie znaleziono numeru telefonu!");
+            case 200:
+              setIsOk(true);
+          }
+        })
+        .catch(() => setError("Wystąpił błąd"))
         .finally(() => setLoading(false));
     }
   };
@@ -129,8 +147,9 @@ export default function PhonePopup({
           )}
           <div className="flex flex-col items-end sm:flex-row sm:items-center gap-8 mt-4 col-span-2 sm:justify-end">
             {loading && <Loader />}
+            {error && <p className="text-sm text-red-400">{error}</p>}
             <button
-              className='className="justify-center bg-secondary w-max transition-colors font-semibold border-primary text-white sm:rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start max-w-max"'
+              className='className="justify-center bg-secondary w-max transition-colors font-semibold border-primary text-white rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start max-w-max"'
               type="submit"
             >
               Prześlij

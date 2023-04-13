@@ -4,6 +4,7 @@ import report from './report.svg'
 import infoFormButton from './info_form_button.svg'
 import profileIcon from './profile_icon.svg'
 import reportSuccessMan from './report_form_success.svg'
+import edit from './edit.svg'
 
 export {
     descIcon,
@@ -11,5 +12,6 @@ export {
     report,
     infoFormButton,
     profileIcon,
-    reportSuccessMan
+    reportSuccessMan,
+    edit
 }

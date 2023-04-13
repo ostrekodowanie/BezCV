@@ -7,19 +7,6 @@ export interface TutorialAnswerProps {
     desc: string
 }
 
-export const employerAnswers: TutorialAnswerProps[] = [
-    {
-        position: 'top-[12%] left-[32%]',
-        title: 'Podstawowe informacje',
-        desc: 'To tutaj zobaczysz podstawowe informacje o wybranym przez siebie kandydacie oraz będziesz miał okazję lepiej go poznać'
-    },
-    {
-        position: 'left-[30%] top-[52%]',
-        title: 'Istotne umiejętności',
-        desc: 'W tej sekcji będziesz miał możliwość poznania mocnych oraz słabych cech Twojego kandydata na podstawie jego umiejętności'
-    }
-]
-
 type ExampleAbilities = {
     [r in RoleType]: AbilityProps[]
 }

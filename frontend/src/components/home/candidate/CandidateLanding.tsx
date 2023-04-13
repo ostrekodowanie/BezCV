@@ -74,7 +74,7 @@ export default function CandidateLanding() {
         </div>
       </div>
       <Link
-        to="/praca"
+        to="/ankieta"
         className="rounded-full max-w-max text-white text-[.8rem] font-semibold flex items-center py-[14px] px-10 bg-secondary"
       >
         Znajdź pracę{" "}

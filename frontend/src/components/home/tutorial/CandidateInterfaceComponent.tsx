@@ -24,7 +24,7 @@ const CandidateInterfaceComponent = () => {
   }, [role.name]);
 
   return (
-    <div className="bg-white py-10 px-[8vw] sm:rounded-3xl flex flex-col items-center gap-4">
+    <div className="bg-white py-10 px-[8vw] rounded-3xl flex flex-col items-center gap-4 overflow-hidden">
       <CircleChart profession={role.name} percentage={percentage} isFirst />
       <div className="flex flex-col gap-6 self-stretch max-w-[5in] w-full mx-auto mt-8">
         {exampleAbilities[role.name].map((ab) => (

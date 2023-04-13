@@ -1,12 +1,13 @@
 import Control, { Controller } from "react-control-js";
-import { Link } from "react-router-dom";
 import { arrowRight } from "../../assets/general";
 import { surveyIntroductionMan, triangle } from "../../assets/survey/survey";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { prevArrow } from "../../assets/candidate/candidate";
 import PhonePopup from "../../components/survey/PhonePopup";
+import { SurveyContext } from "../Survey";
 
 export default function Introduction() {
+  const { setIsIntroduced } = useContext(SurveyContext);
   const [phonePopupActive, setPhonePopupActive] = useState(false);
   return (
     <section className="padding pt-[1.4in] md:pt-[1.8in] bg-white lg:grid grid-cols-[1fr_2fr] gap-8 overflow-hidden">
@@ -105,14 +106,15 @@ export default function Introduction() {
                   alt=""
                 />
               </button>
-              <Link
-                to="/praca/ankieta"
+              <button
+                type="button"
+                onClick={() => setIsIntroduced(true)}
                 id="survey-button"
                 className="justify-center bg-secondary w-full transition-colors font-semibold border-primary text-white sm:rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start xl:max-w-max"
               >
                 Przenieś mnie do ankiety!{" "}
                 <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
-              </Link>
+              </button>
             </div>
           }
         />

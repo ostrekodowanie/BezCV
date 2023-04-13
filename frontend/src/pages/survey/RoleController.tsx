@@ -9,7 +9,8 @@ import RoleChoosePage from "../../components/survey/RoleChoosePage";
 import { rangeNumberKeys } from "../../constants/workForm";
 import Finished from "./Finished";
 import ProgressBar from "./ProgressBar";
-import { SurveyContext } from "./Survey";
+import { SurveyContext } from "../Survey";
+import Summary from "./Summary";
 
 interface RoleQuestion {
   id: number;
@@ -25,9 +26,10 @@ export default function RoleController() {
     setRoleAnswers,
     activeQuestionIndex,
     setActiveQuestionIndex,
+    isSurveyFilled,
     setIsSurveyFilled,
   } = useContext(SurveyContext);
-  const { first_name, phone } = candidateAnswers;
+  const { phone } = candidateAnswers;
   const [numericalAnswer, setNumericalAnswer] = useState<number | null>(null);
   const [questions, setQuestions] = useState<RoleQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +37,13 @@ export default function RoleController() {
   const [secondsLeft, setSecondsLeft] = useState(15);
   const [isFinishing, setIsFinishing] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
+  const [finishFirstName, setFinishFirstName] = useState("");
   const [error, setError] = useState("");
+  const isEverySurveyFilled = !!(
+    isSurveyFilled.customer_service &&
+    isSurveyFilled.office_administration &&
+    isSurveyFilled.sales
+  );
 
   useEffect(() => {
     if (!questions[activeQuestionIndex]) return;
@@ -76,8 +84,9 @@ export default function RoleController() {
             headers: { "Content-Type": "application/json" },
           }
         )
-        .then(() => {
+        .then((res) => {
           setIsFinished(true);
+          setFinishFirstName(res.data.first_name);
           role &&
             setIsSurveyFilled((prev) => ({
               ...prev,
@@ -104,17 +113,13 @@ export default function RoleController() {
       .finally(() => setLoading(false));
   }, [role]);
 
-  if (isFinished && typeof first_name === "string")
-    return <Finished firstName={first_name} />;
-
+  if (isEverySurveyFilled) return <Finished />;
+  if (isFinished) return <Summary firstName={finishFirstName} />;
   if (isFinishing) return <FinishLoader />;
-
   if (!role) return <RoleChoosePage setRole={setRole} />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;
   if (loading || !questions[activeQuestionIndex]) return <Loader />;
-
   const { text } = questions[activeQuestionIndex];
-
   return (
     <>
       <ProgressBar progress={activeQuestionIndex / questions.length} />

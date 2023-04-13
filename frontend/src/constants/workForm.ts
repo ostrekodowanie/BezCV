@@ -78,7 +78,9 @@ export type SurveyContextType = {
     isSurveyFilled: IsFilled,
     setIsSurveyFilled: Dispatch<SetStateAction<IsFilled>>,
     activeQuestionIndex: number,
-    setActiveQuestionIndex: Dispatch<SetStateAction<number>>
+    setActiveQuestionIndex: Dispatch<SetStateAction<number>>,
+    isIntroduced: boolean,
+    setIsIntroduced: Dispatch<SetStateAction<boolean>>
 }
 
 export type ControllerContextType = {
@@ -95,4 +97,8 @@ export const initialFilledState: IsFilled = {
     sales: false,
     office_administration: false,
     customer_service: false
+}
+
+export type SurveyScreenProps = { 
+    setIsHeaderVisible: Dispatch<SetStateAction<boolean>>
 }
