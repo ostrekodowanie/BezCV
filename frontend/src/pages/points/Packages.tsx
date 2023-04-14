@@ -67,10 +67,9 @@ export default function Packages() {
             Chcesz kupić większą ilość tokenów?
           </h2>
           <p className="text-sm md:text-base text-[#3C4663] leading-relaxed text-center xl:text-left md:leading-relaxed max-w-[90%]">
-            Lorem ipsum dolor sit amet consectetur. Nunc posuere eu a sem eget.
-            Vel non nunc sit nibh consectetur blandit amet faucibus velit.
-            Venenatis aliquam habitasse tempor magna vitae malesuada. Vel id
-            pulvinar eget platea.
+            Wypełnij nasz formularz zgłoszeniowy, aby dokonać zakupu większej
+            ilości naszych tokenów. Podaj swoje dane oraz ilość tokenów, którą
+            chcesz nabyć.
           </p>
         </div>
         <MorePointsForm />

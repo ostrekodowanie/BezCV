@@ -406,13 +406,17 @@ export default function Candidate() {
                 <h3 className="font-bold text-lg">Sprzedaż</h3>
                 {!loading.page ? (
                   <>
-                    {candidateDetails.abilities?.sales.map((ab) => (
-                      <AbilityRange
-                        {...ab}
-                        color={professionColorMap.sales.gradient}
-                        key={ab.name}
-                      />
-                    ))}
+                    {candidateDetails.abilities?.sales ? (
+                      candidateDetails.abilities?.sales.map((ab) => (
+                        <AbilityRange
+                          {...ab}
+                          color={professionColorMap.sales.gradient}
+                          key={ab.name}
+                        />
+                      ))
+                    ) : (
+                      <AbilityRange color={professionColorMap.sales.gradient} />
+                    )}
                     <div className="flex flex-col sm:hidden gap-6">
                       {candidateDetails.worst_abilities.sales.map((ab) => (
                         <AbilityRange
@@ -437,16 +441,24 @@ export default function Candidate() {
                 <h3 className="font-bold text-lg">Administracja</h3>
                 {!loading.page ? (
                   <>
-                    {candidateDetails.abilities?.office_administration.map(
-                      (ab) => (
-                        <AbilityRange
-                          {...ab}
-                          color={
-                            professionColorMap.office_administration.gradient
-                          }
-                          key={ab.name}
-                        />
+                    {candidateDetails.abilities?.office_administration ? (
+                      candidateDetails.abilities?.office_administration.map(
+                        (ab) => (
+                          <AbilityRange
+                            {...ab}
+                            color={
+                              professionColorMap.office_administration.gradient
+                            }
+                            key={ab.name}
+                          />
+                        )
                       )
+                    ) : (
+                      <AbilityRange
+                        color={
+                          professionColorMap.office_administration.gradient
+                        }
+                      />
                     )}
                     <div className="flex flex-col sm:hidden gap-6">
                       {candidateDetails.worst_abilities.office_administration.map(
@@ -474,13 +486,19 @@ export default function Candidate() {
                 <h3 className="font-bold text-lg">Obsługa klienta</h3>
                 {!loading.page ? (
                   <>
-                    {candidateDetails.abilities?.customer_service.map((ab) => (
+                    {candidateDetails.abilities?.customer_service ? (
+                      candidateDetails.abilities?.customer_service.map((ab) => (
+                        <AbilityRange
+                          {...ab}
+                          color={professionColorMap.customer_service.gradient}
+                          key={ab.name}
+                        />
+                      ))
+                    ) : (
                       <AbilityRange
-                        {...ab}
                         color={professionColorMap.customer_service.gradient}
-                        key={ab.name}
                       />
-                    ))}
+                    )}
                     <div className="flex flex-col sm:hidden gap-6">
                       {candidateDetails.worst_abilities.customer_service.map(
                         (ab) => (
