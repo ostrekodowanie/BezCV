@@ -39,7 +39,7 @@ export default function MorePointsForm() {
 
   return (
     <form
-      className="bg-white rounded-3xl shadow-primaryBig flex flex-col gap-8 p-12 sm:min-w-[5in] xl:min-w-0"
+      className="bg-white sm:rounded-3xl shadow-primaryBig flex flex-col gap-8 px-[8vw] py-12 sm:p-12 sm:min-w-[5in] xl:min-w-0 self-stretch"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-col gap-3">
