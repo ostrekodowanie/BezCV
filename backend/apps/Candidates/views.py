@@ -24,6 +24,7 @@ class CandidatesFilter(filters.FilterSet):
     professions = filters.BaseInFilter(field_name='profession', lookup_expr='in')
     availability =  filters.BaseInFilter(field_name='availability', lookup_expr='in')
     salary = filters.BaseInFilter(field_name='salary_expectation', lookup_expr='in')
+    province = filters.BaseInFilter(field_name='province', lookup_expr='in')
 
     class Meta:
         model = Candidates
