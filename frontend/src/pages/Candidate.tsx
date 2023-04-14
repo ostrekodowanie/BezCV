@@ -418,13 +418,18 @@ export default function Candidate() {
                       <AbilityRange color={professionColorMap.sales.gradient} />
                     )}
                     <div className="flex flex-col sm:hidden gap-6">
-                      {candidateDetails.worst_abilities.sales.map((ab) => (
-                        <AbilityRange
-                          {...ab}
-                          color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-                          key={ab.name}
-                        />
-                      ))}
+                      {candidateDetails.abilities?.sales &&
+                      candidateDetails.worst_abilities.sales ? (
+                        candidateDetails.worst_abilities.sales.map((ab) => (
+                          <AbilityRange
+                            {...ab}
+                            color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
+                            key={ab.name}
+                          />
+                        ))
+                      ) : (
+                        <AbilityRange color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)" />
+                      )}
                     </div>
                   </>
                 ) : (
@@ -461,14 +466,19 @@ export default function Candidate() {
                       />
                     )}
                     <div className="flex flex-col sm:hidden gap-6">
-                      {candidateDetails.worst_abilities.office_administration.map(
-                        (ab) => (
-                          <AbilityRange
-                            {...ab}
-                            color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-                            key={ab.name}
-                          />
+                      {candidateDetails.abilities?.office_administration &&
+                      candidateDetails.worst_abilities.office_administration ? (
+                        candidateDetails.worst_abilities.office_administration.map(
+                          (ab) => (
+                            <AbilityRange
+                              {...ab}
+                              color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
+                              key={ab.name}
+                            />
+                          )
                         )
+                      ) : (
+                        <AbilityRange color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)" />
                       )}
                     </div>
                   </>
@@ -500,14 +510,19 @@ export default function Candidate() {
                       />
                     )}
                     <div className="flex flex-col sm:hidden gap-6">
-                      {candidateDetails.worst_abilities.customer_service.map(
-                        (ab) => (
-                          <AbilityRange
-                            {...ab}
-                            color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-                            key={ab.name}
-                          />
+                      {candidateDetails.abilities?.customer_service &&
+                      candidateDetails.worst_abilities.customer_service ? (
+                        candidateDetails.worst_abilities.customer_service.map(
+                          (ab) => (
+                            <AbilityRange
+                              {...ab}
+                              color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
+                              key={ab.name}
+                            />
+                          )
                         )
+                      ) : (
+                        <AbilityRange color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)" />
                       )}
                     </div>
                   </>

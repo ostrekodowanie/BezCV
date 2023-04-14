@@ -20,7 +20,6 @@ import getUserInfo from "./utils/getUserInfo";
 import AccountProvider from "./reducers/AccountProvider";
 import CookieConsent from "react-cookie-consent";
 import FixedButton from "./components/FixedButton";
-import { logoHorizontal } from "./assets/general";
 import Survey from "./pages/Survey";
 
 const loginString: string | null = localStorage.getItem("user");
@@ -85,11 +84,9 @@ export default function App() {
   if (loading)
     return (
       <div className="w-screen h-screen flex items-center justify-center">
-        <img
-          className="h-[1.8rem] md:h-[2.5rem] animate-pulse"
-          src={logoHorizontal}
-          alt=""
-        />
+        <strong className="font-medium text-3xl">
+          bez<span className="text-primary">CV</span>
+        </strong>
       </div>
     );
 

@@ -34,8 +34,9 @@ export default function Header() {
 
 const Logo = () => (
   <Link to="/">
-    <img className="h-[1.5rem] md:block hidden" src={logoHorizontal} alt="" />
-    <img className="h-[1.5rem] md:hidden" src={logo} alt="" />
+    <strong className="font-medium text-xl">
+      bez<span className="text-primary">CV</span>
+    </strong>
   </Link>
 );
 

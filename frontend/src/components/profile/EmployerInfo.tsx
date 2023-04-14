@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
-import { descIcon, profilePictureUpload } from "../../assets/profile/profile";
+import { profilePictureUpload } from "../../assets/profile/profile";
 import { useAppSelector } from "../../main";
 import InfoForm from "./InfoForm";
 
@@ -11,7 +11,6 @@ export default function EmployerInfo() {
   const { access } = auth.tokens;
 
   const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
-    console.log("aeffaefe");
     const formData = new FormData();
     formData.append(
       "image",
