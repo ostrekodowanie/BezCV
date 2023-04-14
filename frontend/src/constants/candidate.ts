@@ -112,3 +112,7 @@ export const provinces = [
     "Wielkopolskie",
     "Zachodniopomorskie"
 ]
+
+export type DidFilledSurvey = {
+    [r in RoleType]: boolean
+}

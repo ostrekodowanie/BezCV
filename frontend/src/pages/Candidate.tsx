@@ -11,6 +11,7 @@ import { useAppSelector } from "../main";
 import { purchase } from "../reducers/login";
 import {
   Details,
+  DidFilledSurvey,
   initialDetailsState,
   roleToTextMap,
 } from "../constants/candidate";
@@ -65,6 +66,17 @@ export default function Candidate() {
     candidateDetails.worst_abilities.customer_service.length > 0 &&
     candidateDetails.worst_abilities.office_administration.length > 0 &&
     candidateDetails.worst_abilities.sales.length > 0;
+  const didFilledSurvey: DidFilledSurvey = {
+    sales:
+      candidateDetails.abilities?.sales.filter((item) => item).length ===
+      candidateDetails.abilities?.sales.length,
+    office_administration:
+      candidateDetails.abilities?.office_administration.filter((item) => item)
+        .length === candidateDetails.abilities?.office_administration.length,
+    customer_service:
+      candidateDetails.abilities?.customer_service.filter((item) => item)
+        .length === candidateDetails.abilities?.customer_service.length,
+  };
 
   const handlePurchase = async () => {
     if (points < 1) return navigate("/punkty");
@@ -406,7 +418,7 @@ export default function Candidate() {
                 <h3 className="font-bold text-lg">Sprzedaż</h3>
                 {!loading.page ? (
                   <>
-                    {candidateDetails.abilities?.sales ? (
+                    {didFilledSurvey.sales ? (
                       candidateDetails.abilities?.sales.map((ab) => (
                         <AbilityRange
                           {...ab}
@@ -418,7 +430,7 @@ export default function Candidate() {
                       <AbilityRange color={professionColorMap.sales.gradient} />
                     )}
                     <div className="flex flex-col sm:hidden gap-6">
-                      {candidateDetails.abilities?.sales &&
+                      {didFilledSurvey.sales &&
                       candidateDetails.worst_abilities.sales ? (
                         candidateDetails.worst_abilities.sales.map((ab) => (
                           <AbilityRange
@@ -446,7 +458,7 @@ export default function Candidate() {
                 <h3 className="font-bold text-lg">Administracja</h3>
                 {!loading.page ? (
                   <>
-                    {candidateDetails.abilities?.office_administration ? (
+                    {didFilledSurvey.office_administration ? (
                       candidateDetails.abilities?.office_administration.map(
                         (ab) => (
                           <AbilityRange
@@ -466,7 +478,7 @@ export default function Candidate() {
                       />
                     )}
                     <div className="flex flex-col sm:hidden gap-6">
-                      {candidateDetails.abilities?.office_administration &&
+                      {didFilledSurvey.office_administration &&
                       candidateDetails.worst_abilities.office_administration ? (
                         candidateDetails.worst_abilities.office_administration.map(
                           (ab) => (
@@ -496,7 +508,7 @@ export default function Candidate() {
                 <h3 className="font-bold text-lg">Obsługa klienta</h3>
                 {!loading.page ? (
                   <>
-                    {candidateDetails.abilities?.customer_service ? (
+                    {didFilledSurvey.customer_service ? (
                       candidateDetails.abilities?.customer_service.map((ab) => (
                         <AbilityRange
                           {...ab}
@@ -510,7 +522,7 @@ export default function Candidate() {
                       />
                     )}
                     <div className="flex flex-col sm:hidden gap-6">
-                      {candidateDetails.abilities?.customer_service &&
+                      {didFilledSurvey.customer_service &&
                       candidateDetails.worst_abilities.customer_service ? (
                         candidateDetails.worst_abilities.customer_service.map(
                           (ab) => (
