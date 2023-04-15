@@ -122,7 +122,7 @@ export default function Form() {
               Zresetuj hasło
             </Link>
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center flex-row-reverse sm:flex-row gap-4">
             {status.message === "loading" && <Loader />}
             {!status.ok && status.message && status.message !== "loading" && (
               <span className="text-red-400 font-medium">{status.message}</span>

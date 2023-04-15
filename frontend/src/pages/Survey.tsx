@@ -21,10 +21,13 @@ import {
 import { initialCandidateAnswers } from "../constants/findWork";
 import SurveyManQuote from "../components/survey/SurveyManQuote";
 import Introduction from "./survey/Introduction";
+import { Helmet } from "react-helmet";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export const SurveyContext = createContext<SurveyContextType>(null!);
 
 export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
+  useDocumentTitle("Ankieta | bezCV - innowacyjny portal pracy");
   const [role, setRole] = useState<RoleType | null>(null);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [step, setStep] = useState<"role" | "candidate">("candidate");
@@ -37,10 +40,6 @@ export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
   );
 
   useLayoutEffect(() => {
-    setStep("candidate");
-    setCandidateAnswers(initialCandidateAnswers);
-    setRoleAnswers([]);
-    setActiveQuestionIndex(0);
     isIntroduced ? setIsHeaderVisible(false) : setIsHeaderVisible(true);
   }, [isIntroduced]);
 

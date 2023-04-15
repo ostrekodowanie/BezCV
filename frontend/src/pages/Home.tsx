@@ -16,8 +16,10 @@ import SoftCandidateSkills from "../components/home/employer/SoftCandidateSkills
 import DesktopSurvey from "../components/home/employer/DesktopSurvey";
 import IsEnough from "../components/home/employer/IsEnough";
 import HowToFindJob from "../components/home/candidate/HowToFindJob";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function Home() {
+  useDocumentTitle("bezCV - innowacyjny portal pracy");
   const { account } = useContext(AccountContext);
   if (account === "employer")
     return (

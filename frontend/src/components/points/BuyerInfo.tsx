@@ -2,7 +2,7 @@ import { useAppSelector } from "../../main";
 import { inputStyles } from "../../pages/Contact";
 
 const OrderInfo = () => {
-  const { first_name, last_name, phone, email } = useAppSelector(
+  const { first_name, last_name, email } = useAppSelector(
     (state) => state.login.data
   );
   return (
@@ -47,7 +47,6 @@ const OrderInfo = () => {
           </label>
           <input
             className={inputStyles.input}
-            defaultValue={`+48 ${phone}`}
             id="summary-names"
             name="summary"
             type="text"

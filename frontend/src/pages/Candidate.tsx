@@ -68,14 +68,16 @@ export default function Candidate() {
     candidateDetails.worst_abilities.sales.length > 0;
   const didFilledSurvey: DidFilledSurvey = {
     sales:
-      candidateDetails.abilities?.sales.filter((item) => item).length ===
-      candidateDetails.abilities?.sales.length,
+      candidateDetails.abilities?.sales.filter((item) => item.percentage)
+        .length === candidateDetails.abilities?.sales.length,
     office_administration:
-      candidateDetails.abilities?.office_administration.filter((item) => item)
-        .length === candidateDetails.abilities?.office_administration.length,
+      candidateDetails.abilities?.office_administration.filter(
+        (item) => item.percentage
+      ).length === candidateDetails.abilities?.office_administration.length,
     customer_service:
-      candidateDetails.abilities?.customer_service.filter((item) => item)
-        .length === candidateDetails.abilities?.customer_service.length,
+      candidateDetails.abilities?.customer_service.filter(
+        (item) => item.percentage
+      ).length === candidateDetails.abilities?.customer_service.length,
   };
 
   const handlePurchase = async () => {

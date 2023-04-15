@@ -8,6 +8,7 @@ import {
 import { buttonArrow } from "../../assets/account/account";
 import { roles, RoleType } from "../../constants/workForm";
 import { SurveyContext } from "../../pages/Survey";
+import ProgressBar from "../../pages/survey/ProgressBar";
 
 export default function RoleChoosePage({
   setRole,
@@ -25,6 +26,7 @@ export default function RoleChoosePage({
 
   return (
     <>
+      <ProgressBar progress={1 / 1} />
       <form
         className="flex flex-col flex-1 max-h-[80%] my-auto xl:justify-between gap-8 w-full"
         onSubmit={handleSubmit}
@@ -38,7 +40,7 @@ export default function RoleChoosePage({
               .filter((role) => !isSurveyFilled[role.name])
               .map((role) => (
                 <label
-                  className={`py-6 px-12 sm:p-12 w-full text-center transition-all flex flex-col cursor-pointer font-semibold gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
+                  className={`py-6 px-12 sm:p-12 w-full text-center transition-all flex flex-col cursor-pointer font-semibold gap-4 sm:gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
                     chosen === role.name
                       ? "text-secondary shadow-[0px_56px_114px_rgba(250,175,62,0.25)]"
                       : "shadow-secondaryBig"
@@ -56,7 +58,7 @@ export default function RoleChoosePage({
                     name="role"
                   />
                   <img
-                    className="max-w-[40%] sm:max-w-[1.6in] max-h-[1.2in]"
+                    className="max-w-[30%] sm:max-w-[1.6in] max-h-[1.2in]"
                     src={role.image}
                     alt=""
                   />
@@ -67,7 +69,7 @@ export default function RoleChoosePage({
         </div>
         <button
           type="submit"
-          className="fixed sm:static sm:rounded-full right-0 left-0 bottom-0 text-[.8rem] text-white sm:ml-auto self-end font-bold py-4 px-8 bg-secondary flex items-center mt-8 xl:mt-0"
+          className="fixed bottom-0 right-0 left-0 sm:static justify-center text-[.75rem] w-full sm:w-max sm:rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary sm:self-end flex items-center"
         >
           Rozpocznij ankietę{" "}
           <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="" />

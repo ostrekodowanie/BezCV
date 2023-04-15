@@ -5,10 +5,28 @@ import { useContext, useState } from "react";
 import { prevArrow } from "../../assets/candidate/candidate";
 import PhonePopup from "../../components/survey/PhonePopup";
 import { SurveyContext } from "../Survey";
+import { initialCandidateAnswers } from "../../constants/findWork";
 
 export default function Introduction() {
-  const { setIsIntroduced } = useContext(SurveyContext);
+  const {
+    setIsIntroduced,
+    setStep,
+    setRoleAnswers,
+    setCandidateAnswers,
+    setActiveQuestionIndex,
+    setRole,
+  } = useContext(SurveyContext);
   const [phonePopupActive, setPhonePopupActive] = useState(false);
+
+  const handleNavigate = () => {
+    setStep("candidate");
+    setCandidateAnswers(initialCandidateAnswers);
+    setRoleAnswers([]);
+    setActiveQuestionIndex(0);
+    setRole(null);
+    setIsIntroduced(true);
+  };
+
   return (
     <section className="padding pt-[1.4in] md:pt-[1.8in] bg-white lg:grid grid-cols-[1fr_2fr] gap-8 overflow-hidden">
       {phonePopupActive && (
@@ -108,7 +126,7 @@ export default function Introduction() {
               </button>
               <button
                 type="button"
-                onClick={() => setIsIntroduced(true)}
+                onClick={handleNavigate}
                 id="survey-button"
                 className="justify-center bg-secondary w-full transition-colors font-semibold border-primary text-white sm:rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start xl:max-w-max"
               >

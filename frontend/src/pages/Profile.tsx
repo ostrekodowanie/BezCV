@@ -13,8 +13,10 @@ import { bcvToken } from "../assets/general";
 import { Link } from "react-router-dom";
 import EmployerInfo from "../components/profile/EmployerInfo";
 import { logout } from "../reducers/login";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function Profile() {
+  useDocumentTitle("Profil | bezCV - innowacyjny portal pracy");
   const dispatch = useAppDispatch();
   const [profileData, setProfileData] =
     useState<ProfileDataType>(initialProfileData);

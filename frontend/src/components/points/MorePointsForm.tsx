@@ -6,6 +6,7 @@ import { useState, FormEvent, ChangeEvent } from "react";
 import axios from "axios";
 
 export default function MorePointsForm() {
+  const [loading, setLoading] = useState(false);
   const auth = useAppSelector((state) => state.login);
   const { first_name } = auth.data;
   const { access } = auth.tokens;
@@ -14,7 +15,6 @@ export default function MorePointsForm() {
     points_quantity: "",
     phone_number: "",
   });
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

@@ -13,6 +13,7 @@ const AbilityRange = ({
 }: AbilityProps & { color: string }) => {
   const [scaleValue, setScaleValue] = useState(0);
   const rangeRef = useRef<HTMLDivElement>(null!);
+  const isUndefined = percentage === null || percentage === undefined;
 
   useEffect(() => {
     if (!rangeRef.current) return;
@@ -28,13 +29,11 @@ const AbilityRange = ({
     <div className="flex flex-col gap-3 text-font">
       <h4
         className={`max-w-full w-max font-medium text-[.8rem] flex items-center ${
-          percentage === null ? "opacity-[.1]" : "opacity-1"
+          isUndefined ? "opacity-[.1]" : "opacity-1"
         }`}
       >
-        {percentage === null
-          ? "Kandydat nie wypełnił jeszcze tej ankiety."
-          : name}{" "}
-        {percentage !== null && (
+        {isUndefined ? "Kandydat nie wypełnił jeszcze tej ankiety." : name}{" "}
+        {!isUndefined && (
           <span
             style={{ backgroundImage: color }}
             className="ml-2 bg-clip-text text-transparent"
@@ -47,7 +46,7 @@ const AbilityRange = ({
         <div
           ref={rangeRef}
           style={{
-            width: percentage !== null ? percentage + "%" : "60%",
+            width: !isUndefined ? percentage + "%" : "60%",
             backgroundImage: color,
             transform: `scaleX(${scaleValue}%)`,
             opacity: percentage ? "1" : "0.1",

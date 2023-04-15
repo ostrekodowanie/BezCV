@@ -6,13 +6,17 @@ import { useAppSelector } from "../../main";
 
 export default function InfoForm() {
   const auth = useAppSelector((state) => state.login);
-  const { id, form_answers } = auth.data;
+  const { id, form } = auth.data;
   const { access } = auth.tokens;
   const [hasBeenFilled, setHasBeenFilled] = useState(
-    form_answers && form_answers.filter((answer) => answer).length === 3
+    form && form.filter((answer) => answer).length === 3
   );
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState(form_answers || ["", "", ""]);
+  const indexOfEmptyQuestion = form.findIndex((item) => !item);
+  console.log(indexOfEmptyQuestion);
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState(
+    indexOfEmptyQuestion === -1 ? 0 : indexOfEmptyQuestion
+  );
+  const [answers, setAnswers] = useState(form);
   const { question } =
     activeQuestionIndex <= 2
       ? infoFormQuestions[activeQuestionIndex]

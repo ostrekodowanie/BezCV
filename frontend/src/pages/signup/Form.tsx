@@ -240,7 +240,7 @@ export default function Form() {
                   </label>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-row-reverse sm:flex-row items-center gap-4">
                 {status === "loading" && <Loader />}
                 {status && status !== "loading" && (
                   <span className="text-red-400 font-medium">{status}</span>

@@ -13,10 +13,11 @@ import { RoleType } from "../../constants/workForm";
 import { FilterProps as FilterStateProps } from "../../pages/Offers";
 
 interface FilterProps {
+  filter: FilterStateProps;
   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
 }
 
-export default function CandidateFilter({ setFilter }: FilterProps) {
+export default function CandidateFilter({ filter, setFilter }: FilterProps) {
   const [mobileActive, setMobileActive] = useState(false);
   const [isActive, setIsActive] = useState({
     availability: false,
@@ -89,8 +90,11 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                   availability: !prev.availability,
                 }))
               }
-              className="flex items-center"
+              className="flex items-center relative w-fit"
             >
+              {filter.availability.length > 0 && (
+                <FilterLength length={filter.availability.length} />
+              )}
               <img
                 className={`${
                   isActive.availability ? "rotate-0" : "-rotate-90"
@@ -98,7 +102,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                 src={filtersMenuArrow}
                 alt=""
               />
-              <h4 className="font-medium text-[14px]">Dyspozycyjność</h4>
+              <h4 className="font-medium text-[14px] w-fit">Dyspozycyjność</h4>
             </button>
           ) : (
             <div className="w-[60%] bg-[#f8f8f8] mb-4 rounded-full min-h-[2rem]" />
@@ -134,8 +138,11 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                   salary: !prev.salary,
                 }))
               }
-              className="flex items-center"
+              className="flex items-center relative w-fit"
             >
+              {filter.salary.length > 0 && (
+                <FilterLength length={filter.salary.length} />
+              )}
               <img
                 className={`${
                   isActive.salary ? "rotate-0" : "-rotate-90"
@@ -143,7 +150,7 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                 src={filtersMenuArrow}
                 alt=""
               />
-              <h4 className="font-medium text-left text-[14px]">
+              <h4 className="font-medium text-left text-[14px] w-fit">
                 Oczekiwania finansowe
               </h4>
             </button>
@@ -171,8 +178,11 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
                 province: !prev.province,
               }))
             }
-            className="flex items-center"
+            className="flex items-center relative w-fit"
           >
+            {filter.province.length > 0 && (
+              <FilterLength length={filter.province.length} />
+            )}
             <img
               className={`${
                 isActive.province ? "rotate-0" : "-rotate-90"
@@ -180,7 +190,9 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
               src={filtersMenuArrow}
               alt=""
             />
-            <h4 className="font-medium text-left text-[14px]">Województwo</h4>
+            <h4 className="font-medium text-left text-[14px] w-fit">
+              Województwo
+            </h4>
           </button>
           {isActive.province && (
             <div className="flex flex-col gap-4">
@@ -198,6 +210,14 @@ export default function CandidateFilter({ setFilter }: FilterProps) {
     </>
   );
 }
+
+const FilterLength = ({ length }: { length: number }) => {
+  return (
+    <div className="bg-primary text-white font-medium text-[.75rem] h-5 w-5 rounded-full flex items-center justify-center absolute -right-6 -top-1">
+      {length}
+    </div>
+  );
+};
 
 const AvailabilityCheckBox = ({
   availability,

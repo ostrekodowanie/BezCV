@@ -16,7 +16,7 @@ export interface LoginState {
         company_name: string,
         points: number,
         abilities: string[]
-        form_answers: string[]
+        form: string[]
     },
     tokens: {
         access: string,
@@ -40,7 +40,7 @@ const initialState: LoginState = {
         company_name: '',
         points: 0,
         abilities: [],
-        form_answers: ['', '', '']
+        form: ['', '', '']
     },
     tokens: {
         access: '',

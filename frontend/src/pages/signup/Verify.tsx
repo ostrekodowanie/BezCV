@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import Loader from "../../components/Loader";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export default function Verify() {
+  useDocumentTitle("Zweryfikuj konto | bezCV - innowacyjny portal pracy");
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const [status, setStatus] = useState({

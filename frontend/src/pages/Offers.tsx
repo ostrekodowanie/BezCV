@@ -11,6 +11,7 @@ import CandidateRef from "../components/offers/CandidateRef";
 import { RoleType } from "../constants/workForm";
 import CandidateLoader from "../components/offers/CandidateLoader";
 import OffersLoader from "../components/offers/OffersLoader";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function Offers() {
   return (
@@ -29,6 +30,7 @@ export interface FilterProps {
 }
 
 const CandidateList = () => {
+  useDocumentTitle("Oferty | bezCV - innowacyjny portal pracy");
   const navigate = useNavigate();
   const location = useLocation();
   const firstRender = useRef(true);
@@ -56,6 +58,7 @@ const CandidateList = () => {
     let searchArr = [];
     if (
       filter.availability.length > 0 ||
+      filter.salary.length > 0 ||
       filter.professions.length > 0 ||
       filter.province.length > 0
     ) {
@@ -64,6 +67,8 @@ const CandidateList = () => {
           "availability=" + filter.availability.map((av) => av).join(","),
         filter.professions.length > 0 &&
           "professions=" + filter.professions.map((role) => role).join(","),
+        filter.salary.length > 0 &&
+          "salary=" + filter.salary.map((salary) => salary).join(","),
         filter.province.length > 0 &&
           "province=" + filter.province.map((province) => province).join(",")
       );
@@ -138,7 +143,7 @@ const CandidateList = () => {
         </div>
       </div>
       <div className="flex flex-col lg:grid grid-cols-[1fr_4fr] mt-8 xl:my-12">
-        <CandidateFilter setFilter={setFilter} />
+        <CandidateFilter filter={filter} setFilter={setFilter} />
         <InfiniteScroll
           className={`flex flex-col bg-white shadow-primaryBig sm:rounded-3xl relative flex-1 min-h-[80vh] lg:ml-8`}
           next={() => setPage((prev) => prev + 1)}

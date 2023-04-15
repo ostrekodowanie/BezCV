@@ -22,13 +22,32 @@ export default function PhonePopup({
   const [code, setCode] = useState("");
   const [phone, setPhone] = useState("");
   const [isOk, setIsOk] = useState<boolean | undefined>();
-  const { setStep, setCandidateAnswers, setIsIntroduced } =
-    useContext(SurveyContext);
+  const {
+    setStep,
+    setCandidateAnswers,
+    setIsIntroduced,
+    setIsSurveyFilled,
+    setRole,
+    setRoleAnswers,
+    setActiveQuestionIndex,
+  } = useContext(SurveyContext);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     if (isOk) {
+      setStep("role");
+      setRole(null);
+      setCandidateAnswers((prev) => ({
+        ...prev,
+        phone: phone.split(" ").join(""),
+      }));
+      setIsSurveyFilled({
+        office_administration: false,
+        sales: false,
+        customer_service: false,
+      });
+      setIsIntroduced(true);
       axios
         .post(
           "/api/survey/phone/verify",
@@ -42,12 +61,16 @@ export default function PhonePopup({
             },
           }
         )
-        .then(() => {
+        .then((res) => {
           setStep("role");
+          setRole(null);
+          setRoleAnswers([]);
+          setActiveQuestionIndex(0);
           setCandidateAnswers((prev) => ({
             ...prev,
             phone: phone.split(" ").join(""),
           }));
+          setIsSurveyFilled(res.data);
           setIsIntroduced(true);
         })
         .catch(() => setError("Nieprawidłowy kod!"))
@@ -57,7 +80,7 @@ export default function PhonePopup({
         .post(
           "/api/survey/phone",
           JSON.stringify({
-            phone,
+            phone: phone.split(" ").join(""),
           }),
           {
             headers: {
@@ -145,7 +168,7 @@ export default function PhonePopup({
               </div>
             </>
           )}
-          <div className="flex flex-col items-end sm:flex-row sm:items-center gap-8 mt-4 col-span-2 sm:justify-end">
+          <div className="flex items-center gap-6 mt-4 col-span-2 justify-end">
             {loading && <Loader />}
             {error && <p className="text-sm text-red-400">{error}</p>}
             <button
