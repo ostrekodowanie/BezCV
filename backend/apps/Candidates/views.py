@@ -52,7 +52,7 @@ class CandidatesView(generics.ListAPIView):
                     )
                 ),
             )
-            .filter(is_purchased=False)
+            .filter(Q(is_visible=True) & Q(is_purchased=False))
         )
 
         ordering = self.request.query_params.get("order", None)
@@ -113,9 +113,9 @@ class AddReportView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     
 from rest_framework.decorators import api_view
-@api_view(['POST'])
+@api_view(['GET'])
 def smsapi_endpoint(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         from_number = request.data.get('sms_from')
         to_number = request.data.get('sms_to')
         message = request.data.get('sms_text')
