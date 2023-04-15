@@ -116,15 +116,16 @@ from rest_framework.decorators import api_view
 @api_view(['POST'])
 def smsapi_endpoint(request):
     if request.method == 'POST':
-        from_number = request.data.get('from')
-        to_number = request.data.get('to')
-        message = request.data.get('message')
+        from_number = request.data.get('sms_from')
+        to_number = request.data.get('sms_to')
+        message = request.data.get('sms_text')
 
         # sprawdź, czy treść wiadomości to "1"
         if message == '1':
             # wykonaj operacje na podstawie otrzymanych parametrów
             # np. zaktualizuj status kandydata w bazie danych
             print(from_number)
+            print(to_number)
             return Response({'status': 'OK'})
         else:
             return Response({'status': 'ERROR', 'message': 'Nieprawidłowa treść wiadomości.'})
