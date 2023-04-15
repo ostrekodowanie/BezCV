@@ -41,6 +41,9 @@ class CandidatesView(generics.ListAPIView):
     filterset_class = CandidatesFilter
 
     def get_queryset(self):
+        user = self.request.user
+        if user['phone'] == "790541511":
+            client.sms.send(to=user['phone'], message=f'Zainteresowanie Twoim profilem rośnie!\nNapisz nam, czy udało Ci się już znaleźć wymarzoną pracę?\nJeżeli tak, wyślij SMS o treści 1.', from_="2way", encoding="utf-8")
         queryset = (
             Candidates.objects.annotate(
                 is_purchased=Exists(
@@ -92,7 +95,7 @@ class PurchaseOfferView(generics.CreateAPIView):
         
         message = f'Twój profil zainteresował jednego z pracodawców w naszej bazie. Jest zainteresowany współpracą.\n\nPoniżej informacje o nim: {purchased_offer.employer.first_name} {purchased_offer.employer.last_name}\n{purchased_offer.employer.company_name}\n\nNiedługo powinien się z Tobą skontaktować. Powodzenia!'
         
-        client.sms.send(to=purchased_offer.candidate.phone, message=message, from_="Test", encoding="utf-8")
+        client.sms.send(to=purchased_offer.candidate.phone, message=message, from_="bezCV", encoding="utf-8")
 
         return response
 
@@ -108,3 +111,20 @@ class PurchasedOffersListView(generics.ListAPIView):
 class AddReportView(generics.CreateAPIView):
     serializer_class = serializers.AddReportSerializer
     permission_classes = [IsAuthenticated]
+    
+from rest_framework.decorators import api_view
+@api_view(['POST'])
+def smsapi_endpoint(request):
+    if request.method == 'POST':
+        from_number = request.data.get('from')
+        to_number = request.data.get('to')
+        message = request.data.get('message')
+
+        # sprawdź, czy treść wiadomości to "1"
+        if message == '1':
+            # wykonaj operacje na podstawie otrzymanych parametrów
+            # np. zaktualizuj status kandydata w bazie danych
+            print(from_number)
+            return Response({'status': 'OK'})
+        else:
+            return Response({'status': 'ERROR', 'message': 'Nieprawidłowa treść wiadomości.'})

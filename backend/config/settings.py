@@ -15,6 +15,7 @@ import os, cloudinary, openai
 from pathlib import Path
 from dotenv import load_dotenv
 from smsapi.client import SmsApiPlClient
+from distutils.util import strtobool
 
 load_dotenv()
 
@@ -29,9 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['BEZCV_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', default=True)
-SECURE_SSL_REDIRECT = True
-
+DEBUG = bool(strtobool(os.environ.get('DEBUG', default='False')))
+SECURE_SSL_REDIRECT = bool(strtobool(os.environ.get('SSL', default='True')))
+    
 ALLOWED_HOSTS = ['127.0.0.1', 'bezcv.com', 'bezcv.herokuapp.com']
 
 # Application definition
