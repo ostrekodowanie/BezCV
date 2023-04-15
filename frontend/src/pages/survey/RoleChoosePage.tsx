@@ -7,8 +7,8 @@ import {
 } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { roles, RoleType } from "../../constants/workForm";
-import { SurveyContext } from "../../pages/Survey";
-import ProgressBar from "../../pages/survey/ProgressBar";
+import { SurveyContext } from "../Survey";
+import ProgressBar from "../../components/survey/ProgressBar";
 
 export default function RoleChoosePage({
   setRole,

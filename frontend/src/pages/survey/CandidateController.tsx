@@ -7,8 +7,9 @@ import Loader from "../../components/Loader";
 import EmailCodePopup from "../../components/survey/PhoneCodePopup";
 import { defaultQuestions, QuestionProps } from "../../constants/findWork";
 import { radioInputStyles, textInputStyles } from "../../constants/workForm";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "../../components/survey/ProgressBar";
 import { SurveyContext } from "../Survey";
+import ReactGA from "react-ga";
 
 export default function CandidateController() {
   const {
@@ -105,9 +106,21 @@ export default function CandidateController() {
     setActiveQuestionIndex((prev) => prev + 1);
   };
 
+  const handleLeave = () => {
+    ReactGA.event({
+      category: "Survey",
+      action: "Leave",
+      label: `Basic question ${activeQuestionIndex}`,
+    });
+  };
+
   useEffect(() => {
     setCredentialsError("");
     setError("");
+    window.addEventListener("beforeunload", handleLeave);
+    return () => {
+      window.removeEventListener("beforeunload", handleLeave);
+    };
   }, [activeQuestionIndex]);
 
   const handleReturn = () => {

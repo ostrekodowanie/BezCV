@@ -5,12 +5,14 @@ import { timeLeft } from "../../assets/survey/survey";
 import Loader from "../../components/Loader";
 import FinishLoader from "../../components/survey/FinishLoader";
 import RangeKey from "../../components/survey/RangeKey";
-import RoleChoosePage from "../../components/survey/RoleChoosePage";
+import RoleChoosePage from "./RoleChoosePage";
 import { rangeNumberKeys } from "../../constants/workForm";
 import Finished from "./Finished";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "../../components/survey/ProgressBar";
 import { SurveyContext } from "../Survey";
 import Summary from "./Summary";
+import ReactGA from "react-ga";
+import { roleToTextMap } from "../../constants/candidate";
 
 interface RoleQuestion {
   id: number;
@@ -58,9 +60,23 @@ export default function RoleController() {
     return () => clearTimeout(timer.current);
   }, [secondsLeft, questions]);
 
+  const handleLeave = () => {
+    ReactGA.event({
+      category: "Survey",
+      action: "Leave",
+      label: `${
+        role ? roleToTextMap[role].profession : "Role"
+      } question ${activeQuestionIndex}`,
+    });
+  };
+
   useEffect(() => {
     setSecondsLeft(15);
     setNumericalAnswer(null);
+    window.addEventListener("beforeunload", handleLeave);
+    return () => {
+      window.removeEventListener("beforeunload", handleLeave);
+    };
   }, [activeQuestionIndex]);
 
   const handleSubmit = (e: FormEvent) => {

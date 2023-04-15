@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "../../components/survey/ProgressBar";
 
 export default function Summary({ firstName }: { firstName: string }) {
   return (

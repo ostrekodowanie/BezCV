@@ -6,6 +6,7 @@ import { prevArrow } from "../../assets/candidate/candidate";
 import PhonePopup from "../../components/survey/PhonePopup";
 import { SurveyContext } from "../Survey";
 import { initialCandidateAnswers } from "../../constants/findWork";
+import ReactGa from "react-ga";
 
 export default function Introduction() {
   const {
@@ -19,6 +20,10 @@ export default function Introduction() {
   const [phonePopupActive, setPhonePopupActive] = useState(false);
 
   const handleNavigate = () => {
+    ReactGa.event({
+      category: "Ankieta",
+      action: "Start",
+    });
     setStep("candidate");
     setCandidateAnswers(initialCandidateAnswers);
     setRoleAnswers([]);

@@ -7,12 +7,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import loginReducer from "./reducers/login";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
+import ReactGA from "react-ga";
 
 const store = configureStore({
   reducer: {
     login: loginReducer,
   },
 });
+
+ReactGA.initialize("G-H8CK9Y5CQB");
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

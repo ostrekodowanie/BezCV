@@ -1,4 +1,4 @@
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "../../components/survey/ProgressBar";
 import { useContext } from "react";
 import { SurveyContext } from "../Survey";
 

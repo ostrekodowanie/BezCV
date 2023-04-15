@@ -11,6 +11,7 @@ import axios from "axios";
 import Loader from "../Loader";
 import { textInputStyles } from "../../constants/workForm";
 import { SurveyContext } from "../../pages/Survey";
+import ReactGA from "react-ga";
 
 export default function PhonePopup({
   setPhonePopupActive,
@@ -62,6 +63,10 @@ export default function PhonePopup({
           }
         )
         .then((res) => {
+          ReactGA.event({
+            category: "Ankieta",
+            action: "Start",
+          });
           setStep("role");
           setRole(null);
           setRoleAnswers([]);

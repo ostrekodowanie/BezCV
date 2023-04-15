@@ -21,7 +21,6 @@ import {
 import { initialCandidateAnswers } from "../constants/findWork";
 import SurveyManQuote from "../components/survey/SurveyManQuote";
 import Introduction from "./survey/Introduction";
-import { Helmet } from "react-helmet";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export const SurveyContext = createContext<SurveyContextType>(null!);

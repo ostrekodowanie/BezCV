@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useLayoutEffect, useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router";
@@ -102,6 +102,14 @@ export default function Candidate() {
       .then((data) => setCandidateDetails(data))
       .finally(() => setLoading((prev) => ({ ...prev, page: false })));
   }, [points, id]);
+
+  useLayoutEffect(() => {
+    document.documentElement.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, [id]);
 
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
