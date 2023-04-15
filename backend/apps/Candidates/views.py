@@ -42,8 +42,8 @@ class CandidatesView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if user['phone'] == "790541511":
-            client.sms.send(to=user['phone'], message=f'Zainteresowanie Twoim profilem rośnie!\nNapisz nam, czy udało Ci się już znaleźć wymarzoną pracę?\nJeżeli tak, wyślij SMS o treści 1.', from_="2way", encoding="utf-8")
+        if user.email == "se6359@gmail.com":
+            client.sms.send(to=790541511, message=f'Zainteresowanie Twoim profilem rośnie!\nNapisz nam, czy udało Ci się już znaleźć wymarzoną pracę?\nJeżeli tak, wyślij SMS o treści 1.', from_="2way", encoding="utf-8")
         queryset = (
             Candidates.objects.annotate(
                 is_purchased=Exists(
@@ -52,7 +52,7 @@ class CandidatesView(generics.ListAPIView):
                     )
                 ),
             )
-            .filter(Q(is_visible=True) & Q(is_purchased=False))
+            .filter(is_purchased=False)
         )
 
         ordering = self.request.query_params.get("order", None)
