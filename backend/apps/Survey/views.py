@@ -36,8 +36,8 @@ class CandidateAnswersView(APIView):
         ]
         CandidateAnswers.objects.bulk_create(candidate_answers)
 
-        #for answer in candidate_answers:
-        #    update_percentage(None, instance=answer)
+        for answer in candidate_answers:
+            update_percentage(None, instance=answer)
 
         if not candidate.is_visible:
             candidate.is_visible = True
