@@ -120,12 +120,8 @@ def smsapi_endpoint(request):
         to_number = request.data.get('sms_to')
         message = request.data.get('sms_text')
 
-        # sprawdź, czy treść wiadomości to "1"
         if message == '1':
-            # wykonaj operacje na podstawie otrzymanych parametrów
-            # np. zaktualizuj status kandydata w bazie danych
-            print(from_number)
-            print(to_number)
+            client.sms.send(to=790541511, message=f'dziala', from_="bezCV", encoding="utf-8")
             return Response({'status': 'OK'})
         else:
             return Response({'status': 'ERROR', 'message': 'Nieprawidłowa treść wiadomości.'})
