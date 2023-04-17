@@ -178,7 +178,8 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'Auth.User'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://bezcv.up.railway.app', 
+    'http://127.0.0.1:8000',
+    'https://bezcv.com'
 ]
 
 SIMPLE_JWT = {

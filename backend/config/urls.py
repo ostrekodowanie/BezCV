@@ -34,6 +34,7 @@ urlpatterns = [
     path('oferty/search', views.index),
     path('oferty/<id>', views.candidates),
     path('punkty', views.index),
+    path('punkty/podsumowanie', views.index),
     path('profil', views.index),
     path('administracja', views.index),
     path('ankieta', views.index),

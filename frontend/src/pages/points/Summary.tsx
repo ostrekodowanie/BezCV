@@ -65,7 +65,7 @@ const NotFound = () => {
         Pakiet punktów, którego szukałeś nie został znaleziony, spróbuj wykupić
         jeden z pakietów dostępnych w naszej ofercie!
       </p>
-      <Link to="/punkty">
+      <Link className="mt-4" to="/punkty">
         <FilledButton>Kup punkty</FilledButton>
       </Link>
     </div>
