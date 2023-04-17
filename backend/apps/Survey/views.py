@@ -36,8 +36,8 @@ class CandidateAnswersView(APIView):
         ]
         CandidateAnswers.objects.bulk_create(candidate_answers)
 
-        for answer in candidate_answers:
-            update_percentage(None, instance=answer)
+        #for answer in candidate_answers:
+        #    update_percentage(None, instance=answer)
 
         if not candidate.is_visible:
             candidate.is_visible = True
@@ -186,7 +186,7 @@ class SendCodeView(APIView):
         
         GeneratedCodes.objects.create(phone=phone, code=code)
 
-        client.sms.send(to=phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="Test")
+        client.sms.send(to=phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
 
         return Response({'Access code sent successfully'}, status=200)
     
