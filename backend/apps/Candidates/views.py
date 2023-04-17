@@ -113,9 +113,9 @@ class AddReportView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     
 from rest_framework.decorators import api_view
-@api_view(['GET'])
+@api_view(['POST'])
 def smsapi_endpoint(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         from_number = request.data.get('sms_from')
         to_number = request.data.get('sms_to')
         message = request.data.get('sms_text')
