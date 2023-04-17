@@ -121,7 +121,7 @@ def smsapi_endpoint(request):
         message = request.data.get('sms_text')
 
         if message == '1':
-            client.sms.send(to=790541511, message=f'dziala', from_="bezCV", encoding="utf-8")
+            client.sms.send(to=790541511, message=f'dziala {from_number}', from_="bezCV", encoding="utf-8")
             return Response({'status': 'OK'})
         else:
             return Response({'status': 'ERROR', 'message': 'Nieprawidłowa treść wiadomości.'})
