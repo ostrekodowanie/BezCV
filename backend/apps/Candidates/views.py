@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.decorators import api_view
 
 from django_filters import rest_framework as filters
 
@@ -41,9 +42,6 @@ class CandidatesView(generics.ListAPIView):
     filterset_class = CandidatesFilter
 
     def get_queryset(self):
-        user = self.request.user
-        if user.email == "se6359@gmail.com":
-            client.sms.send(to=790541511, message=f'Zainteresowanie Twoim profilem rośnie!\nNapisz nam, czy udało Ci się już znaleźć wymarzoną pracę?\nJeżeli tak, wyślij SMS o treści 1.', from_="2way", encoding="utf-8")
         queryset = (
             Candidates.objects.annotate(
                 is_purchased=Exists(
@@ -112,16 +110,18 @@ class AddReportView(generics.CreateAPIView):
     serializer_class = serializers.AddReportSerializer
     permission_classes = [IsAuthenticated]
     
-from rest_framework.decorators import api_view
+
 @api_view(['POST'])
 def smsapi_endpoint(request):
     if request.method == 'POST':
         from_number = request.data.get('sms_from')
-        to_number = request.data.get('sms_to')
         message = request.data.get('sms_text')
 
         if message == '1':
-            client.sms.send(to=790541511, message=f'dziala {from_number}', from_="bezCV", encoding="utf-8")
+            phone_number = from_number[2:]
+            candidate = Candidates.objects.get(phone=phone_number)
+            candidate.has_job = True
+            candidate.save()
             return Response({'status': 'OK'})
         else:
             return Response({'status': 'ERROR', 'message': 'Nieprawidłowa treść wiadomości.'})
