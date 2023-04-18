@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
 import ProgressBar from "../../components/survey/ProgressBar";
+import { SurveyContext } from "../Survey";
 
 export default function Summary({ firstName }: { firstName: string }) {
+  const { setIsIntroduced } = useContext(SurveyContext);
   return (
     <>
       <ProgressBar progress={1} />
@@ -16,18 +18,18 @@ export default function Summary({ firstName }: { firstName: string }) {
           </span>{" "}
           za poświęcenie chwili czasu.
         </p>
-        <p className="text-sm md:text-base leading-relaxed">
+        <p className="text-sm md:text-base leading-relaxed text-center">
           Daj nam chwilę na przetworzenie danych, tak abyśmy mogli stworzyć dla
           Ciebie profil. O wszystkich postępach będziesz informowany regularnie
           za pomocą skrzynki mailowej.
         </p>
         <h3 className="font-semibold text-lg">Do usłyszenia!</h3>
-        <Link
+        <button
           className="rounded-full text-[.8rem] max-w-max font-medium mt-8 text-white px-6 py-[14px] bg-secondary"
-          to="/"
+          onClick={() => setIsIntroduced(false)}
         >
           Zakończ
-        </Link>
+        </button>
       </div>
     </>
   );

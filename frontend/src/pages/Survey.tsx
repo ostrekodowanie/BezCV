@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import RoleController from "./survey/RoleController";
 import CandidateController from "./survey/CandidateController";
 import {
@@ -29,7 +29,7 @@ export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
   useDocumentTitle("Ankieta | bezCV - innowacyjny portal pracy");
   const [role, setRole] = useState<RoleType | null>(null);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-  const [step, setStep] = useState<"role" | "candidate">("candidate");
+  const [step, setStep] = useState<"role" | "candidate">("role");
   const [isIntroduced, setIsIntroduced] = useState(false);
   const [isSurveyFilled, setIsSurveyFilled] =
     useState<IsFilled>(initialFilledState);
@@ -37,9 +37,13 @@ export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
   const [candidateAnswers, setCandidateAnswers] = useState<CandidateAnswerType>(
     initialCandidateAnswers
   );
+  const { pathname } = useLocation();
 
   useLayoutEffect(() => {
     isIntroduced ? setIsHeaderVisible(false) : setIsHeaderVisible(true);
+    return () => {
+      pathname !== "/ankieta" && setIsHeaderVisible(true);
+    };
   }, [isIntroduced]);
 
   const contextValue = useMemo<SurveyContextType>(

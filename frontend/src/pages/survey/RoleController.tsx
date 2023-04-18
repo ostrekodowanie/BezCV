@@ -41,11 +41,23 @@ export default function RoleController() {
   const [isFinished, setIsFinished] = useState(false);
   const [finishFirstName, setFinishFirstName] = useState("");
   const [error, setError] = useState("");
-  const isEverySurveyFilled = !!(
-    isSurveyFilled.customer_service &&
-    isSurveyFilled.office_administration &&
-    isSurveyFilled.sales
+  const [isEverySurveyFilled, setIsEverySurveyFilled] = useState(
+    !!(
+      isSurveyFilled.customer_service &&
+      isSurveyFilled.office_administration &&
+      isSurveyFilled.sales
+    )
   );
+
+  useEffect(() => {
+    setIsEverySurveyFilled(
+      !!(
+        isSurveyFilled.customer_service &&
+        isSurveyFilled.office_administration &&
+        isSurveyFilled.sales
+      )
+    );
+  }, [isSurveyFilled]);
 
   useEffect(() => {
     if (!questions[activeQuestionIndex]) return;
@@ -129,8 +141,15 @@ export default function RoleController() {
       .finally(() => setLoading(false));
   }, [role]);
 
-  if (isEverySurveyFilled) return <Finished />;
-  if (isFinished) return <Summary firstName={finishFirstName} />;
+  if (isEverySurveyFilled) return <Summary firstName={finishFirstName} />;
+  if (isFinished)
+    return (
+      <Finished
+        setIsEverySurveyFilled={setIsEverySurveyFilled}
+        setIsFinished={setIsFinished}
+        setIsFinishing={setIsFinishing}
+      />
+    );
   if (isFinishing) return <FinishLoader />;
   if (!role) return <RoleChoosePage setRole={setRole} />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;
