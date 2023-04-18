@@ -1,12 +1,12 @@
 import Control from "react-control-js";
 import { Link } from "react-router-dom";
 import { arrowRight } from "../../../assets/general";
-import { desktopSurvey } from "../../../assets/home/home";
+import { desktop, surveyVideo } from "../../../assets/home/home";
 
 export default function HowToFindJob() {
   return (
     <section
-      className="padding py-[1in] md:py-[1.4in] flex flex-col gap-16 xl:grid grid-cols-[3fr_4fr] items-center"
+      className="padding py-[.5in] md:py-[1in] flex flex-col gap-16 xl:grid grid-cols-[3fr_4fr] items-center"
       id="jzp"
     >
       <Control
@@ -40,11 +40,17 @@ export default function HowToFindJob() {
         delay={200}
         onScroll
         element={
-          <img
-            className="max-w-[8in] w-full xl:max-w-auto"
-            src={desktopSurvey}
-            alt=""
-          />
+          <div className="relative w-full">
+            <div className="absolute top-[4%] bottom-[10%] left-[12%] right-[12%] overflow-hidden max-w-[95%] flex flex-col items-center justify-center">
+              <video
+                className="min-w-[70vw] xl:min-w-[calc(100%+5vw)] 2xl:min-w-[calc(100%+8vw)]"
+                autoPlay
+                loop
+                src={surveyVideo}
+              ></video>
+            </div>
+            <img className="w-full" src={desktop} alt="" />
+          </div>
         }
       />
     </section>
