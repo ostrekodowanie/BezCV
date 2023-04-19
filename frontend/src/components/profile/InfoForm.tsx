@@ -12,11 +12,10 @@ export default function InfoForm() {
     form && form.filter((answer) => answer).length === 3
   );
   const indexOfEmptyQuestion = form.findIndex((item) => !item);
-  console.log(indexOfEmptyQuestion);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(
     indexOfEmptyQuestion === -1 ? 0 : indexOfEmptyQuestion
   );
-  const [answers, setAnswers] = useState(form);
+  const [answers, setAnswers] = useState(form || ["", "", ""]);
   const { question } =
     activeQuestionIndex <= 2
       ? infoFormQuestions[activeQuestionIndex]
