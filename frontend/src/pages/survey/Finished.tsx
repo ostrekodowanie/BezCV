@@ -13,8 +13,11 @@ export default function Finished({
   setIsFinished: Dispatch<SetStateAction<boolean>>;
   setIsFinishing: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { setRole, setRoleAnswers, setActiveQuestionIndex } =
+  const { setRole, setRoleAnswers, setActiveQuestionIndex, isSurveyFilled } =
     useContext(SurveyContext);
+  const surveyCount = Object.values(isSurveyFilled).filter(
+    (item) => item
+  ).length;
 
   const handleRoleChange = () => {
     setRoleAnswers([]);
@@ -37,8 +40,11 @@ export default function Finished({
           chciałbyś zwiększyć jeszcze swoje szanse na pracę marzeń.
         </p>
         <p className="text-sm md:text-base leading-relaxed text-center">
-          Zostając tutaj jeszcze 7 minut zwiększysz prawdopodobieństwo
-          zatrudnienia o 30%. <span className="font-bold">Startujemy?</span>
+          Zostając tutaj jeszcze {surveyCount === 1 ? "9" : "5"} minut{" "}
+          {surveyCount === 1
+            ? "zwiększysz prawdopodobieństwo zatrudnienia o 30%."
+            : "jeszcze bardziej zwiększysz prawdopodobieństwo szybkiego zatrudnienia w wymarzonej pracy."}{" "}
+          <span className="font-bold">Startujemy?</span>
         </p>
         <div className="flex sm:items-center sm:max-w-max sm:self-center sm:gap-4 fixed sm:static right-0 left-0 self-stretch max-w-full bottom-0">
           <button

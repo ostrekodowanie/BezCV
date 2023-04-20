@@ -19,12 +19,7 @@ export default function DesktopSurvey() {
       </div>
       <div className="relative w-full sm:w-[80%] sm:mx-auto">
         <div className="absolute top-[4%] bottom-[10%] left-[12%] right-[12%] overflow-hidden max-w-[95%] flex flex-col items-center justify-center">
-          <video
-            className="min-w-[70vw] md:min-w-[50vw]"
-            autoPlay
-            loop
-            src={surveyVideo}
-          ></video>
+          <video className="w-full" autoPlay loop src={surveyVideo}></video>
         </div>
         <img className="w-full" src={desktop} alt="" />
       </div>

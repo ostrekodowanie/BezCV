@@ -42,12 +42,7 @@ export default function HowToFindJob() {
         element={
           <div className="relative w-full">
             <div className="absolute top-[4%] bottom-[10%] left-[12%] right-[12%] overflow-hidden max-w-[95%] flex flex-col items-center justify-center">
-              <video
-                className="min-w-[70vw] xl:min-w-[calc(100%+5vw)] 2xl:min-w-[calc(100%+8vw)]"
-                autoPlay
-                loop
-                src={surveyVideo}
-              ></video>
+              <video className="w-full" autoPlay loop src={surveyVideo}></video>
             </div>
             <img className="w-full" src={desktop} alt="" />
           </div>

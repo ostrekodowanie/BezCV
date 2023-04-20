@@ -198,7 +198,7 @@ table, td { color: #000000; } @media (max-width: 480px) { #u_content_text_7 .v-c
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 80px;font-family:arial,helvetica,sans-serif;" align="left">
         
   <div style="line-height: 140%; text-align: center; word-wrap: break-word;">
-    <p style="line-height: 140%;"><b>Umiejętności sprzedażowe:</b></p>
+    <p style="line-height: 140%; color: #1BDF69;"><b>Umiejętności sprzedażowe:</b></p>
   </div>
 
       </td>
@@ -213,7 +213,7 @@ table, td { color: #000000; } @media (max-width: 480px) { #u_content_text_7 .v-c
         
   <div style="line-height: 180%; text-align: center; word-wrap: break-word;">
     {% for ability in sales %}
-    <p style="line-height: 180%;">- {{ ability.name }} {{ ability.percentage }}%</p>
+    <p style="line-height: 180%;">- {{ ability.name }} <b>{{ ability.percentage }}%</b></p>
     {% endfor %}
   </div>
 
@@ -228,7 +228,7 @@ table, td { color: #000000; } @media (max-width: 480px) { #u_content_text_7 .v-c
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 80px;font-family:arial,helvetica,sans-serif;" align="left">
         
   <div style="line-height: 140%; text-align: center; word-wrap: break-word;">
-    <p style="line-height: 140%;"><b>Umiejętności administracyjne:</b></p>
+    <p style="line-height: 140%; color: #2F66F4;"><b>Umiejętności administracyjne:</b></p>
   </div>
 
       </td>
@@ -243,7 +243,7 @@ table, td { color: #000000; } @media (max-width: 480px) { #u_content_text_7 .v-c
         
   <div style="line-height: 180%; text-align: center; word-wrap: break-word;">
     {% for ability in office_administration %}
-    <p style="line-height: 180%;">- {{ ability.name }} {{ ability.percentage }}%</p>
+    <p style="line-height: 180%;">- {{ ability.name }} <b>{{ ability.percentage }}%</b></p>
     {% endfor %}
   </div>
 
@@ -258,7 +258,7 @@ table, td { color: #000000; } @media (max-width: 480px) { #u_content_text_7 .v-c
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 80px;font-family:arial,helvetica,sans-serif;" align="left">
         
   <div style="line-height: 140%; text-align: center; word-wrap: break-word;">
-    <p style="line-height: 140%;"><b>Umiejętności obsługi klienta:</b></p>
+    <p style="line-height: 140%; color: #F9AE3D;"><b>Umiejętności obsługi klienta:</b></p>
   </div>
 
       </td>
@@ -273,7 +273,7 @@ table, td { color: #000000; } @media (max-width: 480px) { #u_content_text_7 .v-c
         
   <div style="line-height: 180%; text-align: center; word-wrap: break-word;">
     {% for ability in customer_service %}
-    <p style="line-height: 180%;">- {{ ability.name }} {{ ability.percentage }}%</p>
+    <p style="line-height: 180%;">- {{ ability.name }} <b>{{ ability.percentage }}%</b></p>
     {% endfor %}
   </div>
 
