@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import Loader from "../../components/Loader";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
+import { reportSuccessMan } from "../../assets/profile/profile";
 
 export default function Verify() {
   useDocumentTitle("Zweryfikuj konto | bezCV - innowacyjny portal pracy");
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const [status, setStatus] = useState({
@@ -32,23 +34,26 @@ export default function Verify() {
 
   return (
     <section className="padding py-[1.4in] flex items-center justify-center">
-      <div className="flex flex-col gap-4 text-center items-center xl:items-start xl:w-max">
-        {status.ok ? (
-          <>
-            <h1 className="font-semibold text-3xl md:text-4xl">
-              Konto założone, gratulacje!
-            </h1>
-            <p className="text-[#74788D]">
-              Możesz teraz w pełni korzystać z naszego serwisu
-            </p>
-            <Link to="/logowanie">
-              <FilledButton>Ok, zaczynajmy!</FilledButton>
-            </Link>
-          </>
-        ) : (
-          <Loader />
-        )}
-      </div>
+      {status.ok ? (
+        <div className="flex flex-col text-center items-center gap-4">
+          <img
+            className="max-w-[1.4in] w-full mb-6"
+            src={reportSuccessMan}
+            alt=""
+          />
+          <h2 className="font-semibold text-xl sm:text-2xl">
+            Konto założone, gratulacje!
+          </h2>
+          <p className="text-[#3C4663] flex flex-col items-center gap-2 text-[.8rem]">
+            Możesz teraz w pełni korzystać z naszego serwisu
+          </p>
+          <FilledButton onClick={() => navigate("/login")}>
+            Ok, zaczynajmy!
+          </FilledButton>
+        </div>
+      ) : (
+        <Loader />
+      )}
     </section>
   );
 }
