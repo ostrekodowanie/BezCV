@@ -10,6 +10,9 @@ import { passwordNotVisible, passwordVisible } from "../../assets/general";
 export default function Form() {
   const [confPassword, setConfPassword] = useState("");
   const [status, setStatus] = useState<boolean | undefined | string>(undefined);
+  const [codeStatus, setCodeStatus] = useState<boolean | undefined | string>(
+    undefined
+  );
   const [passwordShown, setPasswordShown] = useState(false);
   const [accepts, setAccepts] = useState({
     statute: false,
@@ -48,6 +51,22 @@ export default function Form() {
       );
   };
 
+  const handleCodeResend = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setCodeStatus("loading");
+    axios
+      .post(
+        "/api/signup/resend",
+        JSON.stringify({ email: employerDetails.email }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(() => setCodeStatus(true));
+  };
+
   return (
     <div className="flex flex-col text-center md:shadow-boxPrimary items-center xl:flex-1 xl:max-w-[10in] bg-white py-[1in] px-[8vw] md:py-10 md:px-16 md:rounded-3xl xl:px-24 xl:py-12 xl:self-start">
       {status === true ? (
@@ -68,9 +87,17 @@ export default function Form() {
             <span className="font-semibold transition-colors text-[.8rem] min-w-max">
               Wiadomość nie dotarła?
             </span>
-            <FilledButton onClick={handleSubmit}>
-              Prześlij ponownie link aktywacyjny
-            </FilledButton>
+            {codeStatus === undefined ? (
+              <FilledButton onClick={handleCodeResend}>
+                Prześlij ponownie link aktywacyjny
+              </FilledButton>
+            ) : codeStatus === "loading" ? (
+              <Loader />
+            ) : (
+              codeStatus === true && (
+                <span className="text-primary">Kod został wysłany</span>
+              )
+            )}
           </div>
         </div>
       ) : (

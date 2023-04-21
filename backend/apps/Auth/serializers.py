@@ -40,12 +40,12 @@ class SignUpSerializer(serializers.ModelSerializer):
         nip = validated_data.get('nip')
         if User.objects.filter(nip=nip).exists():
             raise ValidationError('NIP jest już przypisany do istniejącego konta')
-        active = nip24.isActiveExt(Number.NIP, nip)
-        if not active:
-            if not nip24.getLastError():
-                raise ValidationError('Firma zawiesiła lub zakończyła działalność')
-            else:
-                raise ValidationError(nip24.getLastError())
+        # active = nip24.isActiveExt(Number.NIP, nip)
+        # if not active:
+        #     if not nip24.getLastError():
+        #         raise ValidationError('Firma zawiesiła lub zakończyła działalność')
+        #     else:
+        #         raise ValidationError(nip24.getLastError())
             
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
