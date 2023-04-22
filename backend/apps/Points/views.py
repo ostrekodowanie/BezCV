@@ -3,33 +3,35 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.db.models import Sum
 from django.utils import timezone
-from rest_framework import generics
+from rest_framework import generics, views
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from datetime import timedelta
 
 from . import serializers
-from .models import PaymentDetails
+from .models import Orders
+from apps.Auth.models import User
 
 import requests
 
 
-class PurchasePointsView(generics.CreateAPIView):
-    serializer_class = serializers.PurchasePointsSerializer
-    permission_classes = [IsAuthenticated]
+class PurchasePointsView(views.APIView):
+    #permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        amount = request.data.get('amount')
+        price = request.data.get('price')
         
-        employer = self.request.user
+        import time
+        import random
 
-        payment_details = PaymentDetails.objects.create(
-            employer=employer,
-            amount=serializer.validated_data['amount'],
-            price=serializer.validated_data['price'],
-            currency=serializer.validated_data.get('currency', 'PLN'),
-        )
+        timestamp = str(int(time.time() * 1000))  # convert current time to milliseconds and cast it to string
+        random_num = str(random.randint(100000, 999999))  # generate a random number between 100000 and 999999 and cast it to string
+
+        ext_order_id = timestamp + '-' + random_num
+        
+        #employer = self.request.user
+        employer = User.objects.get(email="se6359@gmail.com")
         
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -38,57 +40,52 @@ class PurchasePointsView(generics.CreateAPIView):
         
         data = {
             'grant_type': 'client_credentials',
-            'client_id': '4176518',
-            'client_secret': '72dab8a214ca3060b5a297f10ab9ef73'
+            'client_id': '4289248',
+            'client_secret': '34e68dfdd5cbc24c55fbab0324d5414b'
         }
 
-        data = requests.post("https://secure.snd.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
-        print(data.content)
+        data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
         response_data = data.json()
         access_token = response_data['access_token']
-        
-        
-        headers = {"Authorization": f'Bearer {access_token}'}
+        print(access_token)
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
         
         data = {
-            "merchantPosId": '4176518',
+            "merchantPosId": '4289248',
             "description": "Purchase of points",
-            "currencyCode": payment_details.currency,
-            "totalAmount": str(payment_details.price * 100),
+            "currencyCode": "PLN",
+            "totalAmount": "0",#str(int(price) * 100),
             "notifyUrl": request.build_absolute_uri(reverse('payu_notify')),
             "customerIp": request.META.get('REMOTE_ADDR'),
+            "continueUrl": "https://bezcv.com",
+            "extOrderId": ext_order_id,
             "buyer": {
-                "email": payment_details.employer.email,
-                "firstName": payment_details.employer.first_name,
-                "lastName": payment_details.employer.last_name,
+                "email": employer.email,
+                "phone": "790541511",
+                "firstName": employer.first_name,
+                "lastName": employer.last_name,
                 "language": "pl",
             },
             "products": [
                 {
-                    "name": f"{payment_details.amount} points",
-                    "unitPrice": str(payment_details.price * 100),
+                    "name": f"{amount} points",
+                    "unitPrice": "0",
                     "quantity": "1"
                 }
             ],
             "settings": {
                 "invoiceDisabled": "true"
-            },
-            "continueUrl": "https://youtube.com",
-            "extOrderId": str(payment_details.id)
+            }
         }
         
-        response = requests.post("https://secure.snd.payu.com/api/v2_1/orders/", headers=headers, json=data)
+        response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=headers, json=data)
         print(response.content)
         response_data = response.json()
-        
-
-        if response.status_code != 201 or 'orderId' not in response_data:
-            payment_details.delete()
-            return Response({"error": "Failed to create PayU order"}, status=400)
-
-        payment_details.payu_order_id = response_data['orderId']
-        payment_details.payu_status = response_data['status']
-        payment_details.save()
+        return Response(response_data)
         
         last_month = timezone.now() - timedelta(days=30)
         purchased_tokens = employer.purchasedpoints_employer.filter(
@@ -109,7 +106,7 @@ class PurchasePointsView(generics.CreateAPIView):
         remaining_tokens = purchased_tokens - purchased_contacts
         
         context = {
-                'employer': employer['first_name'],
+                'employer': "test",#employer['first_name'],
                 'token_count': remaining_tokens
             }
                     
@@ -117,7 +114,7 @@ class PurchasePointsView(generics.CreateAPIView):
         email_message = EmailMessage(
             subject='Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?',
             body=message,
-            to=[employer['email']]
+            to=["se6359@gmail.com"]#[employer['email']]
         )
         email_message.content_subtype ="html"
         email_message.send()

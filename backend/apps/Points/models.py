@@ -1,20 +1,16 @@
 from django.db import models
+from django.urls import reverse
 
 from apps.Auth.models import User
 
-class PaymentDetails(models.Model):
-    employer = models.ForeignKey(
+class Orders(models.Model):
+    buyer = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='purchasedpoints_employer')
-    amount = models.DecimalField(max_digits=3, decimal_places=0)
-    price = models.DecimalField(max_digits=7, decimal_places=2)
-    currency = models.CharField(max_length=3, default='PLN')
-    payu_order_id = models.CharField(max_length=100, blank=True)
-    payu_status = models.CharField(max_length=20, blank=True)
+    tokens = models.DecimalField(max_digits=3, decimal_places=0)
+    amount = models.DecimalField(max_digits=7, decimal_places=2)
+    extOrderId = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = 'Payment Details'
-
-    def __str__(self):
-        return f'{self.employer.email} | {self.amount} | {self.price} {self.currency}'
+        verbose_name_plural = 'Orders'
