@@ -41,7 +41,9 @@ class PurchasePointsView(views.APIView):
         data = {
             'grant_type': 'trusted_merchant',
             'client_id': '4289248',
-            'client_secret': '34e68dfdd5cbc24c55fbab0324d5414b'
+            'client_secret': '34e68dfdd5cbc24c55fbab0324d5414b',
+            'email': employer.email,
+            'ext_customer_id': employer.pk
         }
 
         data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
