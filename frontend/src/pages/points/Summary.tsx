@@ -44,7 +44,12 @@ export default function Summary() {
         JSON.stringify({
           amount: foundPackage.points,
           price: foundPackage.price,
-        })
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       )
       .then((res) => console.log(res.data))
       .finally(() => setLoading(false));
