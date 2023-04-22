@@ -14,7 +14,7 @@ export default function InvoiceInfo() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="mb-8 font-semibold text-xl md:text-2xl">Faktura VAT</h2>
+      <h2 className="mb-6 font-semibold text-xl md:text-2xl">Faktura VAT</h2>
       <div className="flex flex-col gap-6 mb-8">
         <div className="flex flex-col gap-3">
           <label className="font-semibold text-[.8rem]" htmlFor="summary-nip">
@@ -22,6 +22,7 @@ export default function InvoiceInfo() {
           </label>
           <input
             className={inputStyles.input}
+            required
             id="summary-nip"
             name="summary"
             type="text"
@@ -38,6 +39,7 @@ export default function InvoiceInfo() {
           </label>
           <input
             className={inputStyles.input}
+            required
             id="summary-address"
             name="summary"
             type="text"
@@ -56,6 +58,7 @@ export default function InvoiceInfo() {
           </label>
           <input
             className={inputStyles.input}
+            required
             id="summary-postal-code"
             name="summary"
             type="text"
@@ -74,10 +77,11 @@ export default function InvoiceInfo() {
           </label>
           <input
             className={inputStyles.input}
+            required
             id="summary-city"
             name="summary"
             type="text"
-            value={paymentData.address}
+            value={paymentData.city}
             onChange={(e) =>
               setPaymentData((prev) => ({ ...prev, city: e.target.value }))
             }

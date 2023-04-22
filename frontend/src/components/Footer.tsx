@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Route, Routes } from "react-router";
-import { AccountContext } from "../reducers/AccountProvider";
+import { AccountContext } from "../providers/AccountProvider";
 import { logoHorizontal } from "../assets/general";
 import { fbIcon } from "../assets/footer/footer";
 import HomeHashLink from "./header/HomeHashLink";

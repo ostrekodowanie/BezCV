@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { bcvToken } from "../../assets/general";
 import { PackageProps, packages } from "../../constants/points";
-import FilledButton from "../FilledButton";
 import { filtersMenuArrow } from "../../assets/offers/offers";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
+import PaymentButton from "./PaymentButton";
 
-export default function OrderInfo({ days, points, price }: PackageProps) {
+export default function OrderInfo(props: PackageProps) {
+  const { points, price } = props;
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="mb-8 font-semibold text-xl md:text-2xl">Podsumowanie</h2>
+      <h2 className="mb-6 font-semibold text-xl md:text-2xl">Podsumowanie</h2>
       <div className="flex flex-col gap-4">
         <h4 className="font-semibold text-sm">Wybrana ilość tokenów</h4>
         <DropdownMenu points={points} />
@@ -28,9 +29,7 @@ export default function OrderInfo({ days, points, price }: PackageProps) {
           <h4 className="text-primary">{price * 1.23} zł</h4>
         </div>
       </div>
-      <FilledButton className="w-full justify-center">
-        Zamawiam i płacę
-      </FilledButton>
+      <PaymentButton />
     </div>
   );
 }
@@ -44,18 +43,17 @@ const DropdownMenu = ({ points }: Omit<PackageProps, "days" | "price">) => {
     setDropdownActive(false);
   }, [points]);
 
-  const handleFocus = (e: MouseEvent) => {
-    if (button.current && button.current.contains(e.target as Node)) {
-      return setDropdownActive((prev) => !prev);
-    }
-    if (menuRef.current && menuRef.current.contains(e.target as Node)) {
-      setDropdownActive(true);
-    } else {
-      setDropdownActive(false);
-    }
-  };
-
   useEffect(() => {
+    const handleFocus = (e: MouseEvent) => {
+      if (button.current && button.current.contains(e.target as Node)) {
+        return setDropdownActive((prev) => !prev);
+      }
+      if (menuRef.current && menuRef.current.contains(e.target as Node)) {
+        setDropdownActive(true);
+      } else {
+        setDropdownActive(false);
+      }
+    };
     window.addEventListener("click", handleFocus);
     return () => {
       window.removeEventListener("click", handleFocus);

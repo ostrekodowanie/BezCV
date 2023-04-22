@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { useAppSelector } from "../main";
-import { AccountContext } from "../reducers/AccountProvider";
-import { arrowRight, logo, logoHorizontal } from "../assets/general";
+import { AccountContext } from "../providers/AccountProvider";
+import { arrowRight, bcvToken, logo, logoHorizontal } from "../assets/general";
 import { profileIcon } from "../assets/profile/profile";
 import SurveyLink from "./header/SurveyLink";
 import PointsHashLink from "./header/PointsHashLink";
@@ -93,8 +93,12 @@ const Nav = () => {
                 <img className="max-h-[1.1em] mr-2" src={profileIcon} alt="" />
                 Mój profil
               </CustomLink>
-              <CustomLink className="font-semibold text-base" to="/punkty">
-                {points + " pkt."}
+              <CustomLink
+                className="font-semibold flex items-center text-base"
+                to="/punkty"
+              >
+                {points.toString()}
+                <img className="max-h-[1em] ml-2" src={bcvToken} alt="" />
               </CustomLink>
             </>
           ) : (

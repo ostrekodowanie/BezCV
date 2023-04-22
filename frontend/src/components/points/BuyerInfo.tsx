@@ -7,9 +7,9 @@ const BuyerInfo = () => {
     (state) => state.login.data
   );
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-12">
       <div className="flex flex-col gap-4">
-        <h2 className="mb-8 font-semibold text-xl md:text-2xl">
+        <h2 className="mb-6 font-semibold text-xl md:text-2xl">
           Dane do zamówienia
         </h2>
         <div className="flex flex-col gap-6">
@@ -22,6 +22,7 @@ const BuyerInfo = () => {
             </label>
             <input
               className={inputStyles.input}
+              required
               defaultValue={`${first_name} ${last_name}`}
               id="summary-names"
               name="summary"
@@ -37,6 +38,7 @@ const BuyerInfo = () => {
             </label>
             <input
               className={inputStyles.input}
+              required
               defaultValue={email}
               id="summary-names"
               name="summary"
@@ -52,6 +54,7 @@ const BuyerInfo = () => {
             </label>
             <input
               className={inputStyles.input}
+              required
               id="summary-names"
               name="summary"
               type="text"
@@ -70,7 +73,7 @@ const BuyerInfo = () => {
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <h2 className="mb-8 font-semibold text-xl md:text-2xl">
+        <h2 className="mb-6 font-semibold text-xl md:text-2xl">
           Sposób płatności
         </h2>
         <div className="flex flex-col gap-2">

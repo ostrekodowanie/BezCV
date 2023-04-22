@@ -12,7 +12,7 @@ import Followed from "../components/profile/followed/List";
 import { bcvToken } from "../assets/general";
 import { Link } from "react-router-dom";
 import EmployerInfo from "../components/profile/EmployerInfo";
-import { logout } from "../reducers/login";
+import { logout } from "../providers/login";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function Profile() {

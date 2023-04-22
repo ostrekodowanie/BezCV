@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { AccountContext } from "../../reducers/AccountProvider";
+import { AccountContext } from "../../providers/AccountProvider";
 import { useNavigate } from "react-router";
 
 const HomeHashLink = ({ className }: { className?: string }) => {

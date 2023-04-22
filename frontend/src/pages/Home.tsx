@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AccountContext } from "../reducers/AccountProvider";
+import { AccountContext } from "../providers/AccountProvider";
 import CandidateLanding from "../components/home/candidate/CandidateLanding";
 import EmployerLanding from "../components/home/employer/EmployerLanding";
 import Introduction from "../components/home/candidate/Introduction";

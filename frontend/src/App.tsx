@@ -10,17 +10,18 @@ import Profile from "./pages/Profile";
 import Verify from "./pages/signup/Verify";
 import { ReactElement, useLayoutEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./main";
-import { login, logout } from "./reducers/login";
+import { login, logout } from "./providers/login";
 import jwtDecode from "jwt-decode";
 import Offers from "./pages/Offers";
 import Contact from "./pages/Contact";
 import axios from "axios";
 import Points from "./pages/Points";
 import getUserInfo from "./utils/getUserInfo";
-import AccountProvider from "./reducers/AccountProvider";
+import AccountProvider from "./providers/AccountProvider";
 import CookieConsent from "react-cookie-consent";
 import FixedButton from "./components/FixedButton";
 import Survey from "./pages/Survey";
+import AxiosProvider from "./providers/AxiosProvider";
 
 const loginString: string | null = localStorage.getItem("user");
 const loginFromLocalStorage = loginString && JSON.parse(loginString);
@@ -92,93 +93,95 @@ export default function App() {
 
   return (
     <AccountProvider>
-      <>
-        {isHeaderVisible && <Header />}
-        <main style={{ minHeight: "100vh" }}>
-          <ScrollTop>
+      <AxiosProvider>
+        <>
+          {isHeaderVisible && <Header />}
+          <main style={{ minHeight: "100vh" }}>
+            <ScrollTop>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route
+                  path="/oferty/*"
+                  element={
+                    <PrivateRoute>
+                      <Offers />
+                    </PrivateRoute>
+                  }
+                />
+                <Route path="/kontakt" element={<Contact />} />
+                <Route
+                  path="/logowanie/*"
+                  element={
+                    <PublicRoute>
+                      <Login />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/rejestracja/*"
+                  element={
+                    <PublicRoute>
+                      <SignUp />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/rejestracja/verify/*"
+                  element={
+                    <PublicRoute>
+                      <Verify />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/profil"
+                  element={
+                    <PrivateRoute>
+                      <Profile />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/punkty/*"
+                  element={
+                    <PrivateRoute>
+                      <Points />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/ankieta"
+                  element={<Survey setIsHeaderVisible={setIsHeaderVisible} />}
+                />
+              </Routes>
+            </ScrollTop>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/oferty/*"
-                element={
-                  <PrivateRoute>
-                    <Offers />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="/kontakt" element={<Contact />} />
-              <Route
-                path="/logowanie/*"
-                element={
-                  <PublicRoute>
-                    <Login />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/rejestracja/*"
-                element={
-                  <PublicRoute>
-                    <SignUp />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/rejestracja/verify/*"
-                element={
-                  <PublicRoute>
-                    <Verify />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/profil"
-                element={
-                  <PrivateRoute>
-                    <Profile />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/punkty/*"
-                element={
-                  <PrivateRoute>
-                    <Points />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/ankieta"
-                element={<Survey setIsHeaderVisible={setIsHeaderVisible} />}
-              />
+              <Route path="/" element={<FixedButton />} />
             </Routes>
-          </ScrollTop>
-          <Routes>
-            <Route path="/" element={<FixedButton />} />
-          </Routes>
-        </main>
-        <Footer />
-        <CookieConsent
-          enableDeclineButton
-          location="bottom"
-          style={{
-            paddingRight: "8vw",
-            paddingLeft: "8vw",
-          }}
-          buttonText="Akceptuję"
-          declineButtonText="Odmawiam"
-          buttonStyle={{
-            color: "white",
-            backgroundImage:
-              "linear-gradient(90.04deg, #2F66F4 24.53%, #0D9AE9 82.58%)",
-          }}
-        >
-          Serwis bezCV korzysta z plików cookies w celu realizacji usług
-          statystycznych i funkcjonalnych. Warunki przechowywania lub dostępu do
-          plików cookies można określić w ustawieniach przeglądarki
-          internetowej.
-        </CookieConsent>
-      </>
+          </main>
+          <Footer />
+          <CookieConsent
+            enableDeclineButton
+            location="bottom"
+            style={{
+              paddingRight: "8vw",
+              paddingLeft: "8vw",
+            }}
+            buttonText="Akceptuję"
+            declineButtonText="Odmawiam"
+            buttonStyle={{
+              color: "white",
+              backgroundImage:
+                "linear-gradient(90.04deg, #2F66F4 24.53%, #0D9AE9 82.58%)",
+            }}
+          >
+            Serwis bezCV korzysta z plików cookies w celu realizacji usług
+            statystycznych i funkcjonalnych. Warunki przechowywania lub dostępu
+            do plików cookies można określić w ustawieniach przeglądarki
+            internetowej.
+          </CookieConsent>
+        </>
+      </AxiosProvider>
     </AccountProvider>
   );
 }

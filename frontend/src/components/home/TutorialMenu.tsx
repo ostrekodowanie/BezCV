@@ -12,7 +12,7 @@ import {
   underline,
 } from "../../assets/home/candidate/candidate";
 import { RoleProps, roles } from "../../constants/workForm";
-import { AccountContext, AccountType } from "../../reducers/AccountProvider";
+import { AccountContext, AccountType } from "../../providers/AccountProvider";
 import RoleButton from "./tutorial/RoleButton";
 import EmployerInterfaceComponent from "./tutorial/EmployerInterfaceComponent";
 import CandidateInterfaceComponent from "./tutorial/CandidateInterfaceComponent";

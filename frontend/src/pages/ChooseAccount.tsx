@@ -6,7 +6,7 @@ import {
   candUnderline,
   empUnderline,
 } from "../assets/account/account";
-import { AccountType } from "../reducers/AccountProvider";
+import { AccountType } from "../providers/AccountProvider";
 
 export const inputStyles =
   "py-3 px-6 rounded shadow-[0px_6px_132px_rgba(76,101,234,0.08)] bg-white placeholder:text-[#B4BFF7] font-medium text-primary";

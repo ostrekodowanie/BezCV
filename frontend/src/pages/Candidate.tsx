@@ -8,7 +8,7 @@ import AbilityRange from "../components/candidate/AbilityRange";
 import Loader from "../components/Loader";
 import CircleChart from "../components/candidate/CircleChart";
 import { useAppSelector } from "../main";
-import { purchase } from "../reducers/login";
+import { purchase } from "../providers/login";
 import {
   Details,
   DidFilledSurvey,

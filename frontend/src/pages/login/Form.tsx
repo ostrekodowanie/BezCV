@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import Loader from "../../components/Loader";
 import { useAppDispatch } from "../../main";
-import { login } from "../../reducers/login";
+import { login } from "../../providers/login";
 import getUserInfo from "../../utils/getUserInfo";
 import { inputStyles } from "../Contact";
 import { User } from "../Login";

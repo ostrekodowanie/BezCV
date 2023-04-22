@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
-import { AccountContext } from "../../reducers/AccountProvider";
+import { AccountContext } from "../../providers/AccountProvider";
 
 type CustomLinkProps = {
   children: JSX.Element | string | (JSX.Element | string)[];

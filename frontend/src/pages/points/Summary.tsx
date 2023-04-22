@@ -8,14 +8,22 @@ import {
   packages,
 } from "../../constants/points";
 import OrderInfo from "../../components/points/OrderInfo";
-import { useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import {
   PaymentContext,
   PaymentContextType,
 } from "../../context/PaymentContext";
 import { useAppSelector } from "../../main";
+import axios from "axios";
 
 export default function Summary() {
+  const [searchParams] = useSearchParams();
+  const searchParamPoints = searchParams.get("points") || "";
+  const foundPackage = packages.find(
+    (p) => p.points === parseInt(searchParamPoints)
+  );
+  if (!foundPackage) return <NotFound />;
+  const [loading, setLoading] = useState(false);
   const { first_name, last_name, email, phone, nip } = useAppSelector(
     (state) => state.login.data
   );
@@ -26,31 +34,47 @@ export default function Summary() {
     phone,
     nip,
   });
-  const [searchParams] = useSearchParams();
-  const searchParamPoints = searchParams.get("points") || "";
-  const foundPackage = packages.find(
-    (p) => p.points === parseInt(searchParamPoints)
-  );
 
-  if (!foundPackage) return <NotFound />;
+  const handlePayment = (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    axios
+      .post(
+        "/api/points/purchase",
+        JSON.stringify({
+          amount: foundPackage.points,
+          price: foundPackage.price,
+        })
+      )
+      .then((res) => console.log(res.data))
+      .finally(() => setLoading(false));
+  };
 
   const contextValue = useMemo<PaymentContextType>(
     () => ({
+      loading,
+      setLoading,
       paymentData,
       setPaymentData,
     }),
-    [paymentData, setPaymentData]
+    [paymentData, loading, setLoading, setPaymentData]
   );
 
   return (
-    <section className="padding pt-[1.4in] pb-[.7in] 2xl:pb-[.9in] flex flex-col xl:grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center xl:items-start gap-16 2xl:pt-[1.8in] bg-white min-h-screen">
-      <PaymentContext.Provider value={contextValue}>
-        <BuyerInfo />
-        <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
-        <InvoiceInfo />
-        <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
-        <OrderInfo {...foundPackage} />
-      </PaymentContext.Provider>
+    <section className="padding pt-[1.4in] pb-[.7in] 2xl:pb-[.9in] 2xl:pt-[1.8in] bg-white">
+      <form
+        onSubmit={handlePayment}
+        className="flex flex-col xl:grid grid-cols-[1fr_1px_1fr_1px_1fr] items-center xl:items-start gap-16 min-h-screen"
+        id="payment-form"
+      >
+        <PaymentContext.Provider value={contextValue}>
+          <BuyerInfo />
+          <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
+          <InvoiceInfo />
+          <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
+          <OrderInfo {...foundPackage} />
+        </PaymentContext.Provider>
+      </form>
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AccountContext } from "../reducers/AccountProvider";
+import { AccountContext } from "../providers/AccountProvider";
 import { arrowRight } from "../assets/general";
 import { Link } from "react-router-dom";
 
