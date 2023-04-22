@@ -63,6 +63,7 @@ const DropdownMenu = ({ points }: Omit<PackageProps, "days" | "price">) => {
   return (
     <div className="relative" ref={menuRef}>
       <button
+        type="button"
         ref={button}
         className="flex justify-between items-center w-full py-3 px-6 border-[2px] border-[#2F66F4] rounded-2xl"
       >
@@ -76,7 +77,7 @@ const DropdownMenu = ({ points }: Omit<PackageProps, "days" | "price">) => {
         </span>
         <img
           className={`max-h-[1.2em] transition-transform ${
-            dropdownActive ? "rotate-90" : "rotate-0"
+            dropdownActive ? "rotate-0" : "-rotate-90"
           }`}
           src={filtersMenuArrow}
           alt=""
