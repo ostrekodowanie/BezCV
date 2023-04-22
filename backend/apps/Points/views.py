@@ -44,12 +44,12 @@ class PurchasePointsView(views.APIView):
             'client_secret': '34e68dfdd5cbc24c55fbab0324d5414b'
         }
         try:
-            data = requests.post("https://secure.snd.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
+            data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
             print(data.text)
             response_data = data.json()
             access_token = response_data['access_token']
         except:
-            data = requests.post("https://secure.snd.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
+            data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id=4289248&client_secret=34e68dfdd5cbc24c55fbab0324d5414b", headers=headers)
             return Response(data.text)
         
         print(access_token)
