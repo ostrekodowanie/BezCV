@@ -51,7 +51,8 @@ class PurchasePointsView(views.APIView):
             response_data = data.json()
             access_token = response_data['access_token']
         except:
-            return Response("authorize")
+            data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
+            return Response(data.text)
         
         print(access_token)
         headers = {
