@@ -45,10 +45,14 @@ class PurchasePointsView(views.APIView):
             'email': employer.email,
             'ext_customer_id': employer.pk
         }
-
-        data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
-        response_data = data.json()
-        access_token = response_data['access_token']
+        try:
+            data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
+            print(data.text)
+            response_data = data.json()
+            access_token = response_data['access_token']
+        except:
+            return Response("authorize")
+        
         print(access_token)
         headers = {
             'Authorization': f'Bearer {access_token}',
