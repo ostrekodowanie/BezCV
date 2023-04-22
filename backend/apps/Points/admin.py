@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import PaymentDetails
+from .models import Orders
 
-admin.site.register(PaymentDetails)
+admin.site.register(Orders)
