@@ -39,7 +39,7 @@ class PurchasePointsView(views.APIView):
         }
         
         data = {
-            'grant_type': 'client_credentials',
+            'grant_type': 'trusted_merchant',
             'client_id': '4289248',
             'client_secret': '34e68dfdd5cbc24c55fbab0324d5414b'
         }
