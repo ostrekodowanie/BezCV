@@ -55,7 +55,7 @@ export default function Profile() {
       <EmployerInfo />
       <Link
         to="/punkty"
-        className="rounded-full bg-primary ml-[8vw] sm:ml-0 row-[2/3] col-[2/3] max-w-max justify-center xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10"
+        className="rounded-full bg-primary ml-[8vw] sm:ml-0 row-[2/3] col-[2/3] max-w-max h-max justify-center xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10"
       >
         Wykup tokeny{" "}
         <img className="max-h-[1.2em] ml-2" src={bcvToken} alt="" />
