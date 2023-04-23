@@ -36,7 +36,7 @@ class PurchasePointsView(views.APIView):
             'client_secret': '34e68dfdd5cbc24c55fbab0324d5414b'
         }
         
-        data = requests.post("https://secure.snd.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id=4289248&client_secret=34e68dfdd5cbc24c55fbab0324d5414b", headers=headers)
+        data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id=4289248&client_secret=34e68dfdd5cbc24c55fbab0324d5414b", headers=headers)
         
         response_data = data.json()
         access_token = response_data['access_token']
@@ -69,7 +69,7 @@ class PurchasePointsView(views.APIView):
             ]
         }
         
-        response = requests.post("https://secure.snd.payu.com/api/v2_1/orders", headers=order_headers, json=order_data, allow_redirects=False)
+        response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=order_headers, json=order_data, allow_redirects=False)
         location_header = response.headers.get('Location')
         print(response.text)
         return Response(location_header)
