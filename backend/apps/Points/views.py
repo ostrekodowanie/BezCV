@@ -25,8 +25,8 @@ class PurchasePointsView(views.APIView):
         import time
         import random
 
-        timestamp = str(int(time.time() * 1000))  # convert current time to milliseconds and cast it to string
-        random_num = str(random.randint(100000, 999999))  # generate a random number between 100000 and 999999 and cast it to string
+        timestamp = str(int(time.time() * 1000))
+        random_num = str(random.randint(100000, 999999))
 
         ext_order_id = timestamp + '-' + random_num
         
@@ -43,54 +43,50 @@ class PurchasePointsView(views.APIView):
             'client_id': '4289248',
             'client_secret': '34e68dfdd5cbc24c55fbab0324d5414b'
         }
-        try:
-            data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize", headers=headers, data=data)
-            print(data.text)
-            response_data = data.json()
-            access_token = response_data['access_token']
-        except:
-            data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id=4289248&client_secret=34e68dfdd5cbc24c55fbab0324d5414b", headers=headers)
-            return Response(data.text)
         
-        print(access_token)
-        headers = {
+        data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id=4289248&client_secret=34e68dfdd5cbc24c55fbab0324d5414b", headers=headers)
+        
+        response_data = data.json()
+        access_token = response_data['access_token']
+        
+        order_headers = {
             'Authorization': f'Bearer {access_token}',
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
         
-        data = {
+        order_data = {
             "merchantPosId": '4289248',
             "description": "Purchase of points",
             "currencyCode": "PLN",
-            "totalAmount": "0",#str(int(price) * 100),
-            "notifyUrl": request.build_absolute_uri(reverse('payu_notify')),
-            "customerIp": request.META.get('REMOTE_ADDR'),
+            "totalAmount": "1",#str(int(price) * 100),
+            "customerIp": "127.0.0.1",
             "continueUrl": "https://bezcv.com",
-            "extOrderId": ext_order_id,
             "buyer": {
                 "email": employer.email,
-                "phone": "790541511",
                 "firstName": employer.first_name,
                 "lastName": employer.last_name,
                 "language": "pl",
             },
             "products": [
                 {
-                    "name": f"{amount} points",
-                    "unitPrice": "0",
+                    "name": f"{amount} tokens",
+                    "unitPrice": "1",
                     "quantity": "1"
                 }
             ],
-            "settings": {
-                "invoiceDisabled": "true"
+            "payMethods": {
+                "payMethod":    {
+                    "type":"PBL",
+                    "value":"c"
+                }
             }
         }
         
-        response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=headers, json=data)
-        print(response.content)
-        response_data = response.json()
-        return Response(response_data)
+        response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=order_headers, json=order_data, allow_redirects=False)
+        location_header = response.headers.get('Location')
+        print(response.text)
+        return Response(location_header)
         
         last_month = timezone.now() - timedelta(days=30)
         purchased_tokens = employer.purchasedpoints_employer.filter(

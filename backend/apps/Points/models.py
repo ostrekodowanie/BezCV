@@ -8,7 +8,7 @@ class Orders(models.Model):
         User, on_delete=models.CASCADE, related_name='purchasedpoints_employer')
     tokens = models.DecimalField(max_digits=3, decimal_places=0)
     amount = models.DecimalField(max_digits=7, decimal_places=2)
-    extOrderId = models.CharField(max_length=255)
+    order_id = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
