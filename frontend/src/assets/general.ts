@@ -7,6 +7,7 @@ import passwordVisible from './password_visible.svg'
 import passwordNotVisible from './password_not_visible.svg'
 import logoHorizontal from './logo_horizontal.svg'
 import logo from './logo.svg'
+import dropdownArrow from './dropdown_arrow.svg'
 
 export {
     arrowRight,
@@ -17,5 +18,6 @@ export {
     passwordNotVisible,
     passwordVisible,
     logoHorizontal,
-    logo
+    logo,
+    dropdownArrow
 }
