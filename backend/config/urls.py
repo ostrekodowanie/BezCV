@@ -38,6 +38,8 @@ urlpatterns = [
     path('profil', views.index),
     path('administracja', views.index),
     path('ankieta', views.index),
+    path('docs/regulamin', views.index),
+    path('docs/polityka-prywatnosci', views.index),
 
     path('api/', include('apps.Auth.urls')),
     path('api/', include('apps.Contact.urls')),
