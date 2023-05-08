@@ -10,6 +10,7 @@ import { radioInputStyles, textInputStyles } from "../../constants/workForm";
 import ProgressBar from "../../components/survey/ProgressBar";
 import { SurveyContext } from "../Survey";
 import ReactGA from "react-ga";
+import PolicyAccept from "../../components/survey/PolicyAccept";
 
 export default function CandidateController() {
   const {
@@ -25,6 +26,7 @@ export default function CandidateController() {
   const [credentialsError, setCredentialsError] = useState("");
   const [hasReturned, setHasReturned] = useState(false);
   const [error, setError] = useState("");
+  const [policyWindowActive, setPolicyWindowActive] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -33,10 +35,7 @@ export default function CandidateController() {
     //   return axios
     //     .post(
     //       "/api/survey/email",
-    //       JSON.stringify({ email: candidateAnswers.email }),
-    //       {
-    //         headers: { "Content-Type": "application/json" },
-    //       }
+    //       JSON.stringify({ email: candidateAnswers.email })
     //     )
     //     .then((res) => {
     //       switch (res.status) {
@@ -65,12 +64,7 @@ export default function CandidateController() {
     //           typeof candidateAnswers.phone === "string"
     //             ? candidateAnswers.phone.split(" ").join("")
     //             : candidateAnswers.phone,
-    //       }),
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
+    //       })
     //     )
     //     .then(() => setPhoneCodePopupActive(true))
     //     .catch((err) => {
@@ -84,23 +78,7 @@ export default function CandidateController() {
     // }
 
     if (activeQuestionIndex >= defaultQuestions.length - 1) {
-      setLoading(true);
-      return axios
-        .post("/api/survey/candidate", JSON.stringify(candidateAnswers), {
-          headers: { "Content-Type": "application/json" },
-        })
-        .then(() => {
-          setActiveQuestionIndex(0);
-          setStep("role");
-        })
-        .catch((err) =>
-          setCredentialsError(
-            typeof err.response.data.detail === "string"
-              ? err.response.data.detail
-              : "Wystąpił błąd!"
-          )
-        )
-        .finally(() => setLoading(false));
+      return setPolicyWindowActive(true);
     }
     setHasReturned(false);
     setActiveQuestionIndex((prev) => prev + 1);
@@ -126,6 +104,24 @@ export default function CandidateController() {
   const handleReturn = () => {
     setHasReturned(true);
     setActiveQuestionIndex((prev) => prev - 1);
+  };
+
+  const onPolicyAccept = async () => {
+    setLoading(true);
+    return axios
+      .post("/api/survey/candidate", JSON.stringify(candidateAnswers))
+      .then(() => {
+        setActiveQuestionIndex(0);
+        setStep("role");
+      })
+      .catch((err) =>
+        setCredentialsError(
+          typeof err.response.data.detail === "string"
+            ? err.response.data.detail
+            : "Wystąpił błąd!"
+        )
+      )
+      .finally(() => setLoading(false));
   };
 
   if (loading) return <Loader />;
@@ -188,6 +184,7 @@ export default function CandidateController() {
           setPhoneCodePopupActive={setPhoneCodePopupActive}
         />
       )}
+      {policyWindowActive && <PolicyAccept onAccept={onPolicyAccept} />}
     </>
   );
 }
