@@ -372,9 +372,10 @@ const CandidateInput = ({
                     id={input.name}
                     onChange={(e) => {
                       let value = e.target.value;
+                      if (value.startsWith("0")) value = value.substring(1);
                       setCandidateAnswers((prev) => ({
                         ...prev,
-                        [input.name]: value.replace(/\D/g, ""),
+                        [input.name]: value.replace(/\D/g, "") || 0,
                       }));
                     }}
                   />
