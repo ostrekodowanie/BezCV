@@ -94,7 +94,7 @@ export const defaultQuestions: QuestionProps[] = [
         placeholder: 'Tutaj wpisz swoje stanowisko',
         customInputs: [
             {
-                placeholder: 'Tutaj wpisz swoje stanowisko',
+                placeholder: 'Tutaj wpisz swoje stanowisko np. Doradca Klienta, Przedstawiciel Handlowy, Office Manager',
                 name: 'job_position',
                 type: 'text'
             },
@@ -107,25 +107,25 @@ export const defaultQuestions: QuestionProps[] = [
     },
     {
         name: 'experience',
-        question: 'Jakie posiadasz doświadczenie w pracy na wybranych stanowiskach? (wpisz liczbę miesięcy pracy na takim lub podobnym stanowisku)',
+        question: 'Jakie posiadasz doświadczenie w pracy? (wpisz liczbę miesięcy na takim lub podobnym stanowisku)',
         type: 'custom',
         placeholder: 'Tutaj wpisz swoje doświadczenie',
         customInputs: [
             {
                 name: 'experience_sales',
-                placeholder: 'Tutaj wpisz swoje doświadczenie',
+                placeholder: 'Wpisz liczbę miesięcy na takim lub podobnym stanowisku',
                 type: 'number',
                 label: 'Sprzedaż'
             },
             {
                 name: 'experience_customer_service',
-                placeholder: 'Tutaj wpisz swoje doświadczenie',
+                placeholder: 'Wpisz liczbę miesięcy na takim lub podobnym stanowisku',
                 type: 'number',
                 label: 'Obsługa klienta'
             },
             {
                 name: 'experience_office_administration',
-                placeholder: 'Tutaj wpisz swoje doświadczenie',
+                placeholder: 'Wpisz liczbę miesięcy na takim lub podobnym stanowisku',
                 type: 'number',
                 label: 'Administracja biurowa'
             },
@@ -137,7 +137,7 @@ export const defaultQuestions: QuestionProps[] = [
         type: 'radio',
         answers: [
             'wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)',
-            'wykształcenie wyższe (posiadają osoby, które na studiach wyższych (I, II lub III stopnia) uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)',
+            'wykształcenie wyższe (posiadają osoby, które uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)',
         ],
     },
     {
@@ -181,7 +181,9 @@ export const initialCandidateAnswers = defaultQuestions.reduce((acc, { name, typ
       return { ...acc, ...newObj };
     }
     if (type === "date") {
-      return { ...acc, [name]: new Date().toISOString().substring(0, 10) };
+    const currentDate = new Date();
+    const eighteenYearsAgo = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
+      return { ...acc, [name]: eighteenYearsAgo.toISOString().split('T')[0] };
     }
     return { ...acc, [name]: "" };
   }, {} as CandidateAnswerType)

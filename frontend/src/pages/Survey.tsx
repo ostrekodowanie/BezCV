@@ -95,7 +95,7 @@ export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
         onClick={() => setIsIntroduced(false)}
         className="absolute left-[8vw] sm:left-16 top-8"
       >
-        Powrót
+        Wyjdź
       </button>
       <SurveyContext.Provider value={contextValue}>
         <div className="flex flex-col items-center gap-6 w-full mt-16 sm:mt-0">

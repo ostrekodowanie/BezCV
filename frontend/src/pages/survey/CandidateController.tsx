@@ -220,6 +220,28 @@ const CandidateInput = ({
         />
       );
     case "date":
+      // const handleBirthdateChange = (
+      //   event: React.ChangeEvent<HTMLInputElement>
+      // ) => {
+      //   const selectedDate = new Date(event.target.value);
+      //   const currentDate = new Date();
+      //   const eighteenYearsAgo = new Date(
+      //     currentDate.getFullYear() - 18,
+      //     currentDate.getMonth(),
+      //     currentDate.getDate()
+      //   );
+      //   if (selectedDate > eighteenYearsAgo) {
+      //     setCandidateAnswers((prev) => ({
+      //       ...prev,
+      //       [name]: eighteenYearsAgo.toISOString().split("T")[0],
+      //     }));
+      //   } else {
+      //     setCandidateAnswers((prev) => ({
+      //       ...prev,
+      //       [name]: event.target.value,
+      //     }));
+      //   }
+      // };
       return (
         <input
           className={textInputStyles}
@@ -228,7 +250,10 @@ const CandidateInput = ({
           type="date"
           value={candidateAnswers[name]}
           onChange={(e) =>
-            setCandidateAnswers((prev) => ({ ...prev, [name]: e.target.value }))
+            setCandidateAnswers((prev) => ({
+              ...prev,
+              [name]: e.target.value,
+            }))
           }
           id={question}
           placeholder={placeholder}
@@ -328,6 +353,32 @@ const CandidateInput = ({
                   />
                   {input.placeholder}
                 </label>
+              );
+            if (input.type === "number")
+              return (
+                <div className="flex flex-col gap-4 self-stretch">
+                  {input.label && (
+                    <label className="text-sm font-medium" htmlFor={input.name}>
+                      {input.label}:
+                    </label>
+                  )}
+                  <input
+                    className={textInputStyles}
+                    required
+                    type={"text"}
+                    autoComplete="off"
+                    value={candidateAnswers[input.name]}
+                    placeholder={input.placeholder}
+                    id={input.name}
+                    onChange={(e) => {
+                      let value = e.target.value;
+                      setCandidateAnswers((prev) => ({
+                        ...prev,
+                        [input.name]: value.replace(/\D/g, ""),
+                      }));
+                    }}
+                  />
+                </div>
               );
             return (
               <div className="flex flex-col gap-4 self-stretch">

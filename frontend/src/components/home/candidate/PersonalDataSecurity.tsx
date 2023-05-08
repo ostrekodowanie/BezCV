@@ -11,12 +11,12 @@ const topics: PersonalDataTopicProps[] = [
     desc: "",
   },
   {
-    title: "Szyfrowanie wyników i zabezpieczenie danych w Internecie",
+    title: "Szyfrowanie wyników i zabezpieczenie danych w naszej bazie",
     desc: "",
   },
   {
     title:
-      "Wypełniając ankietę zgadzasz się na przetwarzanie danych i przekazanie ich do zainteresowanych pracodawców",
+      "Wypełniając ankietę zgadzasz się na przetwarzanie danych i przekazanie ich tylko do pracodawców, którzy są zainteresowani Twoimi kompetencjami miękkimi",
     desc: "Przy obydwu formach wypełnienia kwestionariusza będziesz poproszony o przeczytanie Polityki Prywatności oraz Regulaminu Portalu. To od Ciebie zależy, czy będziesz jednym z kandydatów w bazie BezCV.",
   },
 ];
