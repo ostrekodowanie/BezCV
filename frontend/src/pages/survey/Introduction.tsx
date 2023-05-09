@@ -122,7 +122,7 @@ export default function Introduction() {
                 type="button"
                 className="sm:rounded-full text-[.8rem] w-full xl:w-max justify-center text-[#F98D3D] scale shadow-[0px_6px_30px_rgba(193,120,16,0.17)] font-semibold py-[14px] px-8 bg-white self-end flex items-center"
               >
-                Kontynuuj wypełnianie{" "}
+                Jestem już w bazie!{" "}
                 <img
                   className="ml-2 max-h-[.9em] rotate-180"
                   src={prevArrow}
@@ -135,7 +135,7 @@ export default function Introduction() {
                 id="survey-button"
                 className="justify-center bg-secondary w-full transition-colors font-semibold border-primary text-white sm:rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start xl:max-w-max"
               >
-                Przenieś mnie do ankiety!{" "}
+                Wypełniam pierwszy raz!{" "}
                 <img className="ml-2 max-h-[1.2em]" src={arrowRight} alt="" />
               </button>
             </div>

@@ -55,12 +55,7 @@ export default function PhonePopup({
           JSON.stringify({
             phone: phone.split(" ").join(""),
             code,
-          }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          })
         )
         .then((res) => {
           ReactGA.event({
@@ -86,17 +81,14 @@ export default function PhonePopup({
           "/api/survey/phone",
           JSON.stringify({
             phone: phone.split(" ").join(""),
-          }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          })
         )
         .then((res) => {
           switch (res.status) {
             case 204:
-              setError("Nie znaleziono numeru telefonu!");
+              setError(
+                "Nie znaleźliśmy takiego numeru telefonu w bazie. Wróć i kliknij 'Wypełniam pierwszy raz!'."
+              );
             case 200:
               setIsOk(true);
           }

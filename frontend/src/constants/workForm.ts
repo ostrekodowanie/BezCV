@@ -39,6 +39,7 @@ export type RoleType = 'office_administration' | 'sales' | 'customer_service'
 export interface RoleProps {
     name: RoleType,
     title: string,
+    genitive: string,
     image: string,
 }
 
@@ -46,16 +47,19 @@ export const roles: RoleProps[] = [
     {
         name: 'office_administration',
         title: 'Administracja biurowa',
+        genitive: 'administracji biurowej',
         image: officeAdministration,
     },
     {
         name: 'customer_service',
         title: 'Obsługa klienta',
+        genitive: 'obsługi klienta',
         image: customerService,
     },
     {
         name: 'sales',
         title: 'Sprzedaż',
+        genitive: 'sprzedaży',
         image: selling,
     },
 ]

@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useContext } from "react";
 import { SurveyContext } from "../Survey";
 import { arrowRight } from "../../assets/general";
 import { prevArrow } from "../../assets/candidate/candidate";
+import { roles } from "../../constants/workForm";
 
 export default function Finished({
   setIsEverySurveyFilled,
@@ -13,8 +14,13 @@ export default function Finished({
   setIsFinished: Dispatch<SetStateAction<boolean>>;
   setIsFinishing: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { setRole, setRoleAnswers, setActiveQuestionIndex, isSurveyFilled } =
-    useContext(SurveyContext);
+  const {
+    role,
+    setRole,
+    setRoleAnswers,
+    setActiveQuestionIndex,
+    isSurveyFilled,
+  } = useContext(SurveyContext);
   const surveyCount = Object.values(isSurveyFilled).filter(
     (item) => item
   ).length;
@@ -35,9 +41,10 @@ export default function Finished({
       </h2>
       <div className="flex flex-col items-center justify-between gap-6 w-full">
         <p className="text-sm md:text-base leading-relaxed text-center">
-          Znamy już Twoje kompetencje do pracy w branży administracji biurowej.
-          Właśnie tworzymy Twój profil dla pracodawców. Jednak coś czuję, że
-          chciałbyś zwiększyć jeszcze swoje szanse na pracę marzeń.
+          Znamy już Twoje kompetencje do pracy w branży{" "}
+          {roles.find((item) => item.name === role)?.genitive}. Właśnie tworzymy
+          Twój profil dla pracodawców. Jednak coś czuję, że chciałbyś zwiększyć
+          jeszcze swoje szanse na pracę marzeń.
         </p>
         <p className="text-sm md:text-base leading-relaxed text-center">
           Zostając tutaj jeszcze {surveyCount === 1 ? "9" : "5"} minut{" "}

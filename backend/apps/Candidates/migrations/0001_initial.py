@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ('experience_sales', models.IntegerField(default=0)),
                 ('experience_customer_service', models.IntegerField(default=0)),
                 ('experience_administration', models.IntegerField(default=0)),
-                ('education', models.CharField(choices=[('wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)'), ('wykształcenie wyższe (posiadają osoby, które uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)')], max_length=255)),
+                ('education', models.CharField(choices=[('wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)', 'wykształcenie średnie (posiadają osoby, które ukończyły liceum lub pokrewne)'), ('wykształcenie wyższe (posiadają osoby, które uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)')], max_length=255)),
                 ('driving_license', models.BooleanField(default=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),

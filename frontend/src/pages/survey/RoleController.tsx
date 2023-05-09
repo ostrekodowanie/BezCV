@@ -36,7 +36,7 @@ export default function RoleController() {
   const [questions, setQuestions] = useState<RoleQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const timer = useRef<any>(null);
-  const [secondsLeft, setSecondsLeft] = useState(15);
+  const [secondsLeft, setSecondsLeft] = useState(20);
   const [isFinishing, setIsFinishing] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [finishFirstName, setFinishFirstName] = useState("");
@@ -76,7 +76,7 @@ export default function RoleController() {
   };
 
   useEffect(() => {
-    setSecondsLeft(15);
+    setSecondsLeft(20);
     setNumericalAnswer(null);
     window.addEventListener("beforeunload", handleLeave);
     return () => {
@@ -167,7 +167,7 @@ export default function RoleController() {
         <div className="flex flex-col items-center w-full gap-6 mt-8">
           <div className="hidden sm:block relative mb-8 xl:mb-16">
             <input
-              className="bg-secondary"
+              className="bg-secondary focus:cursor-grabbing"
               type="range"
               required
               defaultValue={1}
@@ -201,13 +201,15 @@ export default function RoleController() {
               />{" "}
               Pozostały czas
             </h4>
-            <h3 className="text-secondary text-base sm:text-xl font-bold">
-              {secondsLeft > 0 ? (
-                `${secondsLeft} sekund`
-              ) : (
-                <span className="text-red-400">Koniec czasu!</span>
-              )}
-            </h3>
+            {secondsLeft > 0 ? (
+              <h3 className="text-secondary text-base sm:text-xl font-bold">
+                {secondsLeft} sekund
+              </h3>
+            ) : (
+              <h3 className="text-red-400 text-base sm:text-xl font-bold">
+                Koniec czasu!
+              </h3>
+            )}
           </div>
           <button className="sm:rounded-full text-[.75rem] justify-center sm:w-max sm:text-[.8rem] text-white font-semibold py-4 px-8 bg-secondary sm:self-end flex items-center">
             {activeQuestionIndex >= questions.length
