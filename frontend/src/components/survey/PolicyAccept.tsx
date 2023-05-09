@@ -9,10 +9,12 @@ type PolicyAcceptProps = {
 
 export default function PolicyAccept({ onAccept }: PolicyAcceptProps) {
   const [formIndex, setFormIndex] = useState<0 | 1>(0);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     formIndex === 1 ? onAccept() : setFormIndex(1);
   };
+
   return (
     <div className="inset-0 fixed bg-black/50 z-50 flex items-center justify-center">
       <form
