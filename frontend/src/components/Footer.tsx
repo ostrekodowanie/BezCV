@@ -60,11 +60,15 @@ export default function Footer() {
             <div className="flex items-center justify-between gap-4 flex-wrap self-stretch mt-4">
               <small className="font-medium">&copy; 2023 - bezCV</small>
               <div className="flex items-center gap-4 font-medium">
-                <Link to="/">
-                  <small>Regulamin</small>
+                <Link to="/docs/regulamin">
+                  <small className="hover:text-[#2F66F4] transition-colors">
+                    Regulamin
+                  </small>
                 </Link>
-                <Link to="/">
-                  <small>Polityka prywatności</small>
+                <Link to="/docs/polityka-prywatnosci">
+                  <small className="hover:text-[#2F66F4] transition-colors">
+                    Polityka prywatności
+                  </small>
                 </Link>
               </div>
             </div>

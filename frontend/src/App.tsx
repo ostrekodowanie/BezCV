@@ -22,6 +22,7 @@ import CookieConsent from "react-cookie-consent";
 import FixedButton from "./components/FixedButton";
 import Survey from "./pages/Survey";
 import AxiosProvider from "./providers/AxiosProvider";
+import Docs from "./pages/Docs";
 
 const loginString: string | null = localStorage.getItem("user");
 const loginFromLocalStorage = loginString && JSON.parse(loginString);
@@ -153,6 +154,7 @@ export default function App() {
                   path="/ankieta"
                   element={<Survey setIsHeaderVisible={setIsHeaderVisible} />}
                 />
+                <Route path="/docs/*" element={<Docs />} />
               </Routes>
             </ScrollTop>
             <Routes>

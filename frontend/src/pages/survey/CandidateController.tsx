@@ -10,6 +10,7 @@ import { radioInputStyles, textInputStyles } from "../../constants/workForm";
 import ProgressBar from "../../components/survey/ProgressBar";
 import { SurveyContext } from "../Survey";
 import ReactGA from "react-ga";
+import PolicyAccept from "../../components/survey/PolicyAccept";
 
 export default function CandidateController() {
   const {
@@ -25,6 +26,7 @@ export default function CandidateController() {
   const [credentialsError, setCredentialsError] = useState("");
   const [hasReturned, setHasReturned] = useState(false);
   const [error, setError] = useState("");
+  const [policyWindowActive, setPolicyWindowActive] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -33,10 +35,7 @@ export default function CandidateController() {
     //   return axios
     //     .post(
     //       "/api/survey/email",
-    //       JSON.stringify({ email: candidateAnswers.email }),
-    //       {
-    //         headers: { "Content-Type": "application/json" },
-    //       }
+    //       JSON.stringify({ email: candidateAnswers.email })
     //     )
     //     .then((res) => {
     //       switch (res.status) {
@@ -65,12 +64,7 @@ export default function CandidateController() {
     //           typeof candidateAnswers.phone === "string"
     //             ? candidateAnswers.phone.split(" ").join("")
     //             : candidateAnswers.phone,
-    //       }),
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
+    //       })
     //     )
     //     .then(() => setPhoneCodePopupActive(true))
     //     .catch((err) => {
@@ -84,23 +78,7 @@ export default function CandidateController() {
     // }
 
     if (activeQuestionIndex >= defaultQuestions.length - 1) {
-      setLoading(true);
-      return axios
-        .post("/api/survey/candidate", JSON.stringify(candidateAnswers), {
-          headers: { "Content-Type": "application/json" },
-        })
-        .then(() => {
-          setActiveQuestionIndex(0);
-          setStep("role");
-        })
-        .catch((err) =>
-          setCredentialsError(
-            typeof err.response.data.detail === "string"
-              ? err.response.data.detail
-              : "Wystąpił błąd!"
-          )
-        )
-        .finally(() => setLoading(false));
+      return setPolicyWindowActive(true);
     }
     setHasReturned(false);
     setActiveQuestionIndex((prev) => prev + 1);
@@ -126,6 +104,24 @@ export default function CandidateController() {
   const handleReturn = () => {
     setHasReturned(true);
     setActiveQuestionIndex((prev) => prev - 1);
+  };
+
+  const onPolicyAccept = async () => {
+    setLoading(true);
+    return axios
+      .post("/api/survey/candidate", JSON.stringify(candidateAnswers))
+      .then(() => {
+        setActiveQuestionIndex(0);
+        setStep("role");
+      })
+      .catch((err) =>
+        setCredentialsError(
+          typeof err.response.data.detail === "string"
+            ? err.response.data.detail
+            : "Wystąpił błąd!"
+        )
+      )
+      .finally(() => setLoading(false));
   };
 
   if (loading) return <Loader />;
@@ -188,6 +184,7 @@ export default function CandidateController() {
           setPhoneCodePopupActive={setPhoneCodePopupActive}
         />
       )}
+      {policyWindowActive && <PolicyAccept onAccept={onPolicyAccept} />}
     </>
   );
 }
@@ -223,6 +220,28 @@ const CandidateInput = ({
         />
       );
     case "date":
+      // const handleBirthdateChange = (
+      //   event: React.ChangeEvent<HTMLInputElement>
+      // ) => {
+      //   const selectedDate = new Date(event.target.value);
+      //   const currentDate = new Date();
+      //   const eighteenYearsAgo = new Date(
+      //     currentDate.getFullYear() - 18,
+      //     currentDate.getMonth(),
+      //     currentDate.getDate()
+      //   );
+      //   if (selectedDate > eighteenYearsAgo) {
+      //     setCandidateAnswers((prev) => ({
+      //       ...prev,
+      //       [name]: eighteenYearsAgo.toISOString().split("T")[0],
+      //     }));
+      //   } else {
+      //     setCandidateAnswers((prev) => ({
+      //       ...prev,
+      //       [name]: event.target.value,
+      //     }));
+      //   }
+      // };
       return (
         <input
           className={textInputStyles}
@@ -231,7 +250,10 @@ const CandidateInput = ({
           type="date"
           value={candidateAnswers[name]}
           onChange={(e) =>
-            setCandidateAnswers((prev) => ({ ...prev, [name]: e.target.value }))
+            setCandidateAnswers((prev) => ({
+              ...prev,
+              [name]: e.target.value,
+            }))
           }
           id={question}
           placeholder={placeholder}
@@ -331,6 +353,33 @@ const CandidateInput = ({
                   />
                   {input.placeholder}
                 </label>
+              );
+            if (input.type === "number")
+              return (
+                <div className="flex flex-col gap-4 self-stretch">
+                  {input.label && (
+                    <label className="text-sm font-medium" htmlFor={input.name}>
+                      {input.label}:
+                    </label>
+                  )}
+                  <input
+                    className={textInputStyles}
+                    required
+                    type={"text"}
+                    autoComplete="off"
+                    value={candidateAnswers[input.name]}
+                    placeholder={input.placeholder}
+                    id={input.name}
+                    onChange={(e) => {
+                      let value = e.target.value;
+                      if (value.startsWith("0")) value = value.substring(1);
+                      setCandidateAnswers((prev) => ({
+                        ...prev,
+                        [input.name]: value.replace(/\D/g, "") || 0,
+                      }));
+                    }}
+                  />
+                </div>
               );
             return (
               <div className="flex flex-col gap-4 self-stretch">

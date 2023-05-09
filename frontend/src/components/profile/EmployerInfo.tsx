@@ -28,7 +28,7 @@ export default function EmployerInfo() {
   }, [image]);
 
   return (
-    <div className="flex flex-col justify-between gap-6 px-[8vw] py-10 sm:p-10 shadow-primaryBig sm:rounded-3xl row-span-2">
+    <div className="flex flex-col justify-between gap-6 px-[8vw] py-10 sm:p-10 shadow-primaryBig sm:rounded-3xl row-span-2 h-max">
       <div className="flex items-center gap-6">
         <label className="cursor-pointer relative" htmlFor="profile-photo">
           <div className="rounded-full bg-[#F6F6F6] overflow-hidden flex items-center justify-center h-16 w-16 sm:h-20 sm:w-20 relative">

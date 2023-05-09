@@ -61,13 +61,6 @@ export default function RoleController() {
 
   useEffect(() => {
     if (!questions[activeQuestionIndex]) return;
-    if (secondsLeft === 0) {
-      setRoleAnswers((prev) => [
-        ...prev,
-        [questions[activeQuestionIndex].id, numericalAnswer || 3],
-      ]);
-      return setActiveQuestionIndex((prev) => prev + 1);
-    }
     timer.current = setTimeout(() => setSecondsLeft((prev) => prev - 1), 1000);
     return () => clearTimeout(timer.current);
   }, [secondsLeft, questions]);
@@ -172,7 +165,7 @@ export default function RoleController() {
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col items-center w-full gap-6 mt-8">
-          <div className="relative mb-8 xl:mb-16">
+          <div className="hidden sm:block relative mb-8 xl:mb-16">
             <input
               className="bg-secondary"
               type="range"
@@ -209,11 +202,17 @@ export default function RoleController() {
               Pozostały czas
             </h4>
             <h3 className="text-secondary text-base sm:text-xl font-bold">
-              {secondsLeft} sekund
+              {secondsLeft > 0 ? (
+                `${secondsLeft} sekund`
+              ) : (
+                <span className="text-red-400">Koniec czasu!</span>
+              )}
             </h3>
           </div>
           <button className="sm:rounded-full text-[.75rem] justify-center sm:w-max sm:text-[.8rem] text-white font-semibold py-4 px-8 bg-secondary sm:self-end flex items-center">
-            Następne pytanie{" "}
+            {activeQuestionIndex >= questions.length
+              ? "Koniec ankiety"
+              : "Następne pytanie"}
             <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
           </button>
         </div>
