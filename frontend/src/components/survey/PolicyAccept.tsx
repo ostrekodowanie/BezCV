@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import PrivacyPolicy from "../docs/components/PrivacyPolicy";
 import Statute from "../docs/components/Statute";
@@ -8,11 +8,13 @@ type PolicyAcceptProps = {
 };
 
 export default function PolicyAccept({ onAccept }: PolicyAcceptProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null!);
   const [formIndex, setFormIndex] = useState<0 | 1>(0);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     formIndex === 1 ? onAccept() : setFormIndex(1);
+    wrapperRef.current && wrapperRef.current.scrollTo({ top: 0, left: 0 });
   };
 
   return (
@@ -24,7 +26,7 @@ export default function PolicyAccept({ onAccept }: PolicyAcceptProps) {
         <h3 className="font-semibold text-xl">
           {formIndex === 0 ? "Polityka Prywatności bezCV" : "Regulamin bezCV"}
         </h3>
-        <div className="overflow-y-scroll max-h-[5in]">
+        <div className="overflow-y-scroll max-h-[5in]" ref={wrapperRef}>
           {formIndex === 0 ? <PrivacyPolicy /> : <Statute />}
         </div>
         <button
