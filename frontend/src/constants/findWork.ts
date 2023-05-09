@@ -24,7 +24,6 @@ export const defaultQuestions: QuestionProps[] = [
         name: 'name',
         question: 'Podaj proszę swoje imię i nazwisko.',
         type: 'custom',
-        placeholder: 'Tutaj wpisz swoje imię i nazwisko',
         customInputs: [
             {
                 name: 'first_name',

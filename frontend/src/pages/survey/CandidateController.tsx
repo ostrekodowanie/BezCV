@@ -81,10 +81,9 @@ export default function CandidateController() {
     //     .finally(() => setCredentialsLoading(false));
     // }
 
-    if (activeQuestionIndex >= defaultQuestions.length - 1) {
+    if (activeQuestionIndex >= defaultQuestions.length - 1)
       return setPolicyWindowActive(true);
-    }
-    setActiveQuestionIndex((prev) => prev + 1);
+    return setActiveQuestionIndex((prev) => prev + 1);
   };
 
   const handleLeave = () => {
@@ -199,7 +198,7 @@ const CandidateInput = (props: QuestionProps) => {
     case "checkbox":
       return <CheckboxInput {...props} />;
     case "custom":
-      <CustomInput {...props} />;
+      return <CustomInput {...props} />;
     case "select":
       return <SelectInput {...props} />;
   }
