@@ -31,13 +31,12 @@ class Candidates(models.Model):
                                                         ('customer_service', 'customer_service')])
     abilities = models.ManyToManyField(Abilities, through='CandidateAbilities')
     salary_expectation = models.CharField(max_length=100, choices=[
-                                                        ('mniej niż 2999 zł', 'mniej niż 2999 zł'), 
-                                                        ('od 3000 zł do 3499 zł', 'od 3000 zł do 3499 zł'), 
-                                                        ('od 3500 zł do 3999 zł', 'od 3500 zł do 3999 zł'), 
-                                                        ('od 4000 zł do 4499 zł', 'od 4000 zł do 4499 zł'), 
-                                                        ('od 4500 zł do 4999 zł', 'od 4500 zł do 4999 zł'), 
-                                                        ('od 5000 zł do 5999 zł', 'od 5000 zł do 5999 zł'), 
-                                                        ('powyżej 6000 zł', 'powyżej 6000 zł')])
+                                                        ('poniżej 3500 zł', 'poniżej 3500 zł'), 
+                                                        ('od 3501 do 4500 zł', 'od 3501 do 4500 zł'), 
+                                                        ('od 4501 do 5500 zł', 'od 4501 do 5500 zł'), 
+                                                        ('od 5501 do 6500 zł', 'od 5501 do 6500 zł'), 
+                                                        ('od 6500 do 10000 zł', 'od 6500 do 10000 zł'), 
+                                                        ('powyżej 10001 zł', 'powyżej 10001 zł')])
     availability = models.CharField(max_length=255)
     job_position = models.CharField(max_length=100)
     experience_sales = models.IntegerField(default=0)
