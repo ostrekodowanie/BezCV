@@ -196,7 +196,7 @@ class SendCodeToExistingCandidate(APIView):
         phone = request.data.get('phone')
         
         if not Candidates.objects.filter(phone=phone).exists():
-            return Response({'Nie znaleźliśmy takiego numeru w bazie'}, status=404)
+            return Response({'Nie znaleźliśmy takiego numeru w bazie'}, status=400)
         
         gen_code = GeneratedCodes.objects.filter(phone=phone)
 
