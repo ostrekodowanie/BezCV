@@ -190,6 +190,27 @@ class SendCodeView(APIView):
 
         return Response({'Access code sent successfully'}, status=200)
     
+    
+class SendCodeToExistingCandidate(APIView):
+    def post(self, request):
+        phone = request.data.get('phone')
+        
+        if not Candidates.objects.filter(phone=phone).exists():
+            return Response({'Nie znaleźliśmy takiego numeru w bazie'}, status=404)
+        
+        gen_code = GeneratedCodes.objects.filter(phone=phone)
+
+        code = ''.join(random.choices(string.digits, k=6))
+        
+        if gen_code:
+            gen_code.delete()
+        
+        GeneratedCodes.objects.create(phone=phone, code=code)
+
+        client.sms.send(to=int(phone), message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
+
+        return Response(status=200)
+    
 
 class CheckCodeView(APIView):
     def post(self, request):
