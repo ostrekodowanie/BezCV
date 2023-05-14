@@ -106,3 +106,8 @@ export const initialFilledState: IsFilled = {
 export type SurveyScreenProps = { 
     setIsHeaderVisible: Dispatch<SetStateAction<boolean>>
 }
+
+export type LoaderFactProps = {
+    ability: string,
+    desc: string | JSX.Element
+}

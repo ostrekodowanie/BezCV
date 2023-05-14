@@ -13,6 +13,7 @@ import { SurveyContext } from "../Survey";
 import Summary from "./Summary";
 import ReactGA from "react-ga";
 import { roleToTextMap } from "../../constants/candidate";
+import { loaderFacts } from "../../constants/findWork";
 
 interface RoleQuestion {
   id: number;
@@ -143,7 +144,7 @@ export default function RoleController() {
         setIsFinishing={setIsFinishing}
       />
     );
-  if (isFinishing) return <FinishLoader />;
+  if (isFinishing) return <FinishLoader {...loaderFacts[role || "sales"]} />;
   if (!role) return <RoleChoosePage setRole={setRole} />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;
   if (loading || !questions[activeQuestionIndex]) return <Loader />;
@@ -180,7 +181,7 @@ export default function RoleController() {
               {numericalAnswer}
             </p>
           </div>
-          <div className="flex justify-center gap-2 sm:gap-8 flex-wrap max-w-max">
+          <div className="flex flex-col sm:flex-row sm:justify-center gap-8 sm:flex-wrap max-w-max">
             {rangeNumberKeys.map((k) => (
               <RangeKey
                 {...k}

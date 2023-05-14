@@ -4,7 +4,11 @@ import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import Loader from "../../components/Loader";
 import EmailCodePopup from "../../components/survey/PhoneCodePopup";
-import { defaultQuestions, QuestionProps } from "../../constants/findWork";
+import {
+  defaultQuestions,
+  loaderFacts,
+  QuestionProps,
+} from "../../constants/findWork";
 import ProgressBar from "../../components/survey/ProgressBar";
 import { SurveyContext } from "../Survey";
 import ReactGA from "react-ga";
@@ -16,9 +20,11 @@ import PhoneInput from "../../components/survey/inputs/PhoneInput";
 import RadioInput from "../../components/survey/inputs/RadioInput";
 import CheckboxInput from "../../components/survey/inputs/CheckboxInput";
 import CustomInput from "../../components/survey/inputs/CustomInput";
+import LoaderFact from "./LoaderFact";
 
 export default function CandidateController() {
   const {
+    role,
     candidateAnswers,
     setStep,
     activeQuestionIndex,

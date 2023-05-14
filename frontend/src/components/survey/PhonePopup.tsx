@@ -78,22 +78,13 @@ export default function PhonePopup({
     } else {
       axios
         .post(
-          "/api/survey/phone",
+          "/api/survey/continue",
           JSON.stringify({
             phone: phone.split(" ").join(""),
           })
         )
-        .then((res) => {
-          switch (res.status) {
-            case 204:
-              setError(
-                "Nie znaleźliśmy takiego numeru telefonu w bazie. Wróć i kliknij 'Wypełniam pierwszy raz!'."
-              );
-            case 200:
-              setIsOk(true);
-          }
-        })
-        .catch(() => setError("Wystąpił błąd"))
+        .then(() => setIsOk(true))
+        .catch((err) => setError(err.response.data))
         .finally(() => setLoading(false));
     }
   };

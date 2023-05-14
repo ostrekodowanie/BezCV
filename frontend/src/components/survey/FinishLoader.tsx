@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import Loader from "../Loader";
+import { LoaderFactProps } from "../../constants/workForm";
 
 const finishTexts = [
   "Trwa tworzenie twojego profilu",
   "Przesyłamy twoje informacje do bazy",
 ];
 
-export default function FinishLoader() {
+export default function FinishLoader({ ability, desc }: LoaderFactProps) {
   const timer = useRef<any>(null);
   const dotsTimer = useRef<any>(null);
   const [activeTextIndex, setActiveTextIndex] = useState<0 | 1>(0);
@@ -34,13 +35,28 @@ export default function FinishLoader() {
   }, [dots]);
 
   return (
-    <div className="self-center flex flex-col items-center gap-4">
-      <Loader />
-      <div className="relative">
-        <p className="font-medium transition-opacity delay-200 duration-200">
-          {finishTexts[activeTextIndex]}
-          {dots}
-        </p>
+    <div className="flex flex-col gap-8 items-center">
+      <div className="self-center flex flex-col items-center gap-4">
+        <Loader />
+        <div className="relative">
+          <p className="font-medium transition-opacity delay-200 duration-200">
+            {finishTexts[activeTextIndex]}
+            {dots}
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col gap-4 items-center">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center w-full max-w-[8in]">
+          Czy wiedziałeś, że...
+        </h2>
+        <div className="flex flex-col items-center justify-between gap-6 w-full">
+          <h1 className="text-2xl md:text-3xl font-medium">
+            <span>{ability}</span> to cecha szczególnie cenna dla pracodawców!
+          </h1>
+          <p className="text-sm md:text-base leading-relaxed text-center">
+            {desc}
+          </p>
+        </div>
       </div>
     </div>
   );
