@@ -3,7 +3,6 @@ import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { timeLeft } from "../../assets/survey/survey";
 import Loader from "../../components/Loader";
-import FinishLoader from "../../components/survey/FinishLoader";
 import RangeKey from "../../components/survey/RangeKey";
 import RoleChoosePage from "./RoleChoosePage";
 import { rangeNumberKeys } from "../../constants/workForm";
@@ -14,6 +13,7 @@ import Summary from "./Summary";
 import ReactGA from "react-ga";
 import { roleToTextMap } from "../../constants/candidate";
 import { loaderFacts } from "../../constants/findWork";
+import LoaderFact from "./LoaderFact";
 
 interface RoleQuestion {
   id: number;
@@ -144,7 +144,7 @@ export default function RoleController() {
         setIsFinishing={setIsFinishing}
       />
     );
-  if (isFinishing) return <FinishLoader {...loaderFacts[role || "sales"]} />;
+  if (isFinishing) return <LoaderFact {...loaderFacts[role || "sales"]} />;
   if (!role) return <RoleChoosePage setRole={setRole} />;
   if (error) return <p className="text-red-400 mt-16">{error}</p>;
   if (loading || !questions[activeQuestionIndex]) return <Loader />;
