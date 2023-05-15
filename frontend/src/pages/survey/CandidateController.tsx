@@ -179,7 +179,12 @@ export default function CandidateController() {
           setPhoneCodePopupActive={setPhoneCodePopupActive}
         />
       )}
-      {policyWindowActive && <PolicyAccept onAccept={onPolicyAccept} />}
+      {policyWindowActive && (
+        <PolicyAccept
+          hide={() => setPolicyWindowActive(false)}
+          onAccept={onPolicyAccept}
+        />
+      )}
     </>
   );
 }
