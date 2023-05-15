@@ -4,11 +4,7 @@ import { buttonArrow } from "../../assets/account/account";
 import { prevArrow } from "../../assets/candidate/candidate";
 import Loader from "../../components/Loader";
 import EmailCodePopup from "../../components/survey/PhoneCodePopup";
-import {
-  defaultQuestions,
-  loaderFacts,
-  QuestionProps,
-} from "../../constants/findWork";
+import { defaultQuestions, QuestionProps } from "../../constants/findWork";
 import ProgressBar from "../../components/survey/ProgressBar";
 import { SurveyContext } from "../Survey";
 import ReactGA from "react-ga";
@@ -20,17 +16,17 @@ import PhoneInput from "../../components/survey/inputs/PhoneInput";
 import RadioInput from "../../components/survey/inputs/RadioInput";
 import CheckboxInput from "../../components/survey/inputs/CheckboxInput";
 import CustomInput from "../../components/survey/inputs/CustomInput";
-import LoaderFact from "./LoaderFact";
+import DotsLoader from "../../components/survey/DotsLoader";
+import SurveyError from "../../components/survey/SurveyError";
 
 export default function CandidateController() {
   const {
-    role,
     candidateAnswers,
     setStep,
     activeQuestionIndex,
     setActiveQuestionIndex,
   } = useContext(SurveyContext);
-  const { question, type } = defaultQuestions[activeQuestionIndex];
+  const { question } = defaultQuestions[activeQuestionIndex];
   const [loading, setLoading] = useState(false);
   const [credentialsLoading, setCredentialsLoading] = useState(false);
   const [phoneCodePopupActive, setPhoneCodePopupActive] = useState(false);
@@ -127,8 +123,8 @@ export default function CandidateController() {
       .finally(() => setLoading(false));
   };
 
-  if (loading) return <Loader />;
-  if (error) return <p className="text-red-400 mt-16">{error}</p>;
+  if (loading) return <DotsLoader />;
+  if (error) return <SurveyError />;
 
   return (
     <>

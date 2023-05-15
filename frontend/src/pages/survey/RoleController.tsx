@@ -14,6 +14,7 @@ import ReactGA from "react-ga";
 import { roleToTextMap } from "../../constants/candidate";
 import { loaderFacts } from "../../constants/findWork";
 import LoaderFact from "./LoaderFact";
+import SurveyError from "../../components/survey/SurveyError";
 
 interface RoleQuestion {
   id: number;
@@ -146,7 +147,7 @@ export default function RoleController() {
     );
   if (isFinishing) return <LoaderFact {...loaderFacts[role || "sales"]} />;
   if (!role) return <RoleChoosePage setRole={setRole} />;
-  if (error) return <p className="text-red-400 mt-16">{error}</p>;
+  if (error) return <SurveyError />;
   if (loading || !questions[activeQuestionIndex]) return <Loader />;
   const { text } = questions[activeQuestionIndex];
   return (
