@@ -1,5 +1,5 @@
 import { ChangeEvent, useContext } from "react";
-import { inputStyles } from "../../pages/Contact";
+import { inputStyles } from "../../constants/general";
 import { PaymentContext } from "../../context/PaymentContext";
 
 export default function InvoiceInfo() {

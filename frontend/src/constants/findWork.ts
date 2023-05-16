@@ -24,7 +24,6 @@ export const defaultQuestions: QuestionProps[] = [
         name: 'name',
         question: 'Podaj proszę swoje imię i nazwisko.',
         type: 'custom',
-        placeholder: 'Tutaj wpisz swoje imię i nazwisko',
         customInputs: [
             {
                 name: 'first_name',
@@ -106,7 +105,7 @@ export const defaultQuestions: QuestionProps[] = [
     },
     {
         name: 'experience',
-        question: 'Jakie posiadasz doświadczenie w pracy? (wpisz liczbę miesięcy na takim lub podobnym stanowisku)',
+        question: 'Jakie posiadasz doświadczenie w pracy?',
         type: 'custom',
         placeholder: 'Tutaj wpisz swoje doświadczenie',
         customInputs: [
@@ -185,4 +184,26 @@ export const initialCandidateAnswers = defaultQuestions.reduce((acc, { name, typ
       return { ...acc, [name]: eighteenYearsAgo.toISOString().split('T')[0] };
     }
     return { ...acc, [name]: "" };
-  }, {} as CandidateAnswerType)
+}, {} as CandidateAnswerType)
+
+type LoaderFactType = {
+    [t in RoleType]: {
+        ability: string,
+        desc: string
+    }
+}
+
+export const loaderFacts: LoaderFactType = {
+    sales: {
+        ability: 'Asertywność',
+        desc: 'Asertywność oznacza, że potrafisz mówić o swoim zdaniu, uczuciach i postawach w sposób szczery i bezpośredni, nie naruszając przy tym granic innych osób ani swoich własnych. Bycie asertywnym oznacza także umiejętność przyjmowania i wyrażania krytyki, pochwał oraz opinii innych. To również umiejętność stanowczego odmawiania, jeśli czegoś nie chcesz lub nie zgadzasz się z czymś, ale w sposób grzeczny i bez obrażania innych.'
+    },
+    office_administration: {
+        ability: 'Cierpliwość',
+        desc: 'Cierpliwość pozwala nam zachować spokój i kontrolę w trudnych sytuacjach, co może pomóc nam w podejmowaniu lepszych decyzji i  unikaniu konfliktów. Często jest też znaczącym czynnikiem w osiąganiu długoterminowych celów. Cecha ta pomaga nam w budowaniu i utrzymywaniu pozytywnych relacji, ponieważ pozwala na wykazanie zrozumienia i szacunku dla innych.'
+    },
+    customer_service: {
+        ability: 'Prezentacja',
+        desc: 'Prezencja to sposób, w jaki się zachowujemy i postrzegamy siebie w interakcjach z innymi ludźmi. To znaczy, że prezentujemy siebie w sposób świadomy, pewny siebie i szanujący innych, co może wpłynąć na sposób, w jaki inni nas postrzegają. O prezencji świadczy ubiór, fryzura, makijaż czy inne wizualne  efekty dbałości o siebie.'
+    }
+}

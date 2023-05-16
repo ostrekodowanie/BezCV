@@ -16,6 +16,8 @@ import PhoneInput from "../../components/survey/inputs/PhoneInput";
 import RadioInput from "../../components/survey/inputs/RadioInput";
 import CheckboxInput from "../../components/survey/inputs/CheckboxInput";
 import CustomInput from "../../components/survey/inputs/CustomInput";
+import DotsLoader from "../../components/survey/DotsLoader";
+import SurveyError from "../../components/survey/SurveyError";
 
 export default function CandidateController() {
   const {
@@ -24,7 +26,7 @@ export default function CandidateController() {
     activeQuestionIndex,
     setActiveQuestionIndex,
   } = useContext(SurveyContext);
-  const { question, type } = defaultQuestions[activeQuestionIndex];
+  const { question } = defaultQuestions[activeQuestionIndex];
   const [loading, setLoading] = useState(false);
   const [credentialsLoading, setCredentialsLoading] = useState(false);
   const [phoneCodePopupActive, setPhoneCodePopupActive] = useState(false);
@@ -81,10 +83,9 @@ export default function CandidateController() {
     //     .finally(() => setCredentialsLoading(false));
     // }
 
-    if (activeQuestionIndex >= defaultQuestions.length - 1) {
+    if (activeQuestionIndex >= defaultQuestions.length - 1)
       return setPolicyWindowActive(true);
-    }
-    setActiveQuestionIndex((prev) => prev + 1);
+    return setActiveQuestionIndex((prev) => prev + 1);
   };
 
   const handleLeave = () => {
@@ -122,8 +123,8 @@ export default function CandidateController() {
       .finally(() => setLoading(false));
   };
 
-  if (loading) return <Loader />;
-  if (error) return <p className="text-red-400 mt-16">{error}</p>;
+  if (loading) return <DotsLoader />;
+  if (error) return <SurveyError />;
 
   return (
     <>
@@ -178,7 +179,12 @@ export default function CandidateController() {
           setPhoneCodePopupActive={setPhoneCodePopupActive}
         />
       )}
-      {policyWindowActive && <PolicyAccept onAccept={onPolicyAccept} />}
+      {policyWindowActive && (
+        <PolicyAccept
+          hide={() => setPolicyWindowActive(false)}
+          onAccept={onPolicyAccept}
+        />
+      )}
     </>
   );
 }
@@ -199,7 +205,7 @@ const CandidateInput = (props: QuestionProps) => {
     case "checkbox":
       return <CheckboxInput {...props} />;
     case "custom":
-      <CustomInput {...props} />;
+      return <CustomInput {...props} />;
     case "select":
       return <SelectInput {...props} />;
   }

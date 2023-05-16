@@ -4,10 +4,11 @@ import PrivacyPolicy from "../docs/components/PrivacyPolicy";
 import Statute from "../docs/components/Statute";
 
 type PolicyAcceptProps = {
+  hide: () => void;
   onAccept: () => void;
 };
 
-export default function PolicyAccept({ onAccept }: PolicyAcceptProps) {
+export default function PolicyAccept({ hide, onAccept }: PolicyAcceptProps) {
   const wrapperRef = useRef<HTMLDivElement>(null!);
   const [formIndex, setFormIndex] = useState<0 | 1>(0);
 
@@ -18,10 +19,11 @@ export default function PolicyAccept({ onAccept }: PolicyAcceptProps) {
   };
 
   return (
-    <div className="inset-0 fixed bg-black/50 z-50 flex items-center justify-center">
+    <div className="inset-0 fixed z-50 flex items-center justify-center">
+      <div onClick={hide} className="absolute inset-0 bg-black/40" />
       <form
         onSubmit={handleSubmit}
-        className="bg-white sm:rounded-3xl xl:rounded-[2rem] overflow-y-scroll sm:overflow-y-auto overflow-x-auto flex flex-col items-center xl:w-[8in] gap-8 md:gap-10 relative px-[8vw] sm:px-[.8in] py-[1in] sm:py-16"
+        className="bg-white z-10 sm:rounded-3xl xl:rounded-[2rem] overflow-y-scroll sm:overflow-y-auto overflow-x-auto flex flex-col items-center xl:w-[8in] gap-8 md:gap-10 relative px-[8vw] sm:px-[.8in] py-[1in] sm:py-16"
       >
         <h3 className="font-semibold text-xl">
           {formIndex === 0 ? "Polityka Prywatności bezCV" : "Regulamin bezCV"}

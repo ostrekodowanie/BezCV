@@ -13,7 +13,6 @@ import { useAppDispatch, useAppSelector } from "./main";
 import { login, logout } from "./providers/login";
 import jwtDecode from "jwt-decode";
 import Offers from "./pages/Offers";
-import Contact from "./pages/Contact";
 import axios from "axios";
 import Points from "./pages/Points";
 import getUserInfo from "./utils/getUserInfo";
@@ -109,7 +108,6 @@ export default function App() {
                     </PrivateRoute>
                   }
                 />
-                <Route path="/kontakt" element={<Contact />} />
                 <Route
                   path="/logowanie/*"
                   element={

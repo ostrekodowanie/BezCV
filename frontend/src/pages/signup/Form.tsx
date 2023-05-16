@@ -2,7 +2,7 @@ import axios from "axios";
 import { FormEvent, useState, MouseEvent } from "react";
 import { Link } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
-import { inputStyles } from "../Contact";
+import { inputStyles } from "../../constants/general";
 import Loader from "../../components/Loader";
 import { reportSuccessMan } from "../../assets/profile/profile";
 import { passwordNotVisible, passwordVisible } from "../../assets/general";

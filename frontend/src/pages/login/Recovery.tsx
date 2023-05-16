@@ -3,7 +3,7 @@ import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import Loader from "../../components/Loader";
-import { inputStyles } from "../Contact";
+import { inputStyles } from "../../constants/general";
 
 export default function Recovery() {
   const [email, setEmail] = useState("");

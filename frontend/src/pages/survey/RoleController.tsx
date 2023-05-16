@@ -3,7 +3,6 @@ import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { buttonArrow } from "../../assets/account/account";
 import { timeLeft } from "../../assets/survey/survey";
 import Loader from "../../components/Loader";
-import FinishLoader from "../../components/survey/FinishLoader";
 import RangeKey from "../../components/survey/RangeKey";
 import RoleChoosePage from "./RoleChoosePage";
 import { rangeNumberKeys } from "../../constants/workForm";
@@ -13,6 +12,9 @@ import { SurveyContext } from "../Survey";
 import Summary from "./Summary";
 import ReactGA from "react-ga";
 import { roleToTextMap } from "../../constants/candidate";
+import { loaderFacts } from "../../constants/findWork";
+import LoaderFact from "./LoaderFact";
+import SurveyError from "../../components/survey/SurveyError";
 
 interface RoleQuestion {
   id: number;
@@ -143,9 +145,9 @@ export default function RoleController() {
         setIsFinishing={setIsFinishing}
       />
     );
-  if (isFinishing) return <FinishLoader />;
+  if (isFinishing) return <LoaderFact {...loaderFacts[role || "sales"]} />;
   if (!role) return <RoleChoosePage setRole={setRole} />;
-  if (error) return <p className="text-red-400 mt-16">{error}</p>;
+  if (error) return <SurveyError />;
   if (loading || !questions[activeQuestionIndex]) return <Loader />;
   const { text } = questions[activeQuestionIndex];
   return (
@@ -180,7 +182,7 @@ export default function RoleController() {
               {numericalAnswer}
             </p>
           </div>
-          <div className="flex justify-center gap-2 sm:gap-8 flex-wrap max-w-max">
+          <div className="flex flex-col sm:flex-row sm:justify-center gap-8 sm:flex-wrap max-w-max">
             {rangeNumberKeys.map((k) => (
               <RangeKey
                 {...k}

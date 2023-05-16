@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../main";
-import { inputStyles } from "../../pages/Contact";
+import { inputStyles } from "../../constants/general";
 import FilledButton from "../FilledButton";
 import Loader from "../Loader";
 import { useState, FormEvent, ChangeEvent } from "react";

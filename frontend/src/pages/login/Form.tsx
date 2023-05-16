@@ -8,7 +8,7 @@ import Loader from "../../components/Loader";
 import { useAppDispatch } from "../../main";
 import { login } from "../../providers/login";
 import getUserInfo from "../../utils/getUserInfo";
-import { inputStyles } from "../Contact";
+import { inputStyles } from "../../constants/general";
 import { User } from "../Login";
 
 export default function Form() {

@@ -1,6 +1,6 @@
 import { payu } from "../../assets/points/points";
 import { useAppSelector } from "../../main";
-import { inputStyles } from "../../pages/Contact";
+import { inputStyles } from "../../constants/general";
 
 const BuyerInfo = () => {
   const { first_name, last_name, email } = useAppSelector(
