@@ -186,7 +186,7 @@ class SendCodeView(APIView):
         
         GeneratedCodes.objects.create(phone=phone, code=code)
 
-        client.sms.send(to=int(phone), message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
+        client.sms.send(to="48"+phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
 
         return Response({'Access code sent successfully'}, status=200)
     
@@ -207,7 +207,7 @@ class SendCodeToExistingCandidate(APIView):
         
         GeneratedCodes.objects.create(phone=phone, code=code)
 
-        client.sms.send(to=int(phone), message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
+        client.sms.send(to="48"+phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
 
         return Response(status=200)
     
