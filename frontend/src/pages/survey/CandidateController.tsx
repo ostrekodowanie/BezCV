@@ -26,7 +26,7 @@ export default function CandidateController() {
     activeQuestionIndex,
     setActiveQuestionIndex,
   } = useContext(SurveyContext);
-  const { question } = defaultQuestions[activeQuestionIndex];
+  const { question, type } = defaultQuestions[activeQuestionIndex];
   const [loading, setLoading] = useState(false);
   const [credentialsLoading, setCredentialsLoading] = useState(false);
   const [phoneCodePopupActive, setPhoneCodePopupActive] = useState(false);
