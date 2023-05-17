@@ -21,7 +21,7 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
                   'experience_sales', 'experience_customer_service', 'experience_office_administration', 'education',
                   'driving_license']
 
-    def create(self, validated_data):
+    '''def create(self, validated_data):
         candidate = Candidates.objects.create(**validated_data)
 
         subject = 'Potwierdzenie rejestracji kandydata'
@@ -46,4 +46,4 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
         email = EmailMessage(subject, message, to=[to_email])
         email.send()
 
-        return candidate
+        return candidate'''
