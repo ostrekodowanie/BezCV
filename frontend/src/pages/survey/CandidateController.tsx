@@ -18,6 +18,7 @@ import CheckboxInput from "../../components/survey/inputs/CheckboxInput";
 import CustomInput from "../../components/survey/inputs/CustomInput";
 import DotsLoader from "../../components/survey/DotsLoader";
 import SurveyError from "../../components/survey/SurveyError";
+import CandidateLoader from "./CandidateLoader";
 
 export default function CandidateController() {
   const {
@@ -33,6 +34,7 @@ export default function CandidateController() {
   const [credentialsError, setCredentialsError] = useState("");
   const [error, setError] = useState("");
   const [policyWindowActive, setPolicyWindowActive] = useState(false);
+  const [policiesAccepted, setPoliciesAccepted] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -109,10 +111,7 @@ export default function CandidateController() {
     setLoading(true);
     return axios
       .post("/api/survey/candidate", JSON.stringify(candidateAnswers))
-      .then(() => {
-        setActiveQuestionIndex(0);
-        setStep("role");
-      })
+      .then(() => setPoliciesAccepted(true))
       .catch((err) =>
         setCredentialsError(
           typeof err.response.data.detail === "string"
@@ -123,7 +122,8 @@ export default function CandidateController() {
       .finally(() => setLoading(false));
   };
 
-  if (loading) return <DotsLoader />;
+  if (activeQuestionIndex >= defaultQuestions.length - 1 && policiesAccepted)
+    return <CandidateLoader isLoading={loading} />;
   if (error) return <SurveyError />;
 
   return (

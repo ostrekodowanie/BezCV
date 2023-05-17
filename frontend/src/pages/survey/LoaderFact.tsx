@@ -7,7 +7,7 @@ export default function LoaderFact({ ability, desc }: LoaderFactProps) {
     <div className="flex flex-col gap-8 items-center">
       <DotsLoader />
       <div className="flex flex-col gap-4 items-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center w-full max-w-[8in]">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center w-full max-w-[8in] mb-8">
           Czy wiedziałeś, że...
         </h2>
         <div className="flex flex-col items-center justify-between gap-6 w-full">
