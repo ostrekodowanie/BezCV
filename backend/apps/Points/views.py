@@ -20,24 +20,23 @@ client_secret = os.environ.get('PAYU_CLIENT_SECRET')
 
 
 class PurchasePointsView(views.APIView):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         amount = request.data.get('amount')
         price = request.data.get('price')
         
-        #employer = self.request.user
-        employer = User.objects.get(email="se6359@gmail.com")
+        employer = self.request.user
         
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
         }
-        
+    
         data = requests.post(f"https://secure.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id={client_id}&client_secret={client_secret}", headers=headers)
         
         response_data = data.json()
-        print(response_data)
+        
         access_token = response_data['access_token']
         
         order_headers = {
@@ -51,7 +50,7 @@ class PurchasePointsView(views.APIView):
             "description": "Purchase of points",
             "currencyCode": "PLN",
             "totalAmount": "1",#str(int(price) * 100),
-            "customerIp": "127.0.0.1",
+            "customerIp": request.META.get("REMOTE_ADDR"),
             "continueUrl": "https://bezcv.com",
             "buyer": {
                 "email": employer.email,
@@ -70,7 +69,7 @@ class PurchasePointsView(views.APIView):
         
         response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=order_headers, json=order_data, allow_redirects=False)
         location_header = response.headers.get('Location')
-        print(response.text)
+        
         return Response(location_header)
         
         last_month = timezone.now() - timedelta(days=30)
