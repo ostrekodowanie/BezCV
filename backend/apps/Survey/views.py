@@ -71,7 +71,7 @@ class CandidateAnswersView(APIView):
         '''
         
         response = openai.Completion.create(
-            engine="text-davinci-003",
+            engine="text-davinci-002",
             prompt=input_text,
             max_tokens=1500,
             n=1,
