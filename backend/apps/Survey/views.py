@@ -78,6 +78,7 @@ class CandidateAnswersView(APIView):
             stop=None,
             temperature=0.3,
         )
+        print(response)
         
         profession = candidate.candidateabilities_candidate.values(
             'ability__abilityquestions_ability__question__category__name').annotate(
