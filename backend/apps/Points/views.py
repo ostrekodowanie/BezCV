@@ -12,7 +12,11 @@ from . import serializers
 from .models import Orders
 from apps.Auth.models import User
 
-import requests
+import requests, os
+
+
+client_id = os.environ.get('PAYU_CLIENT_ID') 
+client_secret = os.environ.get('PAYU_CLIENT_SECRET') 
 
 
 class PurchasePointsView(views.APIView):
@@ -30,15 +34,10 @@ class PurchasePointsView(views.APIView):
             'Accept': 'application/json',
         }
         
-        data = {
-            'grant_type': 'client_credentials',
-            'client_id': '4289248',
-            'client_secret': '34e68dfdd5cbc24c55fbab0324d5414b'
-        }
-        
-        data = requests.post("https://secure.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id=4289248&client_secret=34e68dfdd5cbc24c55fbab0324d5414b", headers=headers)
+        data = requests.post(f"https://secure.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id={client_id}&client_secret={client_secret}", headers=headers)
         
         response_data = data.json()
+        print(response_data)
         access_token = response_data['access_token']
         
         order_headers = {
@@ -48,7 +47,7 @@ class PurchasePointsView(views.APIView):
         }
         
         order_data = {
-            "merchantPosId": '4289248',
+            "merchantPosId": client_id,
             "description": "Purchase of points",
             "currencyCode": "PLN",
             "totalAmount": "1",#str(int(price) * 100),
