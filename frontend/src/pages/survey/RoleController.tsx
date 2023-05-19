@@ -163,6 +163,7 @@ export default function RoleController() {
         </h2>
       </div>
       <form
+        id="role-form"
         className="flex flex-col flex-1 items-center justify-between gap-8 w-full"
         onSubmit={handleSubmit}
       >
@@ -213,8 +214,13 @@ export default function RoleController() {
               </h3>
             )}
           </div>
-          <button className="sm:rounded-full text-[.75rem] justify-center sm:w-max sm:text-[.8rem] text-white font-semibold py-4 px-8 bg-secondary sm:self-end flex items-center">
-            {activeQuestionIndex >= questions.length
+          <button
+            type="submit"
+            disabled={!numericalAnswer}
+            form="role-form"
+            className="sm:rounded-full text-[.75rem] justify-center sm:w-max sm:text-[.8rem] text-white font-semibold py-4 px-8 bg-secondary sm:self-end flex items-center disabled:opacity-40"
+          >
+            {activeQuestionIndex >= questions.length - 1
               ? "Koniec ankiety"
               : "Następne pytanie"}
             <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />

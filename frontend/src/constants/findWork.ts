@@ -58,8 +58,8 @@ export const defaultQuestions: QuestionProps[] = [
             'od 3500 do 4500 zł',
             'od 4501 do 5500 zł',
             'od 5501 do 6500 zł',
-            'od 6501 do 10 000 zł',
-            'powyżej 10 000 zł',
+            'od 6501 do 10000 zł',
+            'powyżej 10000 zł',
         ],
     },
     {
