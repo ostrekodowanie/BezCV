@@ -47,7 +47,7 @@ export default function Summary() {
           price: foundPackage.price,
         })
       )
-      .then((res) => navigate(res.data))
+      .then((res) => (window.location.href = res.data))
       .finally(() => setLoading(false));
   };
 
