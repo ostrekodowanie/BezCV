@@ -60,11 +60,14 @@ export default function Recovery() {
               </Link>
             </span>
             <div className="flex flex-row-reverse md:flex-row items-center gap-6">
-              {status === "loading" && <Loader />}
+              {status === "loading" ? (
+                <Loader />
+              ) : (
+                <FilledButton type="submit">Wyślij email</FilledButton>
+              )}
               {status === false && (
                 <span className="text-red-400 font-medium">Wystąpił błąd</span>
               )}
-              <FilledButton type="submit">Wyślij email</FilledButton>
             </div>
           </div>
         </form>

@@ -57,12 +57,7 @@ export default function Form() {
     axios
       .post(
         "/api/signup/resend",
-        JSON.stringify({ email: employerDetails.email }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        JSON.stringify({ email: employerDetails.email })
       )
       .then(() => setCodeStatus(true));
   };
@@ -268,11 +263,14 @@ export default function Form() {
                 </div>
               </div>
               <div className="flex flex-row-reverse sm:flex-row items-center gap-4">
-                {status === "loading" && <Loader />}
+                {status === "loading" ? (
+                  <Loader />
+                ) : (
+                  <FilledButton type="submit">Załóż konto</FilledButton>
+                )}
                 {status && status !== "loading" && (
                   <span className="text-red-400 font-medium">{status}</span>
                 )}
-                <FilledButton type="submit">Załóż konto</FilledButton>
               </div>
             </div>
             <div className="relative flex items-center mt-4 mb-2">
