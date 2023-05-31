@@ -15,7 +15,7 @@ const CategoryPercantageBox = ({
 }) => {
   const isActive = role === name;
   const { gradient } = role ? professionColorMap[role] : { gradient: "" };
-  return (
+  return percentage ? (
     <div
       className={`${
         isActive ? "order-first" : "order-last"
@@ -34,6 +34,8 @@ const CategoryPercantageBox = ({
         )}
       </h4>
     </div>
+  ) : (
+    <></>
   );
 };
 

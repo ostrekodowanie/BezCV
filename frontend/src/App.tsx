@@ -85,7 +85,7 @@ export default function App() {
   if (loading)
     return (
       <div className="w-screen h-screen flex items-center justify-center">
-        <strong className="font-medium text-3xl">
+        <strong className="font-medium text-3xl animate-pulse">
           bez<span className="text-primary">CV</span>
         </strong>
       </div>
@@ -162,18 +162,11 @@ export default function App() {
           <Footer />
           <CookieConsent
             enableDeclineButton
-            location="bottom"
-            style={{
-              paddingRight: "8vw",
-              paddingLeft: "8vw",
-            }}
             buttonText="Akceptuję"
             declineButtonText="Odmawiam"
-            buttonStyle={{
-              color: "white",
-              backgroundImage:
-                "linear-gradient(90.04deg, #2F66F4 24.53%, #0D9AE9 82.58%)",
-            }}
+            containerClasses="text-[12px] bg-black/80 items-center backdrop-blur-md max-w-[50vw]"
+            contentClasses="font-medium"
+            buttonClasses="bg-primary font-medium text-light text-[12px]"
           >
             Serwis bezCV korzysta z plików cookies w celu realizacji usług
             statystycznych i funkcjonalnych. Warunki przechowywania lub dostępu

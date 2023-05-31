@@ -25,11 +25,11 @@ body {
 }
 
 .text-primary {
-  background: linear-gradient(263.78deg, #2F66F4 -16.49%, #0D9AE9 96.33%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-  color: transparent !important;
+  background: linear-gradient(263.78deg, #2F66F4 -16.49%, #0D9AE9 96.33%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
   text-shadow: 0px 5px 16px rgba(47, 102, 244, 0.34);
 }
 
@@ -202,4 +202,15 @@ input[type="range"]::-ms-thumb {
 
 .abilities-slider {
   animation: abilities-slider 80s linear infinite 200ms;
+}
+
+@media print {
+  .text-primary {
+    color: "#141B30";
+    background: transparent !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: "#141B30" !important;
+  background-clip: initial !important;
+  text-shadow: none;
+  }
 }

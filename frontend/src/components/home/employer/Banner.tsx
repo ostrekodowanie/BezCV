@@ -53,8 +53,8 @@ export default function Banner() {
           <br className="hidden sm:block" /> kandydatów do pracy
         </h2>
         <p className="font-normal text-[rgba(255,255,255,0.8)] text-sm xl:text-base mb-6 max-w-[6in] leading-relaxed">
-          wyselekcjonowanych na podstawie podstawowych informacji, preferencji
-          zawodowych oraz 21 kompetencji miękkich
+          wyselekcjonowanych w oparciu o podstawowe informacje, preferencje
+          zawodowe oraz 21 kompetencji miękkich
         </p>
         <div className="overflow-hidden">
           <div

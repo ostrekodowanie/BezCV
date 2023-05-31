@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FormEvent, useState, MouseEvent } from "react";
+import { FormEvent, useState, MouseEvent, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import { inputStyles } from "../../constants/general";
@@ -50,6 +50,14 @@ export default function Form() {
         )
       );
   };
+
+  // const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   let value = e.target.value;
+  //   value = value.replace(/\D/g, "");
+  //   value = value.replace(/(\d{3})(?=\d)/g, "$1 ");
+  //   value = value.slice(0, 11);
+  //   setEmployerDetails(prev=> ({...prev, p value);
+  // };
 
   const handleCodeResend = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

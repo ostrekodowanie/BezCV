@@ -2,16 +2,16 @@ import Control, { Controller } from "react-control-js";
 import { htf1, htf2, htf3, htf4 } from "../../../assets/home/employer/employer";
 import { underline } from "../../../assets/home/candidate/candidate";
 
-interface BoxProps {
+type BoxProps = {
   image: string;
   title: string;
   desc: string;
-}
+};
 
 const boxes: BoxProps[] = [
   {
     image: htf1,
-    title: "Rejestracja",
+    title: "Darmowa rejestracja",
     desc: "Wypełniasz dane o swoim przedsiębiorstwie i masz dostęp do wszystkich kandydatów w naszej bazie.",
   },
   {
@@ -27,7 +27,7 @@ const boxes: BoxProps[] = [
   {
     image: htf4,
     title: "Kontakt z kandydatem",
-    desc: "Po wykupieniu dostępu do odpowiedniego kandydata możesz z nim porozmawiać i dokończyć proces rekrutacji u siebie w firmie! ",
+    desc: "Po wykupieniu dostępu do odpowiedniego kandydata możesz z nim porozmawiać i dokończyć proces rekrutacji u siebie w firmie!",
   },
 ];
 

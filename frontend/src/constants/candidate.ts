@@ -17,6 +17,7 @@ export interface CandidateProps {
     profession?: RoleType,
     percentage_by_category: PercentageByProfession,
     drivers_license?: boolean,
+    birth_date?: string,
     job_position?: string,
     availability?: string,
     salary_expectation?: string,

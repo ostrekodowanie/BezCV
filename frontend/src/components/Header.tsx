@@ -3,16 +3,16 @@ import { useLocation } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { useAppSelector } from "../main";
 import { AccountContext } from "../providers/AccountProvider";
-import { arrowRight, bcvToken, logo, logoHorizontal } from "../assets/general";
-import { profileIcon } from "../assets/profile/profile";
+import { arrowRight, bcvToken } from "../assets/general";
 import SurveyLink from "./header/SurveyLink";
 import PointsHashLink from "./header/PointsHashLink";
-import HomeHashLink from "./header/HomeHashLink";
+import HomeHashLink from "./header/HashLink";
 import CustomLink from "./header/CustomLink";
+import ProfileMenu from "./header/ProfileMenu";
+import HashLink from "./header/HashLink";
 
 export default function Header() {
   const [down, setDown] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     const cb = () => setDown(window.scrollY > 100);
@@ -84,22 +84,22 @@ const Nav = () => {
             Widok pracodawcy
           </button>
         )}
-        <HomeHashLink />
+        {!logged && (
+          <HashLink to={"jzp"} route="/">
+            {account === "worker"
+              ? "Jak dostać pracę?"
+              : "Jak znaleźć pracownika?"}
+          </HashLink>
+        )}
         {account === "employer" &&
           (logged ? (
             <>
-              <CustomLink to="/oferty">Wyszukiwarka kandydatów</CustomLink>
-              <CustomLink className="md:ml-2" to="/profil">
-                <img className="max-h-[1.1em] mr-2" src={profileIcon} alt="" />
-                Mój profil
-              </CustomLink>
-              <CustomLink
-                className="font-semibold flex items-center text-base"
-                to="/punkty"
-              >
-                {points.toString()}
-                <img className="max-h-[1em] ml-2" src={bcvToken} alt="" />
-              </CustomLink>
+              <CustomLink to="/oferty">Znajdź pracownika</CustomLink>
+              <HashLink to="pc" route={"/profil"}>
+                Zakupione kontakty
+              </HashLink>
+              <CustomLink to="/punkty">Doładuj swoje konto</CustomLink>
+              <ProfileMenu />
             </>
           ) : (
             <>

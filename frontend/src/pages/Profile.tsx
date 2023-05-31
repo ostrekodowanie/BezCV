@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../main";
+import { useAppSelector } from "../main";
 import {
   initialProfileData,
   ProfileDataContext,
@@ -12,25 +12,16 @@ import Followed from "../components/profile/followed/List";
 import { bcvToken } from "../assets/general";
 import { Link } from "react-router-dom";
 import EmployerInfo from "../components/profile/EmployerInfo";
-import { logout } from "../providers/login";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function Profile() {
   useDocumentTitle("Profil | bezCV - innowacyjny portal pracy");
-  const dispatch = useAppDispatch();
   const [profileData, setProfileData] =
     useState<ProfileDataType>(initialProfileData);
   const [loading, setLoading] = useState(true);
   const auth = useAppSelector((state) => state.login);
   const { id } = auth.data;
-  const { access, refresh } = auth.tokens;
-
-  const handleLogout = async () => {
-    const resp = await axios.post("/api/logout", refresh, {
-      headers: { "Content-Type": "application/json" },
-    });
-    if (resp.status === 200) dispatch(logout());
-  };
+  const { access } = auth.tokens;
 
   const setFollowed = (userId: number) => {
     setProfileData((prev) => ({
@@ -72,12 +63,6 @@ export default function Profile() {
           loading={loading}
         />
       </ProfileDataContext.Provider>
-      <button
-        className="font-medium w-max ml-[8vw] sm:ml-0 transition-colors text-negative hover:text-darkNegative"
-        onClick={handleLogout}
-      >
-        Wyloguj się
-      </button>
     </section>
   );
 }

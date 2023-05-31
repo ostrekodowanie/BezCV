@@ -1,14 +1,15 @@
 import { useContext } from "react";
-import { Route, Routes } from "react-router";
+import { Route, Routes, useLocation, useMatch } from "react-router";
 import { AccountContext } from "../providers/AccountProvider";
-import { logoHorizontal } from "../assets/general";
-import { fbIcon } from "../assets/footer/footer";
-import HomeHashLink from "./header/HomeHashLink";
+import { igIcon } from "../assets/footer/footer";
 import CustomLink from "./header/CustomLink";
 import { useAppSelector } from "../main";
 import { Link } from "react-router-dom";
+import HashLink from "./header/HashLink";
 
 export default function Footer() {
+  const { pathname } = useLocation();
+  const isAuth = useMatch({ path: `${pathname}/*`, end: true });
   const { logged } = useAppSelector((state) => state.login);
   const { account, setAccount } = useContext(AccountContext);
 
@@ -19,28 +20,36 @@ export default function Footer() {
         path="*"
         element={
           <footer className="bg-[#F4F6FA] padding pt-16 pb-8 flex flex-col gap-8 items-center">
-            <div className="flex items-center gap-6 text-sm">
-              {account === "employer" && !logged && (
-                <button
-                  onClick={() => setAccount("worker")}
-                  className="text-[#F98D3D] hover:text-darkSecondary font-medium md:mr-2"
-                >
-                  Widok kandydata
-                </button>
-              )}
-              {account === "worker" && (
-                <button
-                  onClick={() => setAccount("employer")}
-                  className="text-[#2F66F4] hover:text-darkPrimary font-medium md:mr-2"
-                >
-                  Widok pracodawcy
-                </button>
-              )}
-              <HomeHashLink className="text-sm h-max" />
-              {account === "employer" && (
-                <CustomLink to="/oferty">Wyszukiwarka kandydatów</CustomLink>
-              )}
-            </div>
+            {!isAuth && (
+              <div className="flex items-center gap-6 text-sm">
+                {account === "employer" && !logged && (
+                  <button
+                    onClick={() => setAccount("worker")}
+                    className="text-[#F98D3D] hover:text-darkSecondary font-medium md:mr-2"
+                  >
+                    Widok kandydata
+                  </button>
+                )}
+                {account === "worker" && (
+                  <button
+                    onClick={() => setAccount("employer")}
+                    className="text-[#2F66F4] hover:text-darkPrimary font-medium md:mr-2"
+                  >
+                    Widok pracodawcy
+                  </button>
+                )}
+                {!logged && (
+                  <HashLink to={"jzp"} route="/">
+                    {account === "worker"
+                      ? "Jak dostać pracę?"
+                      : "Jak znaleźć pracownika?"}
+                  </HashLink>
+                )}
+                {account === "employer" && (
+                  <CustomLink to="/oferty">Wyszukiwarka kandydatów</CustomLink>
+                )}
+              </div>
+            )}
             <div className="bg-[#E3E8F7] self-stretch h-[1px] w-full" />
             <div className="flex flex-row gap-4 flex-wrap md:flex-nowrap w-full justify-between items-center self-stretch">
               <Link to="/">
@@ -53,9 +62,14 @@ export default function Footer() {
                   ? "Bez problemu rekrutujesz, bez problemu pracujesz. Zwiększamy satysfakcję z pracy i pracownika."
                   : "Bez problemu pracujesz, bez problemu rekrutujesz. Zwiększamy satysfakcję z pracy i pracownika."}
               </p>
-              <button className="bg-white h-12 w-12 flex items-center justify-center shadow-[0px_12px_45px_rgba(47,102,244,0.06)] rounded-xl">
-                <img className="max-h-[60%]" src={fbIcon} alt="" />
-              </button>
+              <a
+                href="https://instagram.com/bezcv?igshid=MzRlODBiNWFlZA=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white h-12 w-12 flex items-center justify-center shadow-[0px_12px_45px_rgba(47,102,244,0.06)] rounded-xl"
+              >
+                <img className="max-h-[60%]" src={igIcon} alt="Instagram" />
+              </a>
             </div>
             <div className="flex items-center justify-between gap-4 flex-wrap self-stretch mt-4">
               <small className="font-medium">&copy; 2023 - bezCV</small>

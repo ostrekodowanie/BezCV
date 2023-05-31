@@ -40,6 +40,7 @@ import WorstAbilitiesList, {
 } from "../components/candidate/WorstAbilitiesList";
 import AbilitiesLoader from "../components/candidate/AbilitiesLoader";
 import FollowButton from "../components/candidate/FollowButton";
+import SuggestedCandidates from "../components/candidate/SuggestedCandidates";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -79,6 +80,10 @@ export default function Candidate() {
         (item) => item.percentage
       ).length === candidateDetails.abilities?.customer_service.length,
   };
+  const didFilledAllSurveys =
+    didFilledSurvey.customer_service &&
+    didFilledSurvey.office_administration &&
+    didFilledSurvey.sales;
 
   const handlePurchase = async () => {
     if (points < 1) return navigate("/punkty");
@@ -230,8 +235,10 @@ export default function Candidate() {
                 } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10`}
               >
                 {candidateDetails.is_purchased
-                  ? "Wykupiono za 1 token "
-                  : "Wykup za 1 token "}
+                  ? `Wykupiono za ${
+                      didFilledAllSurveys ? "2 tokeny" : "1 token "
+                    }`
+                  : `Wykup za ${didFilledAllSurveys ? "2 tokeny" : "1 token "}`}
                 <img className="max-h-[1.4em] ml-2" src={bcvToken} alt="bCV" />
               </button>
               {loading.purchase && <Loader />}
@@ -258,7 +265,7 @@ export default function Candidate() {
                   <>
                     <h4 className="text-sm">Wiek</h4>
                     <h3 className="font-semibold text-sm">
-                      {candidateDetails.availability}
+                      {candidateDetails.birth_date}
                     </h3>
                   </>
                 )}
@@ -360,7 +367,8 @@ export default function Candidate() {
                   <>
                     <h4 className="text-sm">Numer telefonu</h4>
                     <h3 className="font-semibold text-sm">
-                      +48 {candidateDetails.phone}
+                      +48{" "}
+                      {candidateDetails.phone?.replace(/(\d{3})(?=\d)/g, "$1 ")}
                     </h3>
                   </>
                 )}
@@ -369,9 +377,7 @@ export default function Candidate() {
           </div>
           <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-[1/3] flex flex-col">
             <div className="mb-6 flex items-center gap-4 justify-between">
-              <h2 className="font-bold mx-[8vw] sm:mx-0">
-                Opis kandydata na podstawie AI
-              </h2>
+              <h2 className="font-bold mx-[8vw] sm:mx-0">Opis kandydata</h2>
               <div className="hidden md:block">
                 <FollowButton
                   id={id ? parseInt(id) : -1}
@@ -571,22 +577,10 @@ export default function Candidate() {
             disabled={!candidateDetails.is_purchased}
           />
         )}
-        <div className="bg-white sm:rounded-3xl flex flex-wrap py-10 shadow-primaryBig min-h-max gap-4 overflow-hidden">
-          <div className="flex flex-col w-full">
-            <h2 className="font-bold text-lg ml-[8vw] sm:ml-10">
-              Ci kandydaci mogą Cię zainteresować
-            </h2>
-            <div className="flex flex-col w-full">
-              {!loading.page ? (
-                candidateDetails.similar_candidates?.map((cand) => (
-                  <CandidateRef {...cand} key={cand.id} />
-                ))
-              ) : (
-                <OffersLoader />
-              )}
-            </div>
-          </div>
-        </div>
+        <SuggestedCandidates
+          candidates={candidateDetails.similar_candidates}
+          isLoading={loading.page}
+        />
       </section>
     </ColorSchemeContext.Provider>
   );
