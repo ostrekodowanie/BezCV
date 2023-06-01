@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { percentageTriangle } from "../../assets/candidate/candidate";
+import { professionColorMap } from "../../constants/professionColorMap";
 
 export interface AbilityProps {
   name?: string;
@@ -36,13 +37,13 @@ const AbilityRange = ({
         {!isUndefined && (
           <span
             style={{ backgroundImage: color }}
-            className="ml-2 bg-clip-text text-transparent"
+            className="ml-2 bg-clip-text text-transparent print:bg-clip-padding print:text-font"
           >
             {percentage}%
           </span>
         )}
       </h4>
-      <div className="bg-[#F8F9FB] rounded-full h-[1.4rem]">
+      <div className="bg-[#F8F9FB] rounded-full h-[1.4rem] print:hidden">
         <div
           ref={rangeRef}
           style={{

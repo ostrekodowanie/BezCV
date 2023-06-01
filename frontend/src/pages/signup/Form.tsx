@@ -29,6 +29,8 @@ export default function Form() {
   const handleSubmit = (e?: FormEvent) => {
     e && e.preventDefault();
     setStatus("loading");
+    if (!accepts.policy || !accepts.statute)
+      return setStatus("Wymagana akceptacja regulaminu i polityki prywatności");
     if (employerDetails.nip.length !== 10)
       return setStatus("NIP powinien posiadać 10 cyfr!");
     if (confPassword !== employerDetails.password)
@@ -208,6 +210,9 @@ export default function Form() {
                     onMouseDown={() => setPasswordShown(true)}
                     onMouseUp={() => setPasswordShown(false)}
                     onMouseLeave={() => setPasswordShown(false)}
+                    onTouchStart={() => setPasswordShown(true)}
+                    onTouchEnd={() => setPasswordShown(false)}
+                    onTouchCancel={() => setPasswordShown(false)}
                     className="absolute top-[50%] translate-y-[-50%] right-6"
                   >
                     {passwordShown ? (
@@ -234,7 +239,7 @@ export default function Form() {
               </div>
             </div>
             <div className="flex items-center gap-4 flex-wrap justify-between my-4">
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 <div className="relative flex gap-4 items-center justify-start mt-6">
                   <input
                     type="checkbox"
@@ -248,8 +253,14 @@ export default function Form() {
                       }))
                     }
                   />
-                  <label className="text-sm" htmlFor="statute">
-                    Akceptuję regulamin
+                  <label className="text-sm cursor-pointer" htmlFor="statute">
+                    Akceptuję{" "}
+                    <Link
+                      className="text-[#2F66F4] hover:text-darkPrimary transition-colors"
+                      to="/docs/regulamin"
+                    >
+                      regulamin
+                    </Link>
                   </label>
                 </div>
                 <div className="relative flex gap-4 items-center justify-start">
@@ -265,8 +276,14 @@ export default function Form() {
                       }))
                     }
                   />
-                  <label className="text-sm" htmlFor="policy">
-                    Akceptuję politykę prywatności
+                  <label className="text-sm cursor-pointer" htmlFor="policy">
+                    Akceptuję{" "}
+                    <Link
+                      className="text-[#2F66F4] hover:text-darkPrimary transition-colors"
+                      to="/docs/polityka-prywatnosci"
+                    >
+                      politykę prywatności
+                    </Link>
                   </label>
                 </div>
               </div>

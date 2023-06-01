@@ -206,11 +206,14 @@ input[type="range"]::-ms-thumb {
 
 @media print {
   .text-primary {
-    color: "#141B30";
+    color: "#141B30" !important;
     background: transparent !important;
-  -webkit-background-clip: initial !important;
-  -webkit-text-fill-color: "#141B30" !important;
-  background-clip: initial !important;
-  text-shadow: none;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: "#141B30" !important;
+    background-clip: initial !important;
+    text-shadow: none;
+  }
+  .header {
+    opacity: 0;
   }
 }

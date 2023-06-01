@@ -18,7 +18,7 @@ const CustomLink = ({ children, to, className }: CustomLinkProps) => {
       to={to}
       className={`relative flex items-center after:transition-all font-medium ${
         account === "employer" ? "after:bg-primary" : "after:bg-secondary"
-      } after:absolute after:h-[2px] after:-bottom-1 after:rounded-full after:w-full after:block after:right-0 ${
+      } after:absolute after:h-[2px] after:-bottom-1 text-center after:rounded-full after:w-full after:block after:right-0 ${
         isActive
           ? "after:max-w-[50%]"
           : "hover:after:max-w-[50%] after:max-w-[0%]"

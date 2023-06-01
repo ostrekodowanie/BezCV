@@ -14,11 +14,11 @@ export default function FixedButton() {
       const scrollHeight = document.documentElement.scrollHeight;
       const scrollTop =
         document.documentElement.scrollTop || document.body.scrollTop;
-      const offset = 100; // Adjust this value to set the offset from the bottom
+      const offset = 100;
       if (windowHeight + scrollTop >= scrollHeight - offset) {
         setIsVisible(false);
       } else {
-        !isVisible && setIsVisible(true);
+        setIsVisible(true);
       }
     };
 

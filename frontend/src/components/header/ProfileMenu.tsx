@@ -12,12 +12,14 @@ export default function ProfileMenu() {
         <img className="max-h-[1.1em] mr-2" src={profileIcon} alt="" />
         Mój profil
       </CustomLink>
-      <CustomLink
-        className="font-semibold flex items-center text-base"
-        to="/profil"
-      >
-        {points.toString()}
-        <img className="max-h-[1em] ml-2" src={bcvToken} alt="" />
+      <CustomLink className="font-medium flex items-center" to="/profil">
+        Ilość{" "}
+        <img
+          className="max-h-[1em] inline-block"
+          src={bcvToken}
+          alt="tokenów bCV"
+        />
+        : {points.toString()}
       </CustomLink>
       <LogoutButton />
     </>

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Route, Routes, useLocation, useMatch } from "react-router";
+import { Route, Routes, useMatch } from "react-router";
 import { AccountContext } from "../providers/AccountProvider";
 import { igIcon } from "../assets/footer/footer";
 import CustomLink from "./header/CustomLink";
@@ -8,8 +8,9 @@ import { Link } from "react-router-dom";
 import HashLink from "./header/HashLink";
 
 export default function Footer() {
-  const { pathname } = useLocation();
-  const isAuth = useMatch({ path: `${pathname}/*`, end: true });
+  const isSignup = useMatch({ path: `/rejestracja/*`, end: true });
+  const isLogin = useMatch({ path: `/logowanie/*`, end: true });
+  const isAuth = isLogin || isSignup;
   const { logged } = useAppSelector((state) => state.login);
   const { account, setAccount } = useContext(AccountContext);
 
@@ -19,13 +20,13 @@ export default function Footer() {
       <Route
         path="*"
         element={
-          <footer className="bg-[#F4F6FA] padding pt-16 pb-8 flex flex-col gap-8 items-center">
+          <footer className="bg-[#F4F6FA] padding pt-16 pb-8 flex flex-col gap-8 items-center print:hidden">
             {!isAuth && (
               <div className="flex items-center gap-6 text-sm">
                 {account === "employer" && !logged && (
                   <button
                     onClick={() => setAccount("worker")}
-                    className="text-[#F98D3D] hover:text-darkSecondary font-medium md:mr-2"
+                    className="text-[#F98D3D] hover:text-darkSecondary font-medium md:mr-2 text-center"
                   >
                     Widok kandydata
                   </button>
@@ -33,7 +34,7 @@ export default function Footer() {
                 {account === "worker" && (
                   <button
                     onClick={() => setAccount("employer")}
-                    className="text-[#2F66F4] hover:text-darkPrimary font-medium md:mr-2"
+                    className="text-[#2F66F4] hover:text-darkPrimary font-medium md:mr-2 text-center"
                   >
                     Widok pracodawcy
                   </button>
@@ -46,7 +47,7 @@ export default function Footer() {
                   </HashLink>
                 )}
                 {account === "employer" && (
-                  <CustomLink to="/oferty">Wyszukiwarka kandydatów</CustomLink>
+                  <CustomLink to="/oferty">Znajdź pracownika</CustomLink>
                 )}
               </div>
             )}

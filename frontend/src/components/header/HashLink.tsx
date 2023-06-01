@@ -31,7 +31,7 @@ const HashLink = ({
   return (
     <button
       type="button"
-      className={`relative flex items-center after:transition-all font-medium after:bg-primary hover:after:max-w-[50%] after:max-w-[0%] after:absolute after:h-[2px] after:-bottom-1 after:rounded-full after:w-full after:block after:right-0 ${
+      className={`relative text-center flex items-center after:transition-all font-medium after:bg-primary hover:after:max-w-[50%] after:max-w-[0%] after:absolute after:h-[2px] after:-bottom-1 after:rounded-full after:w-full after:block after:right-0 ${
         account === "employer" ? "after:bg-primary" : "after:bg-secondary"
       } ${className}`}
       onClick={handleScroll}

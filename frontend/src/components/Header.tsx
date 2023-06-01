@@ -22,7 +22,7 @@ export default function Header() {
 
   return (
     <header
-      className={`flex items-center justify-between min-h-[5rem] padding fixed left-0 right-0 z-30 top-0 transition-all bg-white ${
+      className={`flex items-center justify-between min-h-[5rem] padding print:opacity-0 print:hidden fixed left-0 right-0 z-30 top-0 transition-all bg-white ${
         down ? "shadow-primarySmall md:min-h-[5rem]" : "md:min-h-[6rem]"
       }`}
     >
@@ -48,7 +48,6 @@ const Nav = () => {
   const auth = useAppSelector((state) => state.login);
   const location = useLocation();
   const { logged } = auth;
-  const { points } = auth.data;
 
   useEffect(() => {
     setActive(false);

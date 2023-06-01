@@ -119,7 +119,7 @@ export default function Candidate() {
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
       <section
-        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
+        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:py-[1in] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
         id="candidate-profile"
       >
         <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] py-10 sm:p-10">
@@ -129,7 +129,7 @@ export default function Candidate() {
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold">
                 <span
                   style={{ backgroundImage: gradient }}
-                  className="bg-clip-text text-transparent"
+                  className="bg-clip-text text-transparent print:text-font print:bg-clip-padding print:bg-transparent"
                 >
                   {candidateDetails.first_name.charAt(0) +
                     candidateDetails.last_name.charAt(0)}
@@ -166,7 +166,7 @@ export default function Candidate() {
                     <h4 className="text-sm">Szuka pracy w</h4>
                     <h3
                       style={{ backgroundImage: gradient }}
-                      className="font-semibold text-sm bg-clip-text text-transparent"
+                      className="font-semibold text-sm bg-clip-text text-transparent print:text-font print:bg-clip-padding print:bg-transparent"
                     >
                       {candidateDetails.profession &&
                         roleToTextMap[candidateDetails.profession].profession}
@@ -232,7 +232,7 @@ export default function Candidate() {
                   !candidateDetails.is_purchased
                     ? "hover:scale-[1.02] transition-transform"
                     : ""
-                } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10`}
+                } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10 print:hidden`}
               >
                 {candidateDetails.is_purchased
                   ? `Wykupiono za ${
@@ -244,7 +244,7 @@ export default function Candidate() {
               {loading.purchase && <Loader />}
             </div>
           )}
-          <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
+          <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10 print:flex-row print:flex-wrap">
             <div className="md:hidden">
               <FollowButton
                 id={id ? parseInt(id) : -1}
@@ -418,9 +418,9 @@ export default function Candidate() {
             )}
           />
         </div>
-        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
+        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col print:shadow-none">
           <div className="flex flex-col w-full">
-            <h2 className="font-bold text-lg mb-8">
+            <h2 className="font-bold text-lg mb-8 print:hidden">
               Umiejętności kandydata do pracy na każdym stanowisku
             </h2>
             <div className="flex flex-col gap-8 md:grid grid-cols-3">

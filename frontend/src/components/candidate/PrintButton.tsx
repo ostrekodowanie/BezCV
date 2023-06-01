@@ -13,7 +13,7 @@ const PDFButton = ({ disabled, gradient }: PDFButtonProps) => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4 mx-[8vw] sm:mx-0">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 mx-[8vw] sm:mx-0 print:hidden">
       <button
         type="button"
         onClick={handlePDF}
