@@ -13,13 +13,12 @@ export default function ProfileMenu() {
         Mój profil
       </CustomLink>
       <CustomLink className="font-medium flex items-center" to="/profil">
-        Ilość{" "}
+        {points.toString()}
         <img
-          className="max-h-[1em] inline-block"
+          className="max-h-[1em] inline-block ml-2"
           src={bcvToken}
           alt="tokenów bCV"
         />
-        : {points.toString()}
       </CustomLink>
       <LogoutButton />
     </>
