@@ -42,18 +42,22 @@ class CandidatesView(generics.ListAPIView):
     filterset_class = CandidatesFilter
 
     def get_queryset(self):
-        queryset = (
-            Candidates.objects.annotate(
-                is_purchased=Exists(
-                    PurchasedOffers.objects.filter(
-                        employer=self.request.user, candidate_id=OuterRef("pk")
-                    )
-                ),
-            )
-            .filter(Q(is_visible=True) & Q(is_purchased=False))
-        )
+        queryset = Candidates.objects.filter(is_visible=True)
 
         ordering = self.request.query_params.get("order", None)
+        show_purchased = self.request.query_params.get("show_purchased", True)
+        
+        if show_purchased is False:
+            queryset = (
+                queryset.annotate(
+                    is_purchased=Exists(
+                        PurchasedOffers.objects.filter(
+                            employer=self.request.user, candidate_id=OuterRef("pk")
+                        )
+                    ),
+                )
+                .filter(is_purchased=False)
+            )
 
         if ordering:
             order_dict = {

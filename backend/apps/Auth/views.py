@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.pagination import PageNumberPagination
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -19,6 +20,7 @@ from cloudinary.uploader import upload, destroy
 
 from . import serializers
 from .models import User
+from apps.Candidates.models import Candidates
 
 import jwt
 from nip24 import *
@@ -212,3 +214,27 @@ class EmployerProfileView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.EmployerProfileSerializer
     permission_classes = [IsAuthenticated]
+    
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    
+    
+class EmployerProfileFollowedView(generics.ListAPIView):
+    serializer_class = serializers.EmployerProfileFollowedSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Candidates.objects.filter(favouritecandidates_candidate__employer=user)
+    
+
+class EmployerProfilePurchasedView(generics.ListAPIView):
+    serializer_class = serializers.EmployerProfilePurchasedSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Candidates.objects.filter(purchasedoffers_candidate__employer=user)

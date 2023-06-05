@@ -7,7 +7,7 @@ from rest_framework.validators import ValidationError
 from datetime import timedelta
 
 from .models import User
-from apps.Candidates.models import CandidateAbilities
+from apps.Candidates.models import CandidateAbilities, Candidates, PurchasedOffers
 
 from nip24 import *
 
@@ -75,13 +75,13 @@ class UserSerializer(serializers.ModelSerializer):
         ).order_by('created_at').values_list('created_at', flat=True).first()
         
         if oldest_token_date:
-            purchased_contacts = obj.purchasedoffers_employer.filter(
+            total_points = obj.purchasedoffers_employer.filter(
                 created_at__gte=oldest_token_date
-            ).count()
+            ).aggregate(Sum('points')).get('points__sum') or 0
         else:
-            purchased_contacts = 0
+            total_points = 0
 
-        remaining_tokens = purchased_tokens - purchased_contacts
+        remaining_tokens = purchased_tokens - total_points
         return remaining_tokens + 1000000
 
 
@@ -95,23 +95,17 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 class EmployerProfileSerializer(serializers.ModelSerializer):
     stats = serializers.SerializerMethodField()
-    purchased_contacts = serializers.SerializerMethodField()
-    followed_contacts = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
             'stats',
-            'purchased_contacts',
-            'followed_contacts',
             )
         
     def to_representation(self, instance):
         employer_data = super().to_representation(instance)
         employer = {
             'stats': employer_data.pop('stats'),
-            'purchased_contacts': employer_data.pop('purchased_contacts'),
-            'followed_contacts': employer_data.pop('followed_contacts')
         }
         return employer
     
@@ -124,32 +118,13 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
         }
         return stats_dict
     
-    def get_purchased_contacts(self, obj):
-        purchased_contacts = obj.purchasedoffers_employer.values().annotate(
-            id=F('candidate__id'),
-            first_name=F('candidate__first_name'),
-            last_name=F('candidate__last_name'),
-            phone=F('candidate__phone'),
-            profession=F('candidate__profession'),
-        ).values('id', 'first_name', 'last_name', 'phone', 'profession').order_by('-created_at')[:10]
-
-        return purchased_contacts
     
-    def get_followed_contacts(self, obj):
-        followed_contacts = obj.favouritecandidates_employer.values().annotate(
-            id=F('candidate__id'),
-            first_name=F('candidate__first_name'),
-            last_name=F('candidate__last_name'),
-            phone=F('candidate__phone'),
-            job_position=F('candidate__job_position'),
-            salary_expectation=F('candidate__salary_expectation'),
-            availability=F('candidate__availability'),
-            province=F('candidate__province'),
-            education=F('candidate__education'),
-            driving_license=F('candidate__driving_license'),
-            profession=F('candidate__profession'),
-            has_job=F('candidate__has_job')
-        ).values(
+class EmployerProfileFollowedSerializer(serializers.ModelSerializer):
+    percentage_by_category = serializers.SerializerMethodField()
+    
+    class Meta:
+        model =  Candidates
+        fields = (
             'id', 
             'first_name', 
             'last_name',
@@ -161,48 +136,44 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
             'province',
             'education',
             'driving_license',
-            'has_job'
-        ).order_by('-created_at')[:5]
+            'has_job',
+            'percentage_by_category'
+        )
+        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        user = self.context['request'].user
+        purchased = PurchasedOffers.objects.filter(employer=user, candidate=instance).exists()
+        
+        if purchased:
+            hidden_first_name = instance.first_name[0] + '*' * (len(instance.first_name) - 1)
+            hidden_last_name = instance.last_name[0] + '*' * (len(instance.last_name) - 1)
+            email_parts = instance.email.split('@')
+            hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
+            
+            representation['first_name'] = hidden_first_name
+            representation['last_name'] = hidden_last_name
+            representation['email'] = hidden_email
+            representation['phone'] = '*********'
+            
+        return representation
 
-        followed_contacts_array = []
-        for contact in followed_contacts:
-            candidate_abilities = CandidateAbilities.objects.filter(
-                candidate_id=contact['id']
-            ).annotate(
-                category=F('ability__abilityquestions_ability__question__category__name')
-            ).values('category').annotate(
-                average_percentage=Avg('percentage')
-            ).order_by('-average_percentage')
+    def get_percentage_by_category(self, instance):
+        candidate_abilities = CandidateAbilities.objects.filter(candidate_id=instance.id).values('ability__abilityquestions_ability__question__category__name').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
 
-            abilities_dict = {}
-            for ability in candidate_abilities:
-                category = ability['category']
-                average = round(ability['average_percentage'])
-                abilities_dict[category] = average
-                
-            if not obj.purchasedoffers_employer.filter(candidate=contact['id']).first():
-                contact['first_name'] = contact['first_name'][0] + '*' * (len(contact['first_name']) - 1)
-                contact['last_name'] = contact['last_name'][0] + '*' * (len(contact['last_name']) - 1)
-                contact['phone'] = '*********'
-                
-            followed_contact = {
-                'id': contact['id'],
-                'first_name': contact['first_name'], 
-                'last_name': contact['last_name'],
-                'phone': contact['phone'],
-                'profession': contact['profession'], 
-                'job_position': contact['job_position'], 
-                'salary_expectation': contact['salary_expectation'], 
-                'availability': contact['availability'],
-                'province': contact['province'],
-                'education': contact['education'],
-                'driving_license': contact['driving_license'],
-                'has_job': contact['has_job'],
-                'percentage_by_category': abilities_dict,
-            }
-            followed_contacts_array.append(followed_contact)
+        abilities_dict = {}
+        for ability in candidate_abilities:
+            category = ability['ability__abilityquestions_ability__question__category__name']
+            average = round(ability['average_percentage'])
+            abilities_dict[category] = average
 
-        return followed_contacts_array
-
+        return abilities_dict
+    
+    
+class EmployerProfilePurchasedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  Candidates
+        fields = ('id', 'first_name', 'last_name', 'phone', 'profession')
 
 

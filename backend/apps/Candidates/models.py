@@ -89,6 +89,7 @@ class PurchasedOffers(models.Model):
         User, on_delete=models.CASCADE, related_name='purchasedoffers_employer')
     candidate = models.ForeignKey(
         Candidates, on_delete=models.CASCADE, related_name='purchasedoffers_candidate')
+    points = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -97,9 +98,10 @@ class PurchasedOffers(models.Model):
         unique_together = [['employer', 'candidate']]
 
     def __str__(self):
-        return '{} | {}'.format(
+        return '{} | {} | {}'.format(
             self.pk,
-            self.created_at
+            self.created_at,
+            self.points
         )
         
         
