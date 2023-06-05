@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FormEvent, useState, MouseEvent } from "react";
+import { FormEvent, useState, MouseEvent, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import { inputStyles } from "../../constants/general";
@@ -29,6 +29,8 @@ export default function Form() {
   const handleSubmit = (e?: FormEvent) => {
     e && e.preventDefault();
     setStatus("loading");
+    if (!accepts.policy || !accepts.statute)
+      return setStatus("Wymagana akceptacja regulaminu i polityki prywatności");
     if (employerDetails.nip.length !== 10)
       return setStatus("NIP powinien posiadać 10 cyfr!");
     if (confPassword !== employerDetails.password)
@@ -51,18 +53,21 @@ export default function Form() {
       );
   };
 
+  // const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   let value = e.target.value;
+  //   value = value.replace(/\D/g, "");
+  //   value = value.replace(/(\d{3})(?=\d)/g, "$1 ");
+  //   value = value.slice(0, 11);
+  //   setEmployerDetails(prev=> ({...prev, p value);
+  // };
+
   const handleCodeResend = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setCodeStatus("loading");
     axios
       .post(
         "/api/signup/resend",
-        JSON.stringify({ email: employerDetails.email }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        JSON.stringify({ email: employerDetails.email })
       )
       .then(() => setCodeStatus(true));
   };
@@ -205,6 +210,9 @@ export default function Form() {
                     onMouseDown={() => setPasswordShown(true)}
                     onMouseUp={() => setPasswordShown(false)}
                     onMouseLeave={() => setPasswordShown(false)}
+                    onTouchStart={() => setPasswordShown(true)}
+                    onTouchEnd={() => setPasswordShown(false)}
+                    onTouchCancel={() => setPasswordShown(false)}
                     className="absolute top-[50%] translate-y-[-50%] right-6"
                   >
                     {passwordShown ? (
@@ -231,7 +239,7 @@ export default function Form() {
               </div>
             </div>
             <div className="flex items-center gap-4 flex-wrap justify-between my-4">
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 <div className="relative flex gap-4 items-center justify-start mt-6">
                   <input
                     type="checkbox"
@@ -245,8 +253,14 @@ export default function Form() {
                       }))
                     }
                   />
-                  <label className="text-sm" htmlFor="statute">
-                    Akceptuję regulamin
+                  <label className="text-sm cursor-pointer" htmlFor="statute">
+                    Akceptuję{" "}
+                    <Link
+                      className="text-[#2F66F4] hover:text-darkPrimary transition-colors"
+                      to="/docs/regulamin"
+                    >
+                      regulamin
+                    </Link>
                   </label>
                 </div>
                 <div className="relative flex gap-4 items-center justify-start">
@@ -262,17 +276,26 @@ export default function Form() {
                       }))
                     }
                   />
-                  <label className="text-sm" htmlFor="policy">
-                    Akceptuję politykę prywatności
+                  <label className="text-sm cursor-pointer" htmlFor="policy">
+                    Akceptuję{" "}
+                    <Link
+                      className="text-[#2F66F4] hover:text-darkPrimary transition-colors"
+                      to="/docs/polityka-prywatnosci"
+                    >
+                      politykę prywatności
+                    </Link>
                   </label>
                 </div>
               </div>
               <div className="flex flex-row-reverse sm:flex-row items-center gap-4">
-                {status === "loading" && <Loader />}
+                {status === "loading" ? (
+                  <Loader />
+                ) : (
+                  <FilledButton type="submit">Załóż konto</FilledButton>
+                )}
                 {status && status !== "loading" && (
                   <span className="text-red-400 font-medium">{status}</span>
                 )}
-                <FilledButton type="submit">Załóż konto</FilledButton>
               </div>
             </div>
             <div className="relative flex items-center mt-4 mb-2">

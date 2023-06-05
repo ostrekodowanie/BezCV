@@ -123,11 +123,14 @@ export default function Form() {
             </Link>
           </span>
           <div className="flex items-center flex-row-reverse sm:flex-row gap-4">
-            {status.message === "loading" && <Loader />}
+            {status.message === "loading" ? (
+              <Loader />
+            ) : (
+              <FilledButton type="submit">Zaloguj się</FilledButton>
+            )}
             {!status.ok && status.message && status.message !== "loading" && (
               <span className="text-red-400 font-medium">{status.message}</span>
             )}
-            <FilledButton type="submit">Zaloguj się</FilledButton>
           </div>
         </div>
         <p className="text-[rgba(23,26,35,0.6)] text-left text-sm max-w-[4in]">

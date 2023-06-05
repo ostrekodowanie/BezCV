@@ -1,5 +1,5 @@
-import fbIcon from './fb.svg'
+import igIcon from './instagram.svg'
 
 export {
-    fbIcon
+    igIcon
 }

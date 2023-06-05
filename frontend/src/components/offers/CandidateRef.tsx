@@ -99,7 +99,9 @@ const CandidateRef = ({
           </div>
           <div className="flex flex-col gap-1">
             <h4 className="text-sm">Numer telefonu</h4>
-            <h3 className="font-semibold text-sm">+48 {phone}</h3>
+            <h3 className="font-semibold text-sm">
+              +48 {phone?.replace(/(\d{3})(?=\d)/g, "$1 ")}
+            </h3>
           </div>
         </div>
         <div className="flex items-center gap-6">

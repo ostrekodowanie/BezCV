@@ -71,8 +71,11 @@ export default function ChangePassword() {
             </div>
           </div>
           <div className="flex items-center mt-6 gap-6">
-            <FilledButton type="submit">Zmień hasło</FilledButton>
-            {status === "loading" && <Loader />}
+            {status === "loading" ? (
+              <Loader />
+            ) : (
+              <FilledButton type="submit">Zmień hasło</FilledButton>
+            )}
             {status && status !== "loading" && (
               <span className="text-red-400 font-medium">{status}</span>
             )}

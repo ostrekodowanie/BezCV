@@ -40,6 +40,7 @@ import WorstAbilitiesList, {
 } from "../components/candidate/WorstAbilitiesList";
 import AbilitiesLoader from "../components/candidate/AbilitiesLoader";
 import FollowButton from "../components/candidate/FollowButton";
+import SuggestedCandidates from "../components/candidate/SuggestedCandidates";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -79,6 +80,10 @@ export default function Candidate() {
         (item) => item.percentage
       ).length === candidateDetails.abilities?.customer_service.length,
   };
+  const didFilledAllSurveys =
+    didFilledSurvey.customer_service &&
+    didFilledSurvey.office_administration &&
+    didFilledSurvey.sales;
 
   const handlePurchase = async () => {
     if (points < 1) return navigate("/punkty");
@@ -114,7 +119,7 @@ export default function Candidate() {
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
       <section
-        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
+        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:py-[1in] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
         id="candidate-profile"
       >
         <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] py-10 sm:p-10">
@@ -124,7 +129,7 @@ export default function Candidate() {
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold">
                 <span
                   style={{ backgroundImage: gradient }}
-                  className="bg-clip-text text-transparent"
+                  className="bg-clip-text text-transparent print:text-font print:bg-clip-padding print:bg-transparent"
                 >
                   {candidateDetails.first_name.charAt(0) +
                     candidateDetails.last_name.charAt(0)}
@@ -161,7 +166,7 @@ export default function Candidate() {
                     <h4 className="text-sm">Szuka pracy w</h4>
                     <h3
                       style={{ backgroundImage: gradient }}
-                      className="font-semibold text-sm bg-clip-text text-transparent"
+                      className="font-semibold text-sm bg-clip-text text-transparent print:text-font print:bg-clip-padding print:bg-transparent"
                     >
                       {candidateDetails.profession &&
                         roleToTextMap[candidateDetails.profession].profession}
@@ -227,17 +232,19 @@ export default function Candidate() {
                   !candidateDetails.is_purchased
                     ? "hover:scale-[1.02] transition-transform"
                     : ""
-                } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10`}
+                } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10 print:hidden`}
               >
                 {candidateDetails.is_purchased
-                  ? "Wykupiono za 1 token "
-                  : "Wykup za 1 token "}
+                  ? `Wykupiono za ${
+                      didFilledAllSurveys ? "2 tokeny" : "1 token "
+                    }`
+                  : `Wykup za ${didFilledAllSurveys ? "2 tokeny" : "1 token "}`}
                 <img className="max-h-[1.4em] ml-2" src={bcvToken} alt="bCV" />
               </button>
               {loading.purchase && <Loader />}
             </div>
           )}
-          <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10">
+          <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10 print:flex-row print:flex-wrap">
             <div className="md:hidden">
               <FollowButton
                 id={id ? parseInt(id) : -1}
@@ -258,7 +265,7 @@ export default function Candidate() {
                   <>
                     <h4 className="text-sm">Wiek</h4>
                     <h3 className="font-semibold text-sm">
-                      {candidateDetails.availability}
+                      {candidateDetails.birth_date}
                     </h3>
                   </>
                 )}
@@ -360,7 +367,8 @@ export default function Candidate() {
                   <>
                     <h4 className="text-sm">Numer telefonu</h4>
                     <h3 className="font-semibold text-sm">
-                      +48 {candidateDetails.phone}
+                      +48{" "}
+                      {candidateDetails.phone?.replace(/(\d{3})(?=\d)/g, "$1 ")}
                     </h3>
                   </>
                 )}
@@ -369,9 +377,7 @@ export default function Candidate() {
           </div>
           <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-[1/3] flex flex-col">
             <div className="mb-6 flex items-center gap-4 justify-between">
-              <h2 className="font-bold mx-[8vw] sm:mx-0">
-                Opis kandydata na podstawie AI
-              </h2>
+              <h2 className="font-bold mx-[8vw] sm:mx-0">Opis kandydata</h2>
               <div className="hidden md:block">
                 <FollowButton
                   id={id ? parseInt(id) : -1}
@@ -412,9 +418,9 @@ export default function Candidate() {
             )}
           />
         </div>
-        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
+        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col print:shadow-none">
           <div className="flex flex-col w-full">
-            <h2 className="font-bold text-lg mb-8">
+            <h2 className="font-bold text-lg mb-8 print:hidden">
               Umiejętności kandydata do pracy na każdym stanowisku
             </h2>
             <div className="flex flex-col gap-8 md:grid grid-cols-3">
@@ -571,22 +577,10 @@ export default function Candidate() {
             disabled={!candidateDetails.is_purchased}
           />
         )}
-        <div className="bg-white sm:rounded-3xl flex flex-wrap py-10 shadow-primaryBig min-h-max gap-4 overflow-hidden">
-          <div className="flex flex-col w-full">
-            <h2 className="font-bold text-lg ml-[8vw] sm:ml-10">
-              Ci kandydaci mogą Cię zainteresować
-            </h2>
-            <div className="flex flex-col w-full">
-              {!loading.page ? (
-                candidateDetails.similar_candidates?.map((cand) => (
-                  <CandidateRef {...cand} key={cand.id} />
-                ))
-              ) : (
-                <OffersLoader />
-              )}
-            </div>
-          </div>
-        </div>
+        <SuggestedCandidates
+          candidates={candidateDetails.similar_candidates}
+          isLoading={loading.page}
+        />
       </section>
     </ColorSchemeContext.Provider>
   );

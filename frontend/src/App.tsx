@@ -22,6 +22,7 @@ import FixedButton from "./components/FixedButton";
 import Survey from "./pages/Survey";
 import AxiosProvider from "./providers/AxiosProvider";
 import Docs from "./pages/Docs";
+import CookiesConsent from "./components/CookiesConsent";
 
 const loginString: string | null = localStorage.getItem("user");
 const loginFromLocalStorage = loginString && JSON.parse(loginString);
@@ -85,7 +86,7 @@ export default function App() {
   if (loading)
     return (
       <div className="w-screen h-screen flex items-center justify-center">
-        <strong className="font-medium text-3xl">
+        <strong className="font-medium text-3xl animate-pulse">
           bez<span className="text-primary">CV</span>
         </strong>
       </div>
@@ -160,26 +161,7 @@ export default function App() {
             </Routes>
           </main>
           <Footer />
-          <CookieConsent
-            enableDeclineButton
-            location="bottom"
-            style={{
-              paddingRight: "8vw",
-              paddingLeft: "8vw",
-            }}
-            buttonText="Akceptuję"
-            declineButtonText="Odmawiam"
-            buttonStyle={{
-              color: "white",
-              backgroundImage:
-                "linear-gradient(90.04deg, #2F66F4 24.53%, #0D9AE9 82.58%)",
-            }}
-          >
-            Serwis bezCV korzysta z plików cookies w celu realizacji usług
-            statystycznych i funkcjonalnych. Warunki przechowywania lub dostępu
-            do plików cookies można określić w ustawieniach przeglądarki
-            internetowej.
-          </CookieConsent>
+          <CookiesConsent />
         </>
       </AxiosProvider>
     </AccountProvider>

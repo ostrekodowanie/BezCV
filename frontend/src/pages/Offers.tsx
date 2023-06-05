@@ -6,12 +6,11 @@ import { CandidateProps } from "../constants/candidate";
 import Candidate from "./Candidate";
 import { useSearchParams } from "react-router-dom";
 import { useAppSelector } from "../main";
-import InfiniteScroll from "react-infinite-scroll-component";
 import CandidateRef from "../components/offers/CandidateRef";
 import { RoleType } from "../constants/workForm";
-import CandidateLoader from "../components/offers/CandidateLoader";
 import OffersLoader from "../components/offers/OffersLoader";
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import Paginator from "../components/Paginator";
 
 export default function Offers() {
   return (
@@ -27,6 +26,7 @@ export interface FilterProps {
   availability: string[];
   salary: string[];
   province: string[];
+  purchased: boolean;
 }
 
 const CandidateList = () => {
@@ -39,28 +39,29 @@ const CandidateList = () => {
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const [candidates, setCandidates] = useState<CandidateProps[]>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [count, setCount] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
   const [filter, setFilter] = useState<FilterProps>({
     professions:
       (searchParams.get("professions")?.split(",") as RoleType[]) || [],
     availability: searchParams.get("availability")?.split(",") || [],
     salary: searchParams.get("salary")?.split(",") || [],
     province: searchParams.get("province")?.split(",") || [],
+    purchased: searchParams.get("purchased") ? false : true,
   });
   const [sort, setSort] = useState("");
 
   useEffect(() => {
-    setPage(1);
-    setHasMore(true);
+    setPage(0);
     let url = "/oferty";
     let searchArr = [];
     if (
       filter.availability.length > 0 ||
       filter.salary.length > 0 ||
       filter.professions.length > 0 ||
-      filter.province.length > 0
+      filter.province.length > 0 ||
+      !filter.purchased
     ) {
       searchArr.push(
         filter.availability.length > 0 &&
@@ -70,7 +71,8 @@ const CandidateList = () => {
         filter.salary.length > 0 &&
           "salary=" + filter.salary.map((salary) => salary).join(","),
         filter.province.length > 0 &&
-          "province=" + filter.province.map((province) => province).join(",")
+          "province=" + filter.province.map((province) => province).join(","),
+        !filter.purchased && "purchased=false"
       );
     }
     if (sort) searchArr.push("order=" + sort);
@@ -92,10 +94,10 @@ const CandidateList = () => {
       .then((res) => res.data)
       .then((data) => {
         setCount(data.count);
+        setTotalPages(data.pages);
         return data;
       })
       .then((data) => !isCancelled && setCandidates(data.results))
-      .catch(() => setHasMore(false))
       .finally(() => setLoading(false));
     return () => {
       isCancelled = true;
@@ -103,11 +105,13 @@ const CandidateList = () => {
   }, [location.search]);
 
   useEffect(() => {
-    if (page === 1) return;
+    if (page === 0) return;
     let url =
       "/api" +
       location.pathname +
-      (location.search ? location.search + "&page=" + page : "?page=" + page);
+      (location.search
+        ? location.search + "&page=" + page + 1
+        : "?page=" + page + 1);
     axios
       .get(url, { headers: { Authorization: "Bearer " + access } })
       .then((res) => res.data)
@@ -119,8 +123,7 @@ const CandidateList = () => {
         setCandidates((prev) =>
           page === 1 ? data.results : [...prev, ...data.results]
         )
-      )
-      .catch(() => setHasMore(false));
+      );
   }, [page]);
 
   return (
@@ -144,13 +147,7 @@ const CandidateList = () => {
       </div>
       <div className="flex flex-col lg:grid grid-cols-[1fr_4fr] mt-8 xl:my-12">
         <CandidateFilter filter={filter} setFilter={setFilter} />
-        <InfiniteScroll
-          className={`flex flex-col bg-white shadow-primaryBig sm:rounded-3xl relative flex-1 min-h-[80vh] lg:ml-8`}
-          next={() => setPage((prev) => prev + 1)}
-          hasMore={hasMore}
-          loader={<CandidateLoader />}
-          dataLength={candidates.length}
-        >
+        <div className="flex flex-col bg-white shadow-primaryBig sm:rounded-3xl relative flex-1 min-h-[80vh] lg:ml-8">
           {loading ? (
             <OffersLoader />
           ) : candidates.length > 0 ? (
@@ -160,7 +157,12 @@ const CandidateList = () => {
           ) : (
             <h2 className="mx-auto mt-8">Nie odnaleziono kandytatów!</h2>
           )}
-        </InfiniteScroll>
+          <Paginator
+            page={page - 1 < 0 ? 0 : page - 1}
+            totalPages={totalPages}
+            onPageChange={({ selected }) => setPage(selected)}
+          />
+        </div>
       </div>
       <div className="flex items-center w-max ml-auto mb-4">
         <h4 className="text-sm font-medium text-[rgba(23,26,35,0.5)]">

@@ -12,10 +12,10 @@ import { provinces, roleToTextMap } from "../../constants/candidate";
 import { RoleType } from "../../constants/workForm";
 import { FilterProps as FilterStateProps } from "../../pages/Offers";
 
-interface FilterProps {
+type FilterProps = {
   filter: FilterStateProps;
   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
-}
+};
 
 export default function CandidateFilter({ filter, setFilter }: FilterProps) {
   const [mobileActive, setMobileActive] = useState(false);
@@ -24,7 +24,9 @@ export default function CandidateFilter({ filter, setFilter }: FilterProps) {
     salary: false,
     province: false,
   });
-  const [allFilters, setAllFilters] = useState<FilterStateProps>({
+  const [allFilters, setAllFilters] = useState<
+    Omit<FilterStateProps, "purchased">
+  >({
     professions: [],
     availability: [],
     salary: [],
@@ -50,12 +52,28 @@ export default function CandidateFilter({ filter, setFilter }: FilterProps) {
       <button
         type="button"
         onClick={() => setMobileActive((prev) => !prev)}
-        className="lg:hidden font-medium mb-4 text-left ml-[8vw] sm:ml-0"
+        className="lg:hidden font-medium mb-6 text-left ml-[8vw] sm:ml-0 w-8 h-6 justify-between flex flex-col"
       >
-        {!mobileActive ? "Filtruj" : "Zamknij"}
+        <div
+          className={`h-1 w-full bg-primary rounded-full ${
+            mobileActive ? "rotate-45" : "rotate-0"
+          } transition-transform origin-top-left`}
+        />
+        <div
+          className={`h-1 w-full bg-primary rounded-full ${
+            mobileActive ? "scale-x-0" : "scale-x-75 origin-center"
+          } transition-transform origin-top-left`}
+        />
+        <div
+          className={`h-1 w-full bg-primary rounded-full ${
+            mobileActive
+              ? "scale-x-100 origin-bottom-left translate-y-[1px] -rotate-45"
+              : "rotate-0 scale-x-50 origin-center"
+          } transition-transform`}
+        />
       </button>
       <div
-        className={`flex-col gap-8 px-8 py-6 mb-4 lg:mb-0 lg:self-start transition-all bg-white shadow-primaryBig sm:rounded-3xl min-h-[80vh] relative ${
+        className={`flex-col gap-8 px-8 py-6 mb-4 lg:mb-0 lg:self-start transition-all bg-white shadow-primaryBig sm:rounded-3xl lg:min-h-[80vh] relative ${
           mobileActive ? "flex" : "hidden lg:flex"
         }`}
       >
@@ -205,6 +223,26 @@ export default function CandidateFilter({ filter, setFilter }: FilterProps) {
               ))}
             </div>
           )}
+        </div>
+        <HorizontalLine />
+        <div className="flex items-start gap-2">
+          <input
+            id="purchased"
+            type="checkbox"
+            checked={filter.purchased}
+            onChange={(e) =>
+              setFilter((prev) => ({
+                ...prev,
+                purchased: e.target.checked ? true : false,
+              }))
+            }
+          />
+          <label
+            className="text-[14px] text-left font-medum w-fit -mt-1"
+            htmlFor="purchased"
+          >
+            Wyświetlaj zakupione kontakty
+          </label>
         </div>
       </div>
     </>

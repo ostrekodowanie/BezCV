@@ -1,7 +1,5 @@
 import { MouseEvent, useContext, useState } from "react";
 import FilledButton from "../FilledButton";
-import axios from "axios";
-import { PackageProps } from "../../constants/points";
 import Loader from "../Loader";
 import { PaymentContext } from "../../context/PaymentContext";
 

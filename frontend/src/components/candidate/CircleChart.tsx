@@ -33,6 +33,7 @@ export default function CircleChart({
   const [offset, setOffset] = useState(circumference);
   const strokeWidth = 30;
   const strokeDasharray = `${circumference} ${circumference}`;
+  const isUndefined = percentage == null;
 
   useEffect(() => {
     const offsetValue = circumference - (percentage * circumference) / 100;
@@ -51,8 +52,8 @@ export default function CircleChart({
   return (
     <div
       ref={circleRef}
-      className={`${
-        isFirst ? "order-first" : "order-last"
+      className={`${isFirst ? "order-first" : "order-last"} ${
+        isUndefined ? "opacity-[0.1]" : "opacity-1"
       } flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px]`}
     >
       <div className="rounded-full h-[280px] w-[280px] bg-white" />
@@ -65,20 +66,26 @@ export default function CircleChart({
           style={{ color }}
           className="text-[1.75rem] font-black relative z-10"
         >
-          <CountUp
-            enableScrollSpy
-            scrollSpyOnce
-            prefix=">"
-            suffix="%"
-            useEasing
-            end={percentage}
-          />
+          {isUndefined ? (
+            "Nie wypełniono ankiety"
+          ) : (
+            <CountUp
+              enableScrollSpy
+              scrollSpyOnce
+              prefix=">"
+              suffix="%"
+              useEasing
+              end={percentage}
+            />
+          )}
         </strong>
         <div className="absolute inset-0 bg-[#F8F9FB] rounded-full flex flex-col items-center text-center justify-end py-7">
           <div className="bg-white absolute top-0 left-0 right-0 bottom-[40%]" />
-          <p className="font-medium w-full max-w-[2in] text-[.8rem] text-font">
-            większe niż <strong>{percentage}% ankietowanych</strong>
-          </p>
+          {!isUndefined && (
+            <p className="font-medium w-full max-w-[2in] text-[.8rem] text-font">
+              większe niż <strong>{percentage}% ankietowanych</strong>
+            </p>
+          )}
         </div>
       </div>
       <svg
@@ -95,6 +102,7 @@ export default function CircleChart({
           r={155}
           strokeWidth={strokeWidth}
           stroke={color}
+          opacity={isUndefined ? 0.1 : 1}
           strokeDasharray={strokeDasharray}
           strokeDashoffset={offset}
           fill="none"

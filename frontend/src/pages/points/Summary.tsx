@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import InvoiceInfo from "../../components/points/InvoiceInfo";
 import BuyerInfo from "../../components/points/BuyerInfo";
@@ -18,6 +18,7 @@ import axios from "axios";
 
 export default function Summary() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const searchParamPoints = searchParams.get("points") || "";
   const foundPackage = packages.find(
     (p) => p.points === parseInt(searchParamPoints)
@@ -44,14 +45,9 @@ export default function Summary() {
         JSON.stringify({
           amount: foundPackage.points,
           price: foundPackage.price,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        })
       )
-      .then((res) => console.log(res.data))
+      .then((res) => (window.location.href = res.data))
       .finally(() => setLoading(false));
   };
 
