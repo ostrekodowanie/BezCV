@@ -53,26 +53,18 @@ class CandidateSerializer(serializers.ModelSerializer):
             
         return representation
     
-    def get_ability_charts(self, obj):                
-        main_candidate_abilities = obj.candidateabilities_candidate.annotate(
+    def get_ability_charts(self, obj):
+        abilities = obj.candidateabilities_candidate.annotate(
             category=F('ability__abilityquestions_ability__question__category__name')
-        ).values('category').annotate(average_percentage=Avg('percentage'))
+        ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
+        
+        abilities_dict = {}
+        for ability in abilities:
+            category = ability['category']
+            average = round(ability['average_percentage'])
+            abilities_dict[category] = average
 
-        total_candidates = Candidates.objects.exclude(id=obj.id).filter(is_visible=True).count()
-
-        worse_candidate_counts = {}
-        for main in main_candidate_abilities:
-            worse_candidate_count = Candidates.objects.exclude(id=obj.id).filter(is_visible=True).filter(
-                candidateabilities_candidate__ability__abilityquestions_ability__question__category__name=main['category']
-            ).annotate(
-                average_percentage=Avg('candidateabilities_candidate__percentage')
-            ).filter(
-                average_percentage__lte=main['average_percentage']
-            ).count()
-
-            worse_candidate_counts[main['category']] = (worse_candidate_count / total_candidates) * 100
-
-        return worse_candidate_counts
+        return abilities_dict
 
     def get_abilities_helper(self, obj, filter_condition):
         all_categories = Abilities.objects.values_list(
