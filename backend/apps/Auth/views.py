@@ -98,6 +98,31 @@ class SignUpView(views.APIView):
         return Response(serializer.errors, 400)
 
 
+class ResendEmailView(views.APIView):
+    def post(self, request):
+        first_name = request.data.get('first_name')
+        email = request.data.get('email')
+                
+        token = jwt.encode({'email': email}, settings.SECRET_KEY, algorithm='HS256')
+        link = 'https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token)
+        
+        context = {
+            'user': first_name,
+            'link': link
+        }
+        
+        message = render_to_string('employers/verify.html', context)
+        email_message = EmailMessage(
+            subject='Potwierdź swoją rejestrację',
+            body=message,
+            to=[email]
+        )
+        email_message.content_subtype ="html"
+        email_message.send()
+                
+        return Response(status=200) 
+
+
 class VerifyView(views.APIView):
     def get(self, request):
         token = request.GET.get('token')
