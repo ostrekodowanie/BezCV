@@ -399,23 +399,33 @@ export default function Candidate() {
           <CircleChart
             profession="sales"
             isFirst={candidateDetails.profession === "sales"}
-            percentage={parseInt(
-              candidateDetails.ability_charts.sales.toString()
-            )}
+            percentage={
+              didFilledSurvey.sales
+                ? parseInt(candidateDetails.ability_charts.sales.toString())
+                : null
+            }
           />
           <CircleChart
             profession="office_administration"
             isFirst={candidateDetails.profession === "office_administration"}
-            percentage={parseInt(
-              candidateDetails.ability_charts.office_administration.toString()
-            )}
+            percentage={
+              didFilledSurvey.office_administration
+                ? parseInt(
+                    candidateDetails.ability_charts.office_administration.toString()
+                  )
+                : null
+            }
           />
           <CircleChart
             profession="customer_service"
             isFirst={candidateDetails.profession === "customer_service"}
-            percentage={parseInt(
-              candidateDetails.ability_charts.customer_service.toString()
-            )}
+            percentage={
+              didFilledSurvey.customer_service
+                ? parseInt(
+                    candidateDetails.ability_charts.customer_service.toString()
+                  )
+                : null
+            }
           />
         </div>
         <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col print:shadow-none">

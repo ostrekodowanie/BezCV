@@ -5,7 +5,7 @@ import { RoleType } from "../../constants/workForm";
 
 type CircleChartProps = {
   profession: RoleType;
-  percentage: number;
+  percentage: number | null;
   isFirst: boolean;
 };
 
@@ -36,6 +36,7 @@ export default function CircleChart({
   const isUndefined = percentage == null;
 
   useEffect(() => {
+    if (!percentage) return;
     const offsetValue = circumference - (percentage * circumference) / 100;
     if (!circleRef.current || !percentage) return;
     const observer = new IntersectionObserver((entries) => {
@@ -64,7 +65,9 @@ export default function CircleChart({
         </h3>
         <strong
           style={{ color }}
-          className="text-[1.75rem] font-black relative z-10"
+          className={`${
+            isUndefined ? "text-base" : "text-[1.75rem]"
+          } text-center font-black relative z-10`}
         >
           {isUndefined ? (
             "Nie wypełniono ankiety"

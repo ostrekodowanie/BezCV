@@ -46,6 +46,7 @@ export default function Form() {
                 tokens,
               })
             );
+            axios.defaults.headers.common.Authorization = `Bearer ${tokens.access}`;
             return navigate("/profil");
           }
         })

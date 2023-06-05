@@ -21,22 +21,10 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const auth = useAppSelector((state) => state.login);
   const { id } = auth.data;
-  const { access } = auth.tokens;
-
-  const setFollowed = (userId: number) => {
-    setProfileData((prev) => ({
-      ...prev,
-      followed_contacts: prev.followed_contacts.filter((u) => u.id !== userId),
-    }));
-  };
 
   useEffect(() => {
     axios
-      .get("/api/profile/" + id, {
-        headers: {
-          Authorization: "Bearer " + access,
-        },
-      })
+      .get("/api/profile/" + id)
       .then((res) => setProfileData(res.data))
       .finally(() => setLoading(false));
   }, []);
@@ -53,15 +41,8 @@ export default function Profile() {
       </Link>
       <ProfileDataContext.Provider value={profileData}>
         <Stats {...profileData.stats} loading={loading} />
-        <Purchased
-          purchased={profileData.purchased_contacts}
-          loading={loading}
-        />
-        <Followed
-          followed={profileData.followed_contacts}
-          setFollowed={setFollowed}
-          loading={loading}
-        />
+        <Purchased />
+        <Followed />
       </ProfileDataContext.Provider>
     </section>
   );
