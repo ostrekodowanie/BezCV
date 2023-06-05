@@ -52,6 +52,7 @@ class PurchasePointsView(views.APIView):
             "totalAmount": "1",#str(int(price) * 100),
             "customerIp": request.META.get("REMOTE_ADDR"),
             "continueUrl": "https://bezcv.com",
+            "notifyUrl": "https://bezcv.com/api/payu-notify",
             "buyer": {
                 "email": employer.email,
                 "firstName": employer.first_name,
@@ -105,3 +106,28 @@ class PurchasePointsView(views.APIView):
         email_message.send()
 
         return Response({"redirect_url": response_data['redirectUri']})
+    
+    
+class PayUNotificationView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        payload = request.data
+        print(payload)
+        status = payload['order']['status']
+        print(status)
+        if status == "COMPLETED":
+            products = payload['order']['products']
+            tokens = sum(int(product['quantity']) for product in products)
+            order_id = payload['order']['orderId']
+            amount = payload['order']['totalAmount']
+            buyer_email = payload['order']['buyer']['email']
+            print(tokens)
+            buyer = User.objects.get(email=buyer_email)
+
+            order = Orders.objects.create(
+                buyer=buyer,
+                tokens=tokens,
+                amount=amount,
+                order_id=order_id
+            )
+
+        return Response(status=200)

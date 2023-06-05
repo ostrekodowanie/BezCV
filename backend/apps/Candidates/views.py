@@ -32,7 +32,7 @@ class CandidatesFilter(filters.FilterSet):
         fields = ['professions', 'availability', 'salary']
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 20
+    page_size = 10
     
 class CandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
