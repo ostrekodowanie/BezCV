@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import Loader from "../../components/Loader";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
@@ -8,7 +8,6 @@ import { reportSuccessMan } from "../../assets/profile/profile";
 
 export default function Verify() {
   useDocumentTitle("Zweryfikuj konto | bezCV - innowacyjny portal pracy");
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const [status, setStatus] = useState({
@@ -47,8 +46,8 @@ export default function Verify() {
           <p className="text-[#3C4663] flex flex-col items-center gap-2 text-[.8rem]">
             Możesz teraz w pełni korzystać z naszego serwisu
           </p>
-          <FilledButton onClick={() => navigate("/login")}>
-            Ok, zaczynajmy!
+          <FilledButton>
+            <Link to="/login">Ok, zaczynajmy!</Link>
           </FilledButton>
         </div>
       ) : (
