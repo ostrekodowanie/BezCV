@@ -242,8 +242,7 @@ class EmployerProfileView(generics.RetrieveAPIView):
     
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 20
-    
+    page_size = 10    
     
 class EmployerProfileFollowedView(generics.ListAPIView):
     serializer_class = serializers.EmployerProfileFollowedSerializer
@@ -254,6 +253,9 @@ class EmployerProfileFollowedView(generics.ListAPIView):
         user = self.request.user
         return Candidates.objects.filter(favouritecandidates_candidate__employer=user)
     
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20  
 
 class EmployerProfilePurchasedView(generics.ListAPIView):
     serializer_class = serializers.EmployerProfilePurchasedSerializer
