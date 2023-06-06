@@ -32,7 +32,7 @@ const CandidateList = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { items, page, totalPages, setPage, count, isLoading } =
-    usePagination<CandidateProps>("/oferty", 15);
+    usePagination<CandidateProps>("/oferty");
   const [displayPurchased, setDisplayPurchased] = useState(
     searchParams.get("show_purchased") == "False" ? false : true
   );
