@@ -1,5 +1,4 @@
-import { createContext, Dispatch, SetStateAction } from "react";
-import { CandidateProps, NonPercentageAbilitiesCandidateProps } from "./candidate";
+import { createContext } from "react";
 
 export type StatsProps = {
     token_count: number,
@@ -9,8 +8,6 @@ export type StatsProps = {
 
 export type ProfileDataType = {
     stats: StatsProps,
-    purchased_contacts: NonPercentageAbilitiesCandidateProps[],
-    followed_contacts: CandidateProps[]
 }
 
 export const initialProfileData: ProfileDataType = {
@@ -19,8 +16,6 @@ export const initialProfileData: ProfileDataType = {
         followed_count: 0,
         purchased_count: 0
     },
-    purchased_contacts: [],
-    followed_contacts: []
 }
 
 export const ProfileDataContext = createContext<ProfileDataType>(initialProfileData)

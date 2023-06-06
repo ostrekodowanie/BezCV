@@ -13,11 +13,18 @@ import { RoleType } from "../../constants/workForm";
 import { FilterProps as FilterStateProps } from "../../pages/Offers";
 
 type FilterProps = {
+  displayPurchased: boolean;
+  setDisplayPurchased: Dispatch<SetStateAction<boolean>>;
   filter: FilterStateProps;
   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
 };
 
-export default function CandidateFilter({ filter, setFilter }: FilterProps) {
+export default function CandidateFilter({
+  displayPurchased,
+  setDisplayPurchased,
+  filter,
+  setFilter,
+}: FilterProps) {
   const [mobileActive, setMobileActive] = useState(false);
   const [isActive, setIsActive] = useState({
     availability: false,
@@ -229,13 +236,8 @@ export default function CandidateFilter({ filter, setFilter }: FilterProps) {
           <input
             id="purchased"
             type="checkbox"
-            checked={filter.purchased}
-            onChange={(e) =>
-              setFilter((prev) => ({
-                ...prev,
-                purchased: e.target.checked ? true : false,
-              }))
-            }
+            checked={displayPurchased}
+            onChange={(e) => setDisplayPurchased(e.target.checked)}
           />
           <label
             className="text-[14px] text-left font-medum w-fit -mt-1"

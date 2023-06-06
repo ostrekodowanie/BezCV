@@ -38,7 +38,7 @@ const CandidateRef = ({
   return (
     <Link
       to={"/oferty/" + id}
-      className={`transition-colors px-[8vw] py-10 sm:px-8 flex flex-col gap-8 border-b-[1px] border-[#E6E7EA] relative ${
+      className={`transition-colors px-[8vw] py-10 sm:px-8 flex flex-col gap-8 border-b-[1px] border-[#E6E7EA] last-of-type:border-b-0 last-of-type:border-none relative ${
         has_job ? "bg-[#FBF8F4]" : "bg-white"
       }`}
     >

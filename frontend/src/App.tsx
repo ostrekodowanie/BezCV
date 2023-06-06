@@ -66,6 +66,7 @@ export default function App() {
               tokens,
             })
           );
+          axios.defaults.headers.common.Authorization = `Bearer ${tokens.access}`;
         }
       })
       .catch(() => dispatch(logout()));
