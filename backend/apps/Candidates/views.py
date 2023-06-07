@@ -47,7 +47,7 @@ class CandidatesView(generics.ListAPIView):
         ordering = self.request.query_params.get("order", None)
         show_purchased = self.request.query_params.get("show_purchased", True)
         
-        if show_purchased is False:
+        if show_purchased == "False":
             queryset = (
                 queryset.annotate(
                     is_purchased=Exists(
