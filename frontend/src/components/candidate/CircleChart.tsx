@@ -54,7 +54,7 @@ export default function CircleChart({
     <div
       ref={circleRef}
       className={`${isFirst ? "order-first" : "order-last"} ${
-        isUndefined ? "opacity-[0.1]" : "opacity-1"
+        isUndefined ? "opacity-[0.1] hidden md:flex" : "opacity-1"
       } flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px]`}
     >
       <div className="rounded-full h-[280px] w-[280px] bg-white" />
@@ -75,7 +75,6 @@ export default function CircleChart({
             <CountUp
               enableScrollSpy
               scrollSpyOnce
-              prefix=">"
               suffix="%"
               useEasing
               end={percentage}

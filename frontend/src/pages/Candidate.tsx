@@ -31,9 +31,7 @@ import {
   PhoneIcon,
   ProfessionIcon,
 } from "../assets/candidate/icons/icons";
-import CandidateRef from "../components/offers/CandidateRef";
 import HasJob from "../components/offers/HasJob";
-import OffersLoader from "../components/offers/OffersLoader";
 import PrintButton from "../components/candidate/PrintButton";
 import WorstAbilitiesList, {
   WorstAbilitiesLoader,
@@ -51,7 +49,7 @@ export default function Candidate() {
   const dispatch = useDispatch();
   const { points } = auth.data;
   const user_id = auth.data.id;
-  const { access, refresh } = auth.tokens;
+  const { refresh } = auth.tokens;
   const [confetti, setConfetti] = useState(false);
   const [loading, setLoading] = useState({
     page: true,
@@ -86,9 +84,15 @@ export default function Candidate() {
     didFilledSurvey.sales;
 
   const handlePurchase = async () => {
-    if (points < 1) return navigate("/punkty");
+    if (didFilledAllSurveys ? points < 2 : points < 1)
+      return navigate("/punkty");
     setLoading((prev) => ({ ...prev, purchase: true }));
-    let data = { candidate: id, employer: user_id, refresh };
+    let data = {
+      candidate: id,
+      employer: user_id,
+      refresh,
+      points: didFilledAllSurveys ? 2 : 1,
+    };
     const resp = await axios.post("/api/oferty/purchase", data);
     if (resp.status === 201) {
       dispatch(purchase());
@@ -100,9 +104,7 @@ export default function Candidate() {
   useEffect(() => {
     setLoading((prev) => ({ ...prev, page: true }));
     axios
-      .get(`/api/oferty/${id}`, {
-        headers: { Authorization: "Bearer " + access },
-      })
+      .get(`/api/oferty/${id}`)
       .then((res) => res.data)
       .then((data) => setCandidateDetails(data))
       .finally(() => setLoading((prev) => ({ ...prev, page: false })));
@@ -119,10 +121,10 @@ export default function Candidate() {
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
       <section
-        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:py-[1in] py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
+        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:sm:px-0 print:md:px-0 print:2xl:px-0 print:py-16 print:md:py-16 print:2xl:py-16 py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8 print:gap-4"
         id="candidate-profile"
       >
-        <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] py-10 sm:p-10">
+        <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] print:py-6 print:sm:py-6 py-10 sm:p-10">
           {candidateDetails.has_job && <HasJob />}
           <div className="flex flex-col sm:flex-row sm:flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:flex xl:justify-between">
             <div className="flex items-center gap-4">
@@ -223,7 +225,7 @@ export default function Candidate() {
               <Loader />
             </div>
           ) : (
-            <div className="flex items-center gap-4 ml-[8vw] sm:ml-0">
+            <div className="flex items-center gap-4 ml-[8vw] sm:ml-0 print:hidden">
               <button
                 onClick={handlePurchase}
                 disabled={candidateDetails.is_purchased}
@@ -232,7 +234,7 @@ export default function Candidate() {
                   !candidateDetails.is_purchased
                     ? "hover:scale-[1.02] transition-transform"
                     : ""
-                } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10 print:hidden`}
+                } xl:max-w-none w-full text-white text-[.8rem] font-semibold flex items-center py-4 px-10`}
               >
                 {candidateDetails.is_purchased
                   ? `Wykupiono za ${
@@ -244,8 +246,8 @@ export default function Candidate() {
               {loading.purchase && <Loader />}
             </div>
           )}
-          <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10 print:flex-row print:flex-wrap">
-            <div className="md:hidden">
+          <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] print:py-6 print:sm:py-6 py-10 sm:p-10 print:flex-row print:flex-wrap">
+            <div className="md:hidden print:hidden">
               <FollowButton
                 id={id ? parseInt(id) : -1}
                 is_followed={candidateDetails.is_followed}
@@ -332,7 +334,7 @@ export default function Candidate() {
               </div>
             </div>
           </div>
-          <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] py-10 sm:p-10 flex flex-col sm:flex-row sm:justify-evenly col-[2/3] gap-6">
+          <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] print:py-6 print:sm:py-6 py-10 sm:p-10 flex flex-col sm:flex-row sm:justify-evenly col-[2/3] gap-6">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
                 <EmailIcon {...colorScheme} />
@@ -375,10 +377,10 @@ export default function Candidate() {
               </div>
             </div>
           </div>
-          <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 sm:p-10 row-[1/3] flex flex-col">
+          <div className="bg-white sm:rounded-3xl col-[2/3] shadow-primaryBig py-10 print:py-6 print:sm:py-6 sm:p-10 row-[1/3] flex flex-col">
             <div className="mb-6 flex items-center gap-4 justify-between">
               <h2 className="font-bold mx-[8vw] sm:mx-0">Opis kandydata</h2>
-              <div className="hidden md:block">
+              <div className="hidden md:block print:hidden print:md:hidden">
                 <FollowButton
                   id={id ? parseInt(id) : -1}
                   is_followed={candidateDetails.is_followed}
@@ -395,7 +397,7 @@ export default function Candidate() {
         {confetti && (
           <ConfettiExplosion className="absolute top-[40vh] right-[50%] translate-x-[-50%]" />
         )}
-        <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto py-10 sm:px-6 shadow-primaryBig gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
+        <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto print:py-8 print:sm:px-4 py-10 sm:px-6 shadow-primaryBig print:gap-4 print:xl:gap-2 print:md:flex-nowrap gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
           <CircleChart
             profession="sales"
             isFirst={candidateDetails.profession === "sales"}
@@ -428,7 +430,7 @@ export default function Candidate() {
             }
           />
         </div>
-        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col print:shadow-none">
+        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col print:shadow-none print:hidden">
           <div className="flex flex-col w-full">
             <h2 className="font-bold text-lg mb-8 print:hidden">
               Umiejętności kandydata do pracy na każdym stanowisku

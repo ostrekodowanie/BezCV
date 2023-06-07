@@ -255,6 +255,7 @@ export default function Form() {
                   <label className="text-sm cursor-pointer" htmlFor="statute">
                     Akceptuję{" "}
                     <button
+                      type="button"
                       className="text-[#2F66F4] hover:text-darkPrimary transition-colors"
                       onClick={() =>
                         setPolicyActive({ policy: true, statute: false })
@@ -280,6 +281,7 @@ export default function Form() {
                   <label className="text-sm cursor-pointer" htmlFor="policy">
                     Akceptuję{" "}
                     <button
+                      type="button"
                       className="text-[#2F66F4] hover:text-darkPrimary transition-colors"
                       onClick={() =>
                         setPolicyActive({ policy: true, statute: false })

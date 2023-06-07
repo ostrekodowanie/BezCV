@@ -59,10 +59,11 @@ const CandidateList = () => {
   });
 
   const changePage = ({ selected }: { selected: number }) => {
+    document.documentElement.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     setPage(selected);
     selected <= 0
       ? searchParams.delete("page")
-      : searchParams.set("page", selected.toString());
+      : searchParams.set("page", (selected + 1).toString());
     navigate({ search: searchParams.toString() });
   };
 
@@ -131,7 +132,7 @@ const CandidateList = () => {
       </div>
       <div className="flex items-center w-max ml-auto mb-4">
         <h4 className="text-sm font-medium text-[rgba(23,26,35,0.5)]">
-          Wyświetlono {items.length} z {count} wyników
+          Wyświetlono wyniki od {page * 10 + 1} do {page * 10 + 10}
         </h4>
       </div>
     </section>

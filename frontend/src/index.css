@@ -213,7 +213,9 @@ input[type="range"]::-ms-thumb {
     background-clip: initial !important;
     text-shadow: none;
   }
-  .header {
-    opacity: 0;
-  }
+}
+
+@page {
+  size: 25cm 35.7cm;
+  margin: 0;
 }

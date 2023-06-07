@@ -8,7 +8,9 @@ export default function usePagination<T>(route: string, size?: number) {
   const [items, setItems] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
-  const [page, setPage] = useState(parseInt(searchParams.get("page") || "0"));
+  const [page, setPage] = useState(
+    parseInt(searchParams.get("page") || "1") - 1
+  );
   const { search } = useLocation();
 
   useEffect(() => {

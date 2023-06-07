@@ -29,6 +29,7 @@ export default function PolicyAccept({
     <div className="inset-0 fixed z-50 flex items-center justify-center">
       <div onClick={hide} className="absolute inset-0 bg-black/40" />
       <form
+        id="policy-accept"
         onSubmit={handleSubmit}
         className="bg-white z-10 sm:rounded-3xl xl:rounded-[2rem] overflow-y-scroll sm:overflow-y-auto overflow-x-auto flex flex-col items-center xl:w-[8in] gap-8 md:gap-10 relative px-[8vw] sm:px-[.8in] py-[1in] sm:py-16"
       >
@@ -39,6 +40,7 @@ export default function PolicyAccept({
           {formIndex === 0 ? <PrivacyPolicy /> : <Statute />}
         </div>
         <button
+          form="policy-accept"
           type="submit"
           className="justify-center text-[.75rem] w-full sm:w-max rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary flex items-center"
         >
