@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router";
 import CandidateFilter from "../components/offers/CandidateFilter";
 import { CandidateProps } from "../constants/candidate";
@@ -33,6 +33,7 @@ const CandidateList = () => {
   const [searchParams] = useSearchParams();
   const { items, page, totalPages, setPage, count, isLoading } =
     usePagination<CandidateProps>("/oferty");
+  const isFirstRender = useRef(true);
   const [displayPurchased, setDisplayPurchased] = useState(
     searchParams.get("show_purchased") == "False" ? false : true
   );
@@ -59,7 +60,6 @@ const CandidateList = () => {
   });
 
   const changePage = ({ selected }: { selected: number }) => {
-    document.documentElement.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     setPage(selected);
     selected <= 0
       ? searchParams.delete("page")
@@ -68,6 +68,8 @@ const CandidateList = () => {
   };
 
   useEffect(() => {
+    if (!isFirstRender.current) changePage({ selected: 0 });
+    isFirstRender.current = false;
     sort ? searchParams.set("order", sort) : searchParams.delete("order");
     !displayPurchased
       ? searchParams.set("show_purchased", "False")
@@ -83,6 +85,10 @@ const CandidateList = () => {
     });
     navigate({ search: searchParams.toString() });
   }, [filter, sort, displayPurchased]);
+
+  useEffect(() => {
+    document.documentElement.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [items]);
 
   return (
     <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1.4in] md:py-[2in] bg-white">
@@ -132,7 +138,8 @@ const CandidateList = () => {
       </div>
       <div className="flex items-center w-max ml-auto mb-4">
         <h4 className="text-sm font-medium text-[rgba(23,26,35,0.5)]">
-          Wyświetlono wyniki od {page * 10 + 1} do {page * 10 + 10}
+          Wyświetlono wyniki od {page * 10 + 1}
+          {page + 1 >= totalPages ? "" : ` do ${page * 10 + 10}`}
         </h4>
       </div>
     </section>
