@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'apps.Favourites',
     'apps.Points',
     'apps.Survey',
+    'apps.Codes',
 ]
 
 MIDDLEWARE = [
