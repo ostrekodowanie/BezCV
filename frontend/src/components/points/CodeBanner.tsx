@@ -51,7 +51,7 @@ export default function CodeBanner() {
               placeholder="Wpisz go tutaj"
               type="text"
               readOnly={!!(isLoading || hasAdded)}
-              value={hasAdded ? "Punkty zostały dodane do twojego konta" : code}
+              value={hasAdded ? "Punkty poprawnie dodane!" : code}
               onChange={(e) => setCode(e.target.value)}
             />
             {isLoading ? (
