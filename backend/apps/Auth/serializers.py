@@ -59,30 +59,9 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    points = serializers.SerializerMethodField()
     class Meta:
         model =  User
         fields = ('first_name', 'last_name', 'points', 'is_staff', 'nip', 'company_name', 'image', 'desc', 'email', 'form')
-        
-    def get_points(self, obj):
-        last_month = timezone.now() - timedelta(days=30)
-        purchased_tokens = obj.purchasedpoints_employer.filter(
-            created_at__gte=last_month
-        ).aggregate(Sum('amount'))['amount__sum'] or 0
-        
-        oldest_token_date = obj.purchasedpoints_employer.filter(
-            created_at__gte=last_month
-        ).order_by('created_at').values_list('created_at', flat=True).first()
-        
-        if oldest_token_date:
-            total_points = obj.purchasedoffers_employer.filter(
-                created_at__gte=oldest_token_date
-            ).aggregate(Sum('points')).get('points__sum') or 0
-        else:
-            total_points = 0
-
-        remaining_tokens = purchased_tokens - total_points
-        return remaining_tokens + 1000000
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):

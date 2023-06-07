@@ -87,8 +87,17 @@ class FiltersView(APIView):
 
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
+    permission_classes = [IsAuthenticated]
     
     def post(self, request, *args, **kwargs):
+        user = self.request.user  
+        
+        if user.points <= 0:
+            return Response({'Not enough points'}, status=400)
+        
+        user.points -= 1
+        user.save()
+        
         response = super().post(request, *args, **kwargs)
 
         purchased_offer_id = response.data.get('id')

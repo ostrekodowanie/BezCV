@@ -79,14 +79,14 @@ class AbilityQuestions(models.Model):
         )
     
 
-class GeneratedCodes(models.Model):
+class VerifyCodes(models.Model):
     code = models.CharField(max_length=6)
     phone = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = 'Generated codes'
+        verbose_name_plural = 'Verify codes'
 
     def __str__(self):
         return self.code

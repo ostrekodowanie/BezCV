@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from apps.Candidates.models import Candidates
-from .models import Questions, CandidateAnswers, Categories, GeneratedCodes
+from .models import Questions, CandidateAnswers, Categories, VerifyCodes
 from .serializers import QuestionSerializer, CandidateCreateSerializer
 from .signals import update_percentage
 from config.settings import client
@@ -78,7 +78,6 @@ class CandidateAnswersView(APIView):
             stop=None,
             temperature=0.3,
         )
-        print(response)
         
         profession = candidate.candidateabilities_candidate.values(
             'ability__abilityquestions_ability__question__category__name').annotate(
@@ -178,14 +177,14 @@ class EmailCheckView(APIView):
 class SendCodeView(APIView):
     def post(self, request):
         phone = request.data.get('phone')
-        gen_code = GeneratedCodes.objects.filter(phone=phone)
+        gen_code = VerifyCodes.objects.filter(phone=phone)
 
         code = ''.join(random.choices(string.digits, k=6))
         
         if gen_code:
             gen_code.delete()
         
-        GeneratedCodes.objects.create(phone=phone, code=code)
+        VerifyCodes.objects.create(phone=phone, code=code)
 
         client.sms.send(to=phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
 
@@ -199,14 +198,14 @@ class SendCodeToExistingCandidate(APIView):
         if not Candidates.objects.filter(phone=phone).exists():
             return Response({'Nie znaleźliśmy takiego numeru w bazie'}, status=400)
         
-        gen_code = GeneratedCodes.objects.filter(phone=phone)
+        gen_code = VerifyCodes.objects.filter(phone=phone)
 
         code = ''.join(random.choices(string.digits, k=6))
         
         if gen_code:
             gen_code.delete()
         
-        GeneratedCodes.objects.create(phone=phone, code=code)
+        VerifyCodes.objects.create(phone=phone, code=code)
 
         client.sms.send(to=phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
 
@@ -219,8 +218,8 @@ class CheckCodeView(APIView):
         code = request.data.get('code')
         if Candidates.objects.filter(phone=phone).exists():
             try:
-                gen_code = GeneratedCodes.objects.get(phone=phone, code=code)
-            except GeneratedCodes.DoesNotExist:
+                gen_code = VerifyCodes.objects.get(phone=phone, code=code)
+            except VerifyCodes.DoesNotExist:
                 return Response({'Access code is not valid'}, status=400)
             
             candidate = Candidates.objects.get(phone=phone)
