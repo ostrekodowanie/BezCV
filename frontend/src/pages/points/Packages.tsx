@@ -4,6 +4,7 @@ import { bcvToken } from "../../assets/general";
 import MorePointsForm from "../../components/points/MorePointsForm";
 import Package from "../../components/points/Package";
 import { packages } from "../../constants/points";
+import CodeBanner from "../../components/points/CodeBanner";
 
 export default function Packages() {
   const [days, setDays] = useState<30 | 90>(30);
@@ -61,6 +62,7 @@ export default function Packages() {
           </Controller>
         </div>
       </section>
+      <CodeBanner />
       <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] bg-[#FAFCFE] py-[.7in] flex flex-col items-center gap-16 2xl:py-[.9in] xl:items-start xl:grid grid-cols-2">
         <div className="max-w-[min(6.8in,90%)] flex flex-col items-center xl:items-start gap-8">
           <h2 className="font-semibold text-3xl md:text-4xl text-center xl:text-left leading-tight md:leading-tight">

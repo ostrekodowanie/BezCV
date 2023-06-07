@@ -17,10 +17,10 @@ class UseCodeView(generics.CreateAPIView):
         try:
             code = Codes.objects.get(code=code, is_active=True)            
         except Codes.DoesNotExist:
-            return Response({"Code is invalid or expired"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Kod jest niepoprawny lub przeterminowany"}, status=status.HTTP_400_BAD_REQUEST)
         
         if UsedCodes.objects.filter(user=user, code=code).exists():
-            return Response({"Code already used"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Kod został już użyty"}, status=status.HTTP_400_BAD_REQUEST)
 
         used_code = UsedCodes(user=user, code=code)
         used_code.save()
