@@ -19,7 +19,7 @@ export default function CodeBanner() {
     axios
       .post("/api/code", JSON.stringify({ code: code.toLowerCase() }))
       .then((res) => {
-        const addedPoints = res.data.points;
+        const addedPoints = res.data;
         dispatch(addPoints(parseInt(addedPoints)));
         setHasAdded(true);
       })
@@ -65,7 +65,7 @@ export default function CodeBanner() {
             )}
           </div>
           {error && (
-            <div className="bg-red-400 border-red-500 border-[2px] p-4">
+            <div className="bg-red-400 border-red-500 border-[2px] px-4 py-2">
               <span className="text-white font-medium text-[.75rem]">
                 {error}
               </span>
