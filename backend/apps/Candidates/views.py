@@ -90,19 +90,18 @@ class PurchaseOfferView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     
     def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        purchased_offer_id = response.data.get('id')
+        
+        purchased_offer = PurchasedOffers.objects.get(id=purchased_offer_id)       
+        
         user = self.request.user  
         
         if user.points <= 0:
             return Response({'Not enough points'}, status=400)
         
-        user.points -= 1
+        user.points -= purchased_offer.points
         user.save()
-        
-        response = super().post(request, *args, **kwargs)
-
-        purchased_offer_id = response.data.get('id')
-
-        purchased_offer = PurchasedOffers.objects.get(id=purchased_offer_id)
         
         message = f'Twój profil zainteresował jednego z pracodawców w naszej bazie. Jest zainteresowany współpracą.\n\nPoniżej informacje o nim: {purchased_offer.employer.first_name} {purchased_offer.employer.last_name}\n{purchased_offer.employer.company_name}\n\nNiedługo powinien się z Tobą skontaktować. Powodzenia!'
         
