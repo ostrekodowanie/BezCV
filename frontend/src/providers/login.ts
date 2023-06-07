@@ -72,8 +72,8 @@ export const loginSlice = createSlice({
         addPoints: (state, action) => {
             state.data.points = state.data.points + action.payload
         },
-        purchase: state => {
-            state.data.points = state.data.points - 1
+        purchase: (state, action) => {
+            state.data.points = state.data.points - (action.payload || 1)
         }
     }
 })

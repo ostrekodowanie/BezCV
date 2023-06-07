@@ -95,7 +95,7 @@ export default function Candidate() {
     };
     const resp = await axios.post("/api/oferty/purchase", data);
     if (resp.status === 201) {
-      dispatch(purchase());
+      dispatch(purchase(didFilledAllSurveys ? 2 : 1));
       setConfetti(true);
     }
     return setLoading((prev) => ({ ...prev, purchase: false }));
