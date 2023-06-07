@@ -4,13 +4,20 @@ import PrivacyPolicy from "../docs/components/PrivacyPolicy";
 import Statute from "../docs/components/Statute";
 
 type PolicyAcceptProps = {
+  isForAccept?: boolean;
+  initialFormIndex?: 0 | 1;
   hide: () => void;
   onAccept: () => void;
 };
 
-export default function PolicyAccept({ hide, onAccept }: PolicyAcceptProps) {
+export default function PolicyAccept({
+  initialFormIndex,
+  isForAccept = true,
+  hide,
+  onAccept,
+}: PolicyAcceptProps) {
   const wrapperRef = useRef<HTMLDivElement>(null!);
-  const [formIndex, setFormIndex] = useState<0 | 1>(0);
+  const [formIndex, setFormIndex] = useState<0 | 1>(initialFormIndex || 0);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -35,8 +42,12 @@ export default function PolicyAccept({ hide, onAccept }: PolicyAcceptProps) {
           type="submit"
           className="justify-center text-[.75rem] w-full sm:w-max rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary flex items-center"
         >
-          Akceptuję {formIndex === 0 ? "politykę prywatności" : "regulamin"}{" "}
-          bezCV <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
+          {!isForAccept
+            ? "Zamknij"
+            : `Akceptuję ${
+                formIndex === 0 ? "politykę prywatności" : "regulamin"
+              } bezCV`}{" "}
+          <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
         </button>
       </form>
     </div>

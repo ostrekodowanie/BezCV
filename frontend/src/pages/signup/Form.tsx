@@ -6,6 +6,12 @@ import { inputStyles } from "../../constants/general";
 import Loader from "../../components/Loader";
 import { reportSuccessMan } from "../../assets/profile/profile";
 import { passwordNotVisible, passwordVisible } from "../../assets/general";
+import PolicyAccept from "../../components/survey/PolicyAccept";
+
+const initialPolicy = {
+  statute: false,
+  policy: false,
+};
 
 export default function Form() {
   const [confPassword, setConfPassword] = useState("");
@@ -14,10 +20,8 @@ export default function Form() {
     undefined
   );
   const [passwordShown, setPasswordShown] = useState(false);
-  const [accepts, setAccepts] = useState({
-    statute: false,
-    policy: false,
-  });
+  const [policyActive, setPolicyActive] = useState(initialPolicy);
+  const [accepts, setAccepts] = useState(initialPolicy);
   const [employerDetails, setEmployerDetails] = useState({
     first_name: "",
     last_name: "",
@@ -53,21 +57,16 @@ export default function Form() {
       );
   };
 
-  // const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   let value = e.target.value;
-  //   value = value.replace(/\D/g, "");
-  //   value = value.replace(/(\d{3})(?=\d)/g, "$1 ");
-  //   value = value.slice(0, 11);
-  //   setEmployerDetails(prev=> ({...prev, p value);
-  // };
-
   const handleCodeResend = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setCodeStatus("loading");
     axios
       .post(
         "/api/signup/resend",
-        JSON.stringify({ email: employerDetails.email })
+        JSON.stringify({
+          email: employerDetails.email,
+          first_name: employerDetails.first_name,
+        })
       )
       .then(() => setCodeStatus(true));
   };
@@ -255,12 +254,14 @@ export default function Form() {
                   />
                   <label className="text-sm cursor-pointer" htmlFor="statute">
                     Akceptuję{" "}
-                    <Link
+                    <button
                       className="text-[#2F66F4] hover:text-darkPrimary transition-colors"
-                      to="/docs/regulamin"
+                      onClick={() =>
+                        setPolicyActive({ policy: true, statute: false })
+                      }
                     >
                       regulamin
-                    </Link>
+                    </button>
                   </label>
                 </div>
                 <div className="relative flex gap-4 items-center justify-start">
@@ -278,12 +279,14 @@ export default function Form() {
                   />
                   <label className="text-sm cursor-pointer" htmlFor="policy">
                     Akceptuję{" "}
-                    <Link
+                    <button
                       className="text-[#2F66F4] hover:text-darkPrimary transition-colors"
-                      to="/docs/polityka-prywatnosci"
+                      onClick={() =>
+                        setPolicyActive({ policy: true, statute: false })
+                      }
                     >
                       politykę prywatności
-                    </Link>
+                    </button>
                   </label>
                 </div>
               </div>
@@ -310,6 +313,14 @@ export default function Form() {
               </span>
               <div className="bg-[#DFDFDF] absolute left-0 right-0 h-[2px]" />
             </div>
+            {(policyActive.policy || policyActive.statute) && (
+              <PolicyAccept
+                hide={() => setPolicyActive(initialPolicy)}
+                onAccept={() => setPolicyActive(initialPolicy)}
+                isForAccept={false}
+                initialFormIndex={policyActive.policy ? 0 : 1}
+              />
+            )}
           </form>
         </>
       )}
