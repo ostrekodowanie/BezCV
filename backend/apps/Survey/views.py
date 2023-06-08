@@ -28,7 +28,11 @@ class CandidateAnswersView(APIView):
     def post(self, request, format=None):
         candidate_phone = request.data.get('candidate')
         answers = request.data.get('answers')
+        profession = request.data.get('profession')
         candidate = Candidates.objects.get(phone=candidate_phone)
+        if candidate.profession in None:
+            candidate.profession = profession
+            candidate.save()
         
         candidate_answers = [
             CandidateAnswers(question=Questions.objects.get(pk=question), answer=answer, candidate=candidate)

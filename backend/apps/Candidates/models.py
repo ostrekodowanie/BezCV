@@ -25,7 +25,7 @@ class Candidates(models.Model):
     phone = models.CharField(max_length=255, unique=True)
     birth_date = models.DateField()
     province = models.CharField(max_length=255)
-    profession = models.CharField(max_length=100, choices=[
+    profession = models.CharField(max_length=100, null=True, choices=[
                                                         ('sales', 'sales'), 
                                                         ('office_administration', 'office_administration'), 
                                                         ('customer_service', 'customer_service')])
