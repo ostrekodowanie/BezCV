@@ -49,6 +49,7 @@ class Candidates(models.Model):
     has_job = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=False)
     desc = models.TextField(null=True, blank=True)
+    completed_surveys = models.JSONField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
