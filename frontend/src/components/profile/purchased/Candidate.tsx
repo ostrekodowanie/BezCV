@@ -43,7 +43,9 @@ const CandidatePurchased = (props: NonPercentageAbilitiesCandidateProps) => {
             </h4>
           </div>
           <div className="flex flex-col gap-1">
-            <h4 className="text-[.75rem]">Nr kontaktowy: +48 {phone}</h4>
+            <h4 className="text-[.75rem]">
+              Nr kontaktowy: +48 {phone?.replace(/(\d{3})(?=\d)/g, "$1 ")}
+            </h4>
             <h3 className="text-[.75rem] flex items-center">
               Szuka pracy w:
               <span

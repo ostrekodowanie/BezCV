@@ -28,7 +28,7 @@ export default function CodeBanner() {
   };
 
   return (
-    <section className="py-[1in] sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] flex flex-col gap-4">
+    <section className="py-[1in] sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw]">
       <div className="bg-[linear-gradient(84.74deg,#2F66F4_15.81%,#0D9AE9_80.36%)] p-16 px-[8vw] sm:px-[10%] flex flex-col gap-8 xl:flex-row justify-between xl:items-center sm:rounded-3xl">
         <h2 className="flex flex-col gap-4 text-white">
           <span className="font-semibold text-3xl md:text-4xl 2xl:text-[2.75rem] md:leading-tight 2xl:leading-tight">
@@ -73,11 +73,6 @@ export default function CodeBanner() {
           )}
         </form>
       </div>
-      <small className="self-center text-[.8rem] text-[#3C4663] mx-[8vw] sm:mx-0">
-        <span className="font-semibold">Uwagi:</span> wielkość liter nie ma
-        znaczenia, kody bezterminowe, natomiast można użyć 1 kodu do jednego
-        konta, kody się ze sobą nie sumują.
-      </small>
     </section>
   );
 }

@@ -85,7 +85,15 @@ export default function CircleChart({
           <div className="bg-white absolute top-0 left-0 right-0 bottom-[40%]" />
           {!isUndefined && (
             <p className="font-medium w-full max-w-[2in] text-[.8rem] text-font">
-              większe niż <strong>{percentage}% ankietowanych</strong>
+              w oparciu o{" "}
+              <strong>
+                {profession === "customer_service"
+                  ? "16"
+                  : profession === "office_administration"
+                  ? "14"
+                  : "11"}{" "}
+                kompetencji miękkich
+              </strong>
             </p>
           )}
         </div>

@@ -121,7 +121,7 @@ export default function Candidate() {
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
       <section
-        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:sm:px-0 print:md:px-0 print:2xl:px-0 print:py-16 print:md:py-16 print:2xl:py-16 py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8 print:gap-4"
+        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:sm:px-0 print:md:px-0 print:2xl:px-0 print:py-16 print:md:py-16 print:2xl:py-16 py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
         id="candidate-profile"
       >
         <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] print:py-6 print:sm:py-6 py-10 sm:p-10">
@@ -430,7 +430,7 @@ export default function Candidate() {
             }
           />
         </div>
-        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col print:shadow-none print:hidden">
+        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
           <div className="flex flex-col w-full">
             <h2 className="font-bold text-lg mb-8 print:hidden">
               Umiejętności kandydata do pracy na każdym stanowisku
