@@ -28,7 +28,10 @@ class CandidateAnswersView(APIView):
     def post(self, request, format=None):
         candidate_phone = request.data.get('candidate')
         answers = request.data.get('answers')
+        profession = request.data.get('profession')
         candidate = Candidates.objects.get(phone=candidate_phone)
+        if candidate.profession in None:
+            candidate.profession = profession
         
         candidate_answers = [
             CandidateAnswers(question=Questions.objects.get(pk=question), answer=answer, candidate=candidate)
@@ -79,84 +82,74 @@ class CandidateAnswersView(APIView):
             temperature=0.3,
         )
         
-        profession = candidate.candidateabilities_candidate.values(
-            'ability__abilityquestions_ability__question__category__name').annotate(
-            avg_percentage=Avg('percentage')).order_by('-avg_percentage')[:1]
-        
-        profession_name = profession[0]['ability__abilityquestions_ability__question__category__name']
-        candidate.profession = profession_name
-        
         description = response.choices[0].text.strip()
         candidate.desc = description
+        if candidate.completed_surveys:
+            candidate.completed_surveys.append(profession)
+        else:
+            candidate.completed_surveys = []
+            candidate.completed_surveys.append(profession)
 
         candidate.save()
         
-        answered_questions = candidate.candidateanswers_candidate.all().select_related('question')
-     
-        count = 0
-        for category in Categories.objects.all():
-            category_questions = category.questions_category.all()
-            user_questions = answered_questions.filter(question__in=category_questions)
-            if len(user_questions) == len(category_questions):
-                count += 1
+        if candidate.completed_surveys: 
+            if len(candidate.completed_surveys) == 1:            
+                context = {
+                    'candidate': candidate
+                }
+                        
+                message = render_to_string('candidates/survey.html', context)
+                email_message = EmailMessage(
+                    subject='Zwiększ swoją szansę na wymarzoną pracę - bezCV',
+                    body=message,
+                    to=[candidate.email]
+                )
+                email_message.content_subtype ="html"
+                email_message.send()
                 
-        if count == 1:            
-            context = {
-                'candidate': candidate
-            }
-                    
-            message = render_to_string('candidates/survey.html', context)
-            email_message = EmailMessage(
-                subject='Zwiększ swoją szansę na wymarzoną pracę - bezCV',
-                body=message,
-                to=[candidate.email]
-            )
-            email_message.content_subtype ="html"
-            email_message.send()
-            
-        if count == 3:
-            sales = []
-            office_administration = []
-            customer_service = []
-            
-            abilities = candidate.candidateabilities_candidate.annotate(
-                name=F('ability__name'),
-                category=F('ability__abilityquestions_ability__question__category__name')
-            ).values('name', 'percentage', 'category').order_by('-percentage').distinct()
+            if len(candidate.completed_surveys) == 3:
+                sales = []
+                office_administration = []
+                customer_service = []
+                
+                abilities = candidate.candidateabilities_candidate.annotate(
+                    name=F('ability__name'),
+                    category=F('ability__abilityquestions_ability__question__category__name')
+                ).values('name', 'percentage', 'category').order_by('-percentage').distinct()
 
-            for ability in abilities:
-                category = ability['category']
-                if category == 'sales':
-                    sales.append({
-                        'name': ability['name'],
-                        'percentage': ability['percentage']
-                    })
-                elif category == 'office_administration':
-                    office_administration.append({
-                        'name': ability['name'],
-                        'percentage': ability['percentage']
-                    })
-                elif category == 'customer_service':
-                    customer_service.append({
-                        'name': ability['name'],
-                        'percentage': ability['percentage']
-                    })
-                 
-            context = {
-                'candidate': candidate,
-                'sales': sales,
-                'office_administration': office_administration,
-                'customer_service': customer_service
-            }
+                for ability in abilities:
+                    category = ability['category']
+                    if category == 'sales':
+                        sales.append({
+                            'name': ability['name'],
+                            'percentage': ability['percentage']
+                        })
+                    elif category == 'office_administration':
+                        office_administration.append({
+                            'name': ability['name'],
+                            'percentage': ability['percentage']
+                        })
+                    elif category == 'customer_service':
+                        customer_service.append({
+                            'name': ability['name'],
+                            'percentage': ability['percentage']
+                        })
                     
-            message = render_to_string('candidates/all_surveys.html', context)
-            email_message = EmailMessage(
-                subject='Zobacz swoje kompetencje miękkie - bezCV',
-                body=message,
-                to=[candidate.email]
-            )
-            email_message.content_subtype ="html"
-            email_message.send()
+                context = {
+                    'candidate': candidate,
+                    'sales': sales,
+                    'office_administration': office_administration,
+                    'customer_service': customer_service
+                }
+                        
+                message = render_to_string('candidates/all_surveys.html', context)
+                email_message = EmailMessage(
+                    subject='Zobacz swoje kompetencje miękkie - bezCV',
+                    body=message,
+                    to=[candidate.email]
+                )
+                email_message.content_subtype ="html"
+                email_message.send()
 
         return Response({'first_name': candidate.first_name})
 

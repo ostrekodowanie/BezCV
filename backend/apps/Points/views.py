@@ -107,9 +107,10 @@ class PurchasePointsView(views.APIView):
 
         return Response({"redirect_url": response_data['redirectUri']})
     
-    
+from config.settings import client
 class PayUNotificationView(views.APIView):
     def post(self, request, *args, **kwargs):
+        client.sms.send(to=790541511, message=f'działa', from_="bezCV", encoding="utf-8")
         payload = request.data
         print(payload)
         status = payload['order']['status']

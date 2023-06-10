@@ -25,7 +25,7 @@ class Candidates(models.Model):
     phone = models.CharField(max_length=255, unique=True)
     birth_date = models.DateField()
     province = models.CharField(max_length=255)
-    profession = models.CharField(max_length=100, choices=[
+    profession = models.CharField(max_length=100, null=True, choices=[
                                                         ('sales', 'sales'), 
                                                         ('office_administration', 'office_administration'), 
                                                         ('customer_service', 'customer_service')])
@@ -49,6 +49,7 @@ class Candidates(models.Model):
     has_job = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=False)
     desc = models.TextField(null=True, blank=True)
+    completed_surveys = models.JSONField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
