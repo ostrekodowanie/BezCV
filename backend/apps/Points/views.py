@@ -47,7 +47,7 @@ class PurchasePointsView(views.APIView):
         
         order_data = {
             "merchantPosId": client_id,
-            "description": "Purchase of points",
+            "description": f"bezCV - {amount} tokens",
             "currencyCode": "PLN",
             "totalAmount": "1",#str(int(price) * 100),
             "customerIp": request.META.get("REMOTE_ADDR"),
@@ -88,8 +88,10 @@ class PurchasePointsView(views.APIView):
             ).count()
         else:
             purchased_contacts = 0
+            
+        tokens_from_codes = employer.usedcodes_user.aggregate(total_value=Sum('code__value'))
 
-        remaining_tokens = purchased_tokens - purchased_contacts
+        remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes['total_value']
         
         context = {
                 'employer': "test",#employer['first_name'],
@@ -110,18 +112,15 @@ class PurchasePointsView(views.APIView):
 from config.settings import client
 class PayUNotificationView(views.APIView):
     def post(self, request, *args, **kwargs):
-        client.sms.send(to=790541511, message=f'działa', from_="bezCV", encoding="utf-8")
         payload = request.data
-        print(payload)
         status = payload['order']['status']
-        print(status)
         if status == "COMPLETED":
             products = payload['order']['products']
             tokens = sum(int(product['quantity']) for product in products)
             order_id = payload['order']['orderId']
             amount = payload['order']['totalAmount']
             buyer_email = payload['order']['buyer']['email']
-            print(tokens)
+            
             buyer = User.objects.get(email=buyer_email)
 
             order = Orders.objects.create(
