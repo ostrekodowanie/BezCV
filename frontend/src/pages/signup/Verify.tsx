@@ -47,7 +47,7 @@ export default function Verify() {
             Możesz teraz w pełni korzystać z naszego serwisu
           </p>
           <FilledButton>
-            <Link to="/login">Ok, zaczynajmy!</Link>
+            <Link to="/logowanie">Ok, zaczynajmy!</Link>
           </FilledButton>
         </div>
       ) : (

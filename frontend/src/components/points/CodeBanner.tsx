@@ -59,9 +59,11 @@ export default function CodeBanner() {
                 <Loader />
               </div>
             ) : (
-              <button className="bg-primary h-8 w-8 rounded-lg flex items-center justify-center absolute right-4">
-                <img className="max-h-[80%]" src={checkmark} alt="" />
-              </button>
+              !hasAdded && (
+                <button className="bg-primary h-8 w-8 rounded-lg flex items-center justify-center absolute right-4">
+                  <img className="max-h-[80%]" src={checkmark} alt="" />
+                </button>
+              )
             )}
           </div>
           {error && (

@@ -17,7 +17,6 @@ import axios from "axios";
 import Points from "./pages/Points";
 import getUserInfo from "./utils/getUserInfo";
 import AccountProvider from "./providers/AccountProvider";
-import CookieConsent from "react-cookie-consent";
 import FixedButton from "./components/FixedButton";
 import Survey from "./pages/Survey";
 import AxiosProvider from "./providers/AxiosProvider";
@@ -25,7 +24,7 @@ import Docs from "./pages/Docs";
 import CookiesConsent from "./components/CookiesConsent";
 
 const loginString: string | null = localStorage.getItem("user");
-const loginFromLocalStorage = loginString && JSON.parse(loginString);
+const loginFromLocalStorage = loginString ? JSON.parse(loginString) : "";
 
 export default function App() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
