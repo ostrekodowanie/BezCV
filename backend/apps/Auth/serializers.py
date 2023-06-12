@@ -7,7 +7,7 @@ from rest_framework.validators import ValidationError
 from datetime import timedelta
 
 from .models import User
-from apps.Candidates.models import CandidateAbilities, Candidates, PurchasedOffers
+from apps.Candidates.models import Candidates
 
 from nip24 import *
 
@@ -82,7 +82,7 @@ class UserSerializer(serializers.ModelSerializer):
         else:
             purchased_contacts = 0
             
-        tokens_from_codes = obj.usedcodes_user.aggregate(total_value=Sum('code__value'))
+        tokens_from_codes = obj.usedcodes_user.aggregate(total_value=Sum('code__value')) or 0
 
         remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes['total_value']
         
