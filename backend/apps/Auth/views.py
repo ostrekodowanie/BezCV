@@ -71,30 +71,30 @@ class SignUpView(views.APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-                serializer.save()
-                user = serializer.data
-                
-                all = nip24.getAllDataExt(Number.NIP, user.nip)
-                user['company_name'] = all.name 
-                
-                token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
-                link = 'https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token)
-                
-                context = {
-                    'user': user['first_name'],
-                    'link': link
-                }
-                
-                message = render_to_string('employers/verify.html', context)
-                email_message = EmailMessage(
-                    subject='Potwierdź swoją rejestrację',
-                    body=message,
-                    to=[user['email']]
-                )
-                email_message.content_subtype ="html"
-                email_message.send()
-                        
-                return Response({'User created'}, 201)     
+            serializer.save()
+            user = serializer.data
+            
+            all = nip24.getAllDataExt(Number.NIP, user['nip'])
+            user['company_name'] = all.name 
+            
+            token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
+            link = 'https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token)
+            
+            context = {
+                'user': user['first_name'],
+                'link': link
+            }
+            
+            message = render_to_string('employers/verify.html', context)
+            email_message = EmailMessage(
+                subject='Potwierdź swoją rejestrację',
+                body=message,
+                to=[user['email']]
+            )
+            email_message.content_subtype ="html"
+            email_message.send()
+                    
+            return Response({'User created'}, 201)     
         return Response(serializer.errors, 400)
 
 
