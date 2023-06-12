@@ -26,6 +26,4 @@ class UseCodeView(generics.CreateAPIView):
         used_code = UsedCodes(user=user, code=code)
         used_code.save()
         
-        user.points += code.value
-        user.save()
         return Response(code.value, status=status.HTTP_201_CREATED)
