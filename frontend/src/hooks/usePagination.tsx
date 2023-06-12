@@ -17,7 +17,7 @@ export default function usePagination<T>(route: string, size?: number) {
     setIsLoading(true);
     document.documentElement.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     axios
-      .get(`/api${route}${search}`)
+      .get(`/api${route}${decodeURIComponent(search)}`)
       .then((res) => {
         setItems(res.data.results);
         setTotalPages(Math.floor(res.data.count / (size || 10)) + 1);
