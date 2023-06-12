@@ -86,7 +86,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes
         
-        return remaining_tokens + 10000
+        return remaining_tokens
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
