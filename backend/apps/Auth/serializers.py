@@ -59,9 +59,34 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    points = serializers.SerializerMethodField()
+    
     class Meta:
         model =  User
         fields = ('first_name', 'last_name', 'points', 'is_staff', 'nip', 'company_name', 'image', 'desc', 'email', 'form')
+        
+    def get_points(self, obj):
+        last_month = timezone.now() - timedelta(days=30)
+        purchased_tokens = obj.purchasedpoints_employer.filter(
+            created_at__gte=last_month
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        oldest_token_date = obj.purchasedpoints_employer.filter(
+            created_at__gte=last_month
+        ).order_by('created_at').values_list('created_at', flat=True).first()
+        
+        if oldest_token_date:
+            purchased_contacts = obj.purchasedoffers_employer.filter(
+                created_at__gte=oldest_token_date
+            ).count()
+        else:
+            purchased_contacts = 0
+            
+        tokens_from_codes = obj.usedcodes_user.aggregate(total_value=Sum('code__value'))
+
+        remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes['total_value']
+        
+        return remaining_tokens + 10000
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
@@ -122,10 +147,8 @@ class EmployerProfileFollowedSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         
-        user = self.context['request'].user
-        purchased = PurchasedOffers.objects.filter(employer=user, candidate=instance).exists()
-        print(user)
-        print(purchased)
+        purchased = instance.purchasedoffers_candidate.filter(employer=self.context['request'].user).exists()
+        
         if not purchased:
             hidden_first_name = instance.first_name[0] + '*' * (len(instance.first_name) - 1)
             hidden_last_name = instance.last_name[0] + '*' * (len(instance.last_name) - 1)
@@ -140,15 +163,17 @@ class EmployerProfileFollowedSerializer(serializers.ModelSerializer):
         return representation
 
     def get_percentage_by_category(self, instance):
-        candidate_abilities = CandidateAbilities.objects.filter(candidate_id=instance.id).values('ability__abilityquestions_ability__question__category__name').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
-
-        abilities_dict = {}
-        for ability in candidate_abilities:
-            category = ability['ability__abilityquestions_ability__question__category__name']
-            average = round(ability['average_percentage'])
-            abilities_dict[category] = average
-
-        return abilities_dict
+        completed_surveys = instance.completed_surveys
+        
+        category_dict = {}
+        for category_name in completed_surveys:
+            abilities = instance.candidateabilities_candidate.filter(ability__abilityquestions_ability__question__category__name=category_name).annotate(
+                category=F('ability__abilityquestions_ability__question__category__name')
+            ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
+            
+            category_dict[category_name] = round(abilities[0]['average_percentage'])
+            
+        return category_dict
     
     
 class EmployerProfilePurchasedSerializer(serializers.ModelSerializer):

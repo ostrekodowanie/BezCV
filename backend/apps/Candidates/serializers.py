@@ -3,7 +3,7 @@ from django.db.models import F, Avg, Q
 from rest_framework import serializers
 
 from .models import Candidates, PurchasedOffers, CandidateAbilities, Reports
-from apps.Survey.models import Abilities
+from apps.Survey.models import Abilities, Categories
 
 
 class CandidateSerializer(serializers.ModelSerializer):
@@ -153,18 +153,18 @@ class CandidateSerializer(serializers.ModelSerializer):
                 candidate['last_name'] = candidate['last_name'][0] + '*' * (len(candidate['last_name']) - 1)
                 candidate['phone'] = '*********'
             
-            abilities = CandidateAbilities.objects.filter(candidate_id=candidate['id']).annotate(
-                category=F('ability__abilityquestions_ability__question__category__name')
-            ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
+            completed_surveys = obj.completed_surveys
             
-            abilities_dict = {}
-            for ability in abilities:
-                category = ability['category']
-                average = round(ability['average_percentage'])
-                abilities_dict[category] = average
+            category_dict = {}
+            for category_name in completed_surveys:
+                abilities = CandidateAbilities.objects.filter(candidate_id=candidate['id'], ability__abilityquestions_ability__question__category__name=category_name).annotate(
+                    category=F('ability__abilityquestions_ability__question__category__name')
+                ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
+                
+                category_dict[category_name] = round(abilities[0]['average_percentage'])
+                
+            candidate['percentage_by_category'] = category_dict
             
-            candidate['percentage_by_category'] = abilities_dict
-        
         return similar_candidates
     
 
@@ -194,27 +194,30 @@ class CandidatesSerializer(serializers.ModelSerializer):
         
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-
-        hidden_first_name = instance.first_name[0] + '*' * (len(instance.first_name) - 1)
-        hidden_last_name = instance.last_name[0] + '*' * (len(instance.last_name) - 1)
         
-        representation['first_name'] = hidden_first_name
-        representation['last_name'] = hidden_last_name
-        representation['phone'] = '*********'
+        purchased_offers = instance.purchasedoffers_candidate.filter(employer=self.context['request'].user)
+        
+        if not purchased_offers.exists():
+            hidden_first_name = instance.first_name[0] + '*' * (len(instance.first_name) - 1)
+            hidden_last_name = instance.last_name[0] + '*' * (len(instance.last_name) - 1)
+            
+            representation['first_name'] = hidden_first_name
+            representation['last_name'] = hidden_last_name
+            representation['phone'] = '*********'
         return representation
     
     def get_percentage_by_category(self, obj):
-        abilities = obj.candidateabilities_candidate.annotate(
-            category=F('ability__abilityquestions_ability__question__category__name')
-        ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
+        completed_surveys = obj.completed_surveys
         
-        abilities_dict = {}
-        for ability in abilities:
-            category = ability['category']
-            average = round(ability['average_percentage'])
-            abilities_dict[category] = average
-
-        return abilities_dict
+        category_dict = {}
+        for category_name in completed_surveys:
+            abilities = obj.candidateabilities_candidate.filter(ability__abilityquestions_ability__question__category__name=category_name).annotate(
+                category=F('ability__abilityquestions_ability__question__category__name')
+            ).values('category').annotate(average_percentage=Avg('percentage')).order_by('-average_percentage')
+            
+            category_dict[category_name] = round(abilities[0]['average_percentage'])
+            
+        return category_dict
     
     def get_is_followed(self, obj):
         user = self.context['request'].user
