@@ -165,7 +165,7 @@ class CandidateSerializer(serializers.ModelSerializer):
                 
             candidate['percentage_by_category'] = category_dict
             
-        return category_dict
+        return similar_candidates
     
 
 class CandidatesSerializer(serializers.ModelSerializer):
