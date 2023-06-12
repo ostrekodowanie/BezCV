@@ -102,7 +102,11 @@ export default function RoleController() {
       axios
         .post(
           "/api/survey/answers",
-          JSON.stringify({ candidate: phone, answers: roleAnswers }),
+          JSON.stringify({
+            candidate: phone,
+            answers: roleAnswers,
+            profession: role,
+          }),
           {
             headers: { "Content-Type": "application/json" },
           }
