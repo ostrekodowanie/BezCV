@@ -54,12 +54,9 @@ const AbilityRange = ({ name, percentage, profession }: AbilityProps) => {
           ref={rangeRef}
           style={{
             width: !isUndefined ? percentage + "%" : "60%",
-            // backgroundImage: !isWorst
-            //   ? professionColorMap[profession].gradient
-            //   : "linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)",
-            backgroundColor: !isWorst
-              ? professionColorMap[profession].color
-              : "red",
+            backgroundImage: !isWorst
+              ? professionColorMap[profession].gradient
+              : "linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)",
             transform: `scaleX(${scaleValue}%)`,
             opacity: percentage ? "1" : "0.1",
           }}
@@ -68,12 +65,9 @@ const AbilityRange = ({ name, percentage, profession }: AbilityProps) => {
           <div className="rounded-full absolute right-0 translate-x-[50%] h-6 w-6 bottom-[75%] shadow-primarySmall bg-white flex items-center justify-center">
             <div
               style={{
-                // backgroundImage: !isWorst
-                //   ? professionColorMap[profession].gradient
-                //   : "linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)",
-                backgroundColor: !isWorst
-                  ? professionColorMap[profession].color
-                  : "red",
+                backgroundImage: !isWorst
+                  ? professionColorMap[profession].gradient
+                  : "linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)",
               }}
               className="h-[35%] w-[35%] rounded-full"
             />
