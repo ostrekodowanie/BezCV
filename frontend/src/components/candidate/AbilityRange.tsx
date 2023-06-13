@@ -1,20 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { percentageTriangle } from "../../assets/candidate/candidate";
 import { professionColorMap } from "../../constants/professionColorMap";
+import { RoleType } from "../../constants/workForm";
 
 export interface AbilityProps {
   name?: string;
   percentage?: number;
+  profession?: RoleType;
 }
 
-const AbilityRange = ({
-  name,
-  percentage,
-  color,
-}: AbilityProps & { color: string }) => {
+const AbilityRange = ({ name, percentage, profession }: AbilityProps) => {
   const [scaleValue, setScaleValue] = useState(0);
   const rangeRef = useRef<HTMLDivElement>(null!);
   const isUndefined = percentage === null || percentage === undefined;
+  const isWorst = !profession;
 
   useEffect(() => {
     if (!rangeRef.current) return;
@@ -24,6 +23,9 @@ const AbilityRange = ({
       }
     });
     observer.observe(rangeRef.current);
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   return (
@@ -36,19 +38,28 @@ const AbilityRange = ({
         {isUndefined ? "Kandydat nie wypełnił jeszcze tej ankiety." : name}{" "}
         {!isUndefined && (
           <span
-            style={{ backgroundImage: color }}
-            className="ml-2 bg-clip-text text-transparent print:bg-clip-padding print:text-font"
+            style={{
+              backgroundImage: isWorst
+                ? "linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
+                : professionColorMap[profession].gradient,
+            }}
+            className="ml-2 bg-clip-text text-transparent print:text-font print-bg-transparent"
           >
             {percentage}%
           </span>
         )}
       </h4>
-      <div className="bg-[#F8F9FB] rounded-full h-[1.4rem] print:hidden">
+      <div className="bg-[#F8F9FB] rounded-full h-[1.4rem]">
         <div
           ref={rangeRef}
           style={{
             width: !isUndefined ? percentage + "%" : "60%",
-            backgroundImage: color,
+            // backgroundImage: !isWorst
+            //   ? professionColorMap[profession].gradient
+            //   : "linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)",
+            backgroundColor: !isWorst
+              ? professionColorMap[profession].color
+              : "red",
             transform: `scaleX(${scaleValue}%)`,
             opacity: percentage ? "1" : "0.1",
           }}
@@ -56,7 +67,14 @@ const AbilityRange = ({
         >
           <div className="rounded-full absolute right-0 translate-x-[50%] h-6 w-6 bottom-[75%] shadow-primarySmall bg-white flex items-center justify-center">
             <div
-              style={{ backgroundImage: color }}
+              style={{
+                // backgroundImage: !isWorst
+                //   ? professionColorMap[profession].gradient
+                //   : "linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)",
+                backgroundColor: !isWorst
+                  ? professionColorMap[profession].color
+                  : "red",
+              }}
               className="h-[35%] w-[35%] rounded-full"
             />
             <img

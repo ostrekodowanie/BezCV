@@ -55,10 +55,10 @@ export default function CircleChart({
       ref={circleRef}
       className={`${isFirst ? "order-first" : "order-last"} ${
         isUndefined ? "opacity-[0.1] hidden md:flex" : "opacity-1"
-      } flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px]`}
+      } flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px] scale-90 min-w-max`}
     >
       <div className="rounded-full h-[280px] w-[280px] bg-white" />
-      <div className="absolute top-[22%] bottom-[18%] right-16 left-16 flex flex-col items-center gap-4">
+      <div className="absolute top-[22%] bottom-[18%] right-16 left-16 flex flex-col items-center gap-4 print:pl-8">
         <h3 className="flex flex-col items-center text-font relative z-10">
           <small className="font-medium text-[.75rem]">Umiejętności</small>
           <span className="text-lg font-bold">{title}</span>

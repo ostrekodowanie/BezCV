@@ -20,7 +20,7 @@ export default function Footer() {
       <Route
         path="*"
         element={
-          <footer className="bg-[#F4F6FA] padding pt-16 pb-8 flex flex-col gap-8 items-center print:hidden">
+          <footer className="bg-[#F4F6FA] padding pt-16 pb-8 flex flex-col gap-8 items-center print:mt-[1in]">
             {!isAuth && (
               <div className="flex items-center gap-6 text-sm">
                 {account === "employer" && !logged && (
@@ -55,7 +55,10 @@ export default function Footer() {
             <div className="flex flex-row gap-4 flex-wrap md:flex-nowrap w-full justify-between items-center self-stretch">
               <Link to="/">
                 <strong className="font-medium text-xl">
-                  bez<span className="text-primary">CV</span>
+                  bez
+                  <span className="text-primary print:text-fontPrimary">
+                    CV
+                  </span>
                 </strong>
               </Link>
               <p className="text-[#3C4663] text-center max-w-[4in] text-sm font-medium">
