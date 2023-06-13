@@ -41,9 +41,6 @@ class CandidateAnswersView(APIView):
 
         for answer in candidate_answers:
             update_percentage(None, instance=answer)
-
-        if not candidate.is_visible:
-            candidate.is_visible = True
         
         abilities = candidate.candidateabilities_candidate.annotate(
             name=F('ability__name')
