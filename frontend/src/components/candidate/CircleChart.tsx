@@ -55,7 +55,7 @@ export default function CircleChart({
       ref={circleRef}
       className={`${isFirst ? "order-first" : "order-last"} ${
         isUndefined ? "opacity-[0.1] hidden md:flex" : "opacity-1"
-      } flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px] scale-90 min-w-max`}
+      } flex justify-center items-center mx-auto relative rounded-full bg-[#F8F9FB] h-[340px] w-[340px] print:scale-90 min-w-max`}
     >
       <div className="rounded-full h-[280px] w-[280px] bg-white" />
       <div className="absolute top-[22%] bottom-[18%] right-16 left-16 flex flex-col items-center gap-4 print:pl-8">
