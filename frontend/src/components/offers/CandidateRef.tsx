@@ -54,6 +54,7 @@ const CandidateRef = ({
                 backgroundImage: profession
                   ? professionColorMap[profession].gradient
                   : "none",
+                color: profession ? "transparent" : colorScheme.color,
               }}
               className="font-semibold text-transparent bg-clip-text"
             >
@@ -82,10 +83,13 @@ const CandidateRef = ({
                 backgroundImage: profession
                   ? professionColorMap[profession].gradient
                   : "none",
+                color: profession ? "transparent" : colorScheme.color,
               }}
               className="text-transparent text-sm bg-clip-text font-semibold"
             >
-              {profession ? roleToTextMap[profession].profession : ""}
+              {profession
+                ? roleToTextMap[profession].profession
+                : "Nie zdefiniowano"}
             </h3>
           </div>
         </div>
@@ -142,28 +146,32 @@ const CandidateRef = ({
               </h3>
             </div>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
-            <h3 className="font-semibold text-[.75rem]">Umiejętności:</h3>
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-              <CategoryPercantageBox
-                {...roleToTextMap["sales"]}
-                role={profession}
-                percentage={percentage_by_category["sales"]}
-                hasJob={has_job}
-              />
-              <CategoryPercantageBox
-                {...roleToTextMap["office_administration"]}
-                role={profession}
-                percentage={percentage_by_category["office_administration"]}
-                hasJob={has_job}
-              />
-              <CategoryPercantageBox
-                {...roleToTextMap["customer_service"]}
-                role={profession}
-                percentage={percentage_by_category["customer_service"]}
-                hasJob={has_job}
-              />
-            </div>
+          <div>
+            {percentage_by_category && (
+              <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
+                <h3 className="font-semibold text-[.75rem]">Umiejętności:</h3>
+                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                  <CategoryPercantageBox
+                    {...roleToTextMap["sales"]}
+                    role={profession}
+                    percentage={percentage_by_category["sales"]}
+                    hasJob={has_job}
+                  />
+                  <CategoryPercantageBox
+                    {...roleToTextMap["office_administration"]}
+                    role={profession}
+                    percentage={percentage_by_category["office_administration"]}
+                    hasJob={has_job}
+                  />
+                  <CategoryPercantageBox
+                    {...roleToTextMap["customer_service"]}
+                    role={profession}
+                    percentage={percentage_by_category["customer_service"]}
+                    hasJob={has_job}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-col items-start xl:self-end xl:items-end gap-6 mt-8 xl:mt-0">
