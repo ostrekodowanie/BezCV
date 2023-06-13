@@ -13,8 +13,6 @@ from . import serializers
 from .models import Candidates, PurchasedOffers
 from apps.Survey.models import Categories
 from config.settings import client
-from apps.Points.models import Orders, User
-from datetime import datetime
 
 
 class CandidateView(generics.RetrieveAPIView):

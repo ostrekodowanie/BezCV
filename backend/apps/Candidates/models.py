@@ -47,7 +47,7 @@ class Candidates(models.Model):
                                                 ('wykształcenie wyższe (posiadają osoby, które uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)', 'wykształcenie wyższe (posiadają osoby, które uzyskały tytuł zawodowy licencjata, inżyniera, magistra lub magistra inżyniera, lub uzyskały stopień naukowy doktora)')])
     driving_license = models.BooleanField(default=False)
     has_job = models.BooleanField(default=False)
-    is_visible = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
     desc = models.TextField(null=True, blank=True)
     completed_surveys = models.JSONField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
