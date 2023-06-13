@@ -13,6 +13,8 @@ from . import serializers
 from .models import Candidates, PurchasedOffers
 from apps.Survey.models import Categories
 from config.settings import client
+from apps.Points.models import Orders, User
+from datetime import datetime
 
 
 class CandidateView(generics.RetrieveAPIView):
@@ -33,7 +35,7 @@ class CandidatesFilter(filters.FilterSet):
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
-    
+  
 class CandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CandidatesSerializer
@@ -43,7 +45,7 @@ class CandidatesView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Candidates.objects.filter(is_visible=True)
-
+        
         ordering = self.request.query_params.get("order", None)
         show_purchased = self.request.query_params.get("show_purchased", True)
         
@@ -93,15 +95,7 @@ class PurchaseOfferView(generics.CreateAPIView):
         response = super().post(request, *args, **kwargs)
         purchased_offer_id = response.data.get('id')
         
-        purchased_offer = PurchasedOffers.objects.get(id=purchased_offer_id)       
-        
-        user = self.request.user  
-        
-        if user.points <= 0:
-            return Response({'Not enough points'}, status=400)
-        
-        user.points -= purchased_offer.points
-        user.save()
+        purchased_offer = PurchasedOffers.objects.get(id=purchased_offer_id)     
         
         message = f'Twój profil zainteresował jednego z pracodawców w naszej bazie. Jest zainteresowany współpracą.\n\nPoniżej informacje o nim: {purchased_offer.employer.first_name} {purchased_offer.employer.last_name}\n{purchased_offer.employer.company_name}\n\nNiedługo powinien się z Tobą skontaktować. Powodzenia!'
         

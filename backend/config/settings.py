@@ -226,6 +226,7 @@ openai.api_key = os.environ.get('OPENAI_KEY')
 
 token = os.environ.get('SMSAPI_TOKEN') 
 client = SmsApiPlClient(access_token=token)
+fakturownia_token = os.environ.get('FAKTUROWNIA_API_TOKEN')
 '''
 Q_CLUSTER = {
     'retry': 360,

@@ -20,8 +20,10 @@ class UseCodeView(generics.CreateAPIView):
         except Codes.DoesNotExist:
             return Response({"Kod wygasł lub jest niepawidłowy"}, status=status.HTTP_400_BAD_REQUEST)
         
-        if UsedCodes.objects.filter(user=user, code=code).exists():
+        if UsedCodes.objects.filter(user=user).exists():
             return Response({"Kod został już wykorzystany"}, status=status.HTTP_400_BAD_REQUEST)
+        #if UsedCodes.objects.filter(user=user, code=code).exists():
+        #    return Response({"Kod został już wykorzystany"}, status=status.HTTP_400_BAD_REQUEST)
 
         used_code = UsedCodes(user=user, code=code)
         used_code.save()
