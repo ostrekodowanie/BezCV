@@ -30,7 +30,7 @@ class CandidateAnswersView(APIView):
         answers = request.data.get('answers')
         profession = request.data.get('profession')
         candidate = Candidates.objects.get(phone=candidate_phone)
-        if candidate.profession in None:
+        if candidate.profession is None:
             candidate.profession = profession
         
         candidate_answers = [

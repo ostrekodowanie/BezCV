@@ -1,16 +1,15 @@
-from django.urls import reverse
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.db.models import Sum
 from django.utils import timezone
-from rest_framework import generics, views
+from rest_framework import views
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from datetime import timedelta
+from datetime import timedelta, datetime
 
-from . import serializers
 from .models import Orders
 from apps.Auth.models import User
+from config.settings import fakturownia_token
 
 import requests, os
 
@@ -109,7 +108,7 @@ class PurchasePointsView(views.APIView):
 
         return Response({"redirect_url": response_data['redirectUri']})
     
-from config.settings import client
+
 class PayUNotificationView(views.APIView):
     def post(self, request, *args, **kwargs):
         payload = request.data
@@ -129,5 +128,37 @@ class PayUNotificationView(views.APIView):
                 amount=amount,
                 order_id=order_id
             )
+            
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+            
+            current_date = datetime.now()
+            formatted_date = current_date.strftime("%d/%m/%Y")
+            
+            data = {
+                "invoice": {
+                    "kind":"vat",
+                    "number": order.id,
+                    "sell_date": formatted_date,
+                    "issue_date": formatted_date,
+                    "payment_to": formatted_date,
+                    "seller_name": "AGENCJA SOCIAL MEDIA YO ME SP. Z O.O.",
+                    "seller_tax_no": "5252445767",
+                    "buyer_name": buyer.first_name + buyer.last_name,
+                    "buyer_email": buyer_email,
+                    "buyer_tax_no": buyer.nip,
+                    "positions":[
+                        {"name":"tokeny bCV", "tax":23, "total_price_gross":amount, "quantity":tokens}
+                    ]
+                }
+            }
+            
+            data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices.json?api_token={fakturownia_token}", json=data, headers=headers) 
+            response_data = data.json()
+            
+            data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}")
+            response_data = data.json()            
 
         return Response(status=200)
