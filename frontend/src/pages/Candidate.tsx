@@ -4,7 +4,6 @@ import ConfettiExplosion from "react-confetti-explosion";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { bcvToken } from "../assets/general";
-import AbilityRange from "../components/candidate/AbilityRange";
 import Loader from "../components/Loader";
 import CircleChart from "../components/candidate/CircleChart";
 import { useAppSelector } from "../main";
@@ -21,11 +20,7 @@ import {
   ProfessionColorScheme,
 } from "../constants/professionColorMap";
 import {
-  AgeIcon,
   AvailabilityIcon,
-  CashIcon,
-  DriversLicenseIcon,
-  EducationIcon,
   EmailIcon,
   JobPositionIcon,
   PhoneIcon,
@@ -33,12 +28,11 @@ import {
 } from "../assets/candidate/icons/icons";
 import HasJob from "../components/offers/HasJob";
 import PrintButton from "../components/candidate/PrintButton";
-import WorstAbilitiesList, {
-  WorstAbilitiesLoader,
-} from "../components/candidate/WorstAbilitiesList";
-import AbilitiesLoader from "../components/candidate/AbilitiesLoader";
 import FollowButton from "../components/candidate/FollowButton";
 import SuggestedCandidates from "../components/candidate/SuggestedCandidates";
+import { Loading } from "../types/candidate";
+import SideBar from "../components/home/candidate/SideBar";
+import AbilitiesList from "../components/candidate/AbilitiesList";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -51,7 +45,7 @@ export default function Candidate() {
   const user_id = auth.data.id;
   const { refresh } = auth.tokens;
   const [confetti, setConfetti] = useState(false);
-  const [loading, setLoading] = useState({
+  const [loading, setLoading] = useState<Loading>({
     page: true,
     purchase: false,
   });
@@ -61,10 +55,6 @@ export default function Candidate() {
     ? professionColorMap[candidateDetails.profession]
     : initialColorScheme;
   const { gradient } = colorScheme;
-  const hasBadAbilities =
-    candidateDetails.worst_abilities.customer_service.length > 0 &&
-    candidateDetails.worst_abilities.office_administration.length > 0 &&
-    candidateDetails.worst_abilities.sales.length > 0;
   const didFilledSurvey: DidFilledSurvey = {
     sales:
       candidateDetails.abilities?.sales.filter((item) => item.percentage)
@@ -121,17 +111,22 @@ export default function Candidate() {
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
       <section
-        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:sm:px-0 print:md:px-0 print:2xl:px-0 print:py-16 print:md:py-16 print:2xl:py-16 py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col gap-8"
+        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:sm:px-0 print:md:px-0 print:2xl:px-0 print:py-16 print:md:py-16 print:2xl:py-16 py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col print:gap-4 gap-8"
         id="candidate-profile"
       >
         <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] print:py-6 print:sm:py-6 py-10 sm:p-10">
           {candidateDetails.has_job && <HasJob />}
-          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] xl:flex xl:justify-between">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-6 md:grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] print:sm:flex-nowrap print:md:flex print:flex print:gap-4 xl:flex xl:justify-between">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center font-semibold">
                 <span
-                  style={{ backgroundImage: gradient }}
-                  className="bg-clip-text text-transparent print:text-font print:bg-clip-padding print:bg-transparent"
+                  style={{
+                    backgroundImage: gradient,
+                    color: candidateDetails.profession
+                      ? "transparent"
+                      : colorScheme.color,
+                  }}
+                  className="bg-clip-text text-transparent print:text-font print:bg-clip-padding print-bg-transparent"
                 >
                   {candidateDetails.first_name.charAt(0) +
                     candidateDetails.last_name.charAt(0)}
@@ -167,11 +162,17 @@ export default function Candidate() {
                   <>
                     <h4 className="text-sm">Szuka pracy w</h4>
                     <h3
-                      style={{ backgroundImage: gradient }}
-                      className="font-semibold text-sm bg-clip-text text-transparent print:text-font print:bg-clip-padding print:bg-transparent"
+                      style={{
+                        backgroundImage: gradient,
+                        color: candidateDetails.profession
+                          ? "transparent"
+                          : colorScheme.color,
+                      }}
+                      className="font-semibold print-bg-transparent text-sm bg-clip-text text-transparent print:text-font print:bg-clip-padding print:bg-transparent"
                     >
-                      {candidateDetails.profession &&
-                        roleToTextMap[candidateDetails.profession].profession}
+                      {candidateDetails.profession
+                        ? roleToTextMap[candidateDetails.profession].profession
+                        : "Nie wypełniono ankiety"}
                     </h3>
                   </>
                 )}
@@ -190,7 +191,7 @@ export default function Candidate() {
                 ) : (
                   <>
                     <h4 className="text-sm">Poprzednie stanowisko</h4>
-                    <h3 className="font-semibold text-sm">
+                    <h3 className="font-semibold text-sm max-w-[2in]">
                       {candidateDetails.job_position}
                     </h3>
                   </>
@@ -219,7 +220,7 @@ export default function Candidate() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col xl:grid grid-cols-[1fr_2fr] xl:grid-rows-[max-content_1fr_max-content] gap-8">
+        <div className="flex flex-col xl:grid grid-cols-[1fr_2fr] xl:grid-rows-[max-content_1fr_max-content] print:grid print:gap-4 gap-8">
           {loading.page ? (
             <div className="ml-[8vw] sm:ml-0">
               <Loader />
@@ -229,7 +230,11 @@ export default function Candidate() {
               <button
                 onClick={handlePurchase}
                 disabled={candidateDetails.is_purchased}
-                style={{ backgroundImage: gradient }}
+                style={{
+                  backgroundImage: candidateDetails.profession
+                    ? gradient
+                    : professionColorMap.office_administration.gradient,
+                }}
                 className={`rounded-full max-w-max justify-center ${
                   !candidateDetails.is_purchased
                     ? "hover:scale-[1.02] transition-transform"
@@ -246,94 +251,7 @@ export default function Candidate() {
               {loading.purchase && <Loader />}
             </div>
           )}
-          <div className="flex flex-col gap-8 row-[2/4] col-[1/2] bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] print:py-6 print:sm:py-6 py-10 sm:p-10 print:flex-row print:flex-wrap">
-            <div className="md:hidden print:hidden">
-              <FollowButton
-                id={id ? parseInt(id) : -1}
-                is_followed={candidateDetails.is_followed}
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <AgeIcon {...colorScheme} />
-              </div>
-              <div className="flex flex-col gap-1">
-                {loading.page ? (
-                  <>
-                    <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                  </>
-                ) : (
-                  <>
-                    <h4 className="text-sm">Wiek</h4>
-                    <h3 className="font-semibold text-sm">
-                      {candidateDetails.birth_date}
-                    </h3>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <EducationIcon {...colorScheme} />
-              </div>
-              <div className="flex flex-col gap-1">
-                {loading.page ? (
-                  <>
-                    <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                  </>
-                ) : (
-                  <>
-                    <h4 className="text-sm">Wykształcenie</h4>
-                    <h3 className="font-semibold text-sm">
-                      {candidateDetails.education?.split("(")[0]}
-                    </h3>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <CashIcon {...colorScheme} />
-              </div>
-              <div className="flex flex-col gap-1">
-                {loading.page ? (
-                  <>
-                    <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                  </>
-                ) : (
-                  <>
-                    <h4 className="text-sm">Oczekiwania finansowe</h4>
-                    <h3 className="font-semibold text-sm">
-                      {candidateDetails.salary_expectation}
-                    </h3>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
-                <DriversLicenseIcon {...colorScheme} />
-              </div>
-              <div className="flex flex-col gap-1">
-                {loading.page ? (
-                  <>
-                    <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                    <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
-                  </>
-                ) : (
-                  <>
-                    <h4 className="text-sm">Prawo jazdy kat. B</h4>
-                    <h3 className="font-semibold text-sm">
-                      {candidateDetails.drivers_license ? "Tak" : "Nie"}
-                    </h3>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+          <SideBar id={id || ""} {...candidateDetails} {...loading} />
           <div className="bg-white sm:rounded-3xl shadow-primaryBig px-[8vw] print:py-6 print:sm:py-6 py-10 sm:p-10 flex flex-col sm:flex-row sm:justify-evenly col-[2/3] gap-6">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
@@ -387,9 +305,12 @@ export default function Candidate() {
                 />
               </div>
             </div>
-            <div className="px-[8vw] py-6 sm:px-8 rounded-xl bg-[#F8F9FB] flex-1">
+            <div className="px-[8vw] py-6 print:bg-white print:p-0 print:sm:px-0 print:px-0 print:py-0 sm:px-8 rounded-xl bg-[#F8F9FB] flex-1">
               <p className="font-medium text-[.8rem] leading-loose">
-                {candidateDetails.desc}
+                {candidateDetails.desc
+                  ? candidateDetails.desc
+                  : !loading.page &&
+                    "Kandydat jeszcze nie wypełnił ankiety. Gdy to zrobi, jego opis zostanie uzupełniony."}
               </p>
             </div>
           </div>
@@ -397,195 +318,55 @@ export default function Candidate() {
         {confetti && (
           <ConfettiExplosion className="absolute top-[40vh] right-[50%] translate-x-[-50%]" />
         )}
-        <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto print:py-8 print:sm:px-4 py-10 sm:px-6 shadow-primaryBig print:gap-4 print:xl:gap-2 print:md:flex-nowrap gap-8 xl:gap-4 flex flex-col sm:flex-row flex-wrap justify-between items-center">
-          <CircleChart
-            profession="sales"
-            isFirst={candidateDetails.profession === "sales"}
-            percentage={
-              didFilledSurvey.sales
-                ? parseInt(candidateDetails.ability_charts.sales.toString())
-                : null
-            }
-          />
-          <CircleChart
-            profession="office_administration"
-            isFirst={candidateDetails.profession === "office_administration"}
-            percentage={
-              didFilledSurvey.office_administration
-                ? parseInt(
-                    candidateDetails.ability_charts.office_administration.toString()
-                  )
-                : null
-            }
-          />
-          <CircleChart
-            profession="customer_service"
-            isFirst={candidateDetails.profession === "customer_service"}
-            percentage={
-              didFilledSurvey.customer_service
-                ? parseInt(
-                    candidateDetails.ability_charts.customer_service.toString()
-                  )
-                : null
-            }
-          />
-        </div>
-        <div className="bg-white sm:rounded-3xl px-[8vw] py-10 sm:p-10 shadow-primaryBig gap-12 flex flex-col">
-          <div className="flex flex-col w-full">
-            <h2 className="font-bold text-lg mb-8 print:hidden">
-              Umiejętności kandydata do pracy na każdym stanowisku
-            </h2>
-            <div className="flex flex-col gap-8 md:grid grid-cols-3">
-              <div
-                className={`flex flex-col gap-6 ${
-                  candidateDetails.profession === "sales"
-                    ? "order-first"
-                    : "order-last"
-                }`}
-              >
-                <h3 className="font-bold text-lg">Sprzedaż</h3>
-                {!loading.page ? (
-                  <>
-                    {didFilledSurvey.sales ? (
-                      candidateDetails.abilities?.sales.map((ab) => (
-                        <AbilityRange
-                          {...ab}
-                          color={professionColorMap.sales.gradient}
-                          key={ab.name}
-                        />
-                      ))
-                    ) : (
-                      <AbilityRange color={professionColorMap.sales.gradient} />
-                    )}
-                    <div className="flex flex-col sm:hidden gap-6">
-                      {didFilledSurvey.sales &&
-                      candidateDetails.worst_abilities.sales ? (
-                        candidateDetails.worst_abilities.sales.map((ab) => (
-                          <AbilityRange
-                            {...ab}
-                            color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-                            key={ab.name}
-                          />
-                        ))
-                      ) : (
-                        <AbilityRange color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)" />
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <AbilitiesLoader />
-                )}
-              </div>
-              <div
-                className={`flex flex-col gap-6 ${
-                  candidateDetails.profession === "office_administration"
-                    ? "order-first"
-                    : "order-last"
-                }`}
-              >
-                <h3 className="font-bold text-lg">Administracja</h3>
-                {!loading.page ? (
-                  <>
-                    {didFilledSurvey.office_administration ? (
-                      candidateDetails.abilities?.office_administration.map(
-                        (ab) => (
-                          <AbilityRange
-                            {...ab}
-                            color={
-                              professionColorMap.office_administration.gradient
-                            }
-                            key={ab.name}
-                          />
-                        )
-                      )
-                    ) : (
-                      <AbilityRange
-                        color={
-                          professionColorMap.office_administration.gradient
-                        }
-                      />
-                    )}
-                    <div className="flex flex-col sm:hidden gap-6">
-                      {didFilledSurvey.office_administration &&
-                      candidateDetails.worst_abilities.office_administration ? (
-                        candidateDetails.worst_abilities.office_administration.map(
-                          (ab) => (
-                            <AbilityRange
-                              {...ab}
-                              color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-                              key={ab.name}
-                            />
-                          )
-                        )
-                      ) : (
-                        <AbilityRange color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)" />
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <AbilitiesLoader />
-                )}
-              </div>
-              <div
-                className={`flex flex-col gap-6 ${
-                  candidateDetails.profession === "customer_service"
-                    ? "order-first"
-                    : "order-last"
-                }`}
-              >
-                <h3 className="font-bold text-lg">Obsługa klienta</h3>
-                {!loading.page ? (
-                  <>
-                    {didFilledSurvey.customer_service ? (
-                      candidateDetails.abilities?.customer_service.map((ab) => (
-                        <AbilityRange
-                          {...ab}
-                          color={professionColorMap.customer_service.gradient}
-                          key={ab.name}
-                        />
-                      ))
-                    ) : (
-                      <AbilityRange
-                        color={professionColorMap.customer_service.gradient}
-                      />
-                    )}
-                    <div className="flex flex-col sm:hidden gap-6">
-                      {didFilledSurvey.customer_service &&
-                      candidateDetails.worst_abilities.customer_service ? (
-                        candidateDetails.worst_abilities.customer_service.map(
-                          (ab) => (
-                            <AbilityRange
-                              {...ab}
-                              color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-                              key={ab.name}
-                            />
-                          )
-                        )
-                      ) : (
-                        <AbilityRange color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)" />
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <AbilitiesLoader />
-                )}
-              </div>
-            </div>
+        {candidateDetails.ability_charts && (
+          <div className="bg-white sm:rounded-3xl overflow-hidden sm:overflow-auto print:py-8 print:sm:px-2 py-10 sm:px-6 shadow-primaryBig print:gap-2 print:xl:gap-2 print:md:flex-nowrap gap-8 xl:gap-4 flex flex-col sm:flex-row print:flex-nowrap flex-wrap justify-between items-center">
+            <CircleChart
+              profession="sales"
+              isFirst={candidateDetails.profession === "sales"}
+              percentage={
+                didFilledSurvey.sales
+                  ? parseInt(candidateDetails.ability_charts.sales.toString())
+                  : null
+              }
+            />
+            <CircleChart
+              profession="office_administration"
+              isFirst={candidateDetails.profession === "office_administration"}
+              percentage={
+                didFilledSurvey.office_administration
+                  ? parseInt(
+                      candidateDetails.ability_charts.office_administration.toString()
+                    )
+                  : null
+              }
+            />
+            <CircleChart
+              profession="customer_service"
+              isFirst={candidateDetails.profession === "customer_service"}
+              percentage={
+                didFilledSurvey.customer_service
+                  ? parseInt(
+                      candidateDetails.ability_charts.customer_service.toString()
+                    )
+                  : null
+              }
+            />
           </div>
-          {hasBadAbilities &&
-            (!loading.page ? (
-              <WorstAbilitiesList {...candidateDetails.worst_abilities} />
-            ) : (
-              <WorstAbilitiesLoader />
-            ))}
-        </div>
+        )}
+        {candidateDetails.profession && (
+          <AbilitiesList
+            {...candidateDetails}
+            {...didFilledSurvey}
+            loading={loading}
+          />
+        )}
         {loading.page ? (
           <div className="ml-[8vw] sm:ml-0">
             <Loader />
           </div>
         ) : (
           <PrintButton
-            gradient={gradient}
+            profession={candidateDetails.profession}
             disabled={!candidateDetails.is_purchased}
           />
         )}

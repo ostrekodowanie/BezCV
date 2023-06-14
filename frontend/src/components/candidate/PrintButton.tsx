@@ -1,12 +1,14 @@
 import { MouseEvent } from "react";
 import { pdf } from "../../assets/candidate/candidate";
+import { RoleType } from "../../constants/workForm";
+import { professionColorMap } from "../../constants/professionColorMap";
 
 type PDFButtonProps = {
   disabled: boolean;
-  gradient: string;
+  profession?: RoleType;
 };
 
-const PDFButton = ({ disabled, gradient }: PDFButtonProps) => {
+const PDFButton = ({ disabled, profession }: PDFButtonProps) => {
   const handlePDF = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     window.print();
@@ -18,7 +20,9 @@ const PDFButton = ({ disabled, gradient }: PDFButtonProps) => {
         type="button"
         onClick={handlePDF}
         style={{
-          backgroundImage: gradient,
+          backgroundImage: profession
+            ? professionColorMap[profession].gradient
+            : professionColorMap.office_administration.gradient,
           opacity: disabled ? 0.4 : 1,
         }}
         disabled={disabled}

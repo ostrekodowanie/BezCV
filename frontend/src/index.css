@@ -213,6 +213,10 @@ input[type="range"]::-ms-thumb {
     background-clip: initial !important;
     text-shadow: none;
   }
+    body {-webkit-print-color-adjust: exact; print-color-adjust: exact;}
+    .print-bg-transparent {
+      background: transparent !important;
+    }
 }
 
 @page {

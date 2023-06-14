@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FormEvent, useState, MouseEvent, ChangeEvent } from "react";
+import { FormEvent, useState, MouseEvent } from "react";
 import { Link } from "react-router-dom";
 import FilledButton from "../../components/FilledButton";
 import { inputStyles } from "../../constants/general";
@@ -99,7 +99,9 @@ export default function Form() {
               <Loader />
             ) : (
               codeStatus === true && (
-                <span className="text-primary">Kod został wysłany</span>
+                <span className="text-green-400 font-medium">
+                  Kod został wysłany
+                </span>
               )
             )}
           </div>

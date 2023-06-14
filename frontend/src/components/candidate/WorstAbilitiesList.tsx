@@ -13,29 +13,13 @@ export default function WorstAbilitiesList({
       </h2>
       <div className="flex flex-col gap-8 md:grid grid-cols-3">
         {sales.length > 0 &&
-          sales.map((ab) => (
-            <AbilityRange
-              {...ab}
-              color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-              key={ab.name}
-            />
-          ))}
+          sales.map((ab) => <AbilityRange {...ab} key={ab.name} />)}
         {office_administration.length > 0 &&
           office_administration.map((ab) => (
-            <AbilityRange
-              {...ab}
-              color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-              key={ab.name}
-            />
+            <AbilityRange {...ab} key={ab.name} />
           ))}
         {customer_service.length > 0 &&
-          customer_service.map((ab) => (
-            <AbilityRange
-              {...ab}
-              color="linear-gradient(180deg, #DF1B5C 0%, #DF1B32 100%)"
-              key={ab.name}
-            />
-          ))}
+          customer_service.map((ab) => <AbilityRange {...ab} key={ab.name} />)}
       </div>
     </div>
   );

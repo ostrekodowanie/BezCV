@@ -32,9 +32,9 @@ export interface CandidateProps {
 
 export type Details = Omit<CandidateProps, | 'id' | 'percentage_by_category'> & { 
     is_purchased: boolean,
-    worst_abilities: AbilitiesListType,
+    worst_abilities?: AbilitiesListType,
     desc: string,
-    ability_charts: PercentageByProfession
+    ability_charts?: PercentageByProfession
 }
 
 export type NonPercentageAbilitiesCandidateProps = Omit<CandidateProps, 'abilities'> & {

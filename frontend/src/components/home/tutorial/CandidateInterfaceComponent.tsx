@@ -28,11 +28,7 @@ const CandidateInterfaceComponent = () => {
       <CircleChart profession={role.name} percentage={percentage} isFirst />
       <div className="flex flex-col gap-6 self-stretch max-w-[5in] w-full mx-auto mt-8">
         {exampleAbilities[role.name].map((ab) => (
-          <AbilityRange
-            {...ab}
-            color={professionColorMap[role.name].gradient}
-            key={ab.name}
-          />
+          <AbilityRange {...ab} profession={role.name} key={ab.name} />
         ))}
       </div>
     </div>
