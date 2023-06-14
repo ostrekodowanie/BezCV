@@ -69,6 +69,7 @@ export default function Candidate() {
       ).length === candidateDetails.abilities?.customer_service.length,
   };
   const didFilledAllSurveys =
+    candidateDetails.abilities &&
     didFilledSurvey.customer_service &&
     didFilledSurvey.office_administration &&
     didFilledSurvey.sales;
