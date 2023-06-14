@@ -70,8 +70,6 @@ class PurchasePointsView(views.APIView):
         response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=order_headers, json=order_data, allow_redirects=False)
         location_header = response.headers.get('Location')
         
-        return Response(location_header)
-        
         last_month = timezone.now() - timedelta(days=30)
         purchased_tokens = employer.purchasedpoints_employer.filter(
             created_at__gte=last_month
@@ -93,7 +91,7 @@ class PurchasePointsView(views.APIView):
         remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes['total_value']
         
         context = {
-                'employer': "test",#employer['first_name'],
+                'employer': employer['first_name'],
                 'token_count': remaining_tokens
             }
                     
@@ -101,12 +99,12 @@ class PurchasePointsView(views.APIView):
         email_message = EmailMessage(
             subject='Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?',
             body=message,
-            to=["se6359@gmail.com"]#[employer['email']]
+            to=[employer['email']]
         )
         email_message.content_subtype ="html"
         email_message.send()
 
-        return Response({"redirect_url": response_data['redirectUri']})
+        return Response(location_header)
     
 
 class PayUNotificationView(views.APIView):

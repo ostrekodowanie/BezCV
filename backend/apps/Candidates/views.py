@@ -33,7 +33,7 @@ class CandidatesFilter(filters.FilterSet):
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
-  
+
 class CandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CandidatesSerializer
