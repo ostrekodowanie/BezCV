@@ -69,40 +69,6 @@ class PurchasePointsView(views.APIView):
         
         response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=order_headers, json=order_data, allow_redirects=False)
         location_header = response.headers.get('Location')
-        
-        last_month = timezone.now() - timedelta(days=30)
-        purchased_tokens = employer.purchasedpoints_employer.filter(
-            created_at__gte=last_month
-        ).aggregate(Sum('amount'))['amount__sum'] or 0
-        
-        oldest_token_date = employer.purchasedpoints_employer.filter(
-            created_at__gte=last_month
-        ).order_by('created_at').values_list('created_at', flat=True).first()
-        
-        if oldest_token_date:
-            purchased_contacts = employer.purchasedoffers_employer.filter(
-                created_at__gte=oldest_token_date
-            ).count()
-        else:
-            purchased_contacts = 0
-            
-        tokens_from_codes = employer.usedcodes_user.aggregate(total_value=Sum('code__value')) or 0
-
-        remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes['total_value']
-        
-        context = {
-                'employer': employer['first_name'],
-                'token_count': remaining_tokens
-            }
-                    
-        message = render_to_string('employers/after_payment.html', context)
-        email_message = EmailMessage(
-            subject='Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?',
-            body=message,
-            to=[employer['email']]
-        )
-        email_message.content_subtype ="html"
-        email_message.send()
 
         return Response(location_header)
     
@@ -157,6 +123,40 @@ class PayUNotificationView(views.APIView):
             response_data = data.json()
             
             data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}")
-            response_data = data.json()            
+            response_data = data.json()    
+            
+            last_month = timezone.now() - timedelta(days=30)
+            purchased_tokens = buyer.purchasedpoints_employer.filter(
+                created_at__gte=last_month
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+            
+            oldest_token_date = buyer.purchasedpoints_employer.filter(
+                created_at__gte=last_month
+            ).order_by('created_at').values_list('created_at', flat=True).first()
+            
+            if oldest_token_date:
+                purchased_contacts = buyer.purchasedoffers_employer.filter(
+                    created_at__gte=oldest_token_date
+                ).count()
+            else:
+                purchased_contacts = 0
+                
+            tokens_from_codes = buyer.usedcodes_user.aggregate(total_value=Sum('code__value')) or 0
+
+            remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes['total_value']
+            
+            context = {
+                    'employer': buyer['first_name'],
+                    'token_count': remaining_tokens
+                }
+                        
+            message = render_to_string('employers/after_payment.html', context)
+            email_message = EmailMessage(
+                subject='Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?',
+                body=message,
+                to=[buyer['email']]
+            )
+            email_message.content_subtype ="html"
+            email_message.send()        
 
         return Response(status=200)
