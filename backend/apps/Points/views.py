@@ -69,7 +69,7 @@ class PurchasePointsView(views.APIView):
         
         response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=order_headers, json=order_data, allow_redirects=False)
         location_header = response.headers.get('Location')
-
+        
         return Response(location_header)
     
 
@@ -93,7 +93,7 @@ class PayUNotificationView(views.APIView):
                 order_id=order_id
             )
             
-            headers = {
+            '''headers = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             }
@@ -123,7 +123,7 @@ class PayUNotificationView(views.APIView):
             response_data = data.json()
             
             data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}")
-            response_data = data.json()    
+            response_data = data.json()    '''
             
             last_month = timezone.now() - timedelta(days=30)
             purchased_tokens = buyer.purchasedpoints_employer.filter(
