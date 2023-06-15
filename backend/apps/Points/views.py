@@ -146,7 +146,7 @@ class PayUNotificationView(views.APIView):
             remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes['total_value']
             
             context = {
-                    'employer': buyer['first_name'],
+                    'employer': buyer.first_name,
                     'token_count': remaining_tokens
                 }
                         
@@ -154,7 +154,7 @@ class PayUNotificationView(views.APIView):
             email_message = EmailMessage(
                 subject='Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?',
                 body=message,
-                to=[buyer['email']]
+                to=[buyer.email]
             )
             email_message.content_subtype ="html"
             email_message.send()        
