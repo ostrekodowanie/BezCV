@@ -48,7 +48,7 @@ class PurchasePointsView(views.APIView):
             "merchantPosId": client_id,
             "description": f"bezCV - {amount} tokens",
             "currencyCode": "PLN",
-            "totalAmount": "1",#str(int(price) * 100),
+            "totalAmount": str(int(price) * 100),
             "customerIp": request.META.get("REMOTE_ADDR"),
             "continueUrl": "https://bezcv.com",
             "notifyUrl": "https://bezcv.com/api/payu-notify",
@@ -60,9 +60,9 @@ class PurchasePointsView(views.APIView):
             },
             "products": [
                 {
-                    "name": f"{amount} tokens",
-                    "unitPrice": "1",
-                    "quantity": "1"
+                    "name": f"bCV tokens",
+                    "unitPrice": amount/price,
+                    "quantity": amount
                 }
             ]
         }
