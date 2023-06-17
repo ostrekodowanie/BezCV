@@ -44,7 +44,7 @@ export default function Summary() {
         "/api/points/purchase",
         JSON.stringify({
           amount: foundPackage.points,
-          price: foundPackage.price,
+          price: foundPackage.price * 1.23,
         })
       )
       .then((res) => (window.location.href = res.data))

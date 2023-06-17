@@ -7,7 +7,7 @@ const BuyerInfo = () => {
     (state) => state.login.data
   );
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-12 self-stretch">
       <div className="flex flex-col gap-4">
         <h2 className="mb-6 font-semibold text-xl md:text-2xl">
           Dane do zamówienia

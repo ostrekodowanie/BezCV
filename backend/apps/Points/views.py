@@ -37,6 +37,8 @@ class PurchasePointsView(views.APIView):
         response_data = data.json()
         
         access_token = response_data['access_token']
+
+        unit_price = price / amount
         
         order_headers = {
             'Authorization': f'Bearer {access_token}',
@@ -48,7 +50,7 @@ class PurchasePointsView(views.APIView):
             "merchantPosId": client_id,
             "description": f"bezCV - {amount} tokens",
             "currencyCode": "PLN",
-            "totalAmount": str(int(price) * 100),
+            "totalAmount": str(int(price * 100)),
             "customerIp": request.META.get("REMOTE_ADDR"),
             "continueUrl": "https://bezcv.com",
             "notifyUrl": "https://bezcv.com/api/payu-notify",
@@ -61,13 +63,14 @@ class PurchasePointsView(views.APIView):
             "products": [
                 {
                     "name": f"bCV tokens",
-                    "unitPrice": amount/price,
+                    "unitPrice": int(unit_price),
                     "quantity": amount
                 }
             ]
         }
         
         response = requests.post("https://secure.payu.com/api/v2_1/orders", headers=order_headers, json=order_data, allow_redirects=False)
+        
         location_header = response.headers.get('Location')
         
         return Response(location_header)
