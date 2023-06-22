@@ -119,11 +119,11 @@ class PayUNotificationView(views.APIView):
                 }
             }
             
-            data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices.json?api_token={fakturownia_token}", json=data, headers=headers) 
-            response_data = data.json()
+            #data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices.json?api_token={fakturownia_token}", json=data, headers=headers) 
+            #response_data = data.json()
             
-            data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}")
-            response_data = data.json()
+            #data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}")
+            #response_data = data.json()
             
             last_month = timezone.now() - timedelta(days=30)
             purchased_tokens = buyer.purchasedpoints_employer.filter(
