@@ -75,7 +75,10 @@ export default function App() {
 
   useLayoutEffect(() => {
     const queryAccount = searchParams.get("account");
-    queryAccount !== "worker" ? getUser() : localStorage.removeItem("user");
+    if (queryAccount === "worker") {
+      localStorage.removeItem("user");
+      setLoading(false);
+    } else getUser();
   }, [loginFromLocalStorage]);
 
   useLayoutEffect(() => {
