@@ -1,7 +1,8 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import ChooseAccount from "../pages/ChooseAccount";
 import { useAppSelector } from "../main";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 export type AccountType = "employer" | "worker" | null;
 
@@ -20,6 +21,7 @@ export default function AccountProvider({
 }: {
   children: JSX.Element;
 }) {
+  const [searchParams] = useSearchParams();
   const { logged } = useAppSelector((state) => state.login);
   const navigate = useNavigate();
   const [account, setAccount] = useState<AccountType>(
@@ -36,6 +38,11 @@ export default function AccountProvider({
     });
     setAccount(account);
   };
+
+  useEffect(() => {
+    const queryAccount = searchParams.get("account");
+    queryAccount && changeAccount(queryAccount as AccountType);
+  }, []);
 
   return !account ? (
     <ChooseAccount setAccount={changeAccount} />
