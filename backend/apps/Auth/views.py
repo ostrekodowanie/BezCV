@@ -75,7 +75,8 @@ class SignUpView(views.APIView):
             user = serializer.data
             
             all = nip24.getAllDataExt(Number.NIP, user['nip'])
-            user['company_name'] = all.name 
+            
+            User.objects.filter(email=user['email']).update(company_name=all.name)
             
             token = jwt.encode({'email': user['email']}, settings.SECRET_KEY, algorithm='HS256')
             link = 'https://' + get_current_site(request).domain + '/rejestracja/verify?token={}'.format(token)
