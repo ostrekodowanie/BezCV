@@ -1,13 +1,15 @@
 from django.db.models import F, Avg, Sum
 from django.utils import timezone
 
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.validators import ValidationError
+from rest_framework.response import Response
 
 from datetime import timedelta
 
 from .models import User
 from apps.Candidates.models import Candidates
+from apps.Codes.models import UsedCodes, Codes
 
 from nip24 import *
 
@@ -26,29 +28,50 @@ class SignUpSerializer(serializers.ModelSerializer):
                 'unique': 'NIP jest już przypisany do istniejącego konta'
             }
         )
+    phone = serializers.CharField(
+            error_messages={
+                'unique': 'Numer telefonu jest już przypisany do istniejącego konta'
+            }
+        )
+    phone = serializers.CharField(allow_null=True, allow_blank=True)
+    code = serializers.CharField(allow_null=True, allow_blank=True)
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'nip', 'password')
+        fields = ('first_name', 'last_name', 'email', 'nip', 'password', 'phone', 'code')
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
     def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        
         email = validated_data.get('email')
         if User.objects.filter(email=email).exists():
             raise ValidationError('Email jest już przypisany do istniejącego konta')
         nip = validated_data.get('nip')
         if User.objects.filter(nip=nip).exists():
             raise ValidationError('NIP jest już przypisany do istniejącego konta')
+        if 'phone' in validated_data:
+            phone = validated_data['phone']
+            if User.objects.filter(phone=phone).exists():
+                raise ValidationError('Numer telefonu jest już przypisany do istniejącego konta')
         active = nip24.isActiveExt(Number.NIP, nip)
         if not active:
             if not nip24.getLastError():
                 raise ValidationError('Firma zawiesiła lub zakończyła działalność')
             else:
                 raise ValidationError(nip24.getLastError())
+        code = validated_data.get('code')
+        if code:        
+            try:
+                code = Codes.objects.get(code=code, is_active=True)  
+            except Codes.DoesNotExist:
+                return Response({"Kod wygasł lub jest niepawidłowy"}, status=status.HTTP_400_BAD_REQUEST)
+
+            used_code = UsedCodes(user=instance, code=code)
+            used_code.save()
             
         password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
 
         if password is not None:
             instance.set_password(password)
