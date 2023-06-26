@@ -7,6 +7,7 @@ import Loader from "../../components/Loader";
 import { reportSuccessMan } from "../../assets/profile/profile";
 import { passwordNotVisible, passwordVisible } from "../../assets/general";
 import PolicyAccept from "../../components/survey/PolicyAccept";
+import Banner from "../../components/signup/Banner";
 
 const initialPolicy = {
   statute: false,
@@ -29,6 +30,10 @@ export default function Form() {
     nip: "",
     password: "",
   });
+  const [codeInfo, setCodeInfo] = useState({
+    code: "",
+    phone: "",
+  });
 
   const handleSubmit = (e?: FormEvent) => {
     e && e.preventDefault();
@@ -41,12 +46,16 @@ export default function Form() {
       return setStatus("Hasła się nie zgadzają!");
     if (employerDetails.password.length < 6)
       return setStatus("Hasło musi posiadać co najmniej 6 znaków!");
+
     axios
-      .post("/api/signup", JSON.stringify(employerDetails), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        "/api/signup",
+        JSON.stringify({
+          ...employerDetails,
+          ...(codeInfo.code && { code: codeInfo.code }),
+          ...(codeInfo.phone && { phone: codeInfo.phone }),
+        })
+      )
       .then(() => setStatus(true))
       .catch((err) =>
         setStatus(
@@ -317,6 +326,7 @@ export default function Form() {
               </span>
               <div className="bg-[#DFDFDF] absolute left-0 right-0 h-[2px]" />
             </div>
+            <Banner onChange={(code, phone) => setCodeInfo({ code, phone })} />
             {(policyActive.policy || policyActive.statute) && (
               <PolicyAccept
                 hide={() => setPolicyActive(initialPolicy)}

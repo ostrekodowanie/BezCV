@@ -89,7 +89,7 @@ const CandidateRef = ({
             >
               {profession
                 ? roleToTextMap[profession].profession
-                : "Nie zdefiniowano"}
+                : "Nie wypełnił"}
             </h3>
           </div>
         </div>
@@ -150,26 +150,36 @@ const CandidateRef = ({
             {percentage_by_category && (
               <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
                 <h3 className="font-semibold text-[.75rem]">Umiejętności:</h3>
-                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-                  <CategoryPercantageBox
-                    {...roleToTextMap["sales"]}
-                    role={profession}
-                    percentage={percentage_by_category["sales"]}
-                    hasJob={has_job}
-                  />
-                  <CategoryPercantageBox
-                    {...roleToTextMap["office_administration"]}
-                    role={profession}
-                    percentage={percentage_by_category["office_administration"]}
-                    hasJob={has_job}
-                  />
-                  <CategoryPercantageBox
-                    {...roleToTextMap["customer_service"]}
-                    role={profession}
-                    percentage={percentage_by_category["customer_service"]}
-                    hasJob={has_job}
-                  />
-                </div>
+                {percentage_by_category.sales ||
+                percentage_by_category.office_administration ||
+                percentage_by_category.customer_service ? (
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                    <CategoryPercantageBox
+                      {...roleToTextMap["sales"]}
+                      role={profession}
+                      percentage={percentage_by_category["sales"]}
+                      hasJob={has_job}
+                    />
+                    <CategoryPercantageBox
+                      {...roleToTextMap["office_administration"]}
+                      role={profession}
+                      percentage={
+                        percentage_by_category["office_administration"]
+                      }
+                      hasJob={has_job}
+                    />
+                    <CategoryPercantageBox
+                      {...roleToTextMap["customer_service"]}
+                      role={profession}
+                      percentage={percentage_by_category["customer_service"]}
+                      hasJob={has_job}
+                    />
+                  </div>
+                ) : (
+                  <h4 className="font-medium text-[.75rem]">
+                    Kandydat nie wypełnił jeszcze ankiety
+                  </h4>
+                )}
               </div>
             )}
           </div>

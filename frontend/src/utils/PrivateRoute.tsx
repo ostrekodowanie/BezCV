@@ -10,5 +10,5 @@ export default function PrivateRoute({ children }: { children: JSX.Element }) {
         <Loader />
       </div>
     );
-  return logged ? children : <Navigate to="/rejestracja" />;
+  return logged ? children : <Navigate to="/logowanie" />;
 }
