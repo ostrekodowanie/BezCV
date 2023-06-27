@@ -53,14 +53,14 @@ export default function Banner() {
             />
           </div>
         </div>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          !hasBeenSent && (
-            <button className="py-2 px-6 rounded-full bg-white mt-4">
+        {!hasBeenSent && (
+          <button className="py-2 px-6 rounded-full bg-white mt-4">
+            {isLoading ? (
+              <Loader />
+            ) : (
               <span className="text-primary font-medium text-sm">Prześlij</span>
-            </button>
-          )
+            )}
+          </button>
         )}
       </form>
     </div>
