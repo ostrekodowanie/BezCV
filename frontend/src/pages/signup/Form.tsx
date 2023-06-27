@@ -8,6 +8,7 @@ import { reportSuccessMan } from "../../assets/profile/profile";
 import { passwordNotVisible, passwordVisible } from "../../assets/general";
 import PolicyAccept from "../../components/survey/PolicyAccept";
 import Banner from "../../components/signup/Banner";
+import { checkmark } from "../../assets/points/points";
 
 const initialPolicy = {
   statute: false,
@@ -30,7 +31,6 @@ export default function Form() {
     nip: "",
     password: "",
   });
-  const [phone, setPhone] = useState("");
 
   const handleSubmit = (e?: FormEvent) => {
     e && e.preventDefault();
@@ -45,13 +45,7 @@ export default function Form() {
       return setStatus("Hasło musi posiadać co najmniej 6 znaków!");
 
     axios
-      .post(
-        "/api/signup",
-        JSON.stringify({
-          ...employerDetails,
-          ...(phone && { phone }),
-        })
-      )
+      .post("/api/signup", JSON.stringify(employerDetails))
       .then(() => setStatus(true))
       .catch((err) =>
         setStatus(
@@ -244,9 +238,18 @@ export default function Form() {
                 />
               </div>
             </div>
-            <div className="flex items-center gap-4 flex-wrap justify-between my-4">
+            <div className="flex items-start gap-2 my-4">
+              <div className="relative mt-[2px] min-w-[1em] w-[1em] h-[1em] bg-green-500 rounded-full flex justify-center items-center">
+                <img className="max-h-[50%]" src={checkmark} alt="" />
+              </div>
+              <small className="font-medium text-left">
+                Dzięki rejestracji otrzymasz możliwość kontaktu z 3 wybranymi
+                kandydatami za darmo!
+              </small>
+            </div>
+            <div className="flex items-center gap-8 flex-wrap justify-between my-4">
               <div className="flex flex-col gap-3">
-                <div className="relative flex gap-4 items-center justify-start mt-6">
+                <div className="relative flex gap-4 items-center justify-start">
                   <input
                     type="checkbox"
                     required
