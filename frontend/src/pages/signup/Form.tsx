@@ -30,10 +30,7 @@ export default function Form() {
     nip: "",
     password: "",
   });
-  const [codeInfo, setCodeInfo] = useState({
-    code: "",
-    phone: "",
-  });
+  const [phone, setPhone] = useState("");
 
   const handleSubmit = (e?: FormEvent) => {
     e && e.preventDefault();
@@ -52,8 +49,7 @@ export default function Form() {
         "/api/signup",
         JSON.stringify({
           ...employerDetails,
-          ...(codeInfo.code && { code: codeInfo.code }),
-          ...(codeInfo.phone && { phone: codeInfo.phone }),
+          ...(phone && { phone }),
         })
       )
       .then(() => setStatus(true))
@@ -314,8 +310,10 @@ export default function Form() {
                 )}
               </div>
             </div>
+          </form>
+          <div className="flex flex-col gap-4 w-full font-medium">
             <div className="relative flex items-center mt-4 mb-2">
-              <span className="relative mx-auto bg-white px-6 xl:px-10 py-3 z-10">
+              <span className="relative mx-auto bg-white px-6 xl:px-10 py-3 z-10 font-medium">
                 Już posiadasz konto?{" "}
                 <Link
                   className="text-[#2F66F4] font-semibold hover:text-darkPrimary transition-colors"
@@ -326,7 +324,7 @@ export default function Form() {
               </span>
               <div className="bg-[#DFDFDF] absolute left-0 right-0 h-[2px]" />
             </div>
-            <Banner onChange={(code, phone) => setCodeInfo({ code, phone })} />
+            <Banner />
             {(policyActive.policy || policyActive.statute) && (
               <PolicyAccept
                 hide={() => setPolicyActive(initialPolicy)}
@@ -335,7 +333,7 @@ export default function Form() {
                 initialFormIndex={policyActive.policy ? 0 : 1}
               />
             )}
-          </form>
+          </div>
         </>
       )}
     </div>

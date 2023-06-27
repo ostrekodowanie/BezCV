@@ -1,69 +1,68 @@
-import { FormEvent, useEffect, useState } from "react";
-import { arrow } from "../../assets/points/points";
+import axios from "axios";
+import { FormEvent, useState } from "react";
+import Loader from "../Loader";
 
-type Props = {
-  onChange: (code: string, phone: string) => void;
-};
-
-export default function Banner({ onChange }: Props) {
-  const [code, setCode] = useState("");
+export default function Banner() {
   const [phone, setPhone] = useState("");
+  const [hasBeenSent, setHasBeenSent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    onChange(code, phone);
-  }, [code, phone]);
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    axios
+      .post("/api/phone")
+      .then(() => setHasBeenSent(true))
+      .finally(() => setIsLoading(false));
+  };
 
   return (
-    <div className="bg-[linear-gradient(84.74deg,#2F66F4_15.81%,#0D9AE9_80.36%)] p-16 px-[8vw] sm:px-[10%] flex flex-col gap-8 rounded-3xl">
-      <h2 className="flex flex-col gap-2 text-white">
+    <div className="bg-[linear-gradient(84.74deg,#2F66F4_15.81%,#0D9AE9_80.36%)] py-12 md:px-16 px-[8vw] sm:px-[10%] flex flex-col gap-8 rounded-3xl">
+      <h2 className="flex flex-col gap-2 text-white text-center">
         <span className="font-semibold text-3xl md:leading-tight 2xl:leading-tight">
-          Wpisz kod rabatowy z kampanii bezCV
+          Chcesz z nami porozmawiać?
         </span>
         <span className="opacity-[.8] font-medium text-lg">
-          i zaproś na rozmowę jednego z kandydatów.
+          Umów się na rozmowę ze specjalistą HR.
         </span>
       </h2>
-      <div className="flex flex-col gap-4 xl:flex-row">
-        <div className="flex flex-col gap-2">
+      <form
+        onSubmit={handleSubmit}
+        className="flex sm:items-center justify-between gap-4 sm:gap-8 flex-col sm:flex-row items-end"
+      >
+        <div className="flex flex-col gap-2 xl:max-w-[5in] w-full">
           <h3 className="text-white font-semibold text-left text-[.8rem]">
-            Masz kod rabatowy?
+            Numer telefonu
           </h3>
-          <div className="relative flex items-center min-w-[3in]">
+          <div className="relative flex items-center">
             <input
-              className={`py-3 px-6 bg-white border-[1px] border-[#CCCFD4] placeholder:text-[#9CA5C0] text-sm rounded-xl w-full text-font`}
-              placeholder="Wpisz go tutaj"
-              type="text"
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value);
-                setPhone("");
-              }}
-            />
-          </div>
-        </div>
-        <span className="text-sm self-center font-medium text-white">lub</span>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-white font-semibold text-left text-[.8rem]">
-            Nie masz kodu rabatowego?
-          </h3>
-          <div className="relative flex items-center min-w-[3in]">
-            <input
-              className={`py-3 px-6 bg-white border-[1px] border-[#CCCFD4] placeholder:text-[#9CA5C0] text-sm rounded-xl w-full text-font`}
+              className={`py-3 px-6 bg-white border-[1px] border-[#CCCFD4] min-w-0 placeholder:text-[#9CA5C0] text-sm rounded-xl w-full ${
+                hasBeenSent ? "text-green-400" : "text-font"
+              }`}
               placeholder="Wpisz numer telefonu"
               type="text"
               maxLength={11}
-              value={phone}
+              value={hasBeenSent ? "Numer telefonu został zapisany" : phone}
+              readOnly={hasBeenSent}
               onChange={(e) => {
                 let value = e.target.value;
                 value = value.replace(/\D/g, "");
                 value = value.replace(/(\d{3})(?=\d)/g, "$1 ");
                 setPhone(value);
-                setCode("");
               }}
             />
           </div>
         </div>
-      </div>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          !hasBeenSent && (
+            <button className="py-2 px-6 rounded-full bg-white mt-4">
+              <span className="text-primary font-medium text-sm">Prześlij</span>
+            </button>
+          )
+        )}
+      </form>
     </div>
   );
 }
