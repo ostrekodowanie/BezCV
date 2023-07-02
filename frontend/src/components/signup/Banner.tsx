@@ -11,7 +11,7 @@ export default function Banner() {
     e.preventDefault();
     setIsLoading(true);
     axios
-      .post("/api/phone")
+      .post("/api/contact", phone)
       .then(() => setHasBeenSent(true))
       .finally(() => setIsLoading(false));
   };
