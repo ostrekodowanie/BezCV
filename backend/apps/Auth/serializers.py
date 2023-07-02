@@ -51,25 +51,12 @@ class SignUpSerializer(serializers.ModelSerializer):
         nip = validated_data.get('nip')
         if User.objects.filter(nip=nip).exists():
             raise ValidationError('NIP jest już przypisany do istniejącego konta')
-        if 'phone' in validated_data:
-            phone = validated_data['phone']
-            if User.objects.filter(phone=phone).exists():
-                raise ValidationError('Numer telefonu jest już przypisany do istniejącego konta')
         active = nip24.isActiveExt(Number.NIP, nip)
         if not active:
             if not nip24.getLastError():
                 raise ValidationError('Firma zawiesiła lub zakończyła działalność')
             else:
                 raise ValidationError(nip24.getLastError())
-        code = validated_data.get('code')
-        if code:        
-            try:
-                code = Codes.objects.get(code=code, is_active=True)  
-            except Codes.DoesNotExist:
-                return Response({"Kod wygasł lub jest niepawidłowy"}, status=status.HTTP_400_BAD_REQUEST)
-
-            used_code = UsedCodes(user=instance, code=code)
-            used_code.save()
             
         password = validated_data.pop('password', None)
 
@@ -107,7 +94,7 @@ class UserSerializer(serializers.ModelSerializer):
             
         tokens_from_codes = obj.usedcodes_user.aggregate(total_value=Sum('code__value'))['total_value'] or 0
 
-        remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes
+        remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes + 3
         
         return remaining_tokens
 

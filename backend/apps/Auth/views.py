@@ -210,6 +210,20 @@ class PasswordResetConfirmView(views.APIView):
         user.save()
 
         return Response({'Hasło zostało zresetowane'}, status=status.HTTP_200_OK)
+    
+    
+class ContactView(views.APIView):
+    def post(self, request):
+        phone = request.data.get('phone')
+        
+        email_message = EmailMessage(
+            subject='Contact',
+            body=f"Numer telefonu: {phone}",
+            to=[os.environ.get('EMAIL')]
+        )
+        email_message.send()
+                
+        return Response(status=200) 
 
 
 # user/employer
