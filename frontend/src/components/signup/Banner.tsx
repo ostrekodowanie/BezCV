@@ -5,14 +5,17 @@ import Loader from "../Loader";
 export default function Banner() {
   const [phone, setPhone] = useState("");
   const [hasBeenSent, setHasBeenSent] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    setIsError(false);
     setIsLoading(true);
     axios
       .post("/api/contact", JSON.stringify({ phone }))
       .then(() => setHasBeenSent(true))
+      .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
   };
 
@@ -63,6 +66,13 @@ export default function Banner() {
           </button>
         )}
       </form>
+      {isError && (
+        <div className="bg-red-400 border-red-500 border-[2px] px-4 py-2">
+          <span className="text-white font-medium text-[.75rem]">
+            Wystąpił błąd
+          </span>
+        </div>
+      )}
     </div>
   );
 }
