@@ -45,7 +45,11 @@ export default function Banner() {
               placeholder="Wpisz numer telefonu"
               type="text"
               maxLength={11}
-              value={hasBeenSent ? "Numer telefonu został zapisany" : phone}
+              value={
+                hasBeenSent
+                  ? "Specjalista HR niedługo się z Tobą skontaktuje!"
+                  : phone
+              }
               readOnly={hasBeenSent}
               onChange={(e) => {
                 let value = e.target.value;
