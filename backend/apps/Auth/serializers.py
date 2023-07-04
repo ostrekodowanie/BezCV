@@ -28,16 +28,9 @@ class SignUpSerializer(serializers.ModelSerializer):
                 'unique': 'NIP jest już przypisany do istniejącego konta'
             }
         )
-    phone = serializers.CharField(
-            error_messages={
-                'unique': 'Numer telefonu jest już przypisany do istniejącego konta'
-            }
-        )
-    phone = serializers.CharField(allow_null=True, allow_blank=True)
-    code = serializers.CharField(allow_null=True, allow_blank=True)
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'nip', 'password', 'phone', 'code')
+        fields = ('first_name', 'last_name', 'email', 'nip', 'password')
         extra_kwargs = {
             'password': {'write_only': True}
         }
