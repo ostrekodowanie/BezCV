@@ -1,4 +1,5 @@
 from django.db.models import Exists, Q, OuterRef
+from django.utils import timezone
 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -93,7 +94,25 @@ class PurchaseOfferView(generics.CreateAPIView):
         response = super().post(request, *args, **kwargs)
         purchased_offer_id = response.data.get('id')
         
-        purchased_offer = PurchasedOffers.objects.get(id=purchased_offer_id)     
+        purchased_offer = PurchasedOffers.objects.get(id=purchased_offer_id)
+        
+        user = self.request.user
+        
+        purchased_tokens = user.purchasedpoints_employer.filter(expiration_date__gt=timezone.now(), remaining_tokens__gt=0).count()
+            
+        if purchased_tokens > 0:
+            purchased_tokens_obj = user.purchasedpoints_employer.filter(expiration_date__gt=timezone.now(), remaining_tokens__gt=0).order_by('expiration_date').first()
+            if len(purchased_offer.candidate.completed_surveys) == 3:
+                purchased_tokens_obj.remaining_tokens -= 2
+            else:
+                purchased_tokens_obj.remaining_tokens -= 1
+            purchased_tokens_obj.save()
+        else:
+            if len(purchased_offer.candidate.completed_surveys) == 3:
+                user.tokens -= 2
+            else:
+                user.tokens -= 1
+            user.save()     
         
         message = f'Twój profil zainteresował jednego z pracodawców w naszej bazie. Jest zainteresowany współpracą.\n\nPoniżej informacje o nim: {purchased_offer.employer.first_name} {purchased_offer.employer.last_name}\n{purchased_offer.employer.company_name}\n\nNiedługo powinien się z Tobą skontaktować. Powodzenia!'
         

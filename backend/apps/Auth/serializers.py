@@ -62,25 +62,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'points', 'is_staff', 'nip', 'company_name', 'image', 'desc', 'email', 'form')
         
     def get_points(self, obj):
-        last_month = timezone.now() - timedelta(days=30)
-        purchased_tokens = obj.purchasedpoints_employer.filter(
-            created_at__gte=last_month
-        ).aggregate(Sum('amount'))['amount__sum'] or 0
-        
-        oldest_token_date = obj.purchasedpoints_employer.filter(
-            created_at__gte=last_month
-        ).order_by('created_at').values_list('created_at', flat=True).first()
-        
-        if oldest_token_date:
-            purchased_contacts = obj.purchasedoffers_employer.filter(
-                created_at__gte=oldest_token_date
-            ).count()
-        else:
-            purchased_contacts = 0
+        purchased_tokens = obj.purchasedpoints_employer.filter(expiration_date__gt=timezone.now(), remaining_tokens__gt=0).aggregate(Sum('remaining_tokens'))['remaining_tokens__sum'] or 0
             
-        tokens_from_codes = obj.usedcodes_user.aggregate(total_value=Sum('code__value'))['total_value'] or 0
-
-        remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes + 3
+        remaining_tokens = purchased_tokens + obj.tokens
         
         return remaining_tokens
 
@@ -117,8 +101,7 @@ class EmployerProfileSerializer(serializers.ModelSerializer):
             'purchased_count': purchased_count
         }
         return stats_dict
-    
-    
+
 class EmployerProfileFollowedSerializer(serializers.ModelSerializer):
     percentage_by_category = serializers.SerializerMethodField()
     

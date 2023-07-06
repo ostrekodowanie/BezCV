@@ -24,6 +24,7 @@ class PurchasePointsView(views.APIView):
     def post(self, request, *args, **kwargs):
         amount = request.data.get('amount')
         price = request.data.get('price')
+        expiry = request.data.get('expiry')
         
         employer = self.request.user
         
@@ -46,7 +47,7 @@ class PurchasePointsView(views.APIView):
         
         order_data = {
             "merchantPosId": client_id,
-            "description": f"bezCV - {amount} tokens",
+            "description": f"bezCV - {amount} tokens, expiry: {expiry}",
             "currencyCode": "PLN",
             "totalAmount": str(int(price) * 100),
             "customerIp": request.META.get("REMOTE_ADDR"),
@@ -83,6 +84,11 @@ class PayUNotificationView(views.APIView):
             order_id = payload['order']['orderId']
             amount = payload['order']['totalAmount']
             buyer_email = payload['order']['buyer']['email']
+            description = payload['order']['description']
+            
+            parts = description.split('expiry: ')
+            expiry = parts[1].strip()
+            expiration_date = timezone.now() + timezone.timedelta(days=int(expiry))
             
             buyer = User.objects.get(email=buyer_email)
 
@@ -90,7 +96,9 @@ class PayUNotificationView(views.APIView):
                 buyer=buyer,
                 tokens=tokens,
                 amount=amount,
-                order_id=order_id
+                order_id=order_id,
+                expiration_date=expiration_date,
+                remaining_tokens=tokens
             )
             
             headers = {
@@ -125,36 +133,20 @@ class PayUNotificationView(views.APIView):
             #data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}")
             #response_data = data.json()
             
-            last_month = timezone.now() - timedelta(days=30)
-            purchased_tokens = buyer.purchasedpoints_employer.filter(
-                created_at__gte=last_month
-            ).aggregate(Sum('amount'))['amount__sum'] or 0
+            purchased_tokens = buyer.purchasedpoints_employer.filter(expiration_date__gt=timezone.now(), remaining_tokens__gt=0).aggregate(Sum('remaining_tokens'))['remaining_tokens__sum'] or 0
             
-            oldest_token_date = buyer.purchasedpoints_employer.filter(
-                created_at__gte=last_month
-            ).order_by('created_at').values_list('created_at', flat=True).first()
-            
-            if oldest_token_date:
-                purchased_contacts = buyer.purchasedoffers_employer.filter(
-                    created_at__gte=oldest_token_date
-                ).count()
-            else:
-                purchased_contacts = 0
-                
-            tokens_from_codes = buyer.usedcodes_user.aggregate(total_value=Sum('code__value')) or 0
-
-            remaining_tokens = purchased_tokens - purchased_contacts + tokens_from_codes['total_value']
+            remaining_tokens = purchased_tokens + buyer.tokens                
             
             context = {
                     'employer': buyer.first_name,
-                    'token_count': int(remaining_tokens)
+                    'token_count': remaining_tokens
                 }
                         
             message = render_to_string('employers/after_payment.html', context)
             email_message = EmailMessage(
                 subject='Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?',
                 body=message,
-                to=[buyer.email]
+                to=[buyer.email, 'biuro@bezcv.com']
             )
             email_message.content_subtype ="html"
             email_message.send()        

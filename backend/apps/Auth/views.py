@@ -142,7 +142,7 @@ class VerifyView(views.APIView):
                 email_message = EmailMessage(
                     subject='Od teraz masz dostęp do wszystkich kandydatów! - bezCV',
                     body=message,
-                    to=[user.email]
+                    to=[user.email, 'biuro@bezcv.com']
                 )
                 email_message.content_subtype ="html"
                 email_message.send()
