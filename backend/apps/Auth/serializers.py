@@ -23,11 +23,6 @@ class SignUpSerializer(serializers.ModelSerializer):
                 'unique': 'Email jest już przypisany do istniejącego konta'
             }
         )
-    nip = serializers.CharField(
-            error_messages={
-                'unique': 'NIP jest już przypisany do istniejącego konta'
-            }
-        )
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'nip', 'password')
@@ -42,8 +37,6 @@ class SignUpSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=email).exists():
             raise ValidationError('Email jest już przypisany do istniejącego konta')
         nip = validated_data.get('nip')
-        if User.objects.filter(nip=nip).exists():
-            raise ValidationError('NIP jest już przypisany do istniejącego konta')
         active = nip24.isActiveExt(Number.NIP, nip)
         if not active:
             if not nip24.getLastError():
