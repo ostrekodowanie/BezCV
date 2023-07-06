@@ -368,10 +368,7 @@ export default function Candidate() {
             <Loader />
           </div>
         ) : (
-          <ShareButton
-            profession={candidateDetails.profession}
-            disabled={!candidateDetails.is_purchased}
-          />
+          <ShareButton profession={candidateDetails.profession} />
         )}
         <SuggestedCandidates
           candidates={candidateDetails.similar_candidates}
