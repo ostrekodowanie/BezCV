@@ -22,11 +22,13 @@ import Survey from "./pages/Survey";
 import AxiosProvider from "./providers/AxiosProvider";
 import Docs from "./pages/Docs";
 import CookiesConsent from "./components/CookiesConsent";
+import { useSearchParams } from "react-router-dom";
 
 const loginString: string | null = localStorage.getItem("user");
 const loginFromLocalStorage = loginString ? JSON.parse(loginString) : "";
 
 export default function App() {
+  const [searchParams] = useSearchParams();
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
@@ -72,7 +74,11 @@ export default function App() {
   };
 
   useLayoutEffect(() => {
-    getUser();
+    const queryAccount = searchParams.get("account");
+    if (queryAccount === "worker") {
+      dispatch(logout());
+      setLoading(false);
+    } else getUser();
   }, [loginFromLocalStorage]);
 
   useLayoutEffect(() => {

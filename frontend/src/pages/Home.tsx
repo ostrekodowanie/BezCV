@@ -19,8 +19,12 @@ import HowToFindJob from "../components/home/candidate/HowToFindJob";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function Home() {
-  useDocumentTitle("bezCV - innowacyjny portal pracy");
   const { account } = useContext(AccountContext);
+  useDocumentTitle(
+    `${
+      account === "employer" ? "Pracodawca" : "Kandydat"
+    } | bezCV - innowacyjny portal pracy`
+  );
   if (account === "employer")
     return (
       <>

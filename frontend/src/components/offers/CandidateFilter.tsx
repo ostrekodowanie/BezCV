@@ -1,12 +1,11 @@
 import axios from "axios";
 import {
+  ChangeEvent,
   Dispatch,
   SetStateAction,
   useEffect,
-  useLayoutEffect,
   useState,
 } from "react";
-import { useLocation } from "react-router";
 import { filtersMenuArrow } from "../../assets/offers/offers";
 import { provinces, roleToTextMap } from "../../constants/candidate";
 import { RoleType } from "../../constants/workForm";
@@ -93,7 +92,12 @@ export default function CandidateFilter({
           <div className="flex flex-col gap-4">
             {allFilters.professions.length > 0 ? (
               allFilters.professions.map((role) => (
-                <RoleCheckBox role={role} setFilter={setFilter} key={role} />
+                <RoleCheckBox
+                  filter={filter}
+                  role={role}
+                  setFilter={setFilter}
+                  key={role}
+                />
               ))
             ) : (
               <>
@@ -137,6 +141,7 @@ export default function CandidateFilter({
               {allFilters.availability.length > 0 ? (
                 allFilters.availability.map((availability) => (
                   <AvailabilityCheckBox
+                    filter={filter}
                     availability={availability}
                     setFilter={setFilter}
                     key={availability}
@@ -186,6 +191,7 @@ export default function CandidateFilter({
             <div className="flex flex-col gap-4">
               {allFilters.salary.map((salary) => (
                 <SalaryCheckBox
+                  filter={filter}
                   salary={salary}
                   setFilter={setFilter}
                   key={salary}
@@ -223,6 +229,7 @@ export default function CandidateFilter({
             <div className="flex flex-col gap-4">
               {allFilters.province.map((province) => (
                 <ProvinceCheckBox
+                  filter={filter}
                   province={province}
                   setFilter={setFilter}
                   key={province}
@@ -261,27 +268,20 @@ const FilterLength = ({ length }: { length: number }) => {
 
 const AvailabilityCheckBox = ({
   availability,
+  filter,
   setFilter,
 }: {
   availability: string;
+  filter: FilterStateProps;
   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
 }) => {
-  const location = useLocation();
-  const [checked, setChecked] = useState(false);
-
-  useLayoutEffect(() => {
-    const decodedSearch = decodeURIComponent(location.search);
-    setChecked(decodedSearch.includes(availability));
-  }, []);
-
-  const handleChange = () => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter((prev) => ({
       ...prev,
-      availability: checked
-        ? prev.availability.filter((ab) => ab !== availability)
-        : [...prev.availability, availability],
+      availability: e.target.checked
+        ? [...prev.availability, availability]
+        : prev.availability.filter((ab) => ab !== availability),
     }));
-    setChecked((prev) => !prev);
   };
 
   return (
@@ -289,7 +289,7 @@ const AvailabilityCheckBox = ({
       <input
         type="checkbox"
         onChange={handleChange}
-        checked={checked}
+        checked={filter.availability.includes(availability)}
         name="availability-filter"
         id={availability}
       />
@@ -302,27 +302,20 @@ const AvailabilityCheckBox = ({
 
 const SalaryCheckBox = ({
   salary,
+  filter,
   setFilter,
 }: {
   salary: string;
+  filter: FilterStateProps;
   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
 }) => {
-  const location = useLocation();
-  const [checked, setChecked] = useState(false);
-
-  useLayoutEffect(() => {
-    const decodedSearch = decodeURIComponent(location.search);
-    setChecked(decodedSearch.includes(salary));
-  }, []);
-
-  const handleChange = () => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter((prev) => ({
       ...prev,
-      salary: checked
-        ? prev.salary.filter((ab) => ab !== salary)
-        : [...prev.salary, salary],
+      salary: e.target.checked
+        ? [...prev.salary, salary]
+        : prev.salary.filter((ab) => ab !== salary),
     }));
-    setChecked((prev) => !prev);
   };
 
   return (
@@ -330,7 +323,7 @@ const SalaryCheckBox = ({
       <input
         type="checkbox"
         onChange={handleChange}
-        checked={checked}
+        checked={filter.salary.includes(salary)}
         name="salary-filter"
         id={salary}
       />
@@ -343,27 +336,20 @@ const SalaryCheckBox = ({
 
 const RoleCheckBox = ({
   role,
+  filter,
   setFilter,
 }: {
   role: RoleType;
+  filter: FilterStateProps;
   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
 }) => {
-  const location = useLocation();
-  const [checked, setChecked] = useState(false);
-
-  useLayoutEffect(() => {
-    const decodedSearch = decodeURIComponent(location.search);
-    setChecked(decodedSearch.includes(role));
-  }, []);
-
-  const handleChange = () => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter((prev) => ({
       ...prev,
-      professions: checked
-        ? prev.professions.filter((r) => r !== role)
-        : [...prev.professions, role],
+      professions: e.target.checked
+        ? [...prev.professions, role]
+        : prev.professions.filter((r) => r !== role),
     }));
-    setChecked((prev) => !prev);
   };
 
   return (
@@ -371,7 +357,7 @@ const RoleCheckBox = ({
       <input
         type="checkbox"
         onChange={handleChange}
-        checked={checked}
+        checked={filter.professions.includes(role)}
         name="profession-filter"
         id={role}
       />
@@ -384,27 +370,20 @@ const RoleCheckBox = ({
 
 const ProvinceCheckBox = ({
   province,
+  filter,
   setFilter,
 }: {
   province: string;
+  filter: FilterStateProps;
   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
 }) => {
-  const location = useLocation();
-  const [checked, setChecked] = useState(false);
-
-  useLayoutEffect(() => {
-    const decodedSearch = decodeURIComponent(location.search);
-    setChecked(decodedSearch.includes(province));
-  }, []);
-
-  const handleChange = () => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter((prev) => ({
       ...prev,
-      province: checked
-        ? prev.province.filter((r) => r !== province)
-        : [...prev.province, province],
+      province: e.target.checked
+        ? [...prev.province, province]
+        : prev.province.filter((r) => r !== province),
     }));
-    setChecked((prev) => !prev);
   };
 
   return (
@@ -412,7 +391,7 @@ const ProvinceCheckBox = ({
       <input
         type="checkbox"
         onChange={handleChange}
-        checked={checked}
+        checked={filter.province.includes(province)}
         name="profession-filter"
         id={province}
       />

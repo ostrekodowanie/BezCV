@@ -9,7 +9,7 @@ import {
 
 export default function CandidateLanding() {
   return (
-    <section className="padding pt-[1.4in] md:pt-[2in] pb-16 items-center flex flex-col gap-12 relative text-center overflow-hidden">
+    <section className="padding pt-[1in] md:pt-[2in] pb-16 items-center flex flex-col gap-12 relative text-center overflow-hidden">
       <h1 className="font-semibold text-3xl leading-snug md:text-4xl md:leading-snug xl:text-[2.75rem] xl:leading-snug mb-32 md:mb-0">
         Znajdź{" "}
         <div className="relative inline-block">

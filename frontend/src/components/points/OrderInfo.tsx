@@ -9,7 +9,7 @@ import PaymentButton from "./PaymentButton";
 export default function OrderInfo(props: PackageProps) {
   const { points, price } = props;
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 self-stretch">
       <h2 className="mb-6 font-semibold text-xl md:text-2xl">Podsumowanie</h2>
       <div className="flex flex-col gap-4">
         <h4 className="font-semibold text-sm">Wybrana ilość tokenów</h4>

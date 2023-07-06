@@ -76,7 +76,10 @@ export default function Footer() {
               </a>
             </div>
             <div className="flex items-center justify-between gap-4 flex-wrap self-stretch mt-4">
-              <small className="font-medium">&copy; 2023 - bezCV</small>
+              <div className="flex items-center gap-4 font-medium">
+                <small className="font-medium">&copy; 2023 - bezCV</small>
+                <small className="font-medium">biuro@bezcv.com</small>
+              </div>
               <div className="flex items-center gap-4 font-medium">
                 <Link to="/docs/regulamin">
                   <small className="hover:text-[#2F66F4] transition-colors">

@@ -13,7 +13,7 @@ export default function InvoiceInfo() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 self-stretch">
       <h2 className="mb-6 font-semibold text-xl md:text-2xl">Faktura VAT</h2>
       <div className="flex flex-col gap-6 mb-8">
         <div className="flex flex-col gap-3">

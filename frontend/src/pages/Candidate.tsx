@@ -27,16 +27,18 @@ import {
   ProfessionIcon,
 } from "../assets/candidate/icons/icons";
 import HasJob from "../components/offers/HasJob";
-import PrintButton from "../components/candidate/PrintButton";
 import FollowButton from "../components/candidate/FollowButton";
 import SuggestedCandidates from "../components/candidate/SuggestedCandidates";
 import { Loading } from "../types/candidate";
 import SideBar from "../components/home/candidate/SideBar";
 import AbilitiesList from "../components/candidate/AbilitiesList";
+import ShareButton from "../components/candidate/ShareButton";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
 export default function Candidate() {
+  useDocumentTitle("Znajdź pracownika | bezCV - innowacyjny portal pracy");
   const auth = useAppSelector((state) => state.login);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -69,6 +71,7 @@ export default function Candidate() {
       ).length === candidateDetails.abilities?.customer_service.length,
   };
   const didFilledAllSurveys =
+    candidateDetails.abilities &&
     didFilledSurvey.customer_service &&
     didFilledSurvey.office_administration &&
     didFilledSurvey.sales;
@@ -365,7 +368,7 @@ export default function Candidate() {
             <Loader />
           </div>
         ) : (
-          <PrintButton
+          <ShareButton
             profession={candidateDetails.profession}
             disabled={!candidateDetails.is_purchased}
           />
