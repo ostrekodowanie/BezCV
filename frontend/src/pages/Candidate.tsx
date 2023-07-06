@@ -33,10 +33,12 @@ import { Loading } from "../types/candidate";
 import SideBar from "../components/home/candidate/SideBar";
 import AbilitiesList from "../components/candidate/AbilitiesList";
 import ShareButton from "../components/candidate/ShareButton";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
 export default function Candidate() {
+  useDocumentTitle("Znajdź pracownika | bezCV - innowacyjny portal pracy");
   const auth = useAppSelector((state) => state.login);
   const { id } = useParams();
   const navigate = useNavigate();
