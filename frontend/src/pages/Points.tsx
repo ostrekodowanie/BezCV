@@ -5,7 +5,7 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import Success from "./points/Success";
 
 export default function Points() {
-  useDocumentTitle("Tokeny | bezCV - innowacyjny portal pracy");
+  useDocumentTitle("Doładuj swoje konto | bezCV - innowacyjny portal pracy");
   return (
     <Routes>
       <Route path="/" element={<Packages />} />
