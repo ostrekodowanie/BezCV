@@ -28,10 +28,10 @@ export interface FilterProps {
 }
 
 const CandidateList = () => {
-  useDocumentTitle("Oferty | bezCV - innowacyjny portal pracy");
+  useDocumentTitle("Znajdź pracownika | bezCV - innowacyjny portal pracy");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { items, page, totalPages, setPage, count, isLoading } =
+  const { items, page, totalPages, setPage, isLoading } =
     usePagination<CandidateProps>("/oferty");
   const isFirstRender = useRef(true);
   const [displayPurchased, setDisplayPurchased] = useState(

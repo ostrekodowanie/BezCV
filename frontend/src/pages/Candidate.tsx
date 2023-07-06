@@ -27,12 +27,12 @@ import {
   ProfessionIcon,
 } from "../assets/candidate/icons/icons";
 import HasJob from "../components/offers/HasJob";
-import PrintButton from "../components/candidate/PrintButton";
 import FollowButton from "../components/candidate/FollowButton";
 import SuggestedCandidates from "../components/candidate/SuggestedCandidates";
 import { Loading } from "../types/candidate";
 import SideBar from "../components/home/candidate/SideBar";
 import AbilitiesList from "../components/candidate/AbilitiesList";
+import ShareButton from "../components/candidate/ShareButton";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -366,7 +366,7 @@ export default function Candidate() {
             <Loader />
           </div>
         ) : (
-          <PrintButton
+          <ShareButton
             profession={candidateDetails.profession}
             disabled={!candidateDetails.is_purchased}
           />

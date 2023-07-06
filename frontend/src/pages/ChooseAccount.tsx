@@ -7,6 +7,7 @@ import {
   empUnderline,
 } from "../assets/account/account";
 import { AccountType } from "../providers/AccountProvider";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export const inputStyles =
   "py-3 px-6 rounded shadow-[0px_6px_132px_rgba(76,101,234,0.08)] bg-white placeholder:text-[#B4BFF7] font-medium text-primary";
@@ -33,6 +34,7 @@ export default function ChooseAccount({
 }: {
   setAccount: (account: AccountType) => void;
 }) {
+  useDocumentTitle("Wybierz typ konta | bezCV - innowacyjny portal pracy");
   return (
     <section className="px-[8vw] md:px-[16vw] 2xl:px-[20vw] py-[8vw] xl:py-0 min-h-screen xl:flex items-center relative">
       <Controller
