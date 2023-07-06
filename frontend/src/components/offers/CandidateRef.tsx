@@ -28,7 +28,7 @@ const CandidateRef = ({
   province,
   education,
   phone,
-  drivers_license,
+  driving_license,
   has_job,
   isFromFollowed = false,
   setFollowed,
@@ -142,7 +142,7 @@ const CandidateRef = ({
             <div className="flex flex-col gap-1">
               <h4 className="text-[.8rem]">Prawo jazdy kat. B</h4>
               <h3 className="text-sm font-semibold">
-                {drivers_license ? "Tak" : "Nie"}
+                {driving_license ? "Tak" : "Nie"}
               </h3>
             </div>
           </div>

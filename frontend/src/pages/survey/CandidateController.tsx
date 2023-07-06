@@ -16,7 +16,6 @@ import PhoneInput from "../../components/survey/inputs/PhoneInput";
 import RadioInput from "../../components/survey/inputs/RadioInput";
 import CheckboxInput from "../../components/survey/inputs/CheckboxInput";
 import CustomInput from "../../components/survey/inputs/CustomInput";
-import DotsLoader from "../../components/survey/DotsLoader";
 import SurveyError from "../../components/survey/SurveyError";
 import CandidateLoader from "./CandidateLoader";
 
@@ -38,52 +37,52 @@ export default function CandidateController() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // if (type === "email") {
-    //   setCredentialsLoading(true);
-    //   return axios
-    //     .post(
-    //       "/api/survey/email",
-    //       JSON.stringify({ email: candidateAnswers.email })
-    //     )
-    //     .then((res) => {
-    //       switch (res.status) {
-    //         case 204:
-    //           setActiveQuestionIndex((prev) => prev + 1);
-    //           break;
-    //         case 200:
-    //           setCredentialsError("Email jest już używany przez inny profil!");
-    //       }
-    //     })
-    //     .catch(() => setCredentialsError("Wystąpił błąd!"))
-    //     .finally(() => setCredentialsLoading(false));
-    // }
+    if (type === "email") {
+      setCredentialsLoading(true);
+      return axios
+        .post(
+          "/api/survey/email",
+          JSON.stringify({ email: candidateAnswers.email })
+        )
+        .then((res) => {
+          switch (res.status) {
+            case 204:
+              setActiveQuestionIndex((prev) => prev + 1);
+              break;
+            case 200:
+              setCredentialsError("Email jest już używany przez inny profil!");
+          }
+        })
+        .catch(() => setCredentialsError("Wystąpił błąd!"))
+        .finally(() => setCredentialsLoading(false));
+    }
 
-    // if (type === "tel") {
-    //   setCredentialsLoading(true);
-    //   if (candidateAnswers.phone.length < 9) {
-    //     setCredentialsLoading(false);
-    //     return setCredentialsError("Nieprawidłowy numer telefonu!");
-    //   }
-    //   return axios
-    //     .post(
-    //       "/api/survey/phone",
-    //       JSON.stringify({
-    //         phone:
-    //           typeof candidateAnswers.phone === "string"
-    //             ? candidateAnswers.phone.split(" ").join("")
-    //             : candidateAnswers.phone,
-    //       })
-    //     )
-    //     .then(() => setPhoneCodePopupActive(true))
-    //     .catch((err) => {
-    //       setCredentialsError(
-    //         typeof err.response.data.detail === "string"
-    //           ? err.response.data.detail
-    //           : "Wystąpił błąd!"
-    //       );
-    //     })
-    //     .finally(() => setCredentialsLoading(false));
-    // }
+    if (type === "tel") {
+      setCredentialsLoading(true);
+      if (candidateAnswers.phone.length < 9) {
+        setCredentialsLoading(false);
+        return setCredentialsError("Nieprawidłowy numer telefonu!");
+      }
+      return axios
+        .post(
+          "/api/survey/phone",
+          JSON.stringify({
+            phone:
+              typeof candidateAnswers.phone === "string"
+                ? candidateAnswers.phone.split(" ").join("")
+                : candidateAnswers.phone,
+          })
+        )
+        .then(() => setPhoneCodePopupActive(true))
+        .catch((err) => {
+          setCredentialsError(
+            typeof err.response.data.detail === "string"
+              ? err.response.data.detail
+              : "Wystąpił błąd!"
+          );
+        })
+        .finally(() => setCredentialsLoading(false));
+    }
 
     if (activeQuestionIndex >= defaultQuestions.length - 1)
       return setPolicyWindowActive(true);
@@ -114,7 +113,7 @@ export default function CandidateController() {
         "/api/survey/candidate",
         JSON.stringify({
           ...candidateAnswers,
-          drivers_license:
+          driving_license:
             candidateAnswers.drivers_license === "Tak" ? true : false,
         })
       )

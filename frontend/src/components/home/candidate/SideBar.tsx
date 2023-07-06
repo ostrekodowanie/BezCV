@@ -16,7 +16,7 @@ export default function SideBar({
   education,
   salary_expectation,
   is_followed,
-  drivers_license,
+  driving_license,
   ...loading
 }: { id: string } & Details & Loading) {
   const colorScheme = useContext(ColorSchemeContext);
@@ -95,7 +95,7 @@ export default function SideBar({
             <>
               <h4 className="text-sm">Prawo jazdy kat. B</h4>
               <h3 className="font-semibold text-sm">
-                {drivers_license ? "Tak" : "Nie"}
+                {driving_license ? "Tak" : "Nie"}
               </h3>
             </>
           )}
