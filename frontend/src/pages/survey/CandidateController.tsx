@@ -110,7 +110,14 @@ export default function CandidateController() {
   const onPolicyAccept = async () => {
     setLoading(true);
     return axios
-      .post("/api/survey/candidate", JSON.stringify(candidateAnswers))
+      .post(
+        "/api/survey/candidate",
+        JSON.stringify({
+          ...candidateAnswers,
+          drivers_license:
+            candidateAnswers.drivers_license === "Tak" ? true : false,
+        })
+      )
       .then(() => setPoliciesAccepted(true))
       .catch((err) =>
         setCredentialsError(
