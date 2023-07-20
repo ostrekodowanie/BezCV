@@ -1,5 +1,5 @@
 from django.db.models import Avg, F
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -69,18 +69,27 @@ class CandidateAnswersView(APIView):
         Bez pisania wprost o umiejętnościach. 
         Nie powtarzaj słów kluczowych.
         '''
-        
-        response = openai.Completion.create(
-            engine="text-davinci-002",
-            prompt=input_text,
-            max_tokens=1500,
-            n=1,
-            stop=None,
-            temperature=0.3,
-        )
-        
-        description = response.choices[0].text.strip()
-        candidate.desc = description
+        try:
+            response = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt=input_text,
+                max_tokens=1500,
+                n=1,
+                stop=None,
+                temperature=0.3,
+            )
+            
+            description = response.choices[0].text.strip()
+            candidate.desc = description
+        except Exception as e:
+            send_mail(
+                subject=f'{candidate.id} - OpenAI',
+                message=f'{e}',
+                from_email="biuro@bezcv.com",
+                to=["biuro@bezcv.com"],
+                fail_silently=False
+            )
+            
         if candidate.completed_surveys:
             candidate.completed_surveys.append(profession)
         else:
