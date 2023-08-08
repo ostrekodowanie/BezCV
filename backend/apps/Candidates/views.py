@@ -34,7 +34,7 @@ class CandidatesFilter(filters.FilterSet):
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
-
+    
 class CandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CandidatesSerializer
@@ -44,7 +44,6 @@ class CandidatesView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Candidates.objects.filter(is_visible=True)
-        
         ordering = self.request.query_params.get("order", None)
         show_purchased = self.request.query_params.get("show_purchased", True)
         

@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
-    #'django_q',
+    'django_q',
 
     'apps.Auth',
     'apps.Contact',
@@ -231,11 +231,10 @@ openai.api_key = os.environ.get('OPENAI_KEY')
 token = os.environ.get('SMSAPI_TOKEN') 
 client = SmsApiPlClient(access_token=token)
 fakturownia_token = os.environ.get('FAKTUROWNIA_API_TOKEN')
-'''
+
 Q_CLUSTER = {
     'retry': 360,
     'timeout': 300,
     "orm": "default",
 }
-'''
 
