@@ -44,7 +44,7 @@ class CandidateSerializer(serializers.ModelSerializer):
             hidden_first_name = instance.first_name[0] + '*' * (len(instance.first_name) - 1)
             hidden_last_name = instance.last_name[0] + '*' * (len(instance.last_name) - 1)
             email_parts = instance.email.split('@')
-            hidden_email = email_parts[0][0] + '*' * (len(email_parts[0]) - 1) + '@' + email_parts[1]
+            hidden_email = '*' * (len(email_parts[0]) - 1) + '@' + '*' * (len(email_parts[1]))
             
             representation['first_name'] = hidden_first_name
             representation['last_name'] = hidden_last_name
