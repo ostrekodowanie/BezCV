@@ -52,6 +52,10 @@ class Candidates(models.Model):
     is_visible = models.BooleanField(default=True)
     desc = models.TextField(null=True, blank=True)
     completed_surveys = models.JSONField(blank=True, null=True)
+    contract_type = models.CharField(max_length=255, null=True, choices=[
+        ('Umowa zlecenie / Umowa o dzieło)', 'Umowa zlecenie / Umowa o dzieło'),
+        ('Umowa o pracę', 'Umowa o pracę'),
+        ('Kontrakt B2B', 'Kontrakt B2B')])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -32,6 +32,7 @@ class CandidateSerializer(serializers.ModelSerializer):
             'education',
             'driving_license',
             'desc',
+            'contract_type',
             'ability_charts',
             'abilities',
             'worst_abilities',

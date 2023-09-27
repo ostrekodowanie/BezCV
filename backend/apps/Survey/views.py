@@ -69,11 +69,14 @@ class CandidateAnswersView(APIView):
             experience_text = "bez doświadczenia"
 
         input_text = f'''
-        Napisz korzyści (długi opis kandydata), jakie może przynieść zatrudnienie pracownika {experience_text}.
+        Napisz korzyści, jakie może przynieść zatrudnienie pracownika {experience_text}.
         Tego pracownika wyróżniają trzy najważniejsze kompetencje miękkie, takie jak {abilities[0]['name']}, {abilities[1]['name']} oraz {abilities[2]['name']}. 
+        Poprzednie stanowisko to {candidate.job_position}
         Skoreluj je ze sobą. 
         Bez pisania wprost o umiejętnościach. 
         Nie powtarzaj słów kluczowych.
+        Nie wyliczaj.
+        Nie pisz długimi zdaniami.
         '''
         try:
             response = openai.Completion.create(
