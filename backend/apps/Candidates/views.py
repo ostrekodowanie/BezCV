@@ -23,18 +23,23 @@ class CandidateView(generics.RetrieveAPIView):
 
 
 class CandidatesFilter(filters.FilterSet):
-    professions = filters.BaseInFilter(field_name='profession', lookup_expr='in')
-    availability =  filters.BaseInFilter(field_name='availability', lookup_expr='in')
-    salary = filters.BaseInFilter(field_name='salary_expectation', lookup_expr='in')
+    professions = filters.BaseInFilter(
+        field_name='profession', lookup_expr='in')
+    availability = filters.BaseInFilter(
+        field_name='availability', lookup_expr='in')
+    salary = filters.BaseInFilter(
+        field_name='salary_expectation', lookup_expr='in')
     province = filters.BaseInFilter(field_name='province', lookup_expr='in')
 
     class Meta:
         model = Candidates
         fields = ['professions', 'availability', 'salary']
 
+
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
-    
+
+
 class CandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CandidatesSerializer
@@ -46,13 +51,14 @@ class CandidatesView(generics.ListAPIView):
         queryset = Candidates.objects.filter(is_visible=True)
         ordering = self.request.query_params.get("order", None)
         show_purchased = self.request.query_params.get("show_purchased", True)
-        
+
         if show_purchased == "False":
             queryset = (
                 queryset.annotate(
                     is_purchased=Exists(
                         PurchasedOffers.objects.filter(
-                            employer=self.request.user, candidate_id=OuterRef("pk")
+                            employer=self.request.user, candidate_id=OuterRef(
+                                "pk")
                         )
                     ),
                 )
@@ -65,7 +71,8 @@ class CandidatesView(generics.ListAPIView):
                 "salary_asc": "salary_expectation",
                 "salary_desc": "-salary_expectation",
             }
-            queryset = queryset.order_by(order_dict.get(ordering, "-created_at"))
+            queryset = queryset.order_by(
+                order_dict.get(ordering, "-created_at"))
         else:
             queryset = queryset.order_by("-created_at")
 
@@ -74,9 +81,11 @@ class CandidatesView(generics.ListAPIView):
 
 class FiltersView(APIView):
     def get(self, request):
-        professions = Categories.objects.values_list('name', flat=True).order_by('name')
-        salary = Candidates.objects.values_list('salary_expectation', flat=True).order_by('salary_expectation').distinct()
-        
+        professions = Categories.objects.values_list(
+            'name', flat=True).order_by('name')
+        salary = Candidates.objects.values_list(
+            'salary_expectation', flat=True).order_by('salary_expectation').distinct()
+
         data = {
             'professions': professions,
             'salary': salary
@@ -88,19 +97,21 @@ class FiltersView(APIView):
 class PurchaseOfferView(generics.CreateAPIView):
     serializer_class = serializers.PurchaseOfferSerializer
     permission_classes = [IsAuthenticated]
-    
+
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         purchased_offer_id = response.data.get('id')
-        
+
         purchased_offer = PurchasedOffers.objects.get(id=purchased_offer_id)
-        
+
         user = self.request.user
-        
-        purchased_tokens = user.purchasedpoints_employer.filter(expiration_date__gt=timezone.now(), remaining_tokens__gt=0).count()
-            
+
+        purchased_tokens = user.purchasedpoints_employer.filter(
+            expiration_date__gt=timezone.now(), remaining_tokens__gt=0).count()
+
         if purchased_tokens > 0:
-            purchased_tokens_obj = user.purchasedpoints_employer.filter(expiration_date__gt=timezone.now(), remaining_tokens__gt=0).order_by('expiration_date').first()
+            purchased_tokens_obj = user.purchasedpoints_employer.filter(
+                expiration_date__gt=timezone.now(), remaining_tokens__gt=0).order_by('expiration_date').first()
             if len(purchased_offer.candidate.completed_surveys) == 3:
                 purchased_tokens_obj.remaining_tokens -= 2
             else:
@@ -111,11 +122,12 @@ class PurchaseOfferView(generics.CreateAPIView):
                 user.tokens -= 2
             else:
                 user.tokens -= 1
-            user.save()     
-        
+            user.save()
+
         message = f'Twój profil zainteresował jednego z pracodawców w naszej bazie. Jest zainteresowany współpracą.\n\nPoniżej informacje o nim: {purchased_offer.employer.first_name} {purchased_offer.employer.last_name}\n{purchased_offer.employer.company_name}\n\nNiedługo powinien się z Tobą skontaktować. Powodzenia!'
-        
-        client.sms.send(to=purchased_offer.candidate.phone, message=message, from_="bezCV", encoding="utf-8")
+
+        client.sms.send(to=purchased_offer.candidate.phone,
+                        message=message, from_="bezCV", encoding="utf-8")
 
         return response
 
@@ -126,12 +138,12 @@ class PurchasedOffersListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Candidates.objects.filter(purchasedoffers_candidate__employer=self.request.user)
-    
-    
+
+
 class AddReportView(generics.CreateAPIView):
     serializer_class = serializers.AddReportSerializer
     permission_classes = [IsAuthenticated]
-    
+
 
 @api_view(['POST'])
 def smsapi_endpoint(request):

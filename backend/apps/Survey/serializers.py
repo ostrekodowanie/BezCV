@@ -4,7 +4,7 @@ from django.db.models import Avg
 from rest_framework import serializers
 
 from .models import Questions
-from apps.Candidates.models import Candidates
+from apps.Candidates.models import Candidates, Industries
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -14,12 +14,13 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class CandidateCreateSerializer(serializers.ModelSerializer):
+    industry_ids = serializers.ListField(child=serializers.IntegerField())
 
     class Meta:
         model = Candidates
         fields = ['first_name', 'last_name', 'email', 'phone', 'province', 'birth_date', 'salary_expectation', 'availability', 'job_position',
                   'experience_sales', 'experience_customer_service', 'experience_office_administration', 'education',
-                  'driving_license']
+                  'driving_license', 'industry_ids']
 
     '''def create(self, validated_data):
         candidate = Candidates.objects.create(**validated_data)
@@ -47,3 +48,9 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
         email.send()
 
         return candidate'''
+
+
+class IndustrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Industries
+        fields = ['id', 'name']
