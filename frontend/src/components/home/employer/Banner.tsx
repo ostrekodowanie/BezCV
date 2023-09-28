@@ -38,7 +38,7 @@ export default function Banner() {
   }, [iteration]);
 
   return (
-    <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] pt-[1in] md:pt-[1.4in] 2xl:pt-[1.8in] items-center relative">
+    <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[16vw] pt-[1in] md:pt-[1.4in] 2xl:pt-[1.8in] items-center relative">
       <div className="font-bold flex flex-col gap-4 bg-primary sm:rounded-3xl px-10 overflow relative xl:px-20 py-8 xl:py-16 text-white">
         <h2 className="text-3xl leading-tight xl:text-[2.5rem] xl:leading-tight relative">
           W bezCV jest ponad{" "}

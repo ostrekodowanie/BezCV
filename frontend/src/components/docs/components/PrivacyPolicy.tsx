@@ -337,13 +337,8 @@ export default function PrivacyPolicy() {
           </p>
           <p className="text-sm sm:text-base">
             Zgłoszenie o wystąpieniu przez Użytkownika z uprawnieniem
-            wynikającym z wymienionych praw należy przesłać na adres [adres
-            e-mail].
-          </p>
-          <p className="text-sm sm:text-base">
-            Zgłoszenie o wystąpieniu przez Użytkownika z uprawnieniem
-            wynikającym z wymienionych praw należy przesłać na adres [adres
-            e-mail].
+            wynikającym z wymienionych praw należy przesłać na adres
+            biuro@bezcv.com.
           </p>
           <p className="text-sm sm:text-base">
             Użytkownik ma prawo złożyć skargę do Prezesa Urzędu Ochrony Danych

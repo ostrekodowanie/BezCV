@@ -642,7 +642,8 @@ export default function Statute() {
               dostępnego w Portalu;
             </li>
             <li>
-              3) telefonicznej pod numerem: ………………… (w godzinach 9:00-17:00).
+              3) telefonicznej pod numerem: 606 296 472 (w godzinach
+              9:00-17:00).
             </li>
           </ol>
           <p className="text-sm sm:text-base">

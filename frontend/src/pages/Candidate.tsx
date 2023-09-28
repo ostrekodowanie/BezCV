@@ -30,10 +30,12 @@ import HasJob from "../components/offers/HasJob";
 import FollowButton from "../components/candidate/FollowButton";
 import SuggestedCandidates from "../components/candidate/SuggestedCandidates";
 import { Loading } from "../types/candidate";
-import SideBar from "../components/home/candidate/SideBar";
+import SideBar from "../components/candidate/SideBar";
 import AbilitiesList from "../components/candidate/AbilitiesList";
 import ShareButton from "../components/candidate/ShareButton";
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import BadgeList from "../components/candidate/BadgeList";
+import LocationIcon from "../assets/candidate/icons/LocationIcon";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -114,7 +116,7 @@ export default function Candidate() {
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
       <section
-        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] print:sm:px-0 print:md:px-0 print:2xl:px-0 print:py-16 print:md:py-16 print:2xl:py-16 py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col print:gap-4 gap-8"
+        className="sm:px-[8vw] md:px-[12vw] 2xl:px-[16vw] print:sm:px-0 print:md:px-0 print:2xl:px-0 print:py-16 print:md:py-16 print:2xl:py-16 py-[1in] md:py-[1.4in] 2xl:py-[1.8in] bg-white min-h-screen flex flex-col print:gap-4 gap-8"
         id="candidate-profile"
       >
         <div className="bg-white sm:rounded-3xl relative shadow-primaryBig px-[8vw] print:py-6 print:sm:py-6 py-10 sm:p-10">
@@ -221,9 +223,36 @@ export default function Candidate() {
                 )}
               </div>
             </div>
+            <div className="flex items-center gap-4">
+              <div className="h-16 w-16 bg-[#F8F8F8] rounded-full flex items-center justify-center">
+                <LocationIcon {...colorScheme} />
+              </div>
+              <div className="flex flex-col gap-1">
+                {loading.page ? (
+                  <>
+                    <div className="w-[1in] h-[1em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                    <div className="w-[1.4in] h-[1.2em] rounded-full py-2 px-6 bg-[#f8f8f8]" />
+                  </>
+                ) : (
+                  <>
+                    <h4 className="text-sm">Chce pracować w</h4>
+                    <h3 className="font-semibold text-sm">Przykład</h3>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-        <div className="flex flex-col xl:grid grid-cols-[1fr_2fr] xl:grid-rows-[max-content_1fr_max-content] print:grid print:gap-4 gap-8">
+        {((candidateDetails.industries &&
+          candidateDetails.industries.length > 0) ||
+          loading.page) && (
+          <BadgeList
+            isLoading={loading.page}
+            profession={candidateDetails.profession}
+            industries={candidateDetails.industries}
+          />
+        )}
+        <div className="flex flex-col xl:grid grid-cols-[2fr_5fr] xl:grid-rows-[max-content_1fr_max-content] print:grid print:gap-4 gap-8">
           {loading.page ? (
             <div className="ml-[8vw] sm:ml-0">
               <Loader />

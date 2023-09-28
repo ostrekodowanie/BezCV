@@ -40,10 +40,10 @@ export default function RoleChoosePage({
               .filter((role) => !isSurveyFilled[role.name])
               .map((role) => (
                 <label
-                  className={`py-6 px-12 sm:p-12 w-full text-center transition-all flex flex-col cursor-pointer font-semibold gap-4 sm:gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl shadow-secondaryBig items-center ${
+                  className={`py-6 px-12 sm:p-12 w-full text-center transition-colors border-[2px] flex flex-col cursor-pointer font-semibold gap-4 sm:gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl items-center ${
                     chosen === role.name
-                      ? "text-secondary shadow-[0px_56px_114px_rgba(250,175,62,0.25)]"
-                      : "shadow-secondaryBig"
+                      ? "text-[#F9AE3D] shadow-[0px_56px_114px_rgba(250,175,62,0.25)] border-[#F9AE3D]"
+                      : "shadow-secondaryBig border-transparent"
                   }`}
                   htmlFor={role.name}
                   key={"label:" + role.name}
