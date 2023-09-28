@@ -5,13 +5,14 @@ import {
 } from "../../constants/professionColorMap";
 import { RoleType } from "../../constants/workForm";
 import { Industry } from "../../types/candidate";
+import CheckMarkIcon from "../../assets/survey/icons/CheckMarkIcon";
 
 type Props = {
   industry: Industry;
   profession?: RoleType;
   isChecked?: boolean;
   size?: "small" | "big";
-  handleChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleChange?: (industry: Industry) => void;
 };
 
 export default function Badge({
@@ -21,36 +22,36 @@ export default function Badge({
   size = "big",
   handleChange,
 }: Props) {
-  const { id, title } = industry;
+  const { id, name } = industry;
   const { color, light, gradient } = profession
     ? professionColorMap[profession]
     : initialColorScheme;
 
   return handleChange ? (
-    <div className="relative">
-      <label
-        style={{ backgroundColor: light, borderColor: color }}
-        className={`border-[1px] rounded-full ${
-          size === "big" ? "py-2.5 px-6" : "py-1 px-4"
-        }`}
-        htmlFor={title + id}
+    <label
+      style={{
+        backgroundColor: isChecked ? light : "#FFF",
+        borderColor: isChecked ? color : "#ECECEC",
+      }}
+      className={`border-[1px] cursor-pointer transition-colors rounded-full flex items-center gap-2 py-2.5 px-6`}
+      htmlFor={name + id}
+    >
+      {isChecked && <CheckMarkIcon color={color} />}
+      <span
+        style={{ color: isChecked ? color : "#141B30" }}
+        className="bg-clip-text text-transparent font-semibold text-[.75rem] transition-colors"
       >
-        <span
-          style={{ backgroundImage: gradient }}
-          className="bg-clip-text text-transparent font-semibold text-[.75rem]"
-        >
-          {title}
-        </span>
-      </label>
+        {name}
+      </span>
       <input
         className="absolute -z-50 opacity-0"
         type="checkbox"
-        id={title + id}
+        id={name + id}
         checked={isChecked}
-        onChange={handleChange}
+        onChange={() => handleChange(industry)}
         name="tasks"
       />
-    </div>
+    </label>
   ) : (
     <div
       style={{ backgroundColor: light, borderColor: light }}
@@ -62,7 +63,7 @@ export default function Badge({
         style={{ backgroundImage: gradient }}
         className="bg-clip-text text-transparent font-semibold text-[.75rem] select-none"
       >
-        {title}
+        {name}
       </span>
     </div>
   );

@@ -118,8 +118,8 @@ li::marker {
 
 @media all and (min-width: 1536px) {
   .padding {
-    padding-left: 17vw;
-    padding-right: 17vw;
+    padding-left: 16vw;
+    padding-right: 16vw;
   }
 }
 

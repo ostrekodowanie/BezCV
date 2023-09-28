@@ -1,13 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
 import RoleController from "./survey/RoleController";
 import CandidateController from "./survey/CandidateController";
-import {
-  createContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useLayoutEffect, useMemo, useState } from "react";
 import { surveyMan } from "../assets/survey/survey";
 import {
   CandidateAnswerType,
@@ -37,12 +30,11 @@ export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
   const [candidateAnswers, setCandidateAnswers] = useState<CandidateAnswerType>(
     initialCandidateAnswers
   );
-  const { pathname } = useLocation();
 
   useLayoutEffect(() => {
     isIntroduced ? setIsHeaderVisible(false) : setIsHeaderVisible(true);
     return () => {
-      pathname !== "/ankieta" && setIsHeaderVisible(true);
+      setIsHeaderVisible(true);
     };
   }, [isIntroduced]);
 

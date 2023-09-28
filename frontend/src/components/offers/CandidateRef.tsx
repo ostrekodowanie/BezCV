@@ -34,7 +34,6 @@ const CandidateRef = ({
   setFollowed,
 }: CandidateProps & FollowedCandidateBonusProps) => {
   const colorScheme: ProfessionColorScheme = initialColorScheme;
-
   return (
     <Link
       to={"/oferty/" + id}
@@ -147,25 +146,18 @@ const CandidateRef = ({
             </div>
           </div>
           <div>
-            {/* {industries && ( */}
-            <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
-              <h3 className="font-semibold text-[.75rem]">Szuka pracy w:</h3>
-              {/* {industries.length > 0 ? ( */}
-              <BadgeList
-                industries={[
-                  { id: 0, title: "Odnawiane źródła energii" },
-                  { id: 1, title: "Farmacja / Medycyna" },
-                  { id: 2, title: "Sieci handlowe" },
-                ]}
-                profession={profession}
-              />
-              {/* ) : (
-                  <h4 className="font-medium text-[.75rem]">
-                    Kandydat nie wypełnił jeszcze ankiety
-                  </h4>
-                )} */}
-            </div>
-            {/* )} */}
+            {industries && (
+              <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
+                <h3 className="font-semibold text-[.75rem]">Szuka pracy w:</h3>
+                {industries.length > 0 ? (
+                  <BadgeList industries={industries} profession={profession} />
+                ) : (
+                  <span className="text-sm font-medium">
+                    Nie znaleziono branż
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-col items-start xl:self-end xl:items-end gap-6 mt-8 xl:mt-0">

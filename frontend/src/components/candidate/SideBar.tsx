@@ -4,12 +4,12 @@ import {
   CashIcon,
   DriversLicenseIcon,
   EducationIcon,
-} from "../../../assets/candidate/icons/icons";
-import { Details } from "../../../constants/candidate";
-import { Loading } from "../../../types/candidate";
-import FollowButton from "../../candidate/FollowButton";
-import { ColorSchemeContext } from "../../../pages/Candidate";
-import ContractIcon from "../../../assets/candidate/icons/ContractIcon";
+} from "../../assets/candidate/icons/icons";
+import { Details } from "../../constants/candidate";
+import { Loading } from "../../types/candidate";
+import FollowButton from "./FollowButton";
+import { ColorSchemeContext } from "../../pages/Candidate";
+import ContractIcon from "../../assets/candidate/icons/ContractIcon";
 
 export default function SideBar({
   id,
@@ -40,7 +40,9 @@ export default function SideBar({
           ) : (
             <>
               <h4 className="text-sm">Forma zatrudnienia</h4>
-              <h3 className="font-semibold text-sm">{contract_type}</h3>
+              <h3 className="font-semibold text-sm">
+                {contract_type || "Nie zdefiniowano"}
+              </h3>
             </>
           )}
         </div>

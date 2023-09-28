@@ -97,25 +97,6 @@ export const roleToTextMap: MapTextToRoleType = {
     }
 }
 
-export const provinces = [
-    "Dolnośląskie",
-    "Kujawsko-pomorskie",
-    "Lubelskie",
-    "Lubuskie",
-    "Łódzkie",
-    "Małopolskie",
-    "Mazowieckie",
-    "Opolskie",
-    "Podkarpackie",
-    "Podlaskie",
-    "Pomorskie",
-    "Śląskie",
-    "Świętokrzyskie",
-    "Warmińsko-mazurskie",
-    "Wielkopolskie",
-    "Zachodniopomorskie"
-]
-
 export type DidFilledSurvey = {
     [r in RoleType]: boolean
 }

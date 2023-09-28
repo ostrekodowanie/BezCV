@@ -7,7 +7,7 @@ export type Loading = {
 
 export type Industry = {
     id: number;
-    title: string;
+    name: string;
 }
 
 export type BadgeListProps = {

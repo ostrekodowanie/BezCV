@@ -80,7 +80,7 @@ export default function TutorialMenu() {
   );
 
   return (
-    <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] pb-[1in] md:pb-[1.4in] 2xl:pb-[1.8in] text-white">
+    <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[16vw] pb-[1in] md:pb-[1.4in] 2xl:pb-[1.8in] text-white">
       <RoleStateContext.Provider value={contextValue}>
         <div
           className={`${

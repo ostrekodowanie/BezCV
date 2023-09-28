@@ -31,7 +31,7 @@ export default function Profile() {
 
   return (
     <ProfileDataContext.Provider value={profileData}>
-      <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in] flex flex-col gap-8 xl:grid grid-cols-[6fr_5fr_5fr] overflow-x-hidden grid-rows-[4in_max-content_1fr]">
+      <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[16vw] py-[1.4in] md:py-[1.8in] 2xl:py-[2.2in] flex flex-col gap-8 xl:grid grid-cols-[6fr_5fr_5fr] overflow-x-hidden grid-rows-[4in_max-content_1fr]">
         <EmployerInfo />
         <Link
           to="/punkty"
