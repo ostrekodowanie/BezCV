@@ -11,7 +11,7 @@ type CustomInput = {
 }
 
 export interface QuestionProps {
-    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'birth_date' | 'province' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration',
+    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'birth_date' | 'province' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration' | 'contract_type',
     question: string,
     type: HTMLInputTypeAttribute | 'custom' | 'select',
     answers?: string[],
@@ -80,10 +80,10 @@ export const defaultQuestions: QuestionProps[] = [
     },
     {
         name: 'province',
-        question: 'W jakim województwie chciałbyś pracować?',
-        type: 'select',
-        placeholder: 'Wybierz województwo',
-        answers: provinces
+        question: 'W jakiej lokalizacji chcesz pracować?',
+        type: 'text',
+        placeholder: 'Tutaj wpisz kod pocztowy',
+        // answers: provinces
     },
     {
         name: 'job_position',
@@ -143,6 +143,12 @@ export const defaultQuestions: QuestionProps[] = [
         question: 'Czy posiadasz prawo jazdy kat. B?',
         type: 'radio',
         answers: ['Tak', 'Nie'],
+    },
+    {
+        name: "contract_type",
+        question: "W jakiej formie chcesz się rozliczać?",
+        type: "radio",
+        answers: ["Umowa zlecenie / Umowa o dzieło", "Umowa o pracę", "Kontrakt B2B"]
     }
 ]
 

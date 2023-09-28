@@ -34,6 +34,7 @@ import SideBar from "../components/home/candidate/SideBar";
 import AbilitiesList from "../components/candidate/AbilitiesList";
 import ShareButton from "../components/candidate/ShareButton";
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import BadgeList from "../components/candidate/BadgeList";
 
 export const ColorSchemeContext = createContext<ProfessionColorScheme>(null!);
 
@@ -223,7 +224,14 @@ export default function Candidate() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col xl:grid grid-cols-[1fr_2fr] xl:grid-rows-[max-content_1fr_max-content] print:grid print:gap-4 gap-8">
+        {(candidateDetails.industries || loading.page) && (
+          <BadgeList
+            isLoading={loading.page}
+            profession={candidateDetails.profession}
+            industries={candidateDetails.industries}
+          />
+        )}
+        <div className="flex flex-col xl:grid grid-cols-[2fr_5fr] xl:grid-rows-[max-content_1fr_max-content] print:grid print:gap-4 gap-8">
           {loading.page ? (
             <div className="ml-[8vw] sm:ml-0">
               <Loader />
