@@ -243,7 +243,7 @@ export default function Candidate() {
                               ? ", " + candidateDetails.location.city
                               : ""
                           }`
-                        : candidateDetails.location?.province || "Nie podano"}
+                        : candidateDetails.province || "Nie podano"}
                     </h3>
                   </>
                 )}

@@ -13,7 +13,6 @@ export type AbilitiesListType = {
 type Location = {
     postal_code?: string,
     city?: string,
-    province?: string
 }
 
 export interface CandidateProps {
