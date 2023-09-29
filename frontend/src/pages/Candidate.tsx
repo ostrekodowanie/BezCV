@@ -236,7 +236,15 @@ export default function Candidate() {
                 ) : (
                   <>
                     <h4 className="text-sm">Chce pracować w</h4>
-                    <h3 className="font-semibold text-sm">Przykład</h3>
+                    <h3 className="font-semibold text-sm">
+                      {candidateDetails.location?.postal_code
+                        ? `${candidateDetails.location.postal_code}${
+                            candidateDetails.location.city
+                              ? ", " + candidateDetails.location.city
+                              : ""
+                          }`
+                        : candidateDetails.province || "Nie podano"}
+                    </h3>
                   </>
                 )}
               </div>

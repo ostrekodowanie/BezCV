@@ -111,6 +111,9 @@ export default function CandidateController() {
           ...candidateAnswers,
           driving_license:
             candidateAnswers.drivers_license === "Tak" ? true : false,
+          postal_code: (candidateAnswers.postal_code as string)
+            .split("-")
+            .join(""),
         })
       )
       .then(() => setPoliciesAccepted(true))
