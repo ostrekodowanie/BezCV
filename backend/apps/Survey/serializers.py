@@ -19,7 +19,6 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "phone",
-            "province",
             "birth_date",
             "salary_expectation",
             "availability",

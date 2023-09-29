@@ -23,7 +23,6 @@ class CandidateSerializer(serializers.ModelSerializer):
             "email",
             "phone",
             "birth_date",
-            "province",
             "profession",
             "salary_expectation",
             "availability",
@@ -37,6 +36,7 @@ class CandidateSerializer(serializers.ModelSerializer):
             "worst_abilities",
             "similar_candidates",
             "industries",
+            "location",
         ]
 
     def to_representation(self, instance):
