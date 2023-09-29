@@ -11,17 +11,17 @@ import {
   professionColorMap,
   ProfessionColorScheme,
 } from "../../constants/professionColorMap";
-import CategoryPercantageBox from "./CategoryPercentageBox";
 import HasJob from "./HasJob";
 import FollowButton from "../candidate/FollowButton";
 import { FollowedCandidateBonusProps } from "../../constants/profile";
+import BadgeList from "./BadgeList";
 
 const CandidateRef = ({
   id,
   first_name,
   last_name,
   is_followed,
-  percentage_by_category,
+  industries,
   availability,
   salary_expectation,
   profession,
@@ -34,7 +34,6 @@ const CandidateRef = ({
   setFollowed,
 }: CandidateProps & FollowedCandidateBonusProps) => {
   const colorScheme: ProfessionColorScheme = initialColorScheme;
-
   return (
     <Link
       to={"/oferty/" + id}
@@ -147,38 +146,15 @@ const CandidateRef = ({
             </div>
           </div>
           <div>
-            {percentage_by_category && (
+            {industries && (
               <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
-                <h3 className="font-semibold text-[.75rem]">Umiejętności:</h3>
-                {percentage_by_category.sales ||
-                percentage_by_category.office_administration ||
-                percentage_by_category.customer_service ? (
-                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-                    <CategoryPercantageBox
-                      {...roleToTextMap["sales"]}
-                      role={profession}
-                      percentage={percentage_by_category["sales"]}
-                      hasJob={has_job}
-                    />
-                    <CategoryPercantageBox
-                      {...roleToTextMap["office_administration"]}
-                      role={profession}
-                      percentage={
-                        percentage_by_category["office_administration"]
-                      }
-                      hasJob={has_job}
-                    />
-                    <CategoryPercantageBox
-                      {...roleToTextMap["customer_service"]}
-                      role={profession}
-                      percentage={percentage_by_category["customer_service"]}
-                      hasJob={has_job}
-                    />
-                  </div>
+                <h3 className="font-semibold text-[.75rem]">Szuka pracy w:</h3>
+                {industries.length > 0 ? (
+                  <BadgeList industries={industries} profession={profession} />
                 ) : (
-                  <h4 className="font-medium text-[.75rem]">
-                    Kandydat nie wypełnił jeszcze ankiety
-                  </h4>
+                  <span className="text-sm font-medium">
+                    Nie znaleziono branż
+                  </span>
                 )}
               </div>
             )}

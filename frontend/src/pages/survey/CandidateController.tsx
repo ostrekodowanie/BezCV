@@ -11,22 +11,18 @@ import ReactGA from "react-ga";
 import PolicyAccept from "../../components/survey/PolicyAccept";
 import BirthdateInput from "../../components/survey/inputs/BirthdateInput";
 import DefaultInput from "../../components/survey/inputs/DefaultInput";
-import SelectInput from "../../components/survey/inputs/SelectInput";
 import PhoneInput from "../../components/survey/inputs/PhoneInput";
 import RadioInput from "../../components/survey/inputs/RadioInput";
 import CheckboxInput from "../../components/survey/inputs/CheckboxInput";
 import CustomInput from "../../components/survey/inputs/CustomInput";
 import SurveyError from "../../components/survey/SurveyError";
 import CandidateLoader from "./CandidateLoader";
+import PostalCodeInput from "../../components/survey/inputs/PostalCodeInput";
 
 export default function CandidateController() {
-  const {
-    candidateAnswers,
-    setStep,
-    activeQuestionIndex,
-    setActiveQuestionIndex,
-  } = useContext(SurveyContext);
-  const { question, type } = defaultQuestions[activeQuestionIndex];
+  const { candidateAnswers, activeQuestionIndex, setActiveQuestionIndex } =
+    useContext(SurveyContext);
+  const { name, question, type } = defaultQuestions[activeQuestionIndex];
   const [loading, setLoading] = useState(false);
   const [credentialsLoading, setCredentialsLoading] = useState(false);
   const [phoneCodePopupActive, setPhoneCodePopupActive] = useState(false);
@@ -143,6 +139,11 @@ export default function CandidateController() {
         <h2 className="text-2xl sm:text-3xl font-bold text-center w-full max-w-[8in]">
           {question}
         </h2>
+        {type === "checkbox" && (
+          <h3 className="text-sm font-medium">
+            {"(Możesz wybrać kilka opcji jednocześnie)"}
+          </h3>
+        )}
       </div>
       <form
         className="flex flex-col flex-1 items-center justify-between gap-8 w-full sm:relative"
@@ -171,7 +172,10 @@ export default function CandidateController() {
             )}
             <button
               type="submit"
-              className="justify-center text-[.75rem] w-full sm:w-max sm:rounded-full sm:text-[.8rem] text-white font-semibold py-[14px] px-8 bg-secondary sm:self-end flex items-center"
+              disabled={
+                type === "checkbox" && candidateAnswers[name].length < 1
+              }
+              className="justify-center text-[.75rem] w-full sm:w-max sm:rounded-full sm:text-[.8rem] disabled:opacity-40 text-white font-semibold py-[14px] px-8 bg-secondary sm:self-end flex items-center"
             >
               Następne pytanie{" "}
               <img className="ml-2 max-h-[.9em]" src={buttonArrow} alt="->" />
@@ -196,7 +200,8 @@ export default function CandidateController() {
 }
 
 const CandidateInput = (props: QuestionProps) => {
-  const { type } = props;
+  const { type, name } = props;
+  if (name === "postal_code") return <PostalCodeInput />;
   switch (type) {
     case "text":
     case "email":
@@ -212,7 +217,5 @@ const CandidateInput = (props: QuestionProps) => {
       return <CheckboxInput {...props} />;
     case "custom":
       return <CustomInput {...props} />;
-    case "select":
-      return <SelectInput {...props} />;
   }
 };

@@ -1,4 +1,5 @@
 import { AbilityProps } from "../components/candidate/AbilityRange"
+import { Industry } from "../types/candidate"
 import { RoleType } from "./workForm"
 
 type PercentageByProfession = {
@@ -15,8 +16,9 @@ export interface CandidateProps {
     last_name: string,
     abilities?: AbilitiesListType,
     profession?: RoleType,
-    percentage_by_category: PercentageByProfession,
+    industries?: Industry[],
     driving_license?: boolean,
+    contract_type?: string,
     birth_date?: string,
     job_position?: string,
     availability?: string,
@@ -94,25 +96,6 @@ export const roleToTextMap: MapTextToRoleType = {
         offersCategoryPercantageBox: 'Administracyjne'
     }
 }
-
-export const provinces = [
-    "Dolnośląskie",
-    "Kujawsko-pomorskie",
-    "Lubelskie",
-    "Lubuskie",
-    "Łódzkie",
-    "Małopolskie",
-    "Mazowieckie",
-    "Opolskie",
-    "Podkarpackie",
-    "Podlaskie",
-    "Pomorskie",
-    "Śląskie",
-    "Świętokrzyskie",
-    "Warmińsko-mazurskie",
-    "Wielkopolskie",
-    "Zachodniopomorskie"
-]
 
 export type DidFilledSurvey = {
     [r in RoleType]: boolean

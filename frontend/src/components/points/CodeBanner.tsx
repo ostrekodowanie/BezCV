@@ -28,7 +28,7 @@ export default function CodeBanner() {
   };
 
   return (
-    <section className="py-[1in] sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw]">
+    <section className="py-[1in] sm:px-[8vw] md:px-[12vw] 2xl:px-[16vw]">
       <div className="bg-[linear-gradient(84.74deg,#2F66F4_15.81%,#0D9AE9_80.36%)] p-16 px-[8vw] sm:px-[10%] flex flex-col gap-8 xl:flex-row justify-between xl:items-center sm:rounded-3xl">
         <h2 className="flex flex-col gap-4 text-white">
           <span className="font-semibold text-3xl md:text-4xl 2xl:text-[2.75rem] md:leading-tight 2xl:leading-tight">

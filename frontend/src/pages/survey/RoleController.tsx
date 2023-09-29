@@ -15,6 +15,8 @@ import { roleToTextMap } from "../../constants/candidate";
 import { loaderFacts } from "../../constants/findWork";
 import LoaderFact from "./LoaderFact";
 import SurveyError from "../../components/survey/SurveyError";
+import IndustryList from "./IndustriesList";
+import { Industry } from "../../types/candidate";
 
 interface RoleQuestion {
   id: number;
@@ -34,6 +36,8 @@ export default function RoleController() {
     setIsSurveyFilled,
   } = useContext(SurveyContext);
   const { phone } = candidateAnswers;
+  const [industriesChosen, setIndustriesChosen] = useState(false);
+  const [industries, setIndustries] = useState<Industry[]>([]);
   const [numericalAnswer, setNumericalAnswer] = useState<number | null>(null);
   const [questions, setQuestions] = useState<RoleQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,6 +110,7 @@ export default function RoleController() {
             candidate: phone,
             answers: roleAnswers,
             profession: role,
+            ...(industries.length > 0 && industries),
           }),
           {
             headers: { "Content-Type": "application/json" },
@@ -151,6 +156,24 @@ export default function RoleController() {
     );
   if (isFinishing) return <LoaderFact {...loaderFacts[role || "sales"]} />;
   if (!role) return <RoleChoosePage setRole={setRole} />;
+  if (
+    !industriesChosen &&
+    Object.values(isSurveyFilled).filter((value) => value).length === 0
+  )
+    return (
+      <IndustryList
+        profession={role}
+        industries={industries}
+        changeIndustry={(industry) =>
+          setIndustries((prev) =>
+            prev.findIndex((item) => item.id === industry.id) === -1
+              ? [...prev, industry]
+              : [...prev].filter((item) => item.id !== industry.id)
+          )
+        }
+        submit={() => setIndustriesChosen(true)}
+      />
+    );
   if (error) return <SurveyError />;
   if (loading || !questions[activeQuestionIndex]) return <Loader />;
   const { text } = questions[activeQuestionIndex];

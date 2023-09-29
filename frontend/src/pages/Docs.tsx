@@ -4,7 +4,7 @@ import DocsNav from "../components/docs/DocsNav";
 
 export default function Docs() {
   return (
-    <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] pt-[1.2in] md:pt-[1.4in] 2xl:pt-[1.8in] flex flex-col gap-8 lg:grid grid-cols-[max-content_1fr] min-h-screen">
+    <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[16vw] pt-[1.2in] md:pt-[1.4in] 2xl:pt-[1.8in] flex flex-col gap-8 lg:grid grid-cols-[max-content_1fr] min-h-screen">
       <DocsNav />
       <Routes>
         <Route

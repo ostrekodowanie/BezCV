@@ -1,6 +1,5 @@
 import { HTMLInputTypeAttribute } from "react"
 import { CandidateAnswerType, RoleType } from "./workForm"
-import { provinces } from "./candidate"
 
 type CustomInput = {
     name: keyof CandidateAnswerType,
@@ -11,9 +10,9 @@ type CustomInput = {
 }
 
 export interface QuestionProps {
-    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'birth_date' | 'province' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration',
+    name: 'name' | 'phone' | "drivers_license" | 'email' | 'preferred_professions' | 'birth_date' | 'salary_expectation' | 'availability' | 'job_position' | 'experience' | 'education' | 'first_name' | 'last_name' | 'experience_sales' | 'experience_customer_service' | 'experience_office_administration' | 'contract_type' | 'postal_code',
     question: string,
-    type: HTMLInputTypeAttribute | 'custom' | 'select',
+    type: HTMLInputTypeAttribute | 'custom',
     answers?: string[],
     placeholder?: string,
     customInputs?: CustomInput[]
@@ -69,6 +68,12 @@ export const defaultQuestions: QuestionProps[] = [
         placeholder: 'Tutaj wprowadź datę'
     },
     {
+        name: 'postal_code',
+        question: 'W jakiej lokalizacji chcesz pracować?',
+        type: 'text',
+        placeholder: 'Tutaj wpisz kod pocztowy',
+    },
+    {
         name: 'availability',
         question: 'Jaka jest Twoja dyspozycyjność?',
         type: 'radio',
@@ -77,13 +82,6 @@ export const defaultQuestions: QuestionProps[] = [
             'pół etatu',
             'cały etat'
         ],
-    },
-    {
-        name: 'province',
-        question: 'W jakim województwie chciałbyś pracować?',
-        type: 'select',
-        placeholder: 'Wybierz województwo',
-        answers: provinces
     },
     {
         name: 'job_position',
@@ -139,11 +137,17 @@ export const defaultQuestions: QuestionProps[] = [
         ],
     },
     {
+        name: "contract_type",
+        question: "W jakiej formie chcesz się rozliczać?",
+        type: "checkbox",
+        answers: ["Umowa zlecenie / Umowa o dzieło", "Umowa o pracę", "Kontrakt B2B"]
+    },
+    {
         name: "drivers_license",
         question: 'Czy posiadasz prawo jazdy kat. B?',
         type: 'radio',
         answers: ['Tak', 'Nie'],
-    }
+    },
 ]
 
 export const defaultQuestionsLength = defaultQuestions.length

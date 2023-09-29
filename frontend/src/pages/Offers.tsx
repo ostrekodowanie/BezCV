@@ -24,7 +24,7 @@ export interface FilterProps {
   professions: RoleType[];
   availability: string[];
   salary: string[];
-  province: string[];
+  // province: string[];
 }
 
 const CandidateList = () => {
@@ -54,9 +54,9 @@ const CandidateList = () => {
     salary: initialFilter.salary
       ? decodeURIComponent(initialFilter.salary).split(",")
       : [],
-    province: initialFilter.province
-      ? decodeURIComponent(initialFilter.province).split(",")
-      : [],
+    // province: initialFilter.province
+    //   ? decodeURIComponent(initialFilter.province).split(",")
+    //   : [],
   });
 
   const changePage = ({ selected }: { selected: number }) => {
@@ -91,7 +91,7 @@ const CandidateList = () => {
   }, [items]);
 
   return (
-    <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[17vw] py-[1.4in] md:py-[2in] bg-white">
+    <section className="sm:px-[8vw] md:px-[12vw] 2xl:px-[16vw] py-[1.4in] md:py-[2in] bg-white">
       <div className="flex flex-wrap gap-6 items-end justify-between mx-[8vw] sm:mx-0">
         <h1 className="font-medium text-3xl xl:text-4xl">Znajdź pracownika</h1>
         <div className="flex items-center gap-4">

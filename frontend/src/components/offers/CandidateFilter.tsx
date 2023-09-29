@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { filtersMenuArrow } from "../../assets/offers/offers";
-import { provinces, roleToTextMap } from "../../constants/candidate";
+import { roleToTextMap } from "../../constants/candidate";
 import { RoleType } from "../../constants/workForm";
 import { FilterProps as FilterStateProps } from "../../pages/Offers";
 
@@ -36,7 +36,7 @@ export default function CandidateFilter({
     professions: [],
     availability: [],
     salary: [],
-    province: provinces,
+    // province: provinces,
   });
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function CandidateFilter({
           professions: data.professions,
           availability: ["cały etat", "pół etatu", "¼ etatu"],
           salary: data.salary,
-          province: prev.province,
+          // province: prev.province,
         }))
       );
   }, []);
@@ -200,7 +200,7 @@ export default function CandidateFilter({
             </div>
           )}
         </div>
-        <HorizontalLine />
+        {/* <HorizontalLine />
         <div className="flex flex-col gap-6">
           <button
             onClick={() =>
@@ -237,7 +237,7 @@ export default function CandidateFilter({
               ))}
             </div>
           )}
-        </div>
+        </div> */}
         <HorizontalLine />
         <div className="flex items-start gap-2">
           <input
@@ -368,39 +368,39 @@ const RoleCheckBox = ({
   );
 };
 
-const ProvinceCheckBox = ({
-  province,
-  filter,
-  setFilter,
-}: {
-  province: string;
-  filter: FilterStateProps;
-  setFilter: Dispatch<SetStateAction<FilterStateProps>>;
-}) => {
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFilter((prev) => ({
-      ...prev,
-      province: e.target.checked
-        ? [...prev.province, province]
-        : prev.province.filter((r) => r !== province),
-    }));
-  };
+// const ProvinceCheckBox = ({
+//   province,
+//   filter,
+//   setFilter,
+// }: {
+//   province: string;
+//   filter: FilterStateProps;
+//   setFilter: Dispatch<SetStateAction<FilterStateProps>>;
+// }) => {
+//   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+//     setFilter((prev) => ({
+//       ...prev,
+//       province: e.target.checked
+//         ? [...prev.province, province]
+//         : prev.province.filter((r) => r !== province),
+//     }));
+//   };
 
-  return (
-    <div className="flex items-center text-[14px] font-medium">
-      <input
-        type="checkbox"
-        onChange={handleChange}
-        checked={filter.province.includes(province)}
-        name="profession-filter"
-        id={province}
-      />
-      <label className="ml-4" htmlFor={province}>
-        {province}
-      </label>
-    </div>
-  );
-};
+//   return (
+//     <div className="flex items-center text-[14px] font-medium">
+//       <input
+//         type="checkbox"
+//         onChange={handleChange}
+//         checked={filter.province.includes(province)}
+//         name="profession-filter"
+//         id={province}
+//       />
+//       <label className="ml-4" htmlFor={province}>
+//         {province}
+//       </label>
+//     </div>
+//   );
+// };
 
 const HorizontalLine = () => {
   return <div className="h-[1px] bg-[#EDEDED]" />;
