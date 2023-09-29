@@ -110,7 +110,9 @@ export default function RoleController() {
             candidate: phone,
             answers: roleAnswers,
             profession: role,
-            ...(industries.length > 0 && industries),
+            ...(industries.length > 0 && {
+              industries: industries.map((item) => item.id),
+            }),
           }),
           {
             headers: { "Content-Type": "application/json" },

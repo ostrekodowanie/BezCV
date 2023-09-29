@@ -35,7 +35,9 @@ export default function Badge({
         backgroundColor: isChecked ? light : "#FFF",
         borderColor: isChecked ? color : "#ECECEC",
       }}
-      className={`border-[1px] cursor-pointer transition-colors rounded-full flex items-center gap-2 py-2.5 px-6`}
+      className={`border-[1px] transition-colors rounded-full flex items-center gap-2 py-2.5 px-6 ${
+        !isCheckable && !isChecked ? "cursor-default" : "cursor-pointer"
+      }`}
       htmlFor={name + id}
     >
       {isChecked && <CheckMarkIcon color={color} />}

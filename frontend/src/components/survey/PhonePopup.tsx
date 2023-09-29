@@ -37,18 +37,6 @@ export default function PhonePopup({
     e.preventDefault();
     setLoading(true);
     if (isOk) {
-      setStep("role");
-      setRole(null);
-      setCandidateAnswers((prev) => ({
-        ...prev,
-        phone: phone.split(" ").join(""),
-      }));
-      setIsSurveyFilled({
-        office_administration: false,
-        sales: false,
-        customer_service: false,
-      });
-      setIsIntroduced(true);
       axios
         .post(
           "/api/survey/phone/verify",
@@ -129,38 +117,34 @@ export default function PhonePopup({
           onSubmit={handleSubmit}
         >
           {isOk ? (
-            <>
+            <input
+              className={textInputStyles}
+              autoComplete="off"
+              required={true}
+              value={code}
+              onChange={handleChange}
+              placeholder={"Tutaj wpisz swój kod"}
+              type="text"
+            />
+          ) : (
+            <div className="grid grid-cols-[max-content_1fr] gap-4 self-stretch items-center">
+              <span className="font-semibold text-sm">+48</span>
               <input
                 className={textInputStyles}
                 autoComplete="off"
                 required={true}
-                value={code}
+                value={phone}
                 onChange={handleChange}
-                placeholder={"Tutaj wpisz swój kod"}
-                type="text"
+                placeholder={"Tutaj wpisz swój numer telefonu"}
+                type={"tel"}
               />
-            </>
-          ) : (
-            <>
-              <div className="grid grid-cols-[max-content_1fr] gap-4 self-stretch items-center">
-                <span className="font-semibold text-sm">+48</span>
-                <input
-                  className={textInputStyles}
-                  autoComplete="off"
-                  required={true}
-                  value={phone}
-                  onChange={handleChange}
-                  placeholder={"Tutaj wpisz swój numer telefonu"}
-                  type={"tel"}
-                />
-              </div>
-            </>
+            </div>
           )}
           <div className="flex items-center gap-6 mt-4 col-span-2 justify-end">
             {loading && <Loader />}
             {error && <p className="text-sm text-red-400">{error}</p>}
             <button
-              className='className="justify-center bg-secondary w-max transition-colors font-semibold border-primary text-white rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start max-w-max"'
+              className='justify-center bg-secondary w-max transition-colors font-semibold border-primary text-white rounded-full flex items-center text-[.8rem] py-[14px] px-8 self-start max-w-max"'
               type="submit"
             >
               Prześlij
