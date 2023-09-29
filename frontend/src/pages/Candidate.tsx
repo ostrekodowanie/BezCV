@@ -251,15 +251,13 @@ export default function Candidate() {
             </div>
           </div>
         </div>
-        {((candidateDetails.industries &&
-          candidateDetails.industries.length > 0) ||
-          loading.page) && (
-          <BadgeList
-            isLoading={loading.page}
-            profession={candidateDetails.profession}
-            industries={candidateDetails.industries}
-          />
-        )}
+        {candidateDetails.industries &&
+          candidateDetails.industries.length > 0 && (
+            <BadgeList
+              profession={candidateDetails.profession}
+              industries={candidateDetails.industries}
+            />
+          )}
         <div className="flex flex-col xl:grid grid-cols-[2fr_5fr] xl:grid-rows-[max-content_1fr_max-content] print:grid print:gap-4 gap-8">
           {loading.page ? (
             <div className="ml-[8vw] sm:ml-0">

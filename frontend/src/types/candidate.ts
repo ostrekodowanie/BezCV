@@ -12,6 +12,5 @@ export type Industry = {
 
 export type BadgeListProps = {
     profession?: RoleType;
-    isLoading?: boolean;
     industries?: Industry[];
   };
