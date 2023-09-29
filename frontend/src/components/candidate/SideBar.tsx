@@ -40,8 +40,14 @@ export default function SideBar({
           ) : (
             <>
               <h4 className="text-sm">Forma zatrudnienia</h4>
-              <h3 className="font-semibold text-sm">
-                {contract_type || "Nie zdefiniowano"}
+              <h3 className="font-semibold text-sm flex items-center gap-1 flex-wrap">
+                {contract_type
+                  ? contract_type.length === 1
+                    ? contract_type[0]
+                    : contract_type.length === 3
+                    ? "Dowolna"
+                    : contract_type.map((type) => <span>{type}</span>)
+                  : "Nie zdefiniowano"}
               </h3>
             </>
           )}

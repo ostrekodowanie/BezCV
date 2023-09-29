@@ -78,6 +78,7 @@ export default function IndustryList({
                     industries.findIndex((item) => item.id === industry.id) !==
                     -1
                   }
+                  isCheckable={industries.length < 3}
                   handleChange={changeIndustry}
                 />
               ))}

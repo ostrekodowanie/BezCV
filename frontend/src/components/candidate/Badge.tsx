@@ -11,6 +11,7 @@ type Props = {
   industry: Industry;
   profession?: RoleType;
   isChecked?: boolean;
+  isCheckable?: boolean;
   size?: "small" | "big";
   handleChange?: (industry: Industry) => void;
 };
@@ -19,6 +20,7 @@ export default function Badge({
   industry,
   profession,
   isChecked,
+  isCheckable,
   size = "big",
   handleChange,
 }: Props) {
@@ -47,8 +49,9 @@ export default function Badge({
         className="absolute -z-50 opacity-0"
         type="checkbox"
         id={name + id}
+        disabled={!isCheckable && !isChecked}
         checked={isChecked}
-        onChange={() => handleChange(industry)}
+        onChange={(e) => !e.target.disabled && handleChange(industry)}
         name="tasks"
       />
     </label>

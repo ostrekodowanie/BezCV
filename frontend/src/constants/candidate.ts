@@ -10,6 +10,12 @@ export type AbilitiesListType = {
     [t in RoleType]: AbilityProps[]
 }
 
+type Location = {
+    postal_code?: string,
+    city?: string,
+    province?: string
+}
+
 export interface CandidateProps {
     id: number,
     first_name: string,
@@ -18,7 +24,7 @@ export interface CandidateProps {
     profession?: RoleType,
     industries?: Industry[],
     driving_license?: boolean,
-    contract_type?: string,
+    contract_type?: string[],
     birth_date?: string,
     job_position?: string,
     availability?: string,
@@ -26,6 +32,7 @@ export interface CandidateProps {
     education?: string,
     phone?: string,
     province?: string,
+    location?: Location,
     email?: string,
     has_job?: boolean,
     is_followed?: boolean,
