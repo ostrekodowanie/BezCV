@@ -1,56 +1,63 @@
-from django.core.mail import EmailMessage
-from django.db.models import Avg
-
+import requests
+from apps.Candidates.models import Candidates, Industries
 from rest_framework import serializers
 
 from .models import Questions
-from apps.Candidates.models import Candidates, Industries
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Questions
-        fields = ['id', 'text']
+        fields = ["id", "text"]
 
 
 class CandidateCreateSerializer(serializers.ModelSerializer):
-    industry_ids = serializers.ListField(child=serializers.IntegerField())
-
     class Meta:
         model = Candidates
-        fields = ['first_name', 'last_name', 'email', 'phone', 'province', 'birth_date', 'salary_expectation', 'availability', 'job_position',
-                  'experience_sales', 'experience_customer_service', 'experience_office_administration', 'education',
-                  'driving_license', 'industry_ids']
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "province",
+            "birth_date",
+            "salary_expectation",
+            "availability",
+            "job_position",
+            "experience_sales",
+            "experience_customer_service",
+            "experience_office_administration",
+            "education",
+            "driving_license",
+            "contract_type",
+        ]
 
-    '''def create(self, validated_data):
-        candidate = Candidates.objects.create(**validated_data)
+    def create(self, validated_data):
+        postal_code = validated_data.get("postal_code")
 
-        subject = 'Potwierdzenie rejestracji kandydata'
-        message = 'Dziękujemy za rejestrację w naszej bazie kandydatów. Poniżej znajdują się informacje, które zostały przesłane:\n'
-        message += 'Imię: ' + candidate.first_name + '\n'
-        message += 'Nazwisko: ' + candidate.last_name + '\n'
-        message += 'E-mail: ' + candidate.email + '\n'
-        message += 'Telefon: ' + candidate.phone + '\n'
-        message += 'Data urodzenia: ' + str(candidate.birth_date) + '\n'
-        message += 'Województwo: ' + candidate.province + '\n'
-        message += 'Oczekiwania finansowe: ' + str(candidate.salary_expectation) + '\n'
-        message += 'Dostępność: ' + str(candidate.availability) + '\n'
-        message += 'Pozycja zawodowa: ' + candidate.job_position + '\n'
-        message += 'Doświadczenie w sprzedaży: ' + str(candidate.experience_sales) + '\n'
-        message += 'Doświadczenie w obsłudze klienta: ' + str(candidate.experience_customer_service) + '\n'
-        message += 'Doświadczenie w administracji: ' + str(candidate.experience_office_administration) + '\n'
-        message += 'Wykształcenie: ' + candidate.education + '\n'
-        driving_license = 'Tak' if candidate.driving_license else 'Nie'
-        message += 'Prawo jazdy: ' + driving_license + '\n'
-        
-        to_email = candidate.email
-        email = EmailMessage(subject, message, to=[to_email])
-        email.send()
+        headers = {
+            "apikey": "96352660-5eb7-11ee-9bc7-f3aa112419dc",
+        }
 
-        return candidate'''
+        params = (("codes", postal_code), ("country", "PL"))
+
+        response = requests.get(
+            "https://app.zipcodebase.com/api/v1/search",
+            headers=headers,
+            params=params,
+        )
+
+        if response.status_code == 200:
+            location_data = response.json().get("results", {}).get(postal_code, [{}])[0]
+            validated_data["location"] = {
+                "zip_code": postal_code,
+                "city": location_data["city"],
+            }
+
+        return super().create(validated_data)
 
 
 class IndustrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Industries
-        fields = ['id', 'name']
+        fields = ["id", "name"]

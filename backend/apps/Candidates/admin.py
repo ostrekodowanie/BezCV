@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import Candidates, Abilities, CandidateAbilities, PurchasedOffers, Industries, CandidateIndustries
+from .models import (
+    Abilities,
+    CandidateAbilities,
+    CandidateIndustries,
+    Candidates,
+    Industries,
+    PurchasedOffers,
+)
 
 admin.site.register(Candidates)
 admin.site.register(Abilities)

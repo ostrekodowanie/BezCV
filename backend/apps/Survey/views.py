@@ -1,45 +1,68 @@
-from django.db.models import Avg, F
+import datetime
+import random
+import string
+
+import openai
+from apps.Candidates.models import CandidateIndustries, Candidates, Industries
+from config.settings import client
 from django.core.mail import EmailMessage, send_mail
+from django.db.models import F
 from django.template.loader import render_to_string
 from rest_framework import generics, status
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from apps.Candidates.models import Candidates, Industries, CandidateIndustries
-from .models import Questions, CandidateAnswers, Categories, VerifyCodes
-from .serializers import QuestionSerializer, CandidateCreateSerializer, IndustrySerializer
+from .models import CandidateAnswers, Categories, Questions, VerifyCodes
+from .serializers import (
+    CandidateCreateSerializer,
+    IndustrySerializer,
+    QuestionSerializer,
+)
 from .signals import update_percentage
-from config.settings import client
-
-import string
-import random
-import openai
-import datetime
 
 
 class QuestionsByCategoryView(generics.ListAPIView):
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
-        category = self.request.GET.get('c')
-        phone = self.request.GET.get('phone')
+        category = self.request.GET.get("c")
+        phone = self.request.GET.get("phone")
         answered_questions = Questions.objects.filter(
-            candidateanswers_question__candidate__phone=phone).values_list('id', flat=True)
-        return Questions.objects.exclude(id__in=answered_questions).filter(category__name=category).order_by('?')
+            candidateanswers_question__candidate__phone=phone
+        ).values_list("id", flat=True)
+        return (
+            Questions.objects.exclude(id__in=answered_questions)
+            .filter(category__name=category)
+            .order_by("?")
+        )
 
 
 class CandidateAnswersView(APIView):
     def post(self, request, format=None):
-        candidate_phone = request.data.get('candidate')
-        answers = request.data.get('answers')
-        profession = request.data.get('profession')
+        candidate_phone = request.data.get("candidate")
+        answers = request.data.get("answers")
+        profession = request.data.get("profession")
+        industry_ids = request.data.get("industries", [])
+
         candidate = Candidates.objects.get(phone=candidate_phone)
         if candidate.profession is None:
             candidate.profession = profession
 
+        for industry_id in industry_ids:
+            try:
+                industry = Industries.objects.get(id=industry_id)
+                CandidateIndustries.objects.create(
+                    candidate=candidate, industry=industry
+                )
+            except Industries.DoesNotExist:
+                pass
+
         candidate_answers = [
-            CandidateAnswers(question=Questions.objects.get(
-                pk=question), answer=answer, candidate=candidate)
+            CandidateAnswers(
+                question=Questions.objects.get(pk=question),
+                answer=answer,
+                candidate=candidate,
+            )
             for question, answer in answers
         ]
         CandidateAnswers.objects.bulk_create(candidate_answers)
@@ -47,18 +70,24 @@ class CandidateAnswersView(APIView):
         for answer in candidate_answers:
             update_percentage(None, instance=answer)
 
-        abilities = candidate.candidateabilities_candidate.annotate(
-            name=F('ability__name')
-        ).values('name', 'percentage').order_by('-percentage').distinct()[:3]
+        abilities = (
+            candidate.candidateabilities_candidate.annotate(name=F("ability__name"))
+            .values("name", "percentage")
+            .order_by("-percentage")
+            .distinct()[:3]
+        )
 
-        total_experience_months = candidate.experience_customer_service + \
-            candidate.experience_office_administration + candidate.experience_sales
+        total_experience_months = (
+            candidate.experience_customer_service
+            + candidate.experience_office_administration
+            + candidate.experience_sales
+        )
 
         if total_experience_months > 0:
             positions = {
-                'obsługi klienta': candidate.experience_customer_service,
-                'administracji biurowej': candidate.experience_office_administration,
-                'sprzedaży': candidate.experience_sales
+                "obsługi klienta": candidate.experience_customer_service,
+                "administracji biurowej": candidate.experience_office_administration,
+                "sprzedaży": candidate.experience_sales,
             }
             best_position = max(positions, key=positions.get)
             years_of_experience = positions[best_position] // 12
@@ -68,16 +97,16 @@ class CandidateAnswersView(APIView):
         else:
             experience_text = "bez doświadczenia"
 
-        input_text = f'''
-        Napisz korzyści, jakie może przynieść zatrudnienie pracownika {experience_text}.
-        Tego pracownika wyróżniają trzy najważniejsze kompetencje miękkie, takie jak {abilities[0]['name']}, {abilities[1]['name']} oraz {abilities[2]['name']}. 
-        Poprzednie stanowisko to {candidate.job_position}
-        Skoreluj je ze sobą. 
-        Bez pisania wprost o umiejętnościach. 
-        Nie powtarzaj słów kluczowych.
-        Nie wyliczaj.
-        Nie pisz długimi zdaniami.
-        '''
+        input_text = f"""
+            Napisz korzyści, jakie może przynieść zatrudnienie pracownika {experience_text}.
+            Tego pracownika wyróżniają trzy najważniejsze kompetencje miękkie, takie jak {abilities[0]['name']}, {abilities[1]['name']} oraz {abilities[2]['name']}. 
+            Poprzednie stanowisko to {candidate.job_position}
+            Skoreluj je ze sobą. 
+            Bez pisania wprost o umiejętnościach. 
+            Nie powtarzaj słów kluczowych.
+            Nie wyliczaj.
+            Nie pisz długimi zdaniami.
+        """
         try:
             response = openai.Completion.create(
                 engine="text-davinci-003",
@@ -92,11 +121,11 @@ class CandidateAnswersView(APIView):
             candidate.desc = description
         except Exception as e:
             send_mail(
-                subject=f'{candidate.id} - OpenAI',
-                message=f'{e}',
+                subject=f"{candidate.id} - OpenAI",
+                message=f"{e}",
                 from_email="biuro@bezcv.com",
                 to=["biuro@bezcv.com"],
-                fail_silently=False
+                fail_silently=False,
             )
 
         if candidate.completed_surveys:
@@ -109,105 +138,94 @@ class CandidateAnswersView(APIView):
 
         if candidate.completed_surveys:
             if len(candidate.completed_surveys) == 1:
-                context = {
-                    'candidate': candidate
-                }
+                context = {"candidate": candidate}
 
-                message = render_to_string('candidates/survey.html', context)
+                message = render_to_string("candidates/survey.html", context)
                 email_message = EmailMessage(
-                    subject='Zwiększ swoją szansę na wymarzoną pracę - bezCV',
+                    subject="Zwiększ swoją szansę na wymarzoną pracę - bezCV",
                     body=message,
-                    to=[candidate.email]
+                    to=[candidate.email],
                 )
                 email_message.content_subtype = "html"
                 email_message.send()
 
             if len(candidate.completed_surveys) == 3:
-                sales = []
-                office_administration = []
-                customer_service = []
+                sales, office_administration, customer_service = []
 
-                abilities = candidate.candidateabilities_candidate.annotate(
-                    name=F('ability__name'),
-                    category=F(
-                        'ability__abilityquestions_ability__question__category__name')
-                ).values('name', 'percentage', 'category').order_by('-percentage').distinct()
+                abilities = (
+                    candidate.candidateabilities_candidate.annotate(
+                        name=F("ability__name"),
+                        category=F(
+                            "ability__abilityquestions_ability__question__category__name"
+                        ),
+                    )
+                    .values("name", "percentage", "category")
+                    .order_by("-percentage")
+                    .distinct()
+                )
 
                 for ability in abilities:
-                    category = ability['category']
-                    if category == 'sales':
-                        sales.append({
-                            'name': ability['name'],
-                            'percentage': ability['percentage']
-                        })
-                    elif category == 'office_administration':
-                        office_administration.append({
-                            'name': ability['name'],
-                            'percentage': ability['percentage']
-                        })
-                    elif category == 'customer_service':
-                        customer_service.append({
-                            'name': ability['name'],
-                            'percentage': ability['percentage']
-                        })
+                    category = ability["category"]
+                    if category == "sales":
+                        sales.append(
+                            {
+                                "name": ability["name"],
+                                "percentage": ability["percentage"],
+                            }
+                        )
+                    elif category == "office_administration":
+                        office_administration.append(
+                            {
+                                "name": ability["name"],
+                                "percentage": ability["percentage"],
+                            }
+                        )
+                    elif category == "customer_service":
+                        customer_service.append(
+                            {
+                                "name": ability["name"],
+                                "percentage": ability["percentage"],
+                            }
+                        )
 
                 context = {
-                    'candidate': candidate,
-                    'sales': sales,
-                    'office_administration': office_administration,
-                    'customer_service': customer_service
+                    "candidate": candidate,
+                    "sales": sales,
+                    "office_administration": office_administration,
+                    "customer_service": customer_service,
                 }
 
-                message = render_to_string(
-                    'candidates/all_surveys.html', context)
+                message = render_to_string("candidates/all_surveys.html", context)
                 email_message = EmailMessage(
-                    subject='Zobacz swoje kompetencje miękkie - bezCV',
+                    subject="Zobacz swoje kompetencje miękkie - bezCV",
                     body=message,
-                    to=[candidate.email]
+                    to=[candidate.email],
                 )
                 email_message.content_subtype = "html"
                 email_message.send()
 
-        return Response({'first_name': candidate.first_name})
+        return Response({"first_name": candidate.first_name})
 
 
 class CandidateCreateView(generics.CreateAPIView):
     queryset = Candidates.objects.all()
     serializer_class = CandidateCreateSerializer
 
-    def create(self, request, *args, **kwargs):
-        industry_ids = request.data.get('industry_ids', [])
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        candidate = serializer.instance
-        for industry_id in industry_ids:
-            try:
-                industry = Industries.objects.get(id=industry_id)
-                CandidateIndustries.objects.create(
-                    candidate=candidate, industry=industry)
-            except Industries.DoesNotExist:
-                pass
-
-        return Response(status=201)
-
 
 class EmailCheckView(APIView):
     def post(self, request):
-        email = request.data.get('email')
+        email = request.data.get("email")
         if Candidates.objects.filter(email=email).exists():
-            return Response({'Email already exists.'}, status=status.HTTP_200_OK)
+            return Response({"Email already exists."}, status=status.HTTP_200_OK)
         return Response(status=204)
 
 
 class SendCodeView(APIView):
     def post(self, request):
-        phone = request.data.get('phone')
+        phone = request.data.get("phone")
         gen_code = VerifyCodes.objects.filter(phone=phone)
 
-        code = ''.join(random.choices(string.digits, k=6))
+        code = "".join(random.choices(string.digits, k=6))
 
         if gen_code:
             gen_code.delete()
@@ -215,21 +233,25 @@ class SendCodeView(APIView):
         VerifyCodes.objects.create(phone=phone, code=code)
 
         client.sms.send(
-            to=phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
+            to=phone,
+            message=f"Twój kod weryfikacyjny bezCV to: {code}",
+            from_="bezCV",
+            encoding="utf-8",
+        )
 
-        return Response({'Access code sent successfully'}, status=200)
+        return Response({"Access code sent successfully"}, status=200)
 
 
 class SendCodeToExistingCandidate(APIView):
     def post(self, request):
-        phone = request.data.get('phone')
+        phone = request.data.get("phone")
 
         if not Candidates.objects.filter(phone=phone).exists():
-            return Response({'Nie znaleźliśmy takiego numeru w bazie'}, status=400)
+            return Response({"Nie znaleźliśmy takiego numeru w bazie"}, status=400)
 
         gen_code = VerifyCodes.objects.filter(phone=phone)
 
-        code = ''.join(random.choices(string.digits, k=6))
+        code = "".join(random.choices(string.digits, k=6))
 
         if gen_code:
             gen_code.delete()
@@ -237,26 +259,36 @@ class SendCodeToExistingCandidate(APIView):
         VerifyCodes.objects.create(phone=phone, code=code)
 
         client.sms.send(
-            to=phone, message=f'Twój kod weryfikacyjny bezCV to: {code}', from_="bezCV", encoding="utf-8")
+            to=phone,
+            message=f"Twój kod weryfikacyjny bezCV to: {code}",
+            from_="bezCV",
+            encoding="utf-8",
+        )
 
         return Response(status=200)
 
 
 class CheckCodeView(APIView):
     def post(self, request):
-        phone = request.data.get('phone')
-        code = request.data.get('code')
+        phone = request.data.get("phone")
+        code = request.data.get("code")
         if Candidates.objects.filter(phone=phone).exists():
             try:
                 gen_code = VerifyCodes.objects.get(phone=phone, code=code)
             except VerifyCodes.DoesNotExist:
-                return Response({'Access code is not valid'}, status=400)
+                return Response({"Access code is not valid"}, status=400)
 
             candidate = Candidates.objects.get(phone=phone)
 
-            if (datetime.datetime.now(datetime.timezone.utc) - gen_code.created_at).total_seconds() <= 600:
+            if (
+                datetime.datetime.now(datetime.timezone.utc) - gen_code.created_at
+            ).total_seconds() <= 600:
                 completed_categories = set()
-                answered_questions = candidate.candidateanswers_candidate.all().select_related('question')
+                answered_questions = (
+                    candidate.candidateanswers_candidate.all().select_related(
+                        "question"
+                    )
+                )
 
                 for answer in answered_questions:
                     categories = set(answer.question.category.all())
@@ -267,14 +299,17 @@ class CheckCodeView(APIView):
                 for category in Categories.objects.all():
                     category_questions = category.questions_category.all()
                     user_questions = answered_questions.filter(
-                        question__in=category_questions)
+                        question__in=category_questions
+                    )
                     if len(user_questions) == len(category_questions):
                         category_dict[category.name] = True
                     else:
                         category_dict[category.name] = False
+                gen_code.delete()
                 return Response(category_dict, status=200)
             else:
-                return Response({'Access code expired'}, status=400)
+                gen_code.delete()
+                return Response({"Access code expired"}, status=400)
         else:
             return Response(status=204)
 
@@ -283,5 +318,5 @@ class IndustryListView(generics.ListAPIView):
     serializer_class = IndustrySerializer
 
     def get_queryset(self):
-        profession = self.request.GET.get('profession')
+        profession = self.request.GET.get("profession")
         return Industries.objects.filter(profession=profession)
