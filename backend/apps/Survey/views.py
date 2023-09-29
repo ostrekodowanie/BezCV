@@ -150,7 +150,7 @@ class CandidateAnswersView(APIView):
                 email_message.send()
 
             if len(candidate.completed_surveys) == 3:
-                sales, office_administration, customer_service = []
+                sales = office_administration = customer_service = []
 
                 abilities = (
                     candidate.candidateabilities_candidate.annotate(
