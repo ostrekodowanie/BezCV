@@ -29,6 +29,8 @@ export default function Badge({
     ? professionColorMap[profession]
     : initialColorScheme;
 
+  console.log(industry);
+
   return handleChange ? (
     <label
       style={{

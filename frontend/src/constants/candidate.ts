@@ -21,7 +21,7 @@ export interface CandidateProps {
     last_name: string,
     abilities?: AbilitiesListType,
     profession?: RoleType,
-    industries?: Industry[],
+    industries?: string[],
     driving_license?: boolean,
     contract_type?: string[],
     birth_date?: string,
