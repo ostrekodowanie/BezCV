@@ -255,10 +255,7 @@ export default function Candidate() {
           candidateDetails.industries.length > 0 && (
             <BadgeList
               profession={candidateDetails.profession}
-              industries={candidateDetails.industries.map((item, id) => ({
-                id,
-                name: item,
-              }))}
+              industries={candidateDetails.industries}
             />
           )}
         <div className="flex flex-col xl:grid grid-cols-[2fr_5fr] xl:grid-rows-[max-content_1fr_max-content] print:grid print:gap-4 gap-8">
