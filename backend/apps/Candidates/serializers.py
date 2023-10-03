@@ -196,10 +196,13 @@ class CandidateSerializer(serializers.ModelSerializer):
             user = self.context["request"].user
 
             candidate_obj = Candidates.objects.get(id=candidate["id"])
-            industries = candidate_obj.candidateindustries_candidate.values_list(
-                "industry__name", flat=True
+            industries = candidate_obj.candidateindustries_candidate.values(
+                "industry__id", "industry__name"
             )[:3]
-            candidate["industries"] = list(industries)
+            candidate["industries"] = [
+                {"id": industry["industry__id"], "name": industry["industry__name"]}
+                for industry in industries
+            ]
 
             if not user.purchasedoffers_employer.filter(
                 candidate=candidate["id"]
