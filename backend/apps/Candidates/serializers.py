@@ -2,7 +2,7 @@ from apps.Survey.models import Abilities
 from django.db.models import Avg, F, Q
 from rest_framework import serializers
 
-from .models import Candidates, PurchasedOffers, Reports
+from .models import Candidates, Industries, PurchasedOffers, Reports
 
 
 class CandidateSerializer(serializers.ModelSerializer):
@@ -215,10 +215,14 @@ class CandidateSerializer(serializers.ModelSerializer):
         return similar_candidates
 
     def get_industries(self, obj):
-        industries = obj.candidateindustries_candidate.values_list(
-            "industry__name", flat=True
+        industries = obj.candidateindustries_candidate.values(
+            "industry__id", "industry__name"
         )
-        return list(industries)
+
+        return [
+            {"id": industry["industry__id"], "name": industry["industry__name"]}
+            for industry in industries
+        ]
 
 
 class CandidatesSerializer(serializers.ModelSerializer):
@@ -274,10 +278,14 @@ class CandidatesSerializer(serializers.ModelSerializer):
         return False
 
     def get_industries(self, obj):
-        industries = obj.candidateindustries_candidate.values_list(
-            "industry__name", flat=True
+        industries = obj.candidateindustries_candidate.values(
+            "industry__id", "industry__name"
         )[:3]
-        return list(industries)
+
+        return [
+            {"id": industry["industry__id"], "name": industry["industry__name"]}
+            for industry in industries
+        ]
 
 
 class PurchaseOfferSerializer(serializers.ModelSerializer):

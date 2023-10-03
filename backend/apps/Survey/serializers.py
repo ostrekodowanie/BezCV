@@ -12,6 +12,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class CandidateCreateSerializer(serializers.ModelSerializer):
+    postal_code = serializers.CharField(write_only=True)
+
     class Meta:
         model = Candidates
         fields = [
@@ -29,10 +31,11 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
             "education",
             "driving_license",
             "contract_type",
+            "postal_code",
         ]
 
     def create(self, validated_data):
-        postal_code = validated_data.get("postal_code")
+        postal_code = validated_data.pop("postal_code")
 
         headers = {
             "apikey": "96352660-5eb7-11ee-9bc7-f3aa112419dc",
