@@ -100,7 +100,7 @@ class CandidateAnswersView(APIView):
         input_text = f"""
             Napisz korzyści, jakie może przynieść zatrudnienie pracownika {experience_text}.
             Tego pracownika wyróżniają trzy najważniejsze kompetencje miękkie, takie jak {abilities[0]['name']}, {abilities[1]['name']} oraz {abilities[2]['name']}. 
-            Poprzednie stanowisko to {candidate.job_position}
+            Jego poprzednie stanowisko to {candidate.job_position}.
             Skoreluj je ze sobą. 
             Bez pisania wprost o umiejętnościach. 
             Nie powtarzaj słów kluczowych.
@@ -111,7 +111,7 @@ class CandidateAnswersView(APIView):
             response = openai.Completion.create(
                 engine="text-davinci-003",
                 prompt=input_text,
-                max_tokens=1500,
+                max_tokens=2000,
                 n=1,
                 stop=None,
                 temperature=0.3,

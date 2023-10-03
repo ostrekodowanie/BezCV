@@ -8,7 +8,7 @@ import { Industry } from "../../types/candidate";
 import CheckMarkIcon from "../../assets/survey/icons/CheckMarkIcon";
 
 type Props = {
-  industry: Industry;
+  industry: string | Industry;
   profession?: RoleType;
   isChecked?: boolean;
   isCheckable?: boolean;
