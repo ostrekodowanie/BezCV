@@ -98,14 +98,14 @@ class CandidateAnswersView(APIView):
             experience_text = "bez doświadczenia"
 
         input_text = f"""
-            Napisz korzyści, jakie może przynieść zatrudnienie pracownika {experience_text}.
-            Tego pracownika wyróżniają trzy najważniejsze kompetencje miękkie, takie jak {abilities[0]['name']}, {abilities[1]['name']} oraz {abilities[2]['name']}. 
-            Jego poprzednie stanowisko to {candidate.job_position}.
-            Skoreluj je ze sobą. 
-            Bez pisania wprost o umiejętnościach. 
             Nie powtarzaj słów kluczowych.
             Nie wyliczaj.
             Nie pisz długimi zdaniami.
+            Napisz korzyści, jakie może przynieść zatrudnienie pracownika {experience_text}.
+            Tego pracownika wyróżniają trzy najważniejsze kompetencje miękkie, takie jak {abilities[0]['name']}, {abilities[1]['name']} oraz {abilities[2]['name']}. 
+            Skoreluj je ze sobą. 
+            Bez pisania wprost o umiejętnościach. 
+            Poprzednie stanowisko kandydata to {candidate.job_position}.
         """
         try:
             response = openai.Completion.create(
@@ -283,30 +283,9 @@ class CheckCodeView(APIView):
             if (
                 datetime.datetime.now(datetime.timezone.utc) - gen_code.created_at
             ).total_seconds() <= 600:
-                completed_categories = set()
-                answered_questions = (
-                    candidate.candidateanswers_candidate.all().select_related(
-                        "question"
-                    )
-                )
-
-                for answer in answered_questions:
-                    categories = set(answer.question.category.all())
-                    if categories:
-                        completed_categories.update(categories)
-
-                category_dict = {}
-                for category in Categories.objects.all():
-                    category_questions = category.questions_category.all()
-                    user_questions = answered_questions.filter(
-                        question__in=category_questions
-                    )
-                    if len(user_questions) == len(category_questions):
-                        category_dict[category.name] = True
-                    else:
-                        category_dict[category.name] = False
+                candidate = Candidates.objects.get(phone=phone)
                 gen_code.delete()
-                return Response(category_dict, status=200)
+                return Response(candidate.completed_surveys, status=200)
             else:
                 gen_code.delete()
                 return Response({"Access code expired"}, status=400)
