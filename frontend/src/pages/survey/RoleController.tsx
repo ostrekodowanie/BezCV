@@ -32,8 +32,8 @@ export default function RoleController() {
     setRoleAnswers,
     activeQuestionIndex,
     setActiveQuestionIndex,
-    isSurveyFilled,
-    setIsSurveyFilled,
+    filledSurveys,
+    setFilledSurveys,
   } = useContext(SurveyContext);
   const { phone } = candidateAnswers;
   const [industriesChosen, setIndustriesChosen] = useState(false);
@@ -48,22 +48,12 @@ export default function RoleController() {
   const [finishFirstName, setFinishFirstName] = useState("");
   const [error, setError] = useState("");
   const [isEverySurveyFilled, setIsEverySurveyFilled] = useState(
-    !!(
-      isSurveyFilled.customer_service &&
-      isSurveyFilled.office_administration &&
-      isSurveyFilled.sales
-    )
+    filledSurveys.length === 3
   );
 
   useEffect(() => {
-    setIsEverySurveyFilled(
-      !!(
-        isSurveyFilled.customer_service &&
-        isSurveyFilled.office_administration &&
-        isSurveyFilled.sales
-      )
-    );
-  }, [isSurveyFilled]);
+    setIsEverySurveyFilled(filledSurveys.length === 3);
+  }, [filledSurveys]);
 
   useEffect(() => {
     if (!questions[activeQuestionIndex]) return;
@@ -121,11 +111,7 @@ export default function RoleController() {
         .then((res) => {
           setIsFinished(true);
           setFinishFirstName(res.data.first_name);
-          role &&
-            setIsSurveyFilled((prev) => ({
-              ...prev,
-              [role]: true,
-            }));
+          role && setFilledSurveys((prev) => [...prev, role]);
         })
         .catch((err) =>
           setError(
@@ -158,10 +144,7 @@ export default function RoleController() {
     );
   if (isFinishing) return <LoaderFact {...loaderFacts[role || "sales"]} />;
   if (!role) return <RoleChoosePage setRole={setRole} />;
-  if (
-    !industriesChosen &&
-    Object.values(isSurveyFilled).filter((value) => value).length === 0
-  )
+  if (!industriesChosen && filledSurveys.length === 0)
     return (
       <IndustryList
         profession={role}

@@ -15,7 +15,7 @@ export default function RoleChoosePage({
 }: {
   setRole: Dispatch<SetStateAction<RoleType | null>>;
 }) {
-  const { isSurveyFilled, setActiveQuestionIndex } = useContext(SurveyContext);
+  const { filledSurveys, setActiveQuestionIndex } = useContext(SurveyContext);
   const [chosen, setChosen] = useState<RoleType | null>(null);
 
   const handleSubmit = (e: FormEvent) => {
@@ -37,7 +37,7 @@ export default function RoleChoosePage({
           </h2>
           <div className="flex flex-col w-full gap-4 sm:grid grid-cols-3">
             {roles
-              .filter((role) => !isSurveyFilled[role.name])
+              .filter((role) => !filledSurveys.includes(role.name))
               .map((role) => (
                 <label
                   className={`py-6 px-12 sm:p-12 w-full text-center transition-colors border-[2px] flex flex-col cursor-pointer font-semibold gap-4 sm:gap-8 sm:max-w-[4in] mx-auto relative bg-white rounded-3xl items-center ${

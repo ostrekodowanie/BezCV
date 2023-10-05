@@ -3,11 +3,8 @@ import { surveyManQuotes } from "../../constants/findWork";
 import { SurveyContext } from "../../pages/Survey";
 
 export default function SurveyManQuote() {
-  const { activeQuestionIndex, step, role, isSurveyFilled } =
+  const { activeQuestionIndex, step, role, filledSurveys } =
     useContext(SurveyContext);
-  const surveyCount = Object.values(isSurveyFilled).filter(
-    (item) => item
-  ).length;
   const [quote, setQuote] = useState("");
 
   useEffect(() => {
@@ -17,7 +14,7 @@ export default function SurveyManQuote() {
       } else {
         return (activeQuestionIndex + 1) % 5 === 0
           ? setQuote(
-              surveyManQuotes.role[surveyCount][
+              surveyManQuotes.role[filledSurveys.length][
                 (activeQuestionIndex + 1) / 5 - 1
               ] || ""
             )
