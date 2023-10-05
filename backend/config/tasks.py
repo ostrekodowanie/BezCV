@@ -1,4 +1,4 @@
-from django.core.mail import EmailMessage, get_connection
+from django.core.mail import EmailMessage, get_connection, send_mass_mail
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.db import models
@@ -26,25 +26,21 @@ def has_job():
 
 #candidates
 def companies():
-    companies_this_week = User.objects.filter(is_verified=True, date_joined__gte=timezone.now()-timezone.timedelta(days=7)).values_list('company_name', flat=True)
+    companies_this_week = User.objects.filter(is_verified=True, date_joined__gte=timezone.now()-timezone.timedelta(days=14)).values_list('company_name', flat=True)
     candidates = Candidates.objects.filter(is_visible=True)
     
     context = {
         'companies_this_week': companies_this_week
     }
     
-    with get_connection() as connection:
-            for candidate in candidates:
-                context['candidate'] = candidate
-                message = render_to_string('candidates/companies.html', context)
-                email_message = EmailMessage(
-                    subject='Te firmy szukają pracownika - bezCV',
-                    body=message,
-                    to=[candidate.email],
-                    connection=connection
-                )
-                email_message.content_subtype ="html"
-                async_task(email_message.send())       
+    message = render_to_string('candidates/companies.html', context)
+    email_message = EmailMessage(
+        subject='Te firmy szukają pracownika - bezCV',
+        body=message,
+        to=[c.email for c in candidates]
+    )
+    email_message.content_subtype ="html"
+    email_message.send()
                 
 
 #employers
