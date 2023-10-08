@@ -211,3 +211,22 @@ export const loaderFacts: LoaderFactType = {
         desc: 'Prezencja to sposób, w jaki się zachowujemy i postrzegamy siebie w interakcjach z innymi ludźmi. To znaczy, że prezentujemy siebie w sposób świadomy, pewny siebie i szanujący innych, co może wpłynąć na sposób, w jaki inni nas postrzegają. O prezencji świadczy ubiór, fryzura, makijaż czy inne wizualne  efekty dbałości o siebie.'
     }
 }
+
+export const provinces = [
+    "Dolnośląskie",
+    "Kujawsko-Pomorskie",
+    "Lubelskie",
+    "Lubuskie",
+    "Łódzkie",
+    "Małopolskie",
+    "Mazowieckie",
+    "Opolskie",
+    "Podkarpackie",
+    "Podlaskie",
+    "Pomorskie",
+    "Śląskie",
+    "Świętokrzyskie",
+    "Warmińsko-Mazurskie",
+    "Wielkopolskie",
+    "Zachodniopomorskie"
+]
