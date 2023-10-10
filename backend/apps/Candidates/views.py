@@ -77,14 +77,19 @@ class CandidatesView(generics.ListAPIView):
 
 class FiltersView(APIView):
     def get(self, request):
+        # provinces = (
+        #     Candidates.objects.annotate(province_item=F("location__province"))
+        #     .values_list("province_item", flat=True)
+        #     .order_by("province_item")
+        #     .distinct()
+        #     .exclude(province_item__isnull=True)
+        # )
         provinces = (
-            Candidates.objects.annotate(province_item=F("location__province"))
-            .values_list("province_item", flat=True)
-            .order_by("province_item")
+            Candidates.objects.values_list("province", flat=True)
+            .order_by("province")
             .distinct()
-            .exclude(province_item__isnull=True)
+            .exclude(province__isnull=True)
         )
-
         professions = Categories.objects.values_list("name", flat=True).order_by("name")
 
         salary = (
