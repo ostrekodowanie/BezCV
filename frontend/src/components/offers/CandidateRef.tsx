@@ -25,7 +25,6 @@ const CandidateRef = ({
   availability,
   salary_expectation,
   profession,
-  province,
   education,
   phone,
   location,
@@ -134,9 +133,9 @@ const CandidateRef = ({
               <h3 className="text-sm font-semibold">
                 {location?.postal_code
                   ? `${location.postal_code}${
-                      location.city ? ", " + location.city : ""
+                      location.town ? ", " + location.town : ""
                     }`
-                  : province || "Nie zdefiniowano"}
+                  : location?.province || "Nie zdefiniowano"}
               </h3>
             </div>
             <div className="flex flex-col gap-1">

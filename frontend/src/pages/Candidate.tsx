@@ -239,11 +239,11 @@ export default function Candidate() {
                     <h3 className="font-semibold text-sm">
                       {candidateDetails.location?.postal_code
                         ? `${candidateDetails.location.postal_code}${
-                            candidateDetails.location.city
-                              ? ", " + candidateDetails.location.city
+                            candidateDetails.location.town
+                              ? ", " + candidateDetails.location.town
                               : ""
                           }`
-                        : candidateDetails.province || "Nie podano"}
+                        : candidateDetails.location?.province || "Nie podano"}
                     </h3>
                   </>
                 )}
