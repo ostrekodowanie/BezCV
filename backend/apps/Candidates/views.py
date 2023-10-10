@@ -117,14 +117,20 @@ class PurchaseOfferView(generics.CreateAPIView):
                 .order_by("expiration_date")
                 .first()
             )
-            if len(purchased_offer.candidate.completed_surveys) == 3:
-                purchased_tokens_obj.remaining_tokens -= 2
+            if purchased_offer.candidate.completed_surveys:
+                if len(purchased_offer.candidate.completed_surveys) == 3:
+                    purchased_tokens_obj.remaining_tokens -= 2
+                else:
+                    purchased_tokens_obj.remaining_tokens -= 1
             else:
                 purchased_tokens_obj.remaining_tokens -= 1
             purchased_tokens_obj.save()
         else:
-            if len(purchased_offer.candidate.completed_surveys) == 3:
-                user.tokens -= 2
+            if purchased_offer.candidate.completed_surveys:
+                if len(purchased_offer.candidate.completed_surveys) == 3:
+                    user.tokens -= 2
+                else:
+                    user.tokens -= 1
             else:
                 user.tokens -= 1
             user.save()
