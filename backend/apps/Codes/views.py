@@ -9,11 +9,10 @@ from .models import Codes, UsedCodes, User
 
 class UseCodeView(generics.CreateAPIView):
     serializer_class = serializers.UsedCodesSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         user = self.request.user
-        user = User.objects.get(id=1)
         code = request.data.get("code")
 
         try:
@@ -23,7 +22,7 @@ class UseCodeView(generics.CreateAPIView):
                 {"Kod wygasł lub jest niepawidłowy"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        if UsedCodes.objects.filter(user=user).exists():
+        if UsedCodes.objects.filter(user=user, type="reward").exists():
             return Response(
                 {"Kod został już wykorzystany"}, status=status.HTTP_400_BAD_REQUEST
             )
@@ -37,48 +36,48 @@ class UseCodeView(generics.CreateAPIView):
         return Response(code.value, status=status.HTTP_201_CREATED)
 
 
-# class UseDiscountCodeView(generics.CreateAPIView):
-#     serializer_class = serializers.UsedCodesSerializer
-#     permission_classes = [IsAuthenticated]
+class UseDiscountCodeView(generics.CreateAPIView):
+    serializer_class = serializers.UsedCodesSerializer
+    permission_classes = [IsAuthenticated]
 
-#     def create(self, request, *args, **kwargs):
-#         user = self.request.user
-#         code = request.data.get("code")
+    def get_queryset(self):
+        return UsedCodes.objects.none()
 
-#         try:
-#             code = Codes.objects.get(code=code, is_active=True, type="discount")
-#         except:
-#             return Response(
-#                 {"Kod wygasł lub jest niepawidłowy"}, status=status.HTTP_400_BAD_REQUEST
-#             )
+    def get(self, request):
+        user = self.request.user
 
-#         if UsedCodes.objects.filter(user=user).exists():
-#             return Response(
-#                 {"Kod został już wykorzystany"}, status=status.HTTP_400_BAD_REQUEST
-#             )
+        try:
+            used_codes = UsedCodes.objects.filter(
+                user=user,
+                is_active=True,
+                code__is_active=True,
+                code__type="discount",
+            )
 
-#         used_code = UsedCodes(user=user, code=code)
-#         used_code.save()
+            data = [{"id": code.id, "value": code.code.value} for code in used_codes]
+            return Response(data, status=200)
+        except:
+            return Response(status=404)
 
-#         return Response(code.value, status=status.HTTP_201_CREATED)
+    def create(self, request, *args, **kwargs):
+        user = self.request.user
+        code = request.data.get("code")
 
+        try:
+            code = Codes.objects.get(code=code, is_active=True, type="discount")
+        except:
+            return Response(
+                {"Kod wygasł lub jest niepawidłowy"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
-# class CheckDiscuntView(APIView):
-#     permission_classes = [IsAuthenticated]
+        if UsedCodes.objects.filter(code=code, user=user).exists():
+            return Response(
+                {"Kod został już wykorzystany"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
-#     def post(self, request):
-#         price = request.data.get("price")
-#         user = self.request.user
+        used_code = UsedCodes(user=user, code=code)
+        used_code.save()
 
-#         try:
-#             used_codes = UsedCodes.objects.filter(
-#                 user=user,
-#                 code__is_active=True,
-#                 code__type="discount",
-#                 code__price=price,
-#             )
-
-#             data = [{"id": code.id, "value": code.code.value} for code in used_codes]
-#             return Response(data, status=200)
-#         except:
-#             return Response(status=404)
+        return Response(
+            {"id": used_code.id, "value": code.value}, status=status.HTTP_201_CREATED
+        )
