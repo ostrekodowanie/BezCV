@@ -8,6 +8,7 @@ import loginReducer from "./providers/login";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
 import ReactGA from "react-ga";
+import { Toaster } from "react-hot-toast";
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <Provider store={store}>
       <BrowserRouter>
         <App />
+        <Toaster />
       </BrowserRouter>
     </Provider>
   </React.StrictMode>
