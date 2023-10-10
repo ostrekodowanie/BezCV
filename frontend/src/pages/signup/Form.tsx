@@ -247,7 +247,35 @@ export default function Form() {
                 kandydatami za darmo!
               </small>
             </div>
-            <div className="flex items-center gap-8 flex-wrap justify-between my-4">
+            <div className="relative flex gap-4 items-start justify-start mt-4">
+              <input
+                className="relative top-0.5"
+                type="checkbox"
+                required
+                id="policy"
+                name="signup"
+                onChange={(e) =>
+                  setAccepts((prev) => ({
+                    ...prev,
+                    policy: e.target.checked,
+                  }))
+                }
+              />
+              <label
+                className="text-sm cursor-pointer text-left"
+                htmlFor="policy"
+              >
+                Zapoznałem/am się z{" "}
+                <Link
+                  to="/docs/umowa-powierzenia-przetwarzania-danych-osobowych"
+                  className="text-[#2F66F4] hover:text-darkPrimary transition-colors text-left"
+                >
+                  Umową powierzenia przetwarzania danych osobowych
+                </Link>{" "}
+                i akceptuję jej warunki
+              </label>
+            </div>
+            <div className="flex items-end gap-8 flex-wrap justify-between mb-4">
               <div className="flex flex-col gap-3">
                 <div className="relative flex gap-4 items-center justify-start">
                   <input

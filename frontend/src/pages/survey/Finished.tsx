@@ -19,12 +19,8 @@ export default function Finished({
     setRole,
     setRoleAnswers,
     setActiveQuestionIndex,
-    isSurveyFilled,
+    filledSurveys,
   } = useContext(SurveyContext);
-  const surveyCount = Object.values(isSurveyFilled).filter(
-    (item) => item
-  ).length;
-
   const handleRoleChange = () => {
     setRoleAnswers([]);
     setActiveQuestionIndex(0);
@@ -47,8 +43,8 @@ export default function Finished({
           jeszcze swoje szanse na pracę marzeń.
         </p>
         <p className="text-sm md:text-base leading-relaxed text-center">
-          Zostając tutaj jeszcze {surveyCount === 1 ? "9" : "5"} minut{" "}
-          {surveyCount === 1
+          Zostając tutaj jeszcze {filledSurveys.length === 1 ? "9" : "5"} minut{" "}
+          {filledSurveys.length === 1
             ? "zwiększysz prawdopodobieństwo zatrudnienia o 30%."
             : "jeszcze bardziej zwiększysz prawdopodobieństwo szybkiego zatrudnienia w wymarzonej pracy."}{" "}
           <span className="font-bold">Startujemy?</span>

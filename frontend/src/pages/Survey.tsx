@@ -4,8 +4,6 @@ import { createContext, useLayoutEffect, useMemo, useState } from "react";
 import { surveyMan } from "../assets/survey/survey";
 import {
   CandidateAnswerType,
-  initialFilledState,
-  IsFilled,
   RoleAnswerType,
   RoleType,
   SurveyContextType,
@@ -24,8 +22,7 @@ export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [step, setStep] = useState<"role" | "candidate">("role");
   const [isIntroduced, setIsIntroduced] = useState(false);
-  const [isSurveyFilled, setIsSurveyFilled] =
-    useState<IsFilled>(initialFilledState);
+  const [filledSurveys, setFilledSurveys] = useState<RoleType[]>([]);
   const [roleAnswers, setRoleAnswers] = useState<RoleAnswerType[]>([]);
   const [candidateAnswers, setCandidateAnswers] = useState<CandidateAnswerType>(
     initialCandidateAnswers
@@ -50,8 +47,8 @@ export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
       setCandidateAnswers,
       activeQuestionIndex,
       setActiveQuestionIndex,
-      isSurveyFilled,
-      setIsSurveyFilled,
+      filledSurveys,
+      setFilledSurveys,
       isIntroduced,
       setIsIntroduced,
     }),
@@ -66,8 +63,8 @@ export default function Survey({ setIsHeaderVisible }: SurveyScreenProps) {
       setCandidateAnswers,
       activeQuestionIndex,
       setActiveQuestionIndex,
-      isSurveyFilled,
-      setIsSurveyFilled,
+      filledSurveys,
+      setFilledSurveys,
       isIntroduced,
       setIsIntroduced,
     ]

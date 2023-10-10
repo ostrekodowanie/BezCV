@@ -23,7 +23,7 @@ export default function PhoneCodePopup({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
-  const { setStep, setIsSurveyFilled, candidateAnswers } =
+  const { setStep, setFilledSurveys, candidateAnswers } =
     useContext(SurveyContext);
 
   const handleSubmit = (e: FormEvent) => {
@@ -48,7 +48,7 @@ export default function PhoneCodePopup({
             return setActiveQuestionIndex((prev) => prev + 1);
           case 200:
             setPhoneCodePopupActive(false);
-            setIsSurveyFilled(res.data);
+            setFilledSurveys(res.data);
             return setStep("role");
         }
       })

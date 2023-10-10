@@ -28,6 +28,7 @@ const CandidateRef = ({
   province,
   education,
   phone,
+  location,
   driving_license,
   has_job,
   isFromFollowed = false,
@@ -128,12 +129,16 @@ const CandidateRef = ({
               <h4 className="text-[.8rem]">Dyspozycyjność</h4>
               <h3 className="text-sm font-semibold">{availability}</h3>
             </div>
-            {province && (
-              <div className="flex flex-col gap-1">
-                <h4 className="text-[.8rem]">Rejon</h4>
-                <h3 className="text-sm font-semibold">{province}</h3>
-              </div>
-            )}
+            <div className="flex flex-col gap-1">
+              <h4 className="text-[.8rem]">Chce pracować w</h4>
+              <h3 className="text-sm font-semibold">
+                {location?.postal_code
+                  ? `${location.postal_code}${
+                      location.city ? ", " + location.city : ""
+                    }`
+                  : province || "Nie zdefiniowano"}
+              </h3>
+            </div>
             <div className="flex flex-col gap-1">
               <h4 className="text-[.8rem]">Wykształcenie</h4>
               <h3 className="text-sm font-semibold">
@@ -150,15 +155,8 @@ const CandidateRef = ({
           <div>
             {industries && (
               <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center">
-                <h3 className="font-semibold text-[.75rem]">Szuka pracy w:</h3>
                 {industries.length > 0 ? (
-                  <BadgeList
-                    industries={industries.map((item, i) => ({
-                      id: i,
-                      name: item,
-                    }))}
-                    profession={profession}
-                  />
+                  <BadgeList industries={industries} profession={profession} />
                 ) : (
                   <span className="text-sm font-medium">
                     Nie znaleziono branż

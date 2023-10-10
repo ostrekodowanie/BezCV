@@ -77,8 +77,8 @@ export type SurveyContextType = {
     setCandidateAnswers: Dispatch<SetStateAction<CandidateAnswerType>>,
     roleAnswers: RoleAnswerType[],
     setRoleAnswers: Dispatch<SetStateAction<RoleAnswerType[]>>,
-    isSurveyFilled: IsFilled,
-    setIsSurveyFilled: Dispatch<SetStateAction<IsFilled>>,
+    filledSurveys: RoleType[],
+    setFilledSurveys: Dispatch<SetStateAction<RoleType[]>>,
     activeQuestionIndex: number,
     setActiveQuestionIndex: Dispatch<SetStateAction<number>>,
     isIntroduced: boolean,
@@ -89,16 +89,6 @@ export type ControllerContextType = {
     activeQuestionIndex: number,
     setActiveQuestionIndex: Dispatch<SetStateAction<number>>,
     questionsLength: number
-}
-
-export type IsFilled = {
-    [r in RoleType]: boolean
-}
-
-export const initialFilledState: IsFilled = {
-    sales: false,
-    office_administration: false,
-    customer_service: false
 }
 
 export type SurveyScreenProps = { 

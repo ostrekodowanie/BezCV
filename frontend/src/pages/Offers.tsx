@@ -24,7 +24,7 @@ export interface FilterProps {
   professions: RoleType[];
   availability: string[];
   salary: string[];
-  // province: string[];
+  province: string[];
 }
 
 const CandidateList = () => {
@@ -54,9 +54,9 @@ const CandidateList = () => {
     salary: initialFilter.salary
       ? decodeURIComponent(initialFilter.salary).split(",")
       : [],
-    // province: initialFilter.province
-    //   ? decodeURIComponent(initialFilter.province).split(",")
-    //   : [],
+    province: initialFilter.province
+      ? decodeURIComponent(initialFilter.province).split(",")
+      : [],
   });
 
   const changePage = ({ selected }: { selected: number }) => {

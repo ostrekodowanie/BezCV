@@ -27,7 +27,7 @@ export default function PhonePopup({
     setStep,
     setCandidateAnswers,
     setIsIntroduced,
-    setIsSurveyFilled,
+    setFilledSurveys,
     setRole,
     setRoleAnswers,
     setActiveQuestionIndex,
@@ -58,7 +58,7 @@ export default function PhonePopup({
             ...prev,
             phone: phone.split(" ").join(""),
           }));
-          setIsSurveyFilled(res.data);
+          setFilledSurveys(res.data);
           setIsIntroduced(true);
         })
         .catch(() => setError("Nieprawidłowy kod!"))
