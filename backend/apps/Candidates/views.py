@@ -25,15 +25,7 @@ class CandidatesFilter(filters.FilterSet):
     professions = filters.BaseInFilter(field_name="profession", lookup_expr="in")
     availability = filters.BaseInFilter(field_name="availability", lookup_expr="in")
     salary = filters.BaseInFilter(field_name="salary_expectation", lookup_expr="in")
-    provinces = filters.CharFilter(method="filter_by_province")
-
-    def filter_by_province(self, queryset, name, value):
-        provinces_list = value.split(",")
-        q = Q()
-        for province in provinces_list:
-            q |= Q(location__province__iexact=province) | Q(province__iexact=province)
-
-        return queryset.filter(q)
+    provinces = filters.BaseInFilter(field_name="location__province", lookup_expr="in")
 
     class Meta:
         model = Candidates
@@ -80,19 +72,14 @@ class CandidatesView(generics.ListAPIView):
 
 class FiltersView(APIView):
     def get(self, request):
-        # provinces = (
-        #     Candidates.objects.annotate(province_item=F("location__province"))
-        #     .values_list("province_item", flat=True)
-        #     .order_by("province_item")
-        #     .distinct()
-        #     .exclude(province_item__isnull=True)
-        # )
         provinces = (
-            Candidates.objects.values_list("province", flat=True)
-            .order_by("province")
+            Candidates.objects.annotate(province_item=F("location__province"))
+            .values_list("province_item", flat=True)
+            .order_by("province_item")
             .distinct()
-            .exclude(province__isnull=True)
+            .exclude(province_item__isnull=True)
         )
+
         professions = Categories.objects.values_list("name", flat=True).order_by("name")
 
         salary = (

@@ -125,7 +125,7 @@ class EmployerProfileFollowedSerializer(serializers.ModelSerializer):
             "job_position",
             "salary_expectation",
             "availability",
-            "province",
+            "location",
             "education",
             "driving_license",
             "has_job",
