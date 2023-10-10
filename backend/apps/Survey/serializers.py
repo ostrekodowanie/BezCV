@@ -37,24 +37,37 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         postal_code = validated_data.pop("postal_code")
 
-        headers = {
-            "apikey": "96352660-5eb7-11ee-9bc7-f3aa112419dc",
-        }
+        # headers = {
+        #     "apikey": "96352660-5eb7-11ee-9bc7-f3aa112419dc",
+        # }
 
-        params = (("codes", postal_code), ("country", "PL"))
+        # params = (("codes", postal_code), ("country", "PL"))
+
+        # response = requests.get(
+        #     "https://app.zipcodebase.com/api/v1/search",
+        #     headers=headers,
+        #     params=params,
+        # )
+
+        # if response.status_code == 200:
+        #     location_data = response.json().get("results", {}).get(postal_code, [{}])[0]
+        #     validated_data["location"] = {
+        #         "postal_code": postal_code,
+        #         "city": location_data["city"],
+        #     }
 
         response = requests.get(
-            "https://app.zipcodebase.com/api/v1/search",
-            headers=headers,
-            params=params,
+            f"http://kodpocztowy.intami.pl/api/{postal_code}",
         )
-
         if response.status_code == 200:
-            location_data = response.json().get("results", {}).get(postal_code, [{}])[0]
+            location_data = response.json()[0]
             validated_data["location"] = {
-                "zip_code": postal_code,
-                "city": location_data["city"],
+                "postal_code": location_data["kod"],
+                "town": location_data["miejscowosc"],
+                "province": location_data["wojewodztwo"],
             }
+        else:
+            validated_data["location"] = {"postal_code": postal_code}
 
         return super().create(validated_data)
 

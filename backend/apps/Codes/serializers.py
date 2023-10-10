@@ -6,4 +6,4 @@ from .models import UsedCodes
 class UsedCodesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsedCodes
-        fields = '__all__'
+        fields = "__all__"

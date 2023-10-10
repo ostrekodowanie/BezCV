@@ -1,6 +1,7 @@
 from apps.Survey.models import Categories
 from config.settings import client
-from django.db.models import Exists, OuterRef, Q
+from django.db.models import CharField, Exists, F, OuterRef, Q, Value
+from django.db.models.functions import Cast
 from django.utils import timezone
 from django_filters import rest_framework as filters
 from rest_framework import generics
@@ -11,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
-from .models import Candidates, PurchasedOffers
+from .models import Candidates, PurchasedOffers, User
 
 
 class CandidateView(generics.RetrieveAPIView):
@@ -24,7 +25,7 @@ class CandidatesFilter(filters.FilterSet):
     professions = filters.BaseInFilter(field_name="profession", lookup_expr="in")
     availability = filters.BaseInFilter(field_name="availability", lookup_expr="in")
     salary = filters.BaseInFilter(field_name="salary_expectation", lookup_expr="in")
-    province = filters.BaseInFilter(field_name="province", lookup_expr="in")
+    province = filters.BaseInFilter(field_name="location__province", lookup_expr="in")
 
     class Meta:
         model = Candidates
@@ -33,6 +34,9 @@ class CandidatesFilter(filters.FilterSet):
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
+
+
+import requests
 
 
 class CandidatesView(generics.ListAPIView):
@@ -71,14 +75,23 @@ class CandidatesView(generics.ListAPIView):
 
 class FiltersView(APIView):
     def get(self, request):
+        provinces = (
+            Candidates.objects.annotate(province=F("location__province"))
+            .values_list("province", flat=True)
+            .order_by("province")
+            .distinct()
+            .exclude(province__isnull=True)
+        )
+
         professions = Categories.objects.values_list("name", flat=True).order_by("name")
+
         salary = (
             Candidates.objects.values_list("salary_expectation", flat=True)
             .order_by("salary_expectation")
             .distinct()
         )
 
-        data = {"professions": professions, "salary": salary}
+        data = {"professions": professions, "salary": salary, "provinces": provinces}
 
         return Response(data)
 
