@@ -24,7 +24,7 @@ export interface FilterProps {
   professions: RoleType[];
   availability: string[];
   salary: string[];
-  province: string[];
+  provinces: string[];
 }
 
 const CandidateList = () => {
@@ -42,7 +42,7 @@ const CandidateList = () => {
     professions: searchParams.get("professions"),
     availability: searchParams.get("availability"),
     salary: searchParams.get("salary"),
-    province: searchParams.get("province"),
+    provinces: searchParams.get("provinces"),
   };
   const [filter, setFilter] = useState<FilterProps>({
     professions: (initialFilter.professions
@@ -54,8 +54,8 @@ const CandidateList = () => {
     salary: initialFilter.salary
       ? decodeURIComponent(initialFilter.salary).split(",")
       : [],
-    province: initialFilter.province
-      ? decodeURIComponent(initialFilter.province).split(",")
+    provinces: initialFilter.provinces
+      ? decodeURIComponent(initialFilter.provinces).split(",")
       : [],
   });
 
@@ -68,6 +68,7 @@ const CandidateList = () => {
   };
 
   useEffect(() => {
+    console.log(filter);
     if (!isFirstRender.current) changePage({ selected: 0 });
     isFirstRender.current = false;
     sort ? searchParams.set("order", sort) : searchParams.delete("order");

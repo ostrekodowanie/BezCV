@@ -10,7 +10,6 @@ import { filtersMenuArrow } from "../../assets/offers/offers";
 import { roleToTextMap } from "../../constants/candidate";
 import { RoleType } from "../../constants/workForm";
 import { FilterProps as FilterStateProps } from "../../pages/Offers";
-import { provinces } from "../../constants/findWork";
 
 type FilterProps = {
   displayPurchased: boolean;
@@ -37,7 +36,7 @@ export default function CandidateFilter({
     professions: [],
     availability: [],
     salary: [],
-    province: provinces,
+    provinces: [],
   });
 
   useEffect(() => {
@@ -45,14 +44,16 @@ export default function CandidateFilter({
       .get("/api/candidate/filters")
       .then((res) => res.data)
       .then((data) =>
-        setAllFilters((prev) => ({
+        setAllFilters({
           professions: data.professions,
           availability: ["cały etat", "pół etatu", "¼ etatu"],
           salary: data.salary,
-          province: prev.province,
-        }))
+          provinces: data.provinces,
+        })
       );
   }, []);
+
+  console.log(filter.provinces);
 
   return (
     <>
@@ -201,7 +202,7 @@ export default function CandidateFilter({
             </div>
           )}
         </div>
-        {/* <HorizontalLine />
+        <HorizontalLine />
         <div className="flex flex-col gap-6">
           <button
             onClick={() =>
@@ -212,8 +213,8 @@ export default function CandidateFilter({
             }
             className="flex items-center relative w-fit"
           >
-            {filter.province.length > 0 && (
-              <FilterLength length={filter.province.length} />
+            {filter.provinces.length > 0 && (
+              <FilterLength length={filter.provinces.length} />
             )}
             <img
               className={`${
@@ -228,7 +229,7 @@ export default function CandidateFilter({
           </button>
           {isActive.province && (
             <div className="flex flex-col gap-4">
-              {allFilters.province.map((province) => (
+              {allFilters.provinces.map((province) => (
                 <ProvinceCheckBox
                   filter={filter}
                   province={province}
@@ -238,7 +239,7 @@ export default function CandidateFilter({
               ))}
             </div>
           )}
-        </div> */}
+        </div>
         <HorizontalLine />
         <div className="flex items-start gap-2">
           <input
@@ -381,9 +382,9 @@ const ProvinceCheckBox = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter((prev) => ({
       ...prev,
-      province: e.target.checked
-        ? [...prev.province, province]
-        : prev.province.filter((r) => r !== province),
+      provinces: e.target.checked
+        ? [...prev.provinces, province]
+        : prev.provinces.filter((r) => r !== province),
     }));
   };
 
@@ -392,12 +393,12 @@ const ProvinceCheckBox = ({
       <input
         type="checkbox"
         onChange={handleChange}
-        checked={filter.province.includes(province)}
+        checked={filter.provinces.includes(province)}
         name="profession-filter"
         id={province}
       />
       <label className="ml-4" htmlFor={province}>
-        {province}
+        {province.charAt(0).toUpperCase() + province.substring(1)}
       </label>
     </div>
   );
