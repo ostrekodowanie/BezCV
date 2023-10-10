@@ -25,7 +25,12 @@ class CandidatesFilter(filters.FilterSet):
     professions = filters.BaseInFilter(field_name="profession", lookup_expr="in")
     availability = filters.BaseInFilter(field_name="availability", lookup_expr="in")
     salary = filters.BaseInFilter(field_name="salary_expectation", lookup_expr="in")
-    provinces = filters.BaseInFilter(field_name="location__province", lookup_expr="in")
+    provinces = filters.CharFilter(method="filter_by_province")
+
+    def filter_by_province(self, queryset, name, value):
+        return queryset.filter(
+            Q(location__province__iexact=value) | Q(province__iexact=value)
+        )
 
     class Meta:
         model = Candidates
