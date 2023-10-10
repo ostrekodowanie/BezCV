@@ -44,6 +44,21 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
 
 
+import json
+
+from django.db import transaction
+
+
+def update_location_with_province():
+    with transaction.atomic():
+        candidates = Candidates.objects.filter(location__province__regex=r"^[Ł-Ś]")
+        for candidate in candidates:
+            location = candidate.location
+            location["province"] = location["province"].lower()
+            candidate.location = location
+            candidate.save()
+
+
 class CandidatesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CandidatesSerializer
@@ -52,6 +67,7 @@ class CandidatesView(generics.ListAPIView):
     filterset_class = CandidatesFilter
 
     def get_queryset(self):
+        update_location_with_province()
         queryset = Candidates.objects.filter(is_visible=True)
         ordering = self.request.query_params.get("order", None)
         show_purchased = self.request.query_params.get("show_purchased", True)

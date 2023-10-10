@@ -241,7 +241,6 @@ class CandidatesSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "phone",
-            "province",
             "location",
             "profession",
             "salary_expectation",
