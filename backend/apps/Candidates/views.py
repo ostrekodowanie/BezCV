@@ -28,9 +28,12 @@ class CandidatesFilter(filters.FilterSet):
     provinces = filters.CharFilter(method="filter_by_province")
 
     def filter_by_province(self, queryset, name, value):
-        return queryset.filter(
-            Q(location__province__iexact=value) | Q(province__iexact=value)
-        )
+        provinces_list = value.split(",")
+        q = Q()
+        for province in provinces_list:
+            q |= Q(location__province__iexact=province) | Q(province__iexact=province)
+
+        return queryset.filter(q)
 
     class Meta:
         model = Candidates
