@@ -68,6 +68,7 @@ const CandidateList = () => {
   };
 
   useEffect(() => {
+    console.log(filter);
     if (!isFirstRender.current) changePage({ selected: 0 });
     isFirstRender.current = false;
     sort ? searchParams.set("order", sort) : searchParams.delete("order");

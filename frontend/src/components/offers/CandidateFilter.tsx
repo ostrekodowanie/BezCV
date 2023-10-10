@@ -44,14 +44,16 @@ export default function CandidateFilter({
       .get("/api/candidate/filters")
       .then((res) => res.data)
       .then((data) =>
-        setAllFilters((prev) => ({
+        setAllFilters({
           professions: data.professions,
           availability: ["cały etat", "pół etatu", "¼ etatu"],
           salary: data.salary,
           provinces: data.provinces,
-        }))
+        })
       );
   }, []);
+
+  console.log(filter.provinces);
 
   return (
     <>
@@ -380,7 +382,7 @@ const ProvinceCheckBox = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter((prev) => ({
       ...prev,
-      province: e.target.checked
+      provinces: e.target.checked
         ? [...prev.provinces, province]
         : prev.provinces.filter((r) => r !== province),
     }));
@@ -396,7 +398,7 @@ const ProvinceCheckBox = ({
         id={province}
       />
       <label className="ml-4" htmlFor={province}>
-        {province}
+        {province.charAt(0).toUpperCase() + province.substring(1)}
       </label>
     </div>
   );
