@@ -25,7 +25,7 @@ class CandidatesFilter(filters.FilterSet):
     professions = filters.BaseInFilter(field_name="profession", lookup_expr="in")
     availability = filters.BaseInFilter(field_name="availability", lookup_expr="in")
     salary = filters.BaseInFilter(field_name="salary_expectation", lookup_expr="in")
-    province = filters.BaseInFilter(field_name="location__province", lookup_expr="in")
+    provinces = filters.BaseInFilter(field_name="location__province", lookup_expr="in")
 
     class Meta:
         model = Candidates
@@ -34,9 +34,6 @@ class CandidatesFilter(filters.FilterSet):
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
-
-
-import requests
 
 
 class CandidatesView(generics.ListAPIView):
