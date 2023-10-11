@@ -179,7 +179,7 @@ class PayUNotificationView(views.APIView):
                         {
                             "name": f"Pakiet rekrutacyjny - {tokens}",
                             "tax": 23,
-                            "total_price_gross": amount,
+                            "total_price_gross": str(amount),
                             "quantity": tokens,
                         }
                     ],
