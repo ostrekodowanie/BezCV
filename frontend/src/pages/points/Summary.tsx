@@ -56,7 +56,7 @@ export default function Summary() {
     setLoading(true);
     const taxedPrice = foundPackage.price * 1.23;
     const finalPrice = theBestCode
-      ? (taxedPrice * (100 - theBestCode.value)) / 100
+      ? foundPackage.price * ((100 - theBestCode.value) / 100) * 1.23
       : taxedPrice;
     axios
       .post(

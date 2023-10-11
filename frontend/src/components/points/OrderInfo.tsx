@@ -17,14 +17,14 @@ type ComponentProps = {
 
 export default function OrderInfo(props: PackageProps & ComponentProps) {
   const [codeData, setCodeData] = useState({
-    isLoading: false,
     value: "",
+    isLoading: false,
     isAdded: false,
     isError: false,
   });
   const { points, price, salePercentage, addPromoCode } = props;
   const finalPrice = salePercentage
-    ? (price * (100 - salePercentage)) / 100
+    ? price * ((100 - salePercentage) / 100)
     : price;
 
   const handleCodeSubmit = async (e: FormEvent) => {
