@@ -1,3 +1,4 @@
+from apps.Points.models import Orders
 from apps.Survey.models import Categories
 from config.settings import client
 from django.db.models import CharField, Exists, F, OuterRef, Q, Value
