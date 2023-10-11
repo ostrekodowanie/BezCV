@@ -13,7 +13,7 @@ export const packages: PackageProps[] = [
   {
     days: 30,
     points: 10,
-    price: 499,
+    price: 1,
   },
   {
     days: 30,
