@@ -157,9 +157,9 @@ class PayUNotificationView(views.APIView):
             message = f"""invoice": 
                     "kind": "vat",
                     "number": "{formatted_date}{formatted_number}",
-                    "sell_date": formatted_date,
-                    "issue_date": formatted_date,
-                    "payment_to": formatted_date,
+                    "sell_date": {formatted_date},
+                    "issue_date": {formatted_date},
+                    "payment_to": {formatted_date},
                     "seller_name": "AGENCJA SOCIAL MEDIA YO ME SP. Z O.O.",
                     "seller_tax_no": "5252445767",
                     "seller_street": "MEKSYKAŃSKA 6/10",
@@ -170,18 +170,18 @@ class PayUNotificationView(views.APIView):
                     "seller_www": "www.bezCV.com",
                     "seller_bank": "mBank",
                     "seller_bank_account": "57 1140 2004 0000 3802 8113 3172",
-                    "buyer_name": buyer.company_name,
-                    "buyer_email": buyer_email,
-                    "buyer_tax_no": buyer.nip,
-                    "buyer_post_code": post_code,
-                    "buyer_city": city,
-                    "buyer_street": street,
+                    "buyer_name": {buyer.company_name},
+                    "buyer_email": {buyer_email},
+                    "buyer_tax_no": {buyer.nip},
+                    "buyer_post_code": {post_code},
+                    "buyer_city": {city},
+                    "buyer_street": {street},
                     "positions": [
                         
                             "name": f"Pakiet rekrutacyjny - {tokens}",
                             "tax": 23,
-                            "total_price_gross": str(amount),
-                            "quantity": tokens,
+                            "total_price_gross": {str(amount)},
+                            "quantity": {tokens},
                         
                     ],
                 )"""
@@ -191,6 +191,26 @@ class PayUNotificationView(views.APIView):
                 body=message,
                 to=["se6359@gmail.com"],
             )
+            email_message.send()
+
+            purchased_tokens = (
+                buyer.purchasedpoints_employer.filter(
+                    expiration_date__gt=timezone.now(), remaining_tokens__gt=0
+                ).aggregate(Sum("remaining_tokens"))["remaining_tokens__sum"]
+                or 0
+            )
+
+            remaining_tokens = purchased_tokens + buyer.tokens
+
+            context = {"employer": buyer.first_name, "token_count": remaining_tokens}
+
+            message = render_to_string("employers/after_payment.html", context)
+            email_message = EmailMessage(
+                subject="Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?",
+                body=message,
+                to=[buyer.email, "biuro@bezcv.com"],
+            )
+            email_message.content_subtype = "html"
             email_message.send()
 
             data = {
@@ -238,25 +258,5 @@ class PayUNotificationView(views.APIView):
                 f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}"
             )
             response_data = data.json()
-
-            purchased_tokens = (
-                buyer.purchasedpoints_employer.filter(
-                    expiration_date__gt=timezone.now(), remaining_tokens__gt=0
-                ).aggregate(Sum("remaining_tokens"))["remaining_tokens__sum"]
-                or 0
-            )
-
-            remaining_tokens = purchased_tokens + buyer.tokens
-
-            context = {"employer": buyer.first_name, "token_count": remaining_tokens}
-
-            message = render_to_string("employers/after_payment.html", context)
-            email_message = EmailMessage(
-                subject="Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?",
-                body=message,
-                to=[buyer.email, "biuro@bezcv.com"],
-            )
-            email_message.content_subtype = "html"
-            email_message.send()
 
         return Response(status=200)
