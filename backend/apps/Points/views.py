@@ -43,8 +43,6 @@ class PurchasePointsView(views.APIView):
             "Accept": "application/json",
         }
 
-        price = 1
-
         data = requests.post(
             f"https://secure.payu.com/pl/standard/user/oauth/authorize?grant_type=client_credentials&client_id={client_id}&client_secret={client_secret}",
             headers=headers,
@@ -187,9 +185,9 @@ class PayUNotificationView(views.APIView):
                 )"""
 
             email_message = EmailMessage(
-                subject="Dziękujemy za zakup tokenów bCV - Jak z nich korzystać?",
+                subject=f"Faktura {formatted_date}{formatted_number}",
                 body=message,
-                to=["se6359@gmail.com"],
+                to=["biuro@bezcv.com"],
             )
             email_message.send()
 
@@ -213,50 +211,50 @@ class PayUNotificationView(views.APIView):
             email_message.content_subtype = "html"
             email_message.send()
 
-            data = {
-                "invoice": {
-                    "kind": "vat",
-                    "number": f"{formatted_date}{formatted_number}",
-                    "sell_date": formatted_date,
-                    "issue_date": formatted_date,
-                    "payment_to": formatted_date,
-                    "seller_name": "AGENCJA SOCIAL MEDIA YO ME SP. Z O.O.",
-                    "seller_tax_no": "5252445767",
-                    "seller_street": "MEKSYKAŃSKA 6/10",
-                    "seller_post_code": "03-948",
-                    "seller_city": "WARSZAWA",
-                    "seller_country": "Polska",
-                    "seller_email": "biuro@bezcv.com",
-                    "seller_www": "www.bezCV.com",
-                    "seller_bank": "mBank",
-                    "seller_bank_account": "57 1140 2004 0000 3802 8113 3172",
-                    "buyer_name": buyer.company_name,
-                    "buyer_email": buyer_email,
-                    "buyer_tax_no": buyer.nip,
-                    "buyer_post_code": post_code,
-                    "buyer_city": city,
-                    "buyer_street": street,
-                    "positions": [
-                        {
-                            "name": f"Pakiet rekrutacyjny - {tokens}",
-                            "tax": 23,
-                            "total_price_gross": str(amount),
-                            "quantity": tokens,
-                        }
-                    ],
-                }
-            }
+            # data = {
+            #     "invoice": {
+            #         "kind": "vat",
+            #         "number": f"{formatted_date}{formatted_number}",
+            #         "sell_date": formatted_date,
+            #         "issue_date": formatted_date,
+            #         "payment_to": formatted_date,
+            #         "seller_name": "AGENCJA SOCIAL MEDIA YO ME SP. Z O.O.",
+            #         "seller_tax_no": "5252445767",
+            #         "seller_street": "MEKSYKAŃSKA 6/10",
+            #         "seller_post_code": "03-948",
+            #         "seller_city": "WARSZAWA",
+            #         "seller_country": "Polska",
+            #         "seller_email": "biuro@bezcv.com",
+            #         "seller_www": "www.bezCV.com",
+            #         "seller_bank": "mBank",
+            #         "seller_bank_account": "57 1140 2004 0000 3802 8113 3172",
+            #         "buyer_name": buyer.company_name,
+            #         "buyer_email": buyer_email,
+            #         "buyer_tax_no": buyer.nip,
+            #         "buyer_post_code": post_code,
+            #         "buyer_city": city,
+            #         "buyer_street": street,
+            #         "positions": [
+            #             {
+            #                 "name": f"Pakiet rekrutacyjny - {tokens}",
+            #                 "tax": 23,
+            #                 "total_price_gross": str(amount),
+            #                 "quantity": tokens,
+            #             }
+            #         ],
+            #     }
+            # }
 
-            data = requests.post(
-                f"https://yome-biuro.fakturownia.pl/invoices.json?api_token={fakturownia_token}",
-                json=data,
-                headers=headers,
-            )
-            response_data = data.json()
+            # data = requests.post(
+            #     f"https://yome-biuro.fakturownia.pl/invoices.json?api_token={fakturownia_token}",
+            #     json=data,
+            #     headers=headers,
+            # )
+            # response_data = data.json()
 
-            data = requests.post(
-                f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}"
-            )
-            response_data = data.json()
+            # data = requests.post(
+            #     f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}"
+            # )
+            # response_data = data.json()
 
         return Response(status=200)
