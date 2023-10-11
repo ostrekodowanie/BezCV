@@ -65,6 +65,10 @@ export default function Summary() {
           amount: foundPackage.points,
           price: finalPrice,
           expiry: foundPackage.days,
+          phone: paymentData.phone,
+          street: paymentData.address,
+          postal_code: paymentData.postal_code,
+          city: paymentData.address,
         })
       )
       .then((res) => (window.location.href = res.data))

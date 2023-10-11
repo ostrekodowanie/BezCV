@@ -1,11 +1,11 @@
 import { payu } from "../../assets/points/points";
-import { useAppSelector } from "../../main";
+import { useContext } from "react";
 import { inputStyles } from "../../constants/general";
+import { PaymentDataType } from "../../constants/points";
+import { PaymentContext } from "../../context/PaymentContext";
 
 const BuyerInfo = () => {
-  const { first_name, last_name, email } = useAppSelector(
-    (state) => state.login.data
-  );
+  const { paymentData, setPaymentData } = useContext(PaymentContext);
   return (
     <div className="flex flex-col gap-12 self-stretch">
       <div className="flex flex-col gap-4">
@@ -23,7 +23,13 @@ const BuyerInfo = () => {
             <input
               className={inputStyles.input}
               required
-              defaultValue={`${first_name} ${last_name}`}
+              value={paymentData.full_name}
+              onChange={(e) =>
+                setPaymentData((prev) => ({
+                  ...prev,
+                  full_name: e.target.value,
+                }))
+              }
               id="summary-names"
               name="summary"
               type="text"
@@ -39,10 +45,13 @@ const BuyerInfo = () => {
             <input
               className={inputStyles.input}
               required
-              defaultValue={email}
+              value={paymentData.email}
+              onChange={(e) =>
+                setPaymentData((prev) => ({ ...prev, email: e.target.value }))
+              }
               id="summary-names"
               name="summary"
-              type="text"
+              type="email"
             />
           </div>
           <div className="flex flex-col gap-3">
@@ -55,9 +64,13 @@ const BuyerInfo = () => {
             <input
               className={inputStyles.input}
               required
+              value={paymentData.phone}
+              onChange={(e) =>
+                setPaymentData((prev) => ({ ...prev, phone: e.target.value }))
+              }
               id="summary-names"
               name="summary"
-              type="text"
+              type="tel"
             />
           </div>
           <div className="flex items-start gap-3">

@@ -1,16 +1,9 @@
-import { ChangeEvent, useContext } from "react";
+import { useContext } from "react";
 import { inputStyles } from "../../constants/general";
 import { PaymentContext } from "../../context/PaymentContext";
 
 export default function InvoiceInfo() {
   const { paymentData, setPaymentData } = useContext(PaymentContext);
-
-  const changeNIP = (e: ChangeEvent<HTMLInputElement>) => {
-    let { value } = e.target;
-    value = value.replace(/[^0-9]/g, "").slice(0, 6);
-    value = value.replace(/(\d{2})(\d{3})/, "$1-$2");
-    setPaymentData((prev) => ({ ...prev, nip: value }));
-  };
 
   return (
     <div className="flex flex-col gap-4 self-stretch">
@@ -27,7 +20,9 @@ export default function InvoiceInfo() {
             name="summary"
             type="text"
             value={paymentData.nip}
-            onChange={changeNIP}
+            onChange={(e) =>
+              setPaymentData((prev) => ({ ...prev, nip: e.target.value }))
+            }
           />
         </div>
         <div className="flex flex-col gap-3">
