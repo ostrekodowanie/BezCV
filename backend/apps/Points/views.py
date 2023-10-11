@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 from apps.Auth.models import User
+from apps.Codes.models import UsedCodes
 from config.settings import fakturownia_token
 from django.core.mail import EmailMessage
 from django.db.models import Sum
@@ -25,6 +26,11 @@ class PurchasePointsView(views.APIView):
         amount = request.data.get("amount")
         price = request.data.get("price")
         expiry = request.data.get("expiry")
+        phone = request.data.get("phone")
+        street = request.data.get("street")
+        postal_code = request.data.get("postal_code")
+        city = request.data.get("city")
+        code_id = request.data.get("code_id")
 
         employer = self.request.user
 
@@ -52,7 +58,7 @@ class PurchasePointsView(views.APIView):
 
         order_data = {
             "merchantPosId": client_id,
-            "description": f"bezCV - {amount} tokens, expiry: {expiry}",
+            "description": f"bezCV - {amount} tokens, expiry: {expiry}, code: {code_id}",
             "currencyCode": "PLN",
             "totalAmount": str(int(price * 100)),
             "customerIp": request.META.get("REMOTE_ADDR"),
@@ -60,13 +66,15 @@ class PurchasePointsView(views.APIView):
             "notifyUrl": "https://bezcv.com/api/payu-notify",
             "buyer": {
                 "email": employer.email,
+                "phone": phone,
                 "firstName": employer.first_name,
                 "lastName": employer.last_name,
                 "language": "pl",
+                "delivery": {"street": street, "postalCode": postal_code, "city": city},
             },
             "products": [
                 {
-                    "name": f"bCV tokens",
+                    "name": f"Pakiet rekrutacyjny - {amount}",
                     "unitPrice": int(unit_price),
                     "quantity": amount,
                 }
@@ -95,15 +103,21 @@ class PayUNotificationView(views.APIView):
             order_id = payload["order"]["orderId"]
             amount = payload["order"]["totalAmount"]
             buyer_email = payload["order"]["buyer"]["email"]
+            post_code = payload["order"]["buyer"]["delivery"]["postalCode"]
+            city = payload["order"]["buyer"]["delivery"]["city"]
+            street = payload["order"]["buyer"]["delivery"]["street"]
             description = payload["order"]["description"]
 
             parts = description.split("expiry: ")
-            expiry = parts[1].strip()
+            parts = parts[1].strip()
+            expiry, code_id = parts.split(", code: ")
+            expiry = expiry.strip()
+            code_id = code_id.strip()
             expiration_date = timezone.now() + timezone.timedelta(days=int(expiry))
 
             buyer = User.objects.get(email=buyer_email)
 
-            order = Orders.objects.create(
+            Orders.objects.create(
                 buyer=buyer,
                 tokens=tokens,
                 amount=amount,
@@ -111,6 +125,8 @@ class PayUNotificationView(views.APIView):
                 expiration_date=expiration_date,
                 remaining_tokens=tokens,
             )
+
+            UsedCodes.objects.filter(id=code_id).update(is_active=False)
 
             headers = {
                 "Content-Type": "application/json",
@@ -120,21 +136,39 @@ class PayUNotificationView(views.APIView):
             current_date = datetime.now()
             formatted_date = current_date.strftime("%d/%m/%Y")
 
+            current_month = current_date.month
+            current_year = current_date.year
+            orders_count = Orders.objects.filter(
+                created_at__year=current_year, created_at__month=current_month
+            ).count()
+            formatted_number = f"b{orders_count + 1}"
+
             data = {
                 "invoice": {
                     "kind": "vat",
-                    "number": order.id,
+                    "number": f"{formatted_date}{formatted_number}",
                     "sell_date": formatted_date,
                     "issue_date": formatted_date,
                     "payment_to": formatted_date,
                     "seller_name": "AGENCJA SOCIAL MEDIA YO ME SP. Z O.O.",
                     "seller_tax_no": "5252445767",
-                    "buyer_name": buyer.first_name + buyer.last_name,
+                    "seller_street": "MEKSYKAŃSKA 6/10",
+                    "seller_post_code": "03-948",
+                    "seller_city": "WARSZAWA",
+                    "seller_country": "Polska",
+                    "seller_email": "biuro@bezcv.com",
+                    "seller_www": "www.bezCV.com",
+                    "seller_bank": "mBank",
+                    "seller_bank_account": "57 1140 2004 0000 3802 8113 3172",
+                    "buyer_name": buyer.company_name,
                     "buyer_email": buyer_email,
                     "buyer_tax_no": buyer.nip,
+                    "buyer_post_code": post_code,
+                    "buyer_city": city,
+                    "buyer_street": street,
                     "positions": [
                         {
-                            "name": "tokeny bCV",
+                            "name": f"Pakiet rekrutacyjny - {tokens}",
                             "tax": 23,
                             "total_price_gross": amount,
                             "quantity": tokens,
@@ -143,11 +177,17 @@ class PayUNotificationView(views.APIView):
                 }
             }
 
-            # data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices.json?api_token={fakturownia_token}", json=data, headers=headers)
-            # response_data = data.json()
+            data = requests.post(
+                f"https://yome-biuro.fakturownia.pl/invoices.json?api_token={fakturownia_token}",
+                json=data,
+                headers=headers,
+            )
+            response_data = data.json()
 
-            # data = requests.post(f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}")
-            # response_data = data.json()
+            data = requests.post(
+                f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}"
+            )
+            response_data = data.json()
 
             purchased_tokens = (
                 buyer.purchasedpoints_employer.filter(
