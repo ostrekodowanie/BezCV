@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 from apps.Auth.models import User
+from apps.Codes.models import UsedCodes
 from config.settings import fakturownia_token
 from django.core.mail import EmailMessage
 from django.db.models import Sum
@@ -29,6 +30,7 @@ class PurchasePointsView(views.APIView):
         street = request.data.get("street")
         postal_code = request.data.get("postal_code")
         city = request.data.get("city")
+        code_id = request.data.get("code_id")
 
         employer = self.request.user
 
@@ -56,7 +58,7 @@ class PurchasePointsView(views.APIView):
 
         order_data = {
             "merchantPosId": client_id,
-            "description": f"bezCV - {amount} tokens, expiry: {expiry}",
+            "description": f"bezCV - {amount} tokens, expiry: {expiry}, code: {code_id}",
             "currencyCode": "PLN",
             "totalAmount": str(int(price * 100)),
             "customerIp": request.META.get("REMOTE_ADDR"),
@@ -107,7 +109,10 @@ class PayUNotificationView(views.APIView):
             description = payload["order"]["description"]
 
             parts = description.split("expiry: ")
-            expiry = parts[1].strip()
+            parts = parts[1].strip()
+            expiry, code_id = parts.split(", code: ")
+            expiry = expiry.strip()
+            code_id = code_id.strip()
             expiration_date = timezone.now() + timezone.timedelta(days=int(expiry))
 
             buyer = User.objects.get(email=buyer_email)
@@ -120,6 +125,8 @@ class PayUNotificationView(views.APIView):
                 expiration_date=expiration_date,
                 remaining_tokens=tokens,
             )
+
+            UsedCodes.objects.filter(id=code_id).update(is_active=False)
 
             headers = {
                 "Content-Type": "application/json",
