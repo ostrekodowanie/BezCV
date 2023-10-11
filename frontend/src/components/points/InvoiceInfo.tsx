@@ -1,9 +1,20 @@
-import { useContext } from "react";
+import { ChangeEvent, useContext } from "react";
 import { inputStyles } from "../../constants/general";
 import { PaymentContext } from "../../context/PaymentContext";
 
 export default function InvoiceInfo() {
   const { paymentData, setPaymentData } = useContext(PaymentContext);
+
+  const handlePostalCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let { value } = e.target;
+    value = value.replace(/[^\d]/g, "");
+    value.length > 2 &&
+      !value.includes("-") &&
+      (value = value.slice(0, 2) + "-" + value.slice(2));
+
+    value = value.slice(0, 6);
+    setPaymentData((prev) => ({ ...prev, postal_code: value }));
+  };
 
   return (
     <div className="flex flex-col gap-4 self-stretch">
@@ -58,12 +69,7 @@ export default function InvoiceInfo() {
             name="summary"
             type="text"
             value={paymentData.postal_code}
-            onChange={(e) =>
-              setPaymentData((prev) => ({
-                ...prev,
-                postal_code: e.target.value,
-              }))
-            }
+            onChange={handlePostalCodeChange}
           />
         </div>
         <div className="flex flex-col gap-3">
