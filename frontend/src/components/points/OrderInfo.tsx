@@ -49,12 +49,12 @@ export default function OrderInfo(props: PackageProps & ComponentProps) {
   return (
     <div className="flex flex-col gap-4 self-stretch">
       <h2 className="mb-6 font-semibold text-xl md:text-2xl">Podsumowanie</h2>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 relative z-10">
         <h4 className="font-semibold text-sm">Wybrana ilość tokenów</h4>
         <DropdownMenu points={points} />
       </div>
 
-      <div className="my-8 flex flex-col gap-4 relative z-10">
+      <div className="my-8 flex flex-col gap-4">
         <div className="flex items-center justify-between text-sm font-semibold">
           <h4>Cena netto:</h4>
           <h4 className="flex items-center gap-2">
