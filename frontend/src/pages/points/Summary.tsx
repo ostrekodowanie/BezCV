@@ -4,11 +4,12 @@ import InvoiceInfo from "../../components/points/InvoiceInfo";
 import BuyerInfo from "../../components/points/BuyerInfo";
 import {
   PaymentDataType,
+  PromoCode,
   initialPaymentData,
   packages,
 } from "../../constants/points";
 import OrderInfo from "../../components/points/OrderInfo";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState, useEffect } from "react";
 import {
   PaymentContext,
   PaymentContextType,
@@ -24,6 +25,14 @@ export default function Summary() {
   );
   if (!foundPackage) return <NotFound />;
   const [loading, setLoading] = useState(false);
+  const [promoCodes, setPromoCodes] = useState<PromoCode[]>([]);
+  const theBestCode =
+    promoCodes.length > 0
+      ? promoCodes.reduce(
+          (prev, curr) => (curr.value > prev.value ? curr : prev),
+          promoCodes[0]
+        )
+      : null;
   const { first_name, last_name, email, phone, nip } = useAppSelector(
     (state) => state.login.data
   );
@@ -35,16 +44,33 @@ export default function Summary() {
     nip,
   });
 
+  useEffect(() => {
+    (async () => {
+      const { data } = await axios.get("/api/discounts");
+      setPromoCodes(data);
+    })();
+  }, []);
+
   const handlePayment = (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    const taxedPrice = foundPackage.price * 1.23;
+    const finalPrice = theBestCode
+      ? (taxedPrice * (100 - theBestCode.value)) / 100
+      : taxedPrice;
     axios
       .post(
         "/api/points/purchase",
         JSON.stringify({
           amount: foundPackage.points,
-          price: foundPackage.price * 1.23,
+          price: finalPrice,
           expiry: foundPackage.days,
+          email: paymentData.email,
+          phone: paymentData.phone,
+          street: paymentData.address,
+          postal_code: paymentData.postal_code,
+          city: paymentData.address,
+          ...(theBestCode && { code_id: theBestCode.id }),
         })
       )
       .then((res) => (window.location.href = res.data))
@@ -73,7 +99,11 @@ export default function Summary() {
           <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
           <InvoiceInfo />
           <div className="h-[1px] w-full bg-[#EDEDED] xl:h-full self-stretch" />
-          <OrderInfo {...foundPackage} />
+          <OrderInfo
+            {...foundPackage}
+            salePercentage={theBestCode ? theBestCode.value : null}
+            addPromoCode={(code) => setPromoCodes((prev) => [...prev, code])}
+          />
         </PaymentContext.Provider>
       </form>
     </section>
