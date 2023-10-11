@@ -191,11 +191,15 @@ class PayUNotificationView(views.APIView):
                 json=data,
                 headers=headers,
             )
+            print(data.status_code)
+            print(data.content)
             response_data = data.json()
 
             data = requests.post(
                 f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}"
             )
+            print(data.status_code)
+            print(data.content)
             response_data = data.json()
 
             purchased_tokens = (
