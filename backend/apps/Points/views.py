@@ -27,10 +27,14 @@ class PurchasePointsView(views.APIView):
         price = request.data.get("price")
         expiry = request.data.get("expiry")
         phone = request.data.get("phone")
+        email = request.data.get("email")
         street = request.data.get("street")
         postal_code = request.data.get("postal_code")
         city = request.data.get("city")
         code_id = request.data.get("code_id")
+        description = f"bezCV - {amount} tokens, expiry: {expiry}"
+        if code_id:
+            description += f", code: {code_id}"
 
         employer = self.request.user
 
@@ -58,14 +62,14 @@ class PurchasePointsView(views.APIView):
 
         order_data = {
             "merchantPosId": client_id,
-            "description": f"bezCV - {amount} tokens, expiry: {expiry}, code: {code_id}",
+            "description": description,
             "currencyCode": "PLN",
             "totalAmount": str(int(price * 100)),
             "customerIp": request.META.get("REMOTE_ADDR"),
             "continueUrl": "https://bezcv.com",
             "notifyUrl": "https://bezcv.com/api/payu-notify",
             "buyer": {
-                "email": employer.email,
+                "email": email,
                 "phone": phone,
                 "firstName": employer.first_name,
                 "lastName": employer.last_name,
@@ -101,7 +105,7 @@ class PayUNotificationView(views.APIView):
             products = payload["order"]["products"]
             tokens = sum(int(product["quantity"]) for product in products)
             order_id = payload["order"]["orderId"]
-            amount = payload["order"]["totalAmount"]
+            amount = payload["order"]["totalAmount"] / 100
             buyer_email = payload["order"]["buyer"]["email"]
             post_code = payload["order"]["buyer"]["delivery"]["postalCode"]
             city = payload["order"]["buyer"]["delivery"]["city"]
@@ -110,9 +114,13 @@ class PayUNotificationView(views.APIView):
 
             parts = description.split("expiry: ")
             parts = parts[1].strip()
-            expiry, code_id = parts.split(", code: ")
-            expiry = expiry.strip()
-            code_id = code_id.strip()
+            if ", code: " in parts:
+                expiry, code_id = parts.split(", code: ")
+                expiry = expiry.strip()
+                code_id = code_id.strip()
+            else:
+                expiry = parts.strip()
+                code_id = None
             expiration_date = timezone.now() + timezone.timedelta(days=int(expiry))
 
             buyer = User.objects.get(email=buyer_email)
@@ -126,7 +134,8 @@ class PayUNotificationView(views.APIView):
                 remaining_tokens=tokens,
             )
 
-            UsedCodes.objects.filter(id=code_id).update(is_active=False)
+            if code_id is not None:
+                UsedCodes.objects.filter(id=code_id).update(is_active=False)
 
             headers = {
                 "Content-Type": "application/json",
