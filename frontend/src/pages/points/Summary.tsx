@@ -65,6 +65,7 @@ export default function Summary() {
           amount: foundPackage.points,
           price: finalPrice,
           expiry: foundPackage.days,
+          email: paymentData.email,
           phone: paymentData.phone,
           street: paymentData.address,
           postal_code: paymentData.postal_code,
