@@ -105,7 +105,7 @@ class PayUNotificationView(views.APIView):
             products = payload["order"]["products"]
             tokens = sum(int(product["quantity"]) for product in products)
             order_id = payload["order"]["orderId"]
-            amount = payload["order"]["totalAmount"] / 100
+            amount = int(payload["order"]["totalAmount"]) / 100
             buyer_email = payload["order"]["buyer"]["email"]
             post_code = payload["order"]["buyer"]["delivery"]["postalCode"]
             city = payload["order"]["buyer"]["delivery"]["city"]
@@ -191,15 +191,11 @@ class PayUNotificationView(views.APIView):
                 json=data,
                 headers=headers,
             )
-            print(data.status_code)
-            print(data.content)
             response_data = data.json()
 
             data = requests.post(
                 f"https://yome-biuro.fakturownia.pl/invoices/{response_data['id']}/send_by_email.json?api_token={fakturownia_token}"
             )
-            print(data.status_code)
-            print(data.content)
             response_data = data.json()
 
             purchased_tokens = (
