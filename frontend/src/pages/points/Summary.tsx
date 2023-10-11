@@ -69,7 +69,7 @@ export default function Summary() {
           phone: paymentData.phone,
           street: paymentData.address,
           postal_code: paymentData.postal_code,
-          city: paymentData.address,
+          city: paymentData.city,
           ...(theBestCode && { code_id: theBestCode.id }),
         })
       )
