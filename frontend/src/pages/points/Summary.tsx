@@ -69,6 +69,7 @@ export default function Summary() {
           street: paymentData.address,
           postal_code: paymentData.postal_code,
           city: paymentData.address,
+          ...(theBestCode && { code_id: theBestCode.id }),
         })
       )
       .then((res) => (window.location.href = res.data))
