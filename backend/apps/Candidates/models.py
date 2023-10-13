@@ -25,6 +25,7 @@ class Candidates(models.Model):
     phone = models.CharField(max_length=255, unique=True)
     birth_date = models.DateField()
     location = models.JSONField(null=True)
+    province = models.CharField(max_length=255, null=True)
     profession = models.CharField(
         max_length=100,
         null=True,

@@ -66,6 +66,7 @@ class CandidateCreateSerializer(serializers.ModelSerializer):
                 "town": location_data["miejscowosc"],
                 "province": location_data["wojewodztwo"],
             }
+            validated_data["province"] = location_data["wojewodztwo"]
         else:
             validated_data["location"] = {"postal_code": postal_code}
 

@@ -33,8 +33,14 @@ class CandidatesFilter(filters.FilterSet):
         fields = ["professions", "availability", "salary"]
 
 
+from django.db.models import CharField
+
+
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
+
+
+from django.db.models.functions import Cast, Replace
 
 
 class CandidatesView(generics.ListAPIView):
@@ -45,6 +51,9 @@ class CandidatesView(generics.ListAPIView):
     filterset_class = CandidatesFilter
 
     def get_queryset(self):
+        Candidates.objects.update(
+            province=Replace(F("province"), Value('"'), Value(""))
+        )
         queryset = Candidates.objects.filter(is_visible=True)
         ordering = self.request.query_params.get("order", None)
         show_purchased = self.request.query_params.get("show_purchased", True)
