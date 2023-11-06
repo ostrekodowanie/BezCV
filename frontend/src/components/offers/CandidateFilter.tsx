@@ -398,7 +398,9 @@ const ProvinceCheckBox = ({
         id={province}
       />
       <label className="ml-4" htmlFor={province}>
-        {province.charAt(0).toUpperCase() + province.substring(1)}
+        {province
+          ? province.charAt(0).toUpperCase() + province.substring(1)
+          : "Brak"}
       </label>
     </div>
   );

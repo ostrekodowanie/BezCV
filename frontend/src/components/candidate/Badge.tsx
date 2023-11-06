@@ -1,8 +1,4 @@
-import { ChangeEvent } from "react";
-import {
-  initialColorScheme,
-  professionColorMap,
-} from "../../constants/professionColorMap";
+import { professionColorMap } from "../../constants/professionColorMap";
 import { RoleType } from "../../constants/workForm";
 import { Industry } from "../../types/candidate";
 import CheckMarkIcon from "../../assets/survey/icons/CheckMarkIcon";
@@ -14,6 +10,12 @@ type Props = {
   isCheckable?: boolean;
   size?: "small" | "big";
   handleChange?: (industry: Industry) => void;
+};
+
+const initialColorScheme = {
+  gradient: "#141B30",
+  light: "rgba(20, 27, 48, 0.25)",
+  color: "#141B3040",
 };
 
 export default function Badge({
@@ -28,8 +30,6 @@ export default function Badge({
   const { color, light, gradient } = profession
     ? professionColorMap[profession]
     : initialColorScheme;
-
-  console.log(industry);
 
   return handleChange ? (
     <label
@@ -67,8 +67,10 @@ export default function Badge({
       }`}
     >
       <span
-        style={{ backgroundImage: gradient }}
-        className="bg-clip-text text-transparent font-semibold text-[.75rem] select-none"
+        style={{ backgroundImage: profession ? gradient : "none" }}
+        className={`${
+          profession ? "bg-clip-text text-transparent" : "text-font"
+        } font-semibold text-[.75rem] select-none`}
       >
         {name}
       </span>

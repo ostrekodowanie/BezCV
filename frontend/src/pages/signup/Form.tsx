@@ -9,6 +9,7 @@ import { passwordNotVisible, passwordVisible } from "../../assets/general";
 import PolicyAccept from "../../components/survey/PolicyAccept";
 import Banner from "../../components/signup/Banner";
 import { checkmark } from "../../assets/points/points";
+import toast from "react-hot-toast";
 
 const initialPolicy = {
   statute: false,
@@ -23,7 +24,11 @@ export default function Form() {
   );
   const [passwordShown, setPasswordShown] = useState(false);
   const [policyActive, setPolicyActive] = useState(initialPolicy);
-  const [accepts, setAccepts] = useState(initialPolicy);
+  const [accepts, setAccepts] = useState({
+    ...initialPolicy,
+    company: false,
+    data: false,
+  });
   const [employerDetails, setEmployerDetails] = useState({
     first_name: "",
     last_name: "",
@@ -34,16 +39,21 @@ export default function Form() {
 
   const handleSubmit = (e?: FormEvent) => {
     e && e.preventDefault();
-    setStatus("loading");
-    if (!accepts.policy || !accepts.statute)
-      return setStatus("Wymagana akceptacja regulaminu i polityki prywatności");
+    if (
+      !accepts.policy ||
+      !accepts.statute ||
+      !accepts.company ||
+      !accepts.data
+    )
+      return toast.error("Wymagana akceptacja warunków portalu.");
     if (employerDetails.nip.length !== 10)
-      return setStatus("NIP powinien posiadać 10 cyfr!");
+      return toast.error("Nieprawidłowy numer NIP");
     if (confPassword !== employerDetails.password)
-      return setStatus("Hasła się nie zgadzają!");
+      return toast.error("Hasła się nie zgadzają!");
     if (employerDetails.password.length < 6)
-      return setStatus("Hasło musi posiadać co najmniej 6 znaków!");
+      return toast.error("Hasło musi posiadać co najmniej 6 znaków!");
 
+    setStatus("loading");
     axios
       .post("/api/signup", JSON.stringify(employerDetails))
       .then(() => setStatus(true))
@@ -252,18 +262,40 @@ export default function Form() {
                 className="relative top-0.5"
                 type="checkbox"
                 required
-                id="policy"
+                id="s-data"
                 name="signup"
                 onChange={(e) =>
                   setAccepts((prev) => ({
                     ...prev,
-                    policy: e.target.checked,
+                    company: e.target.checked,
                   }))
                 }
               />
               <label
                 className="text-sm cursor-pointer text-left"
-                htmlFor="policy"
+                htmlFor="s-data"
+              >
+                Wyrażam zgodę na udostępnianie logotypu oraz nazwy mojej firmy w
+                celach marketingowych oraz promocyjnych portalu bezCV.
+              </label>
+            </div>
+            <div className="relative flex gap-4 items-start justify-start">
+              <input
+                className="relative top-0.5"
+                type="checkbox"
+                required
+                id="m-data"
+                name="signup"
+                onChange={(e) =>
+                  setAccepts((prev) => ({
+                    ...prev,
+                    data: e.target.checked,
+                  }))
+                }
+              />
+              <label
+                className="text-sm cursor-pointer text-left"
+                htmlFor="m-data"
               >
                 Zapoznałem/am się z{" "}
                 <Link
@@ -335,9 +367,6 @@ export default function Form() {
                   <Loader />
                 ) : (
                   <FilledButton type="submit">Załóż konto</FilledButton>
-                )}
-                {status && status !== "loading" && (
-                  <span className="text-red-400 font-medium">{status}</span>
                 )}
               </div>
             </div>
