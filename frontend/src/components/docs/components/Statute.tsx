@@ -9,9 +9,6 @@ export default function Statute() {
           należącego do Agencji Social Media YO ME Sp. z o.o.
         </p>
       </h2>
-      <p className="text-sm sm:text-base">
-        (Wersja produkcyjna - beta z dnia 31 marca 2023 r.)
-      </p>
       <ol className="flex flex-col gap-8">
         <li className="flex flex-col gap-4">
           <h3 className="font-semibold sm:text-lg">1. Postanowienia wstępne</h3>
@@ -563,7 +560,7 @@ export default function Statute() {
             zgromadzonych punktów bezCV liczona jest od daty zakupu Pakietu.
             Pracodawca może zażądać zwrotu przedpłaconych środków dostępnych
             jako punkty bezCV. W tym celu powinien przekazać wniosek o zwrot
-            środków wiadomością poczty elektronicznej na adres: pomoc@bezcv.coml
+            środków wiadomością poczty elektronicznej na adres: pomoc@bezcv.com
             lub listem poleconym na adres korespondencyjny Agencji Social Media
             YO ME. Zwrot dokonywany jest przelewem na rachunek bankowy wskazany
             przez Pracodawcę. W przypadku rozwiązania umowy przez Pracodawcę
