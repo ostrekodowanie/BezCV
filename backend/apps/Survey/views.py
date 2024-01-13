@@ -110,7 +110,7 @@ class CandidateAnswersView(APIView):
 
         try:
             response = openai.Completion.create(
-                engine="text-davinci-002",
+                engine="gpt-3.5-turbo-instruct",
                 prompt=input_text,
                 max_tokens=2000,
                 n=1,
@@ -125,7 +125,7 @@ class CandidateAnswersView(APIView):
                 subject=f"{candidate.id} - OpenAI",
                 message=f"{e}",
                 from_email="biuro@bezcv.com",
-                to=["biuro@bezcv.com"],
+                recipient_list=["biuro@bezcv.com"],
                 fail_silently=False,
             )
 

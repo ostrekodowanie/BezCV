@@ -334,4 +334,13 @@ class AddReportSerializer(serializers.ModelSerializer):
             employer=user,
         )
 
+        purchased_offer = PurchasedOffers.objects.get(
+            employer=user, candidate=validated_data["candidate"]
+        )
+
+        user.tokens += purchased_offer.points
+        user.save()
+
+        purchased_offer.delete()
+
         return instance
