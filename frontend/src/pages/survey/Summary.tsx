@@ -12,10 +12,13 @@ export default function Summary({ firstName }: { firstName: string }) {
       </h2>
       <div className="flex flex-col items-center justify-between gap-6 w-full">
         <p className="text-2xl md:text-3xl font-medium">
-          Dziękuje Ci{" "}
-          <span className="font-medium bg-clip-text text-transparent bg-secondary">
-            {firstName}
-          </span>{" "}
+          Dziękuje Ci
+          {firstName && (
+            <span className="font-medium bg-clip-text text-transparent bg-secondary">
+              {" "}
+              {firstName}
+            </span>
+          )}{" "}
           za poświęcenie chwili czasu.
         </p>
         <p className="text-sm md:text-base leading-relaxed text-center">
